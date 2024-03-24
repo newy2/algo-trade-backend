@@ -162,6 +162,9 @@ class GetBarSeriesTest {
         val series = getBarSeries(2, bybitKlineList)
 
         assertEquals(2, series.barCount)
-        assertEquals("2024-03-09T00:00Z", series.lastBar.beginTime.toString())
+        series.lastBar.beginTime.run {
+            assertEquals(1709942400000, toInstant().toEpochMilli(), "bybitKlineList[0][0].toLong() 과 같음")
+            assertEquals("2024-03-09T00:00Z", toString())
+        }
     }
 }
