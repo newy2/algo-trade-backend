@@ -18,55 +18,7 @@ import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
 
-@DisplayName("WaitForRule 테스트")
-class WaitForRuleTest {
-    @DisplayName("거래가 없는 경우")
-    class WaitForRuleWithNoTradeTest {
-        @Test
-        fun `거래가 발생하지 않았으면 항상 false 를 리턴한다`() {
-            val noTrade = BaseTradingRecord(TradeType.BUY)
-            val rule = WaitForRule(TradeType.BUY, 1)
-
-            assertFalse(rule.isSatisfied(0, noTrade))
-            assertFalse(rule.isSatisfied(1, noTrade))
-            assertFalse(rule.isSatisfied(2, noTrade))
-        }
-    }
-
-    @DisplayName("거래가 있는 경우")
-    class WaitForRuleWithTradeTest {
-        private lateinit var record: TradingRecord
-
-        @BeforeEach
-        fun setUp() {
-            record = BaseTradingRecord(TradeType.BUY)
-            record.enter(1) // 거래가 발생한 index
-        }
-
-        @Test
-        fun `waitBarCount 가 0인 경우, 거래가 발생한 index 부터 true 리턴`() {
-            val waitCount = 0
-            val rule = WaitForRule(TradeType.BUY, waitCount)
-
-            assertFalse(rule.isSatisfied(0, record), "거래가 없어서 false")
-            assertTrue(rule.isSatisfied(1, record), "거래 진입 index + 0")
-            assertTrue(rule.isSatisfied(2, record))
-            assertTrue(rule.isSatisfied(3, record))
-        }
-
-        @Test
-        fun `waitBarCount 가 1 이상인 경우, 거래가 발생한 (index + N) 부터 true 리턴`() {
-            val waitCount = 1
-            val rule = WaitForRule(TradeType.BUY, waitCount)
-
-            assertFalse(rule.isSatisfied(0, record))
-            assertFalse(rule.isSatisfied(1, record))
-            assertTrue(rule.isSatisfied(2, record), "거래 진입 index + 1")
-            assertTrue(rule.isSatisfied(3, record))
-        }
-    }
-}
-
+@DisplayName("포지션 오픈 이후 barCount 만큼 기다리는 경우 사용")
 class OpenedPositionMinimumBarCountRuleTest {
     private lateinit var record: TradingRecord
     private lateinit var rule: Rule
@@ -74,30 +26,101 @@ class OpenedPositionMinimumBarCountRuleTest {
     @BeforeEach
     fun setUp() {
         record = BaseTradingRecord()
-        rule = OpenedPositionMinimumBarCountRule(1)
+        rule = OpenedPositionMinimumBarCountRule(2)
     }
 
     @Test
     fun `거래가 없는 경우 항상 false 리턴`() {
         assertFalse(rule.isSatisfied(0, record))
         assertFalse(rule.isSatisfied(1, record))
-        assertFalse(rule.isSatisfied(3, record))
+        assertFalse(rule.isSatisfied(2, record))
     }
 
     @Test
-    fun `waitBarCount 가 1 이상인 경우, 거래가 발생한 (index + N) 부터 true 리턴`() {
-        record.enter(0)
+    fun `거래 진입 index + N 부터 true 리턴`() {
+        record.enter(1)
 
         assertFalse(rule.isSatisfied(0, record))
-        assertTrue(rule.isSatisfied(1, record), "거래 진입 index + 1")
-        assertTrue(rule.isSatisfied(2, record))
-        assertTrue(rule.isSatisfied(3, record))
+        assertFalse(rule.isSatisfied(1, record), "거래 진입 index")
+        assertFalse(rule.isSatisfied(2, record))
+        assertTrue(rule.isSatisfied(3, record), "거래 진입 index + 2")
+        assertTrue(rule.isSatisfied(4, record))
     }
 
     @Test
-    fun `waitBarCount 0이면 에러 발생`() {
+    fun `waitCount 가 0 이면 에러`() {
         assertThrows<IllegalArgumentException> {
-            OpenedPositionMinimumBarCountRule(0)
+            val zeroWaitCount = 0
+            OpenedPositionMinimumBarCountRule(zeroWaitCount)
+        }
+    }
+}
+
+@DisplayName("WaitForRule 테스트")
+class WaitForRuleTest {
+    private lateinit var record: TradingRecord
+    private lateinit var rule: Rule
+
+    @BeforeEach
+    fun setUp() {
+        record = BaseTradingRecord(TradeType.BUY)
+        rule = WaitForRule(TradeType.BUY, 2)
+    }
+
+    @Test
+    fun `거래가 없는 경우 항상 false 리턴`() {
+        assertFalse(rule.isSatisfied(0, record))
+        assertFalse(rule.isSatisfied(1, record))
+        assertFalse(rule.isSatisfied(2, record))
+    }
+
+    @Test
+    fun `거래 진입 index + N 부터 true 리턴`() {
+        record.enter(1)
+
+        assertFalse(rule.isSatisfied(0, record))
+        assertFalse(rule.isSatisfied(1, record), "거래 진입 index")
+        assertFalse(rule.isSatisfied(2, record))
+        assertTrue(rule.isSatisfied(3, record), "거래 진입 index + 2")
+        assertTrue(rule.isSatisfied(4, record))
+    }
+
+    @DisplayName("WaitForRule 특이사항 테스트")
+    class WaitForRuleExceptionTest {
+        @Test
+        fun `waitBarCount 가 0 인 경우, 거래가 발생한 index 부터 true 리턴`() {
+            val rule = WaitForRule(TradeType.BUY, 0)
+            val record = BaseTradingRecord(TradeType.BUY).also {
+                it.enter(1)
+            }
+
+            assertFalse(rule.isSatisfied(0, record))
+            assertTrue(rule.isSatisfied(1, record), "거래 진입 index + 0")
+            assertTrue(rule.isSatisfied(2, record))
+        }
+
+        @Test
+        fun `TradeType 이 다른 경우 false 리턴`() {
+            val rule = WaitForRule(TradeType.BUY, 0)
+            val record = BaseTradingRecord(TradeType.SELL).also {
+                it.enter(1)
+            }
+
+            assertFalse(rule.isSatisfied(0, record))
+            assertFalse(rule.isSatisfied(1, record))
+            assertFalse(rule.isSatisfied(2, record))
+        }
+
+        @Test
+        fun `TradeType 이 다른 경우 false 리턴2`() {
+            val rule = WaitForRule(TradeType.SELL, 0)
+            val record = BaseTradingRecord(TradeType.BUY).also {
+                it.enter(1)
+            }
+
+            assertFalse(rule.isSatisfied(0, record))
+            assertFalse(rule.isSatisfied(1, record))
+            assertFalse(rule.isSatisfied(2, record))
         }
     }
 }

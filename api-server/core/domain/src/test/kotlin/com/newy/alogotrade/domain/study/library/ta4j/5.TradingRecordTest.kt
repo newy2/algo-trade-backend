@@ -38,6 +38,7 @@ class BaseTradingRecordTest {
 
         assertTrue(isEntered)
         assertEquals(0, record.positionCount, "currentPosition 이 완료되지 않아서 0")
+        assertNull(record.lastPosition, "currentPosition 이 완료되지 않아서 null")
         record.currentPosition.run {
             assertTrue(isOpened, "포지션 진행중")
             entry.run {
@@ -45,7 +46,7 @@ class BaseTradingRecordTest {
                 assertEquals(TradeType.BUY, type)
                 assertTrue(isBuy)
             }
-            assertNull(exit)
+            assertNull(exit, "포지션이 종료되지 않아서 null")
         }
     }
 
@@ -58,7 +59,7 @@ class BaseTradingRecordTest {
         val isExited = record.exit(exitIndex)
 
         assertTrue(isExited)
-        assertEquals(1, record.positionCount, "완료된 포지션 갯수")
+        assertEquals(1, record.positionCount, "완료된 positionCount 업데이트 됨")
         record.lastPosition.run {
             assertTrue(isClosed, "포지션 완료됨")
             entry.run {
@@ -73,9 +74,9 @@ class BaseTradingRecordTest {
             }
         }
         record.currentPosition.run {
-            assertTrue(isNew, "currentPosition 이 새로 생성됨")
-            assertNull(entry)
-            assertNull(exit)
+            assertTrue(isNew, "currentPosition 초기화")
+            assertNull(entry, "currentPosition 초기화")
+            assertNull(exit, "currentPosition 초기화")
         }
     }
 
@@ -97,9 +98,7 @@ class BaseTradingRecordTest {
 
     @Test
     fun `포지션을 오픈하지 않고, 종료할 수 없다`() {
-        val isExited = record.exit(2)
-
-        assertFalse(isExited)
+        assertFalse(record.exit(2))
     }
 
     @Test

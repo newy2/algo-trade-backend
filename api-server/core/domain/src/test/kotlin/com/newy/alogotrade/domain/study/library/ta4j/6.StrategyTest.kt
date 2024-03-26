@@ -38,15 +38,14 @@ class BaseStrategyWithUnstablePeriodTest {
 
     @BeforeEach
     fun setUp() {
-        val entryRule = booleanRule(true, true, true)
-        val exitRule = booleanRule(true, true, true)
-
         /***
          * 참고: https://ta4j.github.io/ta4j-wiki/FAQ.html#why-does-my-indicator-not-match-someone-elses-values
          *
          * (특정 Indicator 사용 시) 과거 index 의 데이터가 적은 경우 오차가 발생하는 경우가 있다.
          * 백테스트 로직에서 BaseStrategy 에 skipIndex 를 사용하면 해당 이슈를 제거할 수 있다.
          */
+        val entryRule = booleanRule(true, true, true)
+        val exitRule = booleanRule(true, true, true)
         val skipIndex = 2
         strategy = BaseStrategy(entryRule, exitRule, skipIndex)
     }

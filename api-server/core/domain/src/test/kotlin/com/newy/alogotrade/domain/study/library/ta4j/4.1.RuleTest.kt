@@ -181,7 +181,6 @@ class EtcRule {
             val chainLink2 = ChainLink(linkRule2, 2)
             val rule = ChainRule(triggerRule, chainLink1, chainLink2)
 
-
             assertFalse(rule.isSatisfied(0))
             assertFalse(rule.isSatisfied(1))
             assertTrue(
