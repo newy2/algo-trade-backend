@@ -18,7 +18,8 @@ class UpAndDownRuleTest {
     @Test
     fun `OverIndicatorRule - 임계값 초과인 경우 통과`() {
         val indicator = fixedDecimalIndicator(900, 1000, 1100)
-        val rule = OverIndicatorRule(indicator, 1000)
+        val threshold = 1000
+        val rule = OverIndicatorRule(indicator, threshold)
 
         assertFalse(rule.isSatisfied(0))
         assertFalse(rule.isSatisfied(1))
@@ -28,7 +29,8 @@ class UpAndDownRuleTest {
     @Test
     fun `UnderIndicatorRule - 임계값 미만인 경우 통과`() {
         val indicator = fixedDecimalIndicator(900, 1000, 1100)
-        val rule = UnderIndicatorRule(indicator, 1000)
+        val threshold = 1000
+        val rule = UnderIndicatorRule(indicator, threshold)
 
         assertTrue(rule.isSatisfied(0), "x < 1000")
         assertFalse(rule.isSatisfied(1))
@@ -52,10 +54,12 @@ class UpAndDownRuleTest {
 
 @DisplayName("지표가 교차하는 경우에 사용")
 class CrossRuleTest {
+    private val threshold = 1000
+
     @Test
     fun `CrossedUpIndicatorRule - 교차 상승하는 경우 통과`() {
         val indicator = fixedDecimalIndicator(800, 900, 1000, 1100, 1200)
-        val rule = CrossedUpIndicatorRule(indicator, 1000)
+        val rule = CrossedUpIndicatorRule(indicator, threshold)
 
         assertFalse(rule.isSatisfied(0))
         assertFalse(rule.isSatisfied(1))
@@ -67,7 +71,7 @@ class CrossRuleTest {
     @Test
     fun `CrossedDownIndicatorRule - 교차 하락하는 경우 통과`() {
         val indicator = fixedDecimalIndicator(1200, 1100, 1000, 900, 800)
-        val rule = CrossedDownIndicatorRule(indicator, 1000)
+        val rule = CrossedDownIndicatorRule(indicator, threshold)
 
         assertFalse(rule.isSatisfied(0))
         assertFalse(rule.isSatisfied(1))
@@ -76,19 +80,17 @@ class CrossRuleTest {
         assertFalse(rule.isSatisfied(4))
     }
 
-    class CrossRuleBugTest {
-        @Test
-        fun `주의 - Indicator 의 첫 번째값 과 마지막 값 사이에 임계값만 있는 경우 작동하지 않음`() {
-            // TODO 라이브러리 신규 버전 배표시, 업데이트 할 예정 (작성 시점 라이브러리 버전: 0.15)
-            // 참고: https://github.com/ta4j/ta4j/pull/1138
+    @Test
+    fun `버그 - Indicator 의 첫 번째값 과 마지막 값 사이에 임계값만 있는 경우 작동하지 않음`() {
+        // TODO 라이브러리 신규 버전 배표시, 업데이트 할 예정 (작성 시점 라이브러리 버전: 0.15)
+        // 참고: https://github.com/ta4j/ta4j/pull/1138
 
-            val indicator = fixedDecimalIndicator(900, 1000, 1100)
-            val rule = CrossedUpIndicatorRule(indicator, 1000)
+        val indicator = fixedDecimalIndicator(900, 1000, 1100)
+        val rule = CrossedUpIndicatorRule(indicator, threshold)
 
-            assertFalse(rule.isSatisfied(0))
-            assertFalse(rule.isSatisfied(1))
-            assertFalse(rule.isSatisfied(2), "버그; 상승 지점을 파악하지 못함 (1000 -> 1100)")
-        }
+        assertFalse(rule.isSatisfied(0))
+        assertFalse(rule.isSatisfied(1))
+        assertFalse(rule.isSatisfied(2), "버그; 상승 지점을 파악하지 못함 (1000 -> 1100)")
     }
 }
 
@@ -98,37 +100,100 @@ class RisingFallingRateRuleTest {
     private val barCountToCheck = 3
 
     @Test
-    fun `IsRisingRule - 상승한 비율이 많은 경우 통과`() {
-        val indicator = fixedDecimalIndicator(1000, 500, 1000, 1100)
+    fun `IsRisingRule - 상승한 횟수의 비율이 많은 경우 통과`() {
+        val indicator = fixedDecimalIndicator(2000, 1000, 1100, 1200)
         val rule = IsRisingRule(indicator, barCountToCheck, passingRate)
 
         assertFalse(rule.isSatisfied(0))
         assertFalse(rule.isSatisfied(1))
         assertFalse(rule.isSatisfied(2))
-        assertTrue(rule.isSatisfied(3), "상승 누적 금액이 아닌, 상승 횟수의 비율로 계산됨 [하락(1000->500), 상승(500->1000), 상승(1000->1100)]")
+        assertTrue(
+            rule.isSatisfied(3),
+            "상승 금액이 아닌, 상승 횟수의 비율로 계산됨 (총 상승횟수: 2회 > 총 하락횟수 1회 | 총 상승금액: 200 < 총 하락금액: 1000)"
+        )
     }
 
     @Test
-    fun `IsFallingRule - 하락한 비율이 많은 경우 통과`() {
-        val indicator = fixedDecimalIndicator(1000, 1100, 1000, 500)
+    fun `IsFallingRule - 하락한 횟수의 비율이 많은 경우 통과`() {
+        val indicator = fixedDecimalIndicator(1000, 2000, 1900, 1800)
         val rule = IsFallingRule(indicator, barCountToCheck, passingRate)
 
         assertFalse(rule.isSatisfied(0))
         assertFalse(rule.isSatisfied(1))
         assertFalse(rule.isSatisfied(2))
-        assertTrue(rule.isSatisfied(3), "하락 누적 금액이 아닌, 하락 횟수의 비율로 계산됨[상승(1000->1100), 하락(1100->1000), 하락(1000->500)]")
+        assertTrue(
+            rule.isSatisfied(3),
+            "하락 금액이 아닌, 하락 횟수의 비율로 계산됨 (총 상승횟수: 1회 < 총 하락횟수 2회 | 총 상승금액: 1000 > 총 하락금액: 200)"
+        )
     }
 }
 
 @DisplayName("그 외 유용한 규칙")
 class EtcRule {
     @Test
-    fun `JustOnceRule - 첫번째 호출만 규칙을 검증하고, 이후 호출부터 항상 false 리턴함`() {
+    fun `JustOnceRule - 같은 index 로 여러번 검증 시, 첫번째 호출만 통과하고, 이후 호출부터 항상 false 리턴함`() {
         val rule = JustOnceRule(booleanRule(true))
 
         assertTrue(rule.isSatisfied(0))
         assertFalse(rule.isSatisfied(0), "첫 번째 검증 이후, 항상 false 리턴")
         assertFalse(rule.isSatisfied(0), "첫 번째 검증 이후, 항상 false 리턴")
+    }
+
+    @DisplayName("ChainRule - 순차적으로 규칙이 실행되야 하는 경우에 사용. (트리거 Rule 이 성공하면, ChainLink 의 Rule 을 순차적으로 검증한다)")
+    class ChainRule {
+        @Test
+        fun `ChainLink 의 threshold 가 0 인 경우, 같은 index 로 linkRule 을 검증한다`() {
+            val triggerRule = booleanRule(true, true, true)
+            val linkRule = booleanRule(true, false, false)
+
+            val canSearchBeforeIndexCount = 0
+            val chainLink = ChainLink(linkRule, canSearchBeforeIndexCount)
+            val rule = ChainRule(triggerRule, chainLink)
+
+            assertTrue(rule.isSatisfied(0), "linkRule[0] == true")
+            assertFalse(rule.isSatisfied(1), "linkRule[1] != true")
+            assertFalse(rule.isSatisfied(2), "linkRule[2] != true")
+        }
+
+        @Test
+        fun `ChainLink 의 threshold 가 0 이상인 경우, index 부터 (index - threshold) 까지 사용해서 linkRule 을 검증한다`() {
+            val triggerRule = booleanRule(true, true, true)
+            val linkRule = booleanRule(true, false, false)
+
+            val canSearchBeforeIndexCount = 1
+            val chainLink = ChainLink(linkRule, canSearchBeforeIndexCount)
+            val rule = ChainRule(triggerRule, chainLink)
+
+            assertTrue(rule.isSatisfied(0), "linkRule[0] == true")
+            assertTrue(rule.isSatisfied(1), "(linkRule[1] || linkRule[0]) == true")
+            assertFalse(rule.isSatisfied(2), "(linkRule[2] || linkRule[1]) != true")
+        }
+
+        @Test
+        fun `주의 - ChainLink 를 여러 개 사용하는 경우, ChainLink 의 threshold 는 직전에 사용된 ChainLink 의 index 기준으로 계산한다`() {
+            // 참고: https://github.com/ta4j/ta4j/pull/472#review-thread-or-comment-id-218945009
+
+            val triggerRule = booleanRule(true, true, true, true, true)
+            val linkRule1 = booleanRule(false, false, true, false, false)
+            val linkRule2 = booleanRule(true, false, false, false, false)
+
+            val chainLink1 = ChainLink(linkRule1, 1)
+            val chainLink2 = ChainLink(linkRule2, 2)
+            val rule = ChainRule(triggerRule, chainLink1, chainLink2)
+
+
+            assertFalse(rule.isSatisfied(0))
+            assertFalse(rule.isSatisfied(1))
+            assertTrue(
+                rule.isSatisfied(2),
+                "linkRule1[2] == true && (linkRule2[2] || linkRule2[1] || linkRule2[0]) == true"
+            )
+            assertTrue(
+                rule.isSatisfied(3),
+                "(linkRule1[3] || linkRule1[2]) == true && (linkRule2[2] || linkRule2[1] || linkRule2[0]) == true"
+            )
+            assertFalse(rule.isSatisfied(4))
+        }
     }
 
     @Test
@@ -144,53 +209,6 @@ class EtcRule {
         assertTrue(rule.isSatisfied(2), "10 <= (10 = 1019 - 1009) <= 100")
         assertTrue(rule.isSatisfied(3), "10 <= (100 = 1300 - 1200) <= 100")
         assertFalse(rule.isSatisfied(4), "10 <= (101 = 1220 - 1119) <= 100")
-    }
-
-    @DisplayName("트리거 Rule 이 통과하고, barCount 내에서 다른 Rule 이 통과해야 하는 경우 사용 - ChainRule")
-    class ChainRule {
-        @Test
-        fun `ChainLink 의 Rule 이 실패하는 경우`() {
-            val triggerRule = booleanRule(false, true)
-            val linkRule = booleanRule(true, false)
-
-            val beforeBarCount = 0
-            val chainLink = ChainLink(linkRule, beforeBarCount)
-            val rule = ChainRule(triggerRule, chainLink)
-
-            assertFalse(rule.isSatisfied(0))
-            assertFalse(rule.isSatisfied(1), "chainLink[1] != true")
-        }
-
-        @Test
-        fun `ChainLink 의 Rule 이 성공하는 경우`() {
-            val triggerRule = booleanRule(false, true)
-            val linkRule = booleanRule(true, false)
-
-            val beforeBarCount = 1
-            val chainLink = ChainLink(linkRule, beforeBarCount)
-            val rule = ChainRule(triggerRule, chainLink)
-
-            assertFalse(rule.isSatisfied(0))
-            assertTrue(rule.isSatisfied(1), "(chainLink[1] || chainLink[0]) == true")
-        }
-
-        @Test
-        fun `주의 - ChainLink 의 'threshold' 는 '이전 ChainLink 의 index 를 기준'으로 사용된다`() {
-            // 참고: https://github.com/ta4j/ta4j/pull/472#review-thread-or-comment-id-218945009
-
-            val triggerRule = booleanRule(true, true, true, true)
-            val linkRule1 = booleanRule(false, true, false, true)
-            val linkRule2 = booleanRule(true, false, false, false)
-
-            val chainLink1 = ChainLink(linkRule1, 0)
-            val chainLink2 = ChainLink(linkRule2, 1)
-            val rule = ChainRule(triggerRule, chainLink1, chainLink2)
-
-            assertFalse(rule.isSatisfied(0))
-            assertTrue(rule.isSatisfied(1), "chainLink1[1] == true && (chainLink2[1] || chainLink2[0]) == true")
-            assertFalse(rule.isSatisfied(2))
-            assertFalse(rule.isSatisfied(3), "chainLink1[3] == true && (chainLink2[3] || chainLink2[2]) != true")
-        }
     }
 }
 
