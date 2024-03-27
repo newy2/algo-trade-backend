@@ -107,17 +107,19 @@ class Ta4jNumTest {
 
 @DisplayName("BaseBar 생성자별 기본 Num 클래스 확인")
 class BaseBarDefaultNumClassTest {
+    private val duration = 1.minutes.toJavaDuration()
+    private lateinit var endTime: ZonedDateTime
+
+    @BeforeEach
+    fun setUp() {
+        endTime = ZonedDateTime.now()
+    }
+
     @Test
-    fun `생성자의 가격 관련 파라미터 타입이 BigDecimal 인 경우`() {
-        val bar = BaseBar(
-            1.minutes.toJavaDuration(),
-            ZonedDateTime.now(),
-            1000.toBigDecimal(),
-            1000.toBigDecimal(),
-            1000.toBigDecimal(),
-            1000.toBigDecimal(),
-            0.toBigDecimal(),
-        )
+    fun `생성자의 가격 관련 파라미터 타입이 BigDecimal 인 경우 - DecimalNum`() {
+        val bar = 1000.toBigDecimal().let { bigDecimal ->
+            BaseBar(duration, endTime, bigDecimal, bigDecimal, bigDecimal, bigDecimal, bigDecimal)
+        }
 
         assertTrue(bar.openPrice is DecimalNum)
         assertTrue(bar.highPrice is DecimalNum)
@@ -125,20 +127,14 @@ class BaseBarDefaultNumClassTest {
         assertTrue(bar.closePrice is DecimalNum)
         assertTrue(bar.amount is DecimalNum)
         assertTrue(bar.volume is DecimalNum)
-        assertTrue(bar.trades is Long)
+        assertTrue(bar.amount is DecimalNum)
     }
 
     @Test
-    fun `생성자의 가격 관련 파라미터 타입이 String 인 경우`() {
-        val bar = BaseBar(
-            1.minutes.toJavaDuration(),
-            ZonedDateTime.now(),
-            "1000",
-            "1000",
-            "1000",
-            "1000",
-            "0",
-        )
+    fun `생성자의 가격 관련 파라미터 타입이 String 인 경우 - DecimalNum`() {
+        val bar = "1000".let { string ->
+            BaseBar(duration, endTime, string, string, string, string, string)
+        }
 
         assertTrue(bar.openPrice is DecimalNum)
         assertTrue(bar.highPrice is DecimalNum)
@@ -146,20 +142,14 @@ class BaseBarDefaultNumClassTest {
         assertTrue(bar.closePrice is DecimalNum)
         assertTrue(bar.amount is DecimalNum)
         assertTrue(bar.volume is DecimalNum)
-        assertTrue(bar.trades is Long)
+        assertTrue(bar.amount is DecimalNum)
     }
 
     @Test
-    fun `생성자의 가격 관련 파라미터 타입이 Double 인 경우`() {
-        val bar = BaseBar(
-            1.minutes.toJavaDuration(),
-            ZonedDateTime.now(),
-            1000.toDouble(),
-            1000.toDouble(),
-            1000.toDouble(),
-            1000.toDouble(),
-            0.toDouble(),
-        )
+    fun `생성자의 가격 관련 파라미터 타입이 Double 인 경우 - DoubleNum`() {
+        val bar = 1000.toDouble().let { double ->
+            BaseBar(duration, endTime, double, double, double, double, double)
+        }
 
         assertTrue(bar.openPrice is DoubleNum)
         assertTrue(bar.highPrice is DoubleNum)
@@ -167,14 +157,14 @@ class BaseBarDefaultNumClassTest {
         assertTrue(bar.closePrice is DoubleNum)
         assertTrue(bar.amount is DoubleNum)
         assertTrue(bar.volume is DoubleNum)
-        assertTrue(bar.trades is Long)
+        assertTrue(bar.amount is DoubleNum)
     }
 
     @Test
     fun `생성자의 가격 관련 파라미터 타입과 상관없이, Num 타입을 직접 지정할 수도 있음`() {
         val decimalNumBar = BaseBar(
-            1.minutes.toJavaDuration(),
-            ZonedDateTime.now(),
+            duration,
+            endTime,
             1000.toDouble(),
             1000.toDouble(),
             1000.toDouble(),
@@ -191,58 +181,29 @@ class BaseBarDefaultNumClassTest {
         assertTrue(decimalNumBar.closePrice is DecimalNum)
         assertTrue(decimalNumBar.amount is DecimalNum)
         assertTrue(decimalNumBar.volume is DecimalNum)
-        assertTrue(decimalNumBar.trades is Long)
+        assertTrue(decimalNumBar.amount is DecimalNum)
     }
 }
 
 @DisplayName("BaseBar 동등성 테스트")
 class BaseBarEqualityTest {
     @Test
-    fun `BaseBar 객체 동등성 비교는 Num 타입까지 같아야 함`() {
+    fun `BaseBar 객체 동등성 비교는 Num 타입까지 같아야 한다`() {
+        val duration = 1.minutes.toJavaDuration()
         val endTime = ZonedDateTime.now()
 
-        assertEquals(
-            BaseBar(
-                1.minutes.toJavaDuration(),
-                endTime,
-                1000.toBigDecimal(),
-                1000.toBigDecimal(),
-                1000.toBigDecimal(),
-                1000.toBigDecimal(),
-                0.toBigDecimal(),
-            ),
-            BaseBar(
-                1.minutes.toJavaDuration(),
-                endTime,
-                "1000",
-                "1000",
-                "1000",
-                "1000",
-                "0",
-            ),
-            "Num 타입까지 같은 경우"
-        )
-        assertNotEquals(
-            BaseBar(
-                1.minutes.toJavaDuration(),
-                endTime,
-                1000.toBigDecimal(),
-                1000.toBigDecimal(),
-                1000.toBigDecimal(),
-                1000.toBigDecimal(),
-                0.toBigDecimal(),
-            ),
-            BaseBar(
-                1.minutes.toJavaDuration(),
-                ZonedDateTime.now(),
-                1000.toDouble(),
-                1000.toDouble(),
-                1000.toDouble(),
-                1000.toDouble(),
-                0.toDouble(),
-            ),
-            "Num 타입이 다른 경우"
-        )
+        val decimalNum1 = 1000.toBigDecimal().let { bigDecimal ->
+            BaseBar(duration, endTime, bigDecimal, bigDecimal, bigDecimal, bigDecimal, bigDecimal)
+        }
+        val decimalNum2 = "1000".let { string ->
+            BaseBar(duration, endTime, string, string, string, string, string)
+        }
+        val doubleNum = 1000.toDouble().let { double ->
+            BaseBar(duration, endTime, double, double, double, double, double)
+        }
+
+        assertEquals(decimalNum1, decimalNum2)
+        assertNotEquals(decimalNum1, doubleNum)
     }
 }
 

@@ -79,10 +79,10 @@ class BaseBarSeriesAddBarTest {
 
     @BeforeEach
     fun setUp() {
-        series = BaseBarSeries()
         endTime = ZonedDateTime.now()
-
-        series.addBar(decimalNumBar(endTime, 1000.toBigDecimal()))
+        series = BaseBarSeries().also {
+            it.addBar(decimalNumBar(endTime, 1000.toBigDecimal()))
+        }
     }
 
     @Test
@@ -92,17 +92,19 @@ class BaseBarSeriesAddBarTest {
 
         assertEquals(3, series.barCount)
         series.run {
-            assertEquals(1000, getBar(beginIndex).closePrice.intValue(), "첫 변째 Bar 에 접근하는 방법1")
-            assertEquals(1000, firstBar.closePrice.intValue(), "첫 변째 Bar 에 접근하는 방법2")
+            // 첫 번째 Bar 를 가져오는 방법
+            assertEquals(1000, getBar(beginIndex).closePrice.intValue())
+            assertEquals(1000, firstBar.closePrice.intValue())
         }
         series.run {
-            assertEquals(3000, getBar(endIndex).closePrice.intValue(), "마지막 Bar 에 접근하는 방법1")
-            assertEquals(3000, lastBar.closePrice.intValue(), "마지막 Bar 에 접근하는 방법2")
+            // 마지막 Bar 를 가져오는 방법
+            assertEquals(3000, getBar(endIndex).closePrice.intValue())
+            assertEquals(3000, lastBar.closePrice.intValue())
         }
     }
 
     @Test
-    fun `새로 추가하는 Bar 의 endTime 은 마지막 Bar 의 endTime 보다 커야한다`() {
+    fun `새로 추가하는 Bar 의 endTime 은 마지막 endTime 보다 커야한다`() {
         assertThrows<IllegalArgumentException>("마지막 endTime 과 같은 경우") {
             series.addBar(decimalNumBar(endTime))
         }
@@ -112,9 +114,10 @@ class BaseBarSeriesAddBarTest {
     }
 
     @Test
-    fun `BarSeries 의 마지막 Bar 데이터(종가, 거래량 등)를 업데이트 하는 방법`() {
+    fun `BarSeries 의 마지막 Bar 를 교체하는 방법`() {
+        val sameEndTime = endTime
         val isReplace = true
-        series.addBar(decimalNumBar(endTime, 2000.toBigDecimal()), isReplace)
+        series.addBar(decimalNumBar(sameEndTime, 2000.toBigDecimal()), isReplace)
 
         assertEquals(1, series.barCount)
         assertEquals(2000, series.lastBar.closePrice.intValue())
@@ -147,8 +150,8 @@ class BaseBarMaximumBarCountTest {
             assertEquals(3, barCount, "등록된 Bar 갯수")
             assertEquals(3, removedBarsCount, "삭제된 Bar 갯수")
             assertEquals(0, beginIndex, "첫 번째 Bar index")
-            assertEquals(5, endIndex, "마지막 Bar index. endIndex 의 값은 ('barCount' + 'removedBarsCount' - 1) 이다.")
-            assertEquals(endIndex, barCount + removedBarsCount - 1, "endIndex 계산식")
+            assertEquals(5, endIndex, "마지막 Bar index")
+            assertEquals(endIndex, (barCount + removedBarsCount) - 1, "endIndex 계산식")
         }
     }
 
