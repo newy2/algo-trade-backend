@@ -1,4 +1,4 @@
-package com.newy.alogotrade.domain.study.library.ta4j
+package com.newy.algotrade.domain.study.library.ta4j
 
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -142,12 +142,12 @@ class EtcRule {
     @DisplayName("ChainRule - 순차적으로 규칙이 실행되야 하는 경우에 사용. (트리거 Rule 이 성공하면, ChainLink 의 Rule 을 순차적으로 검증한다)")
     class ChainRule {
         @Test
-        fun `ChainLink 의 threshold 가 0 인 경우, 같은 index 로 linkRule 을 검증한다`() {
+        fun `ChainLink 의 beforeIndexCount(threshold) 가 0 인 경우, linkRule 이 사용 가능한 index 는 triggerRule 가 성공한 index 이다`() {
             val triggerRule = booleanRule(true, true, true)
             val linkRule = booleanRule(true, false, false)
 
-            val canSearchBeforeIndexCount = 0
-            val chainLink = ChainLink(linkRule, canSearchBeforeIndexCount)
+            val beforeIndexCount = 0
+            val chainLink = ChainLink(linkRule, beforeIndexCount)
             val rule = ChainRule(triggerRule, chainLink)
 
             assertTrue(rule.isSatisfied(0), "linkRule[0] == true")
@@ -156,12 +156,12 @@ class EtcRule {
         }
 
         @Test
-        fun `ChainLink 의 threshold 가 0 이상인 경우, index 부터 (index - threshold) 까지 사용해서 linkRule 을 검증한다`() {
+        fun `ChainLink 의 beforeIndexCount(threshold) 가 0 이상인 경우, linkRule 이 사용 가능한 index 는 triggerRule 이 성공한 index 에서 (index - beforeIndexCount) 까지 이다`() {
             val triggerRule = booleanRule(true, true, true)
             val linkRule = booleanRule(true, false, false)
 
-            val canSearchBeforeIndexCount = 1
-            val chainLink = ChainLink(linkRule, canSearchBeforeIndexCount)
+            val beforeIndexCount = 1
+            val chainLink = ChainLink(linkRule, beforeIndexCount)
             val rule = ChainRule(triggerRule, chainLink)
 
             assertTrue(rule.isSatisfied(0), "linkRule[0] == true")
@@ -170,7 +170,7 @@ class EtcRule {
         }
 
         @Test
-        fun `주의 - ChainLink 를 여러 개 사용하는 경우, ChainLink 의 threshold 는 직전에 사용된 ChainLink 의 index 기준으로 계산한다`() {
+        fun `주의 - ChainLink 를 여러 개 사용하는 경우, ChainLink 의 beforeIndexCount 는 직전에 성공한 ChainLink 의 index 기준으로 계산한다`() {
             // 참고: https://github.com/ta4j/ta4j/pull/472#review-thread-or-comment-id-218945009
 
             val triggerRule = booleanRule(true, true, true, true, true)
@@ -263,12 +263,15 @@ class ConditionRuleTest {
 
     @Test
     fun `Not 조건식`() {
-        val rule = NotRule(expression1)
-
-        assertFalse(rule.isSatisfied(0))
-        assertTrue(rule.isSatisfied(1))
-        assertFalse(rule.isSatisfied(2))
-        assertTrue(rule.isSatisfied(3))
+        arrayOf(
+            NotRule(expression1),
+            expression1.negation()
+        ).forEach {
+            assertFalse(it.isSatisfied(0))
+            assertTrue(it.isSatisfied(1))
+            assertFalse(it.isSatisfied(2))
+            assertTrue(it.isSatisfied(3))
+        }
     }
 
     @Test

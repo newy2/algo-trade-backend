@@ -1,4 +1,4 @@
-package com.newy.alogotrade.helper
+package com.newy.algotrade.helper
 
 import java.util.stream.Stream
 

@@ -1,4 +1,4 @@
-package com.newy.alogotrade.domain.study.library.ta4j
+package com.newy.algotrade.domain.study.library.ta4j
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
