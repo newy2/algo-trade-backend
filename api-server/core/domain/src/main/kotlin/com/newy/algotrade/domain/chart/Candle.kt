@@ -33,7 +33,7 @@ data class Candle private constructor(
             throw IllegalArgumentException("잘못된 openPrice 입니다. lowPrice($lowPrice) =< openPrice($openPrice) =< highPrice($highPrice)")
         }
         if (closePrice < lowPrice || highPrice < closePrice) {
-            throw IllegalArgumentException("잘못된 highPrice 입니다. lowPrice($lowPrice) =< highPrice($highPrice) =< highPrice($highPrice)")
+            throw IllegalArgumentException("잘못된 closePrice 입니다. lowPrice($lowPrice) =< closePrice($closePrice) =< highPrice($highPrice)")
         }
     }
 
