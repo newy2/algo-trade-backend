@@ -4,6 +4,7 @@ import com.newy.algotrade.domain.chart.Candle
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Assertions.assertNotSame
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.math.BigDecimal
 import java.time.Duration
@@ -14,21 +15,6 @@ import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
-
-class KotlinStudyTest {
-    @Test
-    fun `Duration 팩토리 메소드 캐싱 테스트`() {
-        assertNotSame(Duration.ofMinutes(1), Duration.ofMinutes(1))
-        assertNotSame(Duration.ofMinutes(1), 1.minutes.toJavaDuration())
-    }
-
-    @Test
-    fun `BigDecimal 팩토리 메소드 캐싱 테스트`() {
-        assertSame(BigDecimal.valueOf(0), BigDecimal.valueOf(0))
-        assertSame(BigDecimal.valueOf(0), BigDecimal.ZERO)
-        assertSame(BigDecimal.valueOf(0), 0.toBigDecimal())
-    }
-}
 
 class CandleTest {
     @Test
@@ -47,11 +33,13 @@ class CandleTest {
             assertEquals(beginTime.plusMinutes(1), end)
             assertEquals(1.minutes.toJavaDuration(), period)
         }
-        assertEquals(1000.toBigDecimal(), candle.openPrice)
-        assertEquals(2000.toBigDecimal(), candle.highPrice)
-        assertEquals(500.toBigDecimal(), candle.lowPrice)
-        assertEquals(1500.toBigDecimal(), candle.closePrice)
-        assertEquals(0.toBigDecimal(), candle.volume)
+        candle.run {
+            assertEquals(1000.toBigDecimal(), openPrice)
+            assertEquals(2000.toBigDecimal(), highPrice)
+            assertEquals(500.toBigDecimal(), lowPrice)
+            assertEquals(1500.toBigDecimal(), closePrice)
+            assertEquals(0.toBigDecimal(), volume)
+        }
     }
 
     @Test
@@ -76,8 +64,8 @@ class CandleTest {
     }
 
     @Test
-    fun `highPrice 는 lowPrice 보다 작은 경우`() {
-        assertThrows<IllegalArgumentException>("lowPrice <= closePrice") {
+    fun `highPrice 가 lowPrice 보다 작은 경우`() {
+        assertThrows<IllegalArgumentException>("lowPrice <= highPrice") {
             Candle.Factory.M1(
                 ZonedDateTime.now(),
                 highPrice = 1000.toBigDecimal(),
@@ -91,7 +79,7 @@ class CandleTest {
     @Test
     fun `openPrice 는 highPrice 와 lowPrice 사이에 있어야 한다`() {
         arrayOf(100, 3000).forEach { openPrice ->
-            assertThrows<IllegalArgumentException>("lowPrice <= openPrice <= closePrice") {
+            assertThrows<IllegalArgumentException>("lowPrice <= openPrice <= highPrice") {
                 Candle.Factory.H1(
                     ZonedDateTime.now(),
                     lowPrice = 1000.toBigDecimal(),
@@ -106,7 +94,7 @@ class CandleTest {
     @Test
     fun `closePrice 는 highPrice 와 lowPRice 사이에 있어야 한다`() {
         arrayOf(100, 3000).forEach { closePrice ->
-            assertThrows<IllegalArgumentException>("lowPrice <= closePrice <= closePrice") {
+            assertThrows<IllegalArgumentException>("lowPrice <= closePrice <= highPrice") {
                 Candle.Factory.M1(
                     ZonedDateTime.now(),
                     lowPrice = 1000.toBigDecimal(),
@@ -116,5 +104,33 @@ class CandleTest {
                 )
             }
         }
+    }
+
+    @Test
+    fun `가격 정보가 같은 경우`() {
+        assertDoesNotThrow("에러가 발생하지 않아야 한다") {
+            Candle.Factory.M1(
+                ZonedDateTime.now(),
+                openPrice = 1000.toBigDecimal(),
+                highPrice = 1000.toBigDecimal(),
+                lowPrice = 1000.toBigDecimal(),
+                closePrice = 1000.toBigDecimal(),
+            )
+        }
+    }
+}
+
+class KotlinStudyTest {
+    @Test
+    fun `Duration 팩토리 메소드는 객체를 캐싱하지 않는다`() {
+        assertNotSame(Duration.ofMinutes(1), Duration.ofMinutes(1))
+        assertNotSame(Duration.ofMinutes(1), 1.minutes.toJavaDuration())
+    }
+
+    @Test
+    fun `BigDecimal 팩토리 메소드는 객체를 캐싱한다`() {
+        assertSame(BigDecimal.valueOf(0), BigDecimal.valueOf(0))
+        assertSame(BigDecimal.valueOf(0), BigDecimal.ZERO)
+        assertSame(BigDecimal.valueOf(0), 0.toBigDecimal())
     }
 }

@@ -1,6 +1,6 @@
-package com.newy.algotrade.domain.unit.helper
+package com.newy.algotrade.domain.unit.test_helper
 
-import com.newy.algotrade.helper.SimpleCsvParser
+import com.newy.algotrade.test_helper.SimpleCsvParser
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.DisplayName

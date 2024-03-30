@@ -15,26 +15,18 @@ interface Candles {
         add(candle, isReplace(candle))
     }
 
-    fun isReplace(candle: Candle) =
+    private fun isReplace(candle: Candle) =
         if (size == 0) {
             false
         } else {
             this[lastIndex].time == candle.time
         }
 
-    fun validate(candle: Candle) {
+    private fun validate(candle: Candle) {
         if (size == 0) {
             return
         }
 
-        this[lastIndex].time.let {
-            if (!it.isSamePeriod(candle.time)) {
-                throw IllegalArgumentException("시간 간격이 다릅니다. (Candles#period: ${it.period}, candle#period: ${candle.time.period})")
-            }
-            if (it.isOverlap(candle.time)) {
-                throw IllegalArgumentException("시간이 겹칩니다. (lastBar#beginTime(${it.begin}) < candle#beginTime(${candle.time.begin}) < lastBar#endTime(${it.end}))")
-            }
-        }
-
+        this[lastIndex].time.checkNextTime(candle.time)
     }
 }

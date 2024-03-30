@@ -1,10 +1,7 @@
 package com.newy.algotrade.domain.study.library.ta4j
 
-import com.newy.algotrade.helper.SimpleCsvParser
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
+import com.newy.algotrade.test_helper.SimpleCsvParser
+import org.junit.jupiter.api.*
 import org.opentest4j.AssertionFailedError
 import org.ta4j.core.BarSeries
 import org.ta4j.core.BaseBar

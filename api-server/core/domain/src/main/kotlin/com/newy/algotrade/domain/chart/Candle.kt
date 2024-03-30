@@ -4,19 +4,6 @@ import java.math.BigDecimal
 import java.time.Duration
 import java.time.ZonedDateTime
 
-data class TimeRange(
-    val period: Duration,
-    val begin: ZonedDateTime,
-    val end: ZonedDateTime = begin.plus(period)
-) {
-    fun isSamePeriod(other: TimeRange) =
-        this.period == other.period
-
-    fun isOverlap(other: TimeRange) =
-        begin.isBefore(other.begin) && end.isAfter(other.begin)
-//        begin < other.begin && other.begin < end
-}
-
 data class Candle private constructor(
     val time: TimeRange,
     val openPrice: BigDecimal,
@@ -26,6 +13,10 @@ data class Candle private constructor(
     val volume: BigDecimal,
 ) {
     init {
+        validate()
+    }
+
+    private fun validate() {
         if (highPrice < lowPrice) {
             throw IllegalArgumentException("highPrice 는 lowPrice 보다 작을 수 없습니다. highPrice($highPrice) < lowPrice($lowPrice)")
         }
@@ -37,7 +28,7 @@ data class Candle private constructor(
         }
     }
 
-    enum class Factory(private val duration: Duration) {
+    enum class Factory(private val timePeriod: Duration) {
         M1(Duration.ofMinutes(1)),
         M3(Duration.ofMinutes(3)),
         M5(Duration.ofMinutes(5)),
@@ -53,7 +44,7 @@ data class Candle private constructor(
             closePrice: BigDecimal = BigDecimal.ZERO,
             volume: BigDecimal = BigDecimal.ZERO,
         ) = Candle(
-            TimeRange(this.duration, beginTime),
+            TimeRange(this.timePeriod, beginTime),
             openPrice,
             highPrice,
             lowPrice,
@@ -62,8 +53,30 @@ data class Candle private constructor(
         )
 
         companion object {
-            fun from(value: Duration) =
-                Factory.values().find { it.duration == value }
+            fun from(timePeriod: Duration) =
+                Factory.values().find { it.timePeriod == timePeriod }
+        }
+    }
+
+    data class TimeRange(
+        val period: Duration,
+        val begin: ZonedDateTime,
+        val end: ZonedDateTime = begin.plus(period)
+    ) {
+        private fun isSamePeriod(other: TimeRange) =
+            period == other.period
+
+        private fun isOverlap(other: TimeRange) =
+            begin.isBefore(other.begin) && end.isAfter(other.begin)
+//        begin < other.begin && other.begin < end
+
+        fun checkNextTime(nextTime: TimeRange) {
+            if (!isSamePeriod(nextTime)) {
+                throw IllegalArgumentException("시간 간격이 다릅니다. [period(${period}) != nextTime#period(${nextTime.period})]")
+            }
+            if (isOverlap(nextTime)) {
+                throw IllegalArgumentException("시간이 겹칩니다. (begin(${begin}) < nextTime#begin(${nextTime.begin}) < end(${end}))")
+            }
         }
     }
 }

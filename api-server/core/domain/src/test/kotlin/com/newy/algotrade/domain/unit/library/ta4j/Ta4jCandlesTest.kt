@@ -1,7 +1,7 @@
-package com.newy.algotrade.domain.unit.chart
+package com.newy.algotrade.domain.unit.library.ta4j
 
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.Ta4jCandles
+import com.newy.algotrade.domain.library.ta4j.Ta4jCandles
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -92,6 +92,10 @@ class Ta4jCandlesTest {
             candles.upsert(oneMinuteCandle(beginTime.plusSeconds(30), 2000))
         }
     }
+
+    // TODO Candles#upsert 연속적인 시간대의 Candle 이 확인하는 로직
+    //      TODO 시작시간 종료시간이 있는 금융시장: 예) 국내/해외 주식
+    //      TODO 시작시간 종료시간이 없는 금융시장: 예) 암호화폐 거래
 
     @Test
     fun `index 범위를 벗어난 경우`() {
