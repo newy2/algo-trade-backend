@@ -16,24 +16,25 @@ import java.time.Instant
 import java.time.ZoneOffset
 
 
-private fun getCandles(length: Int, list: Array<Array<String>> = bybitKlineList) = Ta4jCandles().also { results ->
-    list.sliceArray(IntRange(0, length - 1))
-        .also { it.reverse() }
-        .forEach {
-            val beginTimeMillis = it[0].toLong()
-            val beginTime = Instant.ofEpochMilli(beginTimeMillis).atZone(ZoneOffset.UTC)
-            results.upsert(
-                Candle.Factory.M1(
-                    beginTime,
-                    it[1].toBigDecimal(),
-                    it[2].toBigDecimal(),
-                    it[3].toBigDecimal(),
-                    it[4].toBigDecimal(),
-                    it[5].toBigDecimal(),
+private fun getCandles(length: Int, list: Array<Array<String>> = bybitKlineList) =
+    Ta4jCandles().also { results ->
+        list.sliceArray(IntRange(0, length - 1))
+            .also { it.reverse() }
+            .forEach {
+                val beginTimeMillis = it[0].toLong()
+                val beginTime = Instant.ofEpochMilli(beginTimeMillis).atZone(ZoneOffset.UTC)
+                results.upsert(
+                    Candle.Factory.M1(
+                        beginTime,
+                        it[1].toBigDecimal(),
+                        it[2].toBigDecimal(),
+                        it[3].toBigDecimal(),
+                        it[4].toBigDecimal(),
+                        it[5].toBigDecimal(),
+                    )
                 )
-            )
-        }
-}
+            }
+    }
 
 private fun assertBigDecimalEquals(expected: Double, actual: BigDecimal) {
     return assertEquals(expected, actual.toDouble(), 0.005)

@@ -65,7 +65,7 @@ class CandleTest {
 
     @Test
     fun `highPrice 가 lowPrice 보다 작은 경우`() {
-        assertThrows<IllegalArgumentException>("lowPrice <= highPrice") {
+        assertThrows<IllegalArgumentException>("lowPrice <= highPrice 이어야 한다") {
             Candle.Factory.M1(
                 ZonedDateTime.now(),
                 highPrice = 1000.toBigDecimal(),
@@ -79,7 +79,7 @@ class CandleTest {
     @Test
     fun `openPrice 는 highPrice 와 lowPrice 사이에 있어야 한다`() {
         arrayOf(100, 3000).forEach { openPrice ->
-            assertThrows<IllegalArgumentException>("lowPrice <= openPrice <= highPrice") {
+            assertThrows<IllegalArgumentException>("lowPrice <= openPrice <= highPrice 이어야 한다") {
                 Candle.Factory.H1(
                     ZonedDateTime.now(),
                     lowPrice = 1000.toBigDecimal(),
@@ -94,7 +94,7 @@ class CandleTest {
     @Test
     fun `closePrice 는 highPrice 와 lowPRice 사이에 있어야 한다`() {
         arrayOf(100, 3000).forEach { closePrice ->
-            assertThrows<IllegalArgumentException>("lowPrice <= closePrice <= highPrice") {
+            assertThrows<IllegalArgumentException>("lowPrice <= closePrice <= highPrice 이어야 한다") {
                 Candle.Factory.M1(
                     ZonedDateTime.now(),
                     lowPrice = 1000.toBigDecimal(),

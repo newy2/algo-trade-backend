@@ -21,7 +21,6 @@ import kotlin.time.toJavaDuration
 val bybitKlineList =
     SimpleCsvParser.parseFromResource("/csv/[ByBit] BTCUSDT - 1m - 1000count - until 2024-03-09T00:00Z(UTC).csv")
 
-const val TEST_TARGET_BAR_BEGIN_TIME = "2024-03-09T00:00Z"
 val TEST_TARGET_BAR_EXPECTED_VALUES = mapOf(
     "RSI7" to 44.49,
     "RSI14" to 46.83,
@@ -30,25 +29,26 @@ val TEST_TARGET_BAR_EXPECTED_VALUES = mapOf(
     "EMA50" to 68232.69
 )
 
-private fun getBarSeries(length: Int, list: Array<Array<String>> = bybitKlineList) = BaseBarSeries().also { results ->
-    list.sliceArray(IntRange(0, length - 1))
-        .also { it.reverse() }
-        .forEach {
-            val endTimeMillis = it[0].toLong() + 1.minutes.toJavaDuration().toMillis()
-            val endTime = Instant.ofEpochMilli(endTimeMillis).atZone(ZoneOffset.UTC)
-            results.addBar(
-                BaseBar(
-                    1.minutes.toJavaDuration(),
-                    endTime,
-                    it[1],
-                    it[2],
-                    it[3],
-                    it[4],
-                    it[5],
+private fun getBarSeries(length: Int, list: Array<Array<String>> = bybitKlineList) =
+    BaseBarSeries().also { results ->
+        list.sliceArray(IntRange(0, length - 1))
+            .also { it.reverse() }
+            .forEach {
+                val endTimeMillis = it[0].toLong() + 1.minutes.toJavaDuration().toMillis()
+                val endTime = Instant.ofEpochMilli(endTimeMillis).atZone(ZoneOffset.UTC)
+                results.addBar(
+                    BaseBar(
+                        1.minutes.toJavaDuration(),
+                        endTime,
+                        it[1],
+                        it[2],
+                        it[3],
+                        it[4],
+                        it[5],
+                    )
                 )
-            )
-        }
-}
+            }
+    }
 
 fun assertDoubleNumEquals(expected: Double, actual: Num) =
     assertEquals(expected, actual.doubleValue(), 0.005)
@@ -63,8 +63,8 @@ class IndicatorTest {
     }
 
     @Test
-    fun `마지막 Bar 의 beginTime 확인하기`() {
-        assertEquals(TEST_TARGET_BAR_BEGIN_TIME, series.lastBar.beginTime.toString())
+    fun `테스트 대상 Bar 의 beginTime 확인하기`() {
+        assertEquals("2024-03-09T00:00Z", series.lastBar.beginTime.toString())
     }
 
     @Test
@@ -113,8 +113,8 @@ class IndicatorExceptionTest {
     fun `작은 BarSeries 로 EMA50 를 계산하는 경우 오차가 발생한다`() {
         // 참고: https://ta4j.github.io/ta4j-wiki/FAQ.html#why-does-my-indicator-not-match-someone-elses-values
 
-        arrayOf(100, 200, 250).forEach { listSize ->
-            val smallSizeSeries = getBarSeries(listSize)
+        arrayOf(100, 200, 250).forEach { smallSize ->
+            val smallSizeSeries = getBarSeries(smallSize)
             val basePrice = ClosePriceIndicator(smallSizeSeries)
             val indicator = EMAIndicator(basePrice, 50)
 

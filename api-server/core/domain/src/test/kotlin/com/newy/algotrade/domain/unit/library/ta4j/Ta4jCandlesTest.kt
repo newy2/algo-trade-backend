@@ -50,8 +50,9 @@ class Ta4jCandlesTest {
 
     @BeforeEach
     fun setUp() {
-        candles = Ta4jCandles()
-        candles.upsert(oneMinuteCandle(beginTime, 1000))
+        candles = Ta4jCandles().also {
+            it.upsert(oneMinuteCandle(beginTime, 1000))
+        }
     }
 
     @Test
@@ -75,27 +76,26 @@ class Ta4jCandlesTest {
     @Test
     fun `과거 시간 캔들을 등록하는 경우`() {
         assertThrows<IllegalArgumentException>("과거 시간의 Candle 을 등록하면 에러발생") {
-            candles.upsert(oneMinuteCandle(beginTime.minusMinutes(1), 2000))
+            val beforeBeginTime = beginTime.minusMinutes(1)
+            candles.upsert(oneMinuteCandle(beforeBeginTime, 2000))
+        }
+    }
+
+    @Test
+    fun `마지막 캔들 beginTime 과 endTime 사이의 시간으로 Candle 을 등록하는 경우`() {
+        assertThrows<IllegalArgumentException>("마지막 beginTime 이 00:00:00 이고, 신규 beginTime 이 00:00:30 이면 에러발생") {
+            val irregularBeginTime = beginTime.plusSeconds(30)
+            candles.upsert(oneMinuteCandle(irregularBeginTime, 2000))
         }
     }
 
     @Test
     fun `시간 간격이 다른 Candle 을 등록하는 경우`() {
         assertThrows<IllegalArgumentException>("1분봉 Candles 에 1시간봉 Candle 을 등록하면 에러발생") {
-            candles.upsert(oneHourCandle(beginTime.plusMinutes(1), 2000))
+            val hour1Candle = oneHourCandle(beginTime.plusMinutes(1), 2000)
+            candles.upsert(hour1Candle)
         }
     }
-
-    @Test
-    fun `마지막 캔들 beginTime 과 endTime 사이의 시간으로 Candle 을 등록하는 경우`() {
-        assertThrows<IllegalArgumentException>("마지막 캔들 beginTime 이 00:00:00 이고, 신규 캔들 beginTime 이 00:00:30 이면 에러발생") {
-            candles.upsert(oneMinuteCandle(beginTime.plusSeconds(30), 2000))
-        }
-    }
-
-    // TODO Candles#upsert 연속적인 시간대의 Candle 이 확인하는 로직
-    //      TODO 시작시간 종료시간이 있는 금융시장: 예) 국내/해외 주식
-    //      TODO 시작시간 종료시간이 없는 금융시장: 예) 암호화폐 거래
 
     @Test
     fun `index 범위를 벗어난 경우`() {
@@ -108,6 +108,9 @@ class Ta4jCandlesTest {
     }
 
     // TODO Candles 의 이름을 알아야 하나?
+    // TODO Candles#upsert 연속적인 시간대의 Candle 이 확인하는 로직?
+    //      TODO 시작시간 종료시간이 있는 금융시장: 예) 국내/해외 주식
+    //      TODO 시작시간 종료시간이 없는 금융시장: 예) 암호화폐 거래
 }
 
 @DisplayName("최대 크기 제한")

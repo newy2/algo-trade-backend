@@ -7,10 +7,10 @@ import java.math.BigDecimal
 import org.ta4j.core.Indicator as _Ta4jIndicator
 
 open class Taj4NumIndicatorWrapper(
-    private val indicator: _Ta4jIndicator<Num>
+    private val ta4jIndicator: _Ta4jIndicator<Num>
 ) : Indicator {
     override operator fun get(index: Int): BigDecimal =
-        indicator.getValue(index).let {
+        ta4jIndicator.getValue(index).let {
             (it as DecimalNum).delegate
         }
 }

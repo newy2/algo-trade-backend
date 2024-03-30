@@ -106,10 +106,12 @@ class BaseBarSeriesAddBarTest {
     @Test
     fun `새로 추가하는 Bar 의 endTime 은 마지막 endTime 보다 커야한다`() {
         assertThrows<IllegalArgumentException>("마지막 endTime 과 같은 경우") {
-            series.addBar(decimalNumBar(endTime))
+            val sameEndTime = endTime
+            series.addBar(decimalNumBar(sameEndTime))
         }
         assertThrows<IllegalArgumentException>("마지막 endTime 보다 과거인 경우") {
-            series.addBar(decimalNumBar(endTime.minusMinutes(1)))
+            val beforeEndTime = endTime.minusMinutes(1)
+            series.addBar(decimalNumBar(beforeEndTime))
         }
     }
 
@@ -158,17 +160,13 @@ class BaseBarMaximumBarCountTest {
     @Test
     fun `BarSeries 에 등록된 Bar 는 FIFO 방식으로 제거된다`() {
         series.run {
-            assertEquals(4000, firstBar.closePrice.intValue())
             assertEquals(4000, getBar(beginIndex).closePrice.intValue())
-        }
-        series.run {
-            assertEquals(6000, lastBar.closePrice.intValue())
             assertEquals(6000, getBar(endIndex).closePrice.intValue())
         }
     }
 
     @Test
-    fun `BarSeries#getBar 함수를 사용시, index 범위를 벗어난 경우 에러가 발생한다`() {
+    fun `BarSeries#getBar 함수를 사용시, index 범위를 벗어난 경우`() {
         assertThrows<IndexOutOfBoundsException> {
             series.getBar(series.beginIndex - 1)
         }
