@@ -14,7 +14,6 @@ import org.ta4j.core.num.DecimalNum
 import org.ta4j.core.num.Num
 import java.time.Instant
 import java.time.ZoneOffset
-import kotlin.math.roundToInt
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
@@ -23,7 +22,7 @@ val bybitKlineList =
     SimpleCsvParser.parseFromResource("/csv/[ByBit] BTCUSDT - 1m - 1000count - until 2024-03-09T00:00Z(UTC).csv")
 
 const val TEST_TARGET_BAR_BEGIN_TIME = "2024-03-09T00:00Z"
-val TEST_TARGET_EXPECTED_VALUES = mapOf(
+val TEST_TARGET_BAR_EXPECTED_VALUES = mapOf(
     "RSI7" to 44.49,
     "RSI14" to 46.83,
     "RSI21" to 47.06,
@@ -31,7 +30,7 @@ val TEST_TARGET_EXPECTED_VALUES = mapOf(
     "EMA50" to 68232.69
 )
 
-fun getBarSeries(length: Int, list: Array<Array<String>> = bybitKlineList) = BaseBarSeries().also { results ->
+private fun getBarSeries(length: Int, list: Array<Array<String>> = bybitKlineList) = BaseBarSeries().also { results ->
     list.sliceArray(IntRange(0, length - 1))
         .also { it.reverse() }
         .forEach {
@@ -51,8 +50,8 @@ fun getBarSeries(length: Int, list: Array<Array<String>> = bybitKlineList) = Bas
         }
 }
 
-fun assertDoubleEquals(expected: Double, actual: Num) =
-    assertEquals(expected, (actual.doubleValue() * 100).roundToInt() / 100.0)
+fun assertDoubleNumEquals(expected: Double, actual: Num) =
+    assertEquals(expected, actual.doubleValue(), 0.005)
 
 @DisplayName("바이빗 BTC/USDT 클레인 데이터로 지수 검증하기")
 class IndicatorTest {
@@ -72,7 +71,7 @@ class IndicatorTest {
     fun `ADX14 지수`() {
         val indicator = ADXIndicator(series, 14)
 
-        assertDoubleEquals(TEST_TARGET_EXPECTED_VALUES.getValue("ADX14"), indicator.getValue(series.endIndex))
+        assertDoubleNumEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("ADX14"), indicator.getValue(series.endIndex))
     }
 
     @Test
@@ -80,7 +79,7 @@ class IndicatorTest {
         val basePrice = ClosePriceIndicator(series)
         val indicator = RSIIndicator(basePrice, 7)
 
-        assertDoubleEquals(TEST_TARGET_EXPECTED_VALUES.getValue("RSI7"), indicator.getValue(series.endIndex))
+        assertDoubleNumEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("RSI7"), indicator.getValue(series.endIndex))
     }
 
     @Test
@@ -88,7 +87,7 @@ class IndicatorTest {
         val basePrice = ClosePriceIndicator(series)
         val indicator = RSIIndicator(basePrice, 14)
 
-        assertDoubleEquals(TEST_TARGET_EXPECTED_VALUES.getValue("RSI14"), indicator.getValue(series.endIndex))
+        assertDoubleNumEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("RSI14"), indicator.getValue(series.endIndex))
     }
 
     @Test
@@ -96,7 +95,7 @@ class IndicatorTest {
         val basePrice = ClosePriceIndicator(series)
         val indicator = RSIIndicator(basePrice, 21)
 
-        assertDoubleEquals(TEST_TARGET_EXPECTED_VALUES.getValue("RSI21"), indicator.getValue(series.endIndex))
+        assertDoubleNumEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("RSI21"), indicator.getValue(series.endIndex))
     }
 
     @Test
@@ -104,7 +103,7 @@ class IndicatorTest {
         val basePrice = ClosePriceIndicator(series)
         val indicator = EMAIndicator(basePrice, 50)
 
-        assertDoubleEquals(TEST_TARGET_EXPECTED_VALUES.getValue("EMA50"), indicator.getValue(series.endIndex))
+        assertDoubleNumEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("EMA50"), indicator.getValue(series.endIndex))
     }
 }
 
@@ -120,8 +119,8 @@ class IndicatorExceptionTest {
             val indicator = EMAIndicator(basePrice, 50)
 
             assertThrows<AssertionFailedError> {
-                assertDoubleEquals(
-                    TEST_TARGET_EXPECTED_VALUES.getValue("EMA50"),
+                assertDoubleNumEquals(
+                    TEST_TARGET_BAR_EXPECTED_VALUES.getValue("EMA50"),
                     indicator.getValue(smallSizeSeries.endIndex)
                 )
             }
@@ -130,17 +129,25 @@ class IndicatorExceptionTest {
 }
 
 @DisplayName("테스트 헬퍼 메소드 테스트")
-class KotlinStudyTest {
+class JUnitStudyTest {
     @Test
-    fun `roundToInt 소수점 2자리 반올림 테스트`() {
-        assertEquals(1.22, (1.224 * 100).roundToInt() / 100.0)
-        assertEquals(1.23, (1.225 * 100).roundToInt() / 100.0)
+    fun `부동소수점 소수점 2자리 반올림`() {
+        Assertions.assertEquals(0.01, 0.01, 0.005)
+        Assertions.assertEquals(0.01, 0.009, 0.005)
+        Assertions.assertEquals(0.01, 0.008, 0.005)
+        Assertions.assertEquals(0.01, 0.007, 0.005)
+        Assertions.assertEquals(0.01, 0.006, 0.005)
+        Assertions.assertEquals(0.01, 0.005, 0.005)
+        Assertions.assertNotEquals(0.01, 0.004, 0.005)
+        Assertions.assertNotEquals(0.01, 0.003, 0.005)
+        Assertions.assertNotEquals(0.01, 0.002, 0.005)
+        Assertions.assertNotEquals(0.01, 0.001, 0.005)
     }
 
     @Test
     fun `assertDoubleEquals 헬퍼 메소드`() {
-        assertDoubleEquals(1.22, DecimalNum.valueOf(1.224))
-        assertDoubleEquals(1.23, DecimalNum.valueOf(1.225))
+        assertDoubleNumEquals(1.22, DecimalNum.valueOf(1.224))
+        assertDoubleNumEquals(1.23, DecimalNum.valueOf(1.225))
     }
 }
 
