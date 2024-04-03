@@ -288,8 +288,8 @@ class ConditionRuleTest {
     }
 }
 
-fun fixedDecimalIndicator(vararg values: Number) =
+private fun fixedDecimalIndicator(vararg values: Number) =
     FixedDecimalIndicator(BaseBarSeries(), *(values.map { it.toString() }.toTypedArray()))
 
-fun booleanRule(vararg values: Boolean) =
+private fun booleanRule(vararg values: Boolean) =
     BooleanIndicatorRule(FixedIndicator(BaseBarSeries(), *(values.toTypedArray())))

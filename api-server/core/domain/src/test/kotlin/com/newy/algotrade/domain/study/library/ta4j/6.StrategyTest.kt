@@ -3,10 +3,12 @@ package com.newy.algotrade.domain.study.library.ta4j
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.ta4j.core.BaseBarSeries
 import org.ta4j.core.BaseStrategy
 import org.ta4j.core.Strategy
+import org.ta4j.core.indicators.helpers.FixedIndicator
+import org.ta4j.core.rules.BooleanIndicatorRule
 import kotlin.test.assertTrue
-
 
 class BaseStrategyTest {
     private lateinit var strategy: Strategy
@@ -64,3 +66,6 @@ class BaseStrategyWithUnstablePeriodTest {
         assertTrue(strategy.shouldExit(2))
     }
 }
+
+private fun booleanRule(vararg values: Boolean) =
+    BooleanIndicatorRule(FixedIndicator(BaseBarSeries(), *(values.toTypedArray())))
