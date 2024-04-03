@@ -1,10 +1,6 @@
 package com.newy.algotrade.domain.unit.library.ta4j
 
 import com.newy.algotrade.domain.chart.*
-import com.newy.algotrade.domain.library.ta4j.Ta4jCandles
-import com.newy.algotrade.domain.library.ta4j.indicator.Ta4jADXIndicator
-import com.newy.algotrade.domain.library.ta4j.indicator.Ta4jEMAIndicator
-import com.newy.algotrade.domain.library.ta4j.indicator.Ta4jRSIIndicator
 import com.newy.algotrade.domain.study.library.ta4j.TEST_TARGET_BAR_EXPECTED_VALUES
 import com.newy.algotrade.domain.study.library.ta4j.bybitKlineList
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -15,16 +11,15 @@ import java.math.BigDecimal
 import java.time.Instant
 import java.time.ZoneOffset
 
-
 private fun getCandles(length: Int, list: Array<Array<String>> = bybitKlineList) =
-    Ta4jCandles().also { results ->
+    ChartFactory.TA4J.createCandles().also { results ->
         list.sliceArray(IntRange(0, length - 1))
             .also { it.reverse() }
             .forEach {
                 val beginTimeMillis = it[0].toLong()
                 val beginTime = Instant.ofEpochMilli(beginTimeMillis).atZone(ZoneOffset.UTC)
                 results.upsert(
-                    Candle.Factory.M1(
+                    Candle.TimeFrame.M1(
                         beginTime,
                         it[1].toBigDecimal(),
                         it[2].toBigDecimal(),
@@ -50,35 +45,35 @@ class IndicatorTest {
 
     @Test
     fun `ADX14 지표`() {
-        val indicator = Ta4jADXIndicator(candles, 14)
+        val indicator = ChartFactory.TA4J.createADXIndicator(candles, 14)
 
         assertBigDecimalEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("ADX14"), indicator[candles.lastIndex])
     }
 
     @Test
     fun `RSI7 지수`() {
-        val indicator = Ta4jRSIIndicator(candles, 7)
+        val indicator = ChartFactory.TA4J.createRSIIndicator(candles, 7)
 
         assertBigDecimalEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("RSI7"), indicator[candles.lastIndex])
     }
 
     @Test
     fun `RSI14 지수`() {
-        val indicator = Ta4jRSIIndicator(candles, 14)
+        val indicator = ChartFactory.TA4J.createRSIIndicator(candles, 14)
 
         assertBigDecimalEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("RSI14"), indicator[candles.lastIndex])
     }
 
     @Test
     fun `RSI21 지수`() {
-        val indicator = Ta4jRSIIndicator(candles, 21)
+        val indicator = ChartFactory.TA4J.createRSIIndicator(candles, 21)
 
         assertBigDecimalEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("RSI21"), indicator[candles.lastIndex])
     }
 
     @Test
     fun `EMA50 지수`() {
-        val indicator = Ta4jEMAIndicator(candles, 50)
+        val indicator = ChartFactory.TA4J.createEMAIndicator(candles, 50)
 
         assertBigDecimalEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("EMA50"), indicator[candles.lastIndex])
     }
@@ -99,7 +94,7 @@ class HelperFunctionTest {
     fun `바이빗 클레인 리스트 데이터로 BarSeries 생성하기`() {
         val candles = getCandles(2, bybitKlineList)
 
-        kotlin.test.assertEquals(2, candles.barCount)
+        kotlin.test.assertEquals(2, candles.size)
         candles[candles.lastIndex].time.begin.run {
             kotlin.test.assertEquals(1709942400000, toInstant().toEpochMilli(), "bybitKlineList[0][0].toLong() 과 같음")
             kotlin.test.assertEquals("2024-03-09T00:00Z", toString())

@@ -15,18 +15,17 @@ interface Candles {
         add(candle, isReplace(candle))
     }
 
+    private fun validate(candle: Candle) {
+        if (size == 0) {
+            return
+        }
+        this[lastIndex].time.validate(nextTime = candle.time)
+    }
+
     private fun isReplace(candle: Candle) =
         if (size == 0) {
             false
         } else {
             this[lastIndex].time == candle.time
         }
-
-    private fun validate(candle: Candle) {
-        if (size == 0) {
-            return
-        }
-
-        this[lastIndex].time.checkNextTime(candle.time)
-    }
 }

@@ -16,7 +16,7 @@ fun asBar(candle: Candle) = BaseBar(
 )
 
 fun Bar.toCandle() =
-    (Candle.Factory.from(this.timePeriod)!!)(
+    (Candle.TimeFrame.from(this.timePeriod)!!)(
         this.beginTime,
         (this.openPrice as DecimalNum).delegate,
         (this.highPrice as DecimalNum).delegate,

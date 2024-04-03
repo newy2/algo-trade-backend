@@ -1,6 +1,8 @@
 package com.newy.algotrade.domain.unit.library.ta4j
 
 import com.newy.algotrade.domain.chart.Candle
+import com.newy.algotrade.domain.chart.Candles
+import com.newy.algotrade.domain.chart.ChartFactory
 import com.newy.algotrade.domain.library.ta4j.Ta4jCandles
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -11,7 +13,7 @@ import java.time.ZonedDateTime
 import kotlin.test.assertEquals
 
 private fun oneMinuteCandle(beginTime: ZonedDateTime, price: Number) =
-    Candle.Factory.M1(
+    Candle.TimeFrame.M1(
         beginTime,
         openPrice = price.toDouble().toBigDecimal(),
         highPrice = price.toDouble().toBigDecimal(),
@@ -21,7 +23,7 @@ private fun oneMinuteCandle(beginTime: ZonedDateTime, price: Number) =
     )
 
 private fun oneHourCandle(beginTime: ZonedDateTime, price: Number) =
-    Candle.Factory.H1(
+    Candle.TimeFrame.H1(
         beginTime,
         openPrice = price.toDouble().toBigDecimal(),
         highPrice = price.toDouble().toBigDecimal(),
@@ -34,7 +36,7 @@ private fun oneHourCandle(beginTime: ZonedDateTime, price: Number) =
 class EmptyTa4jCandlesTest {
     @Test
     fun `기본 생성자`() {
-        val candles = Ta4jCandles()
+        val candles = ChartFactory.TA4J.createCandles()
 
         assertEquals(0, candles.size)
         assertEquals(400, candles.maxSize)
@@ -45,12 +47,13 @@ class EmptyTa4jCandlesTest {
 
 @DisplayName("기본 기능 테스트")
 class Ta4jCandlesTest {
-    private val beginTime = ZonedDateTime.parse("2024-03-09T00:00:00Z")
-    private lateinit var candles: Ta4jCandles
+    private lateinit var beginTime: ZonedDateTime
+    private lateinit var candles: Candles
 
     @BeforeEach
     fun setUp() {
-        candles = Ta4jCandles().also {
+        beginTime = ZonedDateTime.parse("2024-03-09T00:00:00Z")
+        candles = ChartFactory.TA4J.createCandles().also {
             it.upsert(oneMinuteCandle(beginTime, 1000))
         }
     }

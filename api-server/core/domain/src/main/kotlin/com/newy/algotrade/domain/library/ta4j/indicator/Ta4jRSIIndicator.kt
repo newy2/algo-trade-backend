@@ -1,10 +1,9 @@
 package com.newy.algotrade.domain.library.ta4j.indicator
 
-import com.newy.algotrade.domain.chart.Candles
 import org.ta4j.core.BarSeries
 import org.ta4j.core.indicators.RSIIndicator
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator
 
-class Ta4jRSIIndicator(candles: Candles, candleCount: Int) : Taj4NumIndicatorWrapper(
-    RSIIndicator(ClosePriceIndicator(candles as BarSeries), candleCount)
+class Ta4jRSIIndicator(barSeries: BarSeries, candleCount: Int) : Taj4NumIndicatorWrapper(
+    RSIIndicator(ClosePriceIndicator(barSeries), candleCount)
 )

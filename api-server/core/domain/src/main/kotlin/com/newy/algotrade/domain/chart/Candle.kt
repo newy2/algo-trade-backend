@@ -17,18 +17,17 @@ data class Candle private constructor(
     }
 
     private fun validate() {
-        if (highPrice < lowPrice) {
-            throw IllegalArgumentException("highPrice 는 lowPrice 보다 작을 수 없습니다. highPrice($highPrice) < lowPrice($lowPrice)")
-        }
-        if (openPrice < lowPrice || highPrice < openPrice) {
-            throw IllegalArgumentException("잘못된 openPrice 입니다. lowPrice($lowPrice) =< openPrice($openPrice) =< highPrice($highPrice)")
-        }
-        if (closePrice < lowPrice || highPrice < closePrice) {
-            throw IllegalArgumentException("잘못된 closePrice 입니다. lowPrice($lowPrice) =< closePrice($closePrice) =< highPrice($highPrice)")
-        }
+        arrayOf(lowPrice, openPrice, closePrice, highPrice)
+            .also {
+                it.sort()
+            }.let {
+                if (it.first() != lowPrice || it.last() != highPrice) {
+                    throw IllegalArgumentException("잘못된 price 입니다. lowPrice($lowPrice) =< openPrice($openPrice), closePrice($closePrice) =< highPrice($highPrice)")
+                }
+            }
     }
 
-    enum class Factory(private val timePeriod: Duration) {
+    enum class TimeFrame(private val timePeriod: Duration) {
         M1(Duration.ofMinutes(1)),
         M3(Duration.ofMinutes(3)),
         M5(Duration.ofMinutes(5)),
@@ -54,7 +53,7 @@ data class Candle private constructor(
 
         companion object {
             fun from(timePeriod: Duration) =
-                Factory.values().find { it.timePeriod == timePeriod }
+                TimeFrame.values().find { it.timePeriod == timePeriod }
         }
     }
 
@@ -67,10 +66,11 @@ data class Candle private constructor(
             period == other.period
 
         private fun isOverlap(other: TimeRange) =
-            begin.isBefore(other.begin) && end.isAfter(other.begin)
-//        begin < other.begin && other.begin < end
+            other.begin.let { otherBegin ->
+                begin < otherBegin && otherBegin < end
+            }
 
-        fun checkNextTime(nextTime: TimeRange) {
+        fun validate(nextTime: TimeRange) {
             if (!isSamePeriod(nextTime)) {
                 throw IllegalArgumentException("시간 간격이 다릅니다. [period(${period}) != nextTime#period(${nextTime.period})]")
             }
