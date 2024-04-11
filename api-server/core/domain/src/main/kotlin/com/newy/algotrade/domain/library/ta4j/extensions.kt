@@ -8,10 +8,10 @@ import org.ta4j.core.num.DecimalNum
 fun asBar(candle: Candle) = BaseBar(
     candle.time.period,
     candle.time.end,
-    candle.openPrice,
-    candle.highPrice,
-    candle.lowPrice,
-    candle.closePrice,
+    candle.price.open,
+    candle.price.high,
+    candle.price.low,
+    candle.price.close,
     candle.volume
 )
 

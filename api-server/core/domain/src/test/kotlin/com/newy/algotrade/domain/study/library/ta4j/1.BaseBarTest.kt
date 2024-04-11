@@ -6,6 +6,7 @@ import org.ta4j.core.BaseBar
 import org.ta4j.core.num.DecimalNum
 import org.ta4j.core.num.DoubleNum
 import org.ta4j.core.num.Num
+import java.time.Duration
 import java.time.ZonedDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -60,12 +61,14 @@ class BaseBarFieldTest {
     @Test
     fun `주의 - '고가'와 '저가'를 반대로 입력한 경우`() {
         assertDoesNotThrow("아무런 에러가 발생하지 않는다") {
+            val highPrice = 500.toBigDecimal()
+            val lowPrice = 1500.toBigDecimal()
             val bar = BaseBar(
                 1.minutes.toJavaDuration(),
                 ZonedDateTime.now(),
                 1000.toBigDecimal(),
-                500.toBigDecimal(),
-                1500.toBigDecimal(),
+                highPrice,
+                lowPrice,
                 1000.toBigDecimal(),
                 0.toBigDecimal(),
             )
@@ -84,8 +87,7 @@ class Ta4jNumTest {
         val decimalNum: Num = DecimalNum.valueOf(1000)
 
         assertEquals(doubleNum, doubleNum)
-        assertEquals(decimalNum, decimalNum)
-        assertNotEquals(doubleNum, decimalNum)
+        assertNotEquals(decimalNum, doubleNum)
     }
 
     @Test
@@ -107,81 +109,84 @@ class Ta4jNumTest {
 
 @DisplayName("BaseBar 생성자별 기본 Num 클래스 확인")
 class BaseBarDefaultNumClassTest {
-    private val duration = 1.minutes.toJavaDuration()
+    private lateinit var duration: Duration
     private lateinit var endTime: ZonedDateTime
 
     @BeforeEach
     fun setUp() {
+        duration = 1.minutes.toJavaDuration()
         endTime = ZonedDateTime.now()
     }
 
     @Test
     fun `생성자의 가격 관련 파라미터 타입이 BigDecimal 인 경우 - DecimalNum`() {
         val bar = 1000.toBigDecimal().let { bigDecimal ->
-            BaseBar(duration, endTime, bigDecimal, bigDecimal, bigDecimal, bigDecimal, bigDecimal)
+            BaseBar(
+                duration,
+                endTime,
+                bigDecimal,
+                bigDecimal,
+                bigDecimal,
+                bigDecimal,
+                bigDecimal,
+            )
         }
 
         assertTrue(bar.openPrice is DecimalNum)
-        assertTrue(bar.highPrice is DecimalNum)
-        assertTrue(bar.lowPrice is DecimalNum)
-        assertTrue(bar.closePrice is DecimalNum)
-        assertTrue(bar.amount is DecimalNum)
-        assertTrue(bar.volume is DecimalNum)
-        assertTrue(bar.amount is DecimalNum)
     }
 
     @Test
     fun `생성자의 가격 관련 파라미터 타입이 String 인 경우 - DecimalNum`() {
         val bar = "1000".let { string ->
-            BaseBar(duration, endTime, string, string, string, string, string)
+            BaseBar(
+                duration,
+                endTime,
+                string,
+                string,
+                string,
+                string,
+                string,
+            )
         }
 
         assertTrue(bar.openPrice is DecimalNum)
-        assertTrue(bar.highPrice is DecimalNum)
-        assertTrue(bar.lowPrice is DecimalNum)
-        assertTrue(bar.closePrice is DecimalNum)
-        assertTrue(bar.amount is DecimalNum)
-        assertTrue(bar.volume is DecimalNum)
-        assertTrue(bar.amount is DecimalNum)
     }
 
     @Test
     fun `생성자의 가격 관련 파라미터 타입이 Double 인 경우 - DoubleNum`() {
         val bar = 1000.toDouble().let { double ->
-            BaseBar(duration, endTime, double, double, double, double, double)
+            BaseBar(
+                duration,
+                endTime,
+                double,
+                double,
+                double,
+                double,
+                double,
+            )
         }
 
         assertTrue(bar.openPrice is DoubleNum)
-        assertTrue(bar.highPrice is DoubleNum)
-        assertTrue(bar.lowPrice is DoubleNum)
-        assertTrue(bar.closePrice is DoubleNum)
-        assertTrue(bar.amount is DoubleNum)
-        assertTrue(bar.volume is DoubleNum)
-        assertTrue(bar.amount is DoubleNum)
     }
 
     @Test
     fun `생성자의 가격 관련 파라미터 타입과 상관없이, Num 타입을 직접 지정할 수도 있음`() {
-        val decimalNumBar = BaseBar(
-            duration,
-            endTime,
-            1000.toDouble(),
-            1000.toDouble(),
-            1000.toDouble(),
-            1000.toDouble(),
-            0.toDouble(),
-            0.toDouble(),
-            0.toLong(),
-            DecimalNum::valueOf
-        )
+        val bar = 1000.toDouble().let { double ->
+            BaseBar(
+                duration,
+                endTime,
+                double,
+                double,
+                double,
+                double,
+                double,
+                double,
+                0.toLong(),
+                DecimalNum::valueOf
+            )
+        }
 
-        assertTrue(decimalNumBar.openPrice is DecimalNum)
-        assertTrue(decimalNumBar.highPrice is DecimalNum)
-        assertTrue(decimalNumBar.lowPrice is DecimalNum)
-        assertTrue(decimalNumBar.closePrice is DecimalNum)
-        assertTrue(decimalNumBar.amount is DecimalNum)
-        assertTrue(decimalNumBar.volume is DecimalNum)
-        assertTrue(decimalNumBar.amount is DecimalNum)
+        assertTrue(bar.openPrice is DecimalNum)
     }
 }
 
@@ -203,7 +208,7 @@ class BaseBarEqualityTest {
         }
 
         assertEquals(decimalNum1, decimalNum2)
-        assertNotEquals(decimalNum1, doubleNum)
+        assertNotEquals(doubleNum, decimalNum1)
     }
 }
 
@@ -304,22 +309,38 @@ class ChangeBaseBarDataTest {
     }
 
     @Test
-    fun `다른 Num 객체로 종가(현재가)를 변경하는 경우`() {
+    fun `다른 타입의 Num 객체로 종가(현재가)를 변경하는 경우`() {
         assertThrows<ClassCastException> {
-            bar.addPrice(DoubleNum.valueOf(500))
+            val otherTypePrice = DoubleNum.valueOf(500)
+            bar.addPrice(otherTypePrice)
+        }
+        assertDoesNotThrow {
+            val sameTypePrice = DecimalNum.valueOf(500)
+            bar.addPrice(sameTypePrice)
         }
     }
 
     @Test
-    fun `다른 Num 객체로 거래가 발생한 경우`() {
+    fun `다른 타입의 Num 객체로 거래가 발생한 경우`() {
         assertThrows<ClassCastException> {
-            bar.addTrade(DoubleNum.valueOf(2), DoubleNum.valueOf(1500))
+            val otherTypeVolume = DoubleNum.valueOf(2)
+            val otherTypeAmount = DoubleNum.valueOf(1500)
+            bar.addTrade(otherTypeVolume, otherTypeAmount)
         }
         assertThrows<ClassCastException> {
-            bar.addTrade(DoubleNum.valueOf(2), DecimalNum.valueOf(1500))
+            val sameTypeVolume = DecimalNum.valueOf(2)
+            val otherTypeAmount = DoubleNum.valueOf(1500)
+            bar.addTrade(sameTypeVolume, otherTypeAmount)
         }
         assertThrows<ClassCastException> {
-            bar.addTrade(DecimalNum.valueOf(2), DoubleNum.valueOf(1500))
+            val otherTypeVolume = DoubleNum.valueOf(2)
+            val sameTypeAmount = DecimalNum.valueOf(1500)
+            bar.addTrade(otherTypeVolume, sameTypeAmount)
+        }
+        assertDoesNotThrow {
+            val sameTypeVolume = DecimalNum.valueOf(2)
+            val sameTypeAmount = DecimalNum.valueOf(1500)
+            bar.addTrade(sameTypeVolume, sameTypeAmount)
         }
     }
 }

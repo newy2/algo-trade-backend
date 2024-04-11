@@ -5,20 +5,16 @@ import com.newy.algotrade.domain.chart.Rule
 
 open class CrossedUpRule(private val upper: Indicator, private val lower: Indicator) : Rule {
     override fun isSatisfied(index: Int): Boolean {
-        return calculate(index)
-    }
-
-    private fun calculate(currentIndex: Int): Boolean {
-        if (currentIndex == 0 || upper[currentIndex] <= lower[currentIndex]) {
+        if (index == 0 || upper[index] <= lower[index]) {
             return false
         }
 
-        val beforeIndex = findBeforeIndex(currentIndex)
+        val beforeIndex = findBeforeIndex(currentIndex = index)
         return upper[beforeIndex] < lower[beforeIndex]
     }
 
-    private fun findBeforeIndex(index: Int): Int {
-        var result = index
+    private fun findBeforeIndex(currentIndex: Int): Int {
+        var result = currentIndex
 
         do {
             result--

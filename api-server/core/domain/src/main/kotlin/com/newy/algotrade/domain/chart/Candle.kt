@@ -6,27 +6,9 @@ import java.time.ZonedDateTime
 
 data class Candle private constructor(
     val time: TimeRange,
-    val openPrice: BigDecimal,
-    val highPrice: BigDecimal,
-    val lowPrice: BigDecimal,
-    val closePrice: BigDecimal,
+    val price: Price,
     val volume: BigDecimal,
 ) {
-    init {
-        validate()
-    }
-
-    private fun validate() {
-        arrayOf(lowPrice, openPrice, closePrice, highPrice)
-            .also {
-                it.sort()
-            }.let {
-                if (it.first() != lowPrice || it.last() != highPrice) {
-                    throw IllegalArgumentException("잘못된 price 입니다. lowPrice($lowPrice) =< openPrice($openPrice), closePrice($closePrice) =< highPrice($highPrice)")
-                }
-            }
-    }
-
     enum class TimeFrame(private val timePeriod: Duration) {
         M1(Duration.ofMinutes(1)),
         M3(Duration.ofMinutes(3)),
@@ -44,10 +26,12 @@ data class Candle private constructor(
             volume: BigDecimal = BigDecimal.ZERO,
         ) = Candle(
             TimeRange(this.timePeriod, beginTime),
-            openPrice,
-            highPrice,
-            lowPrice,
-            closePrice,
+            Price(
+                openPrice,
+                highPrice,
+                lowPrice,
+                closePrice,
+            ),
             volume,
         )
 
@@ -76,6 +60,27 @@ data class Candle private constructor(
             }
             if (isOverlap(nextTime)) {
                 throw IllegalArgumentException("시간이 겹칩니다. (begin(${begin}) < nextTime#begin(${nextTime.begin}) < end(${end}))")
+            }
+        }
+    }
+
+    data class Price(
+        val open: BigDecimal,
+        val high: BigDecimal,
+        val low: BigDecimal,
+        val close: BigDecimal,
+    ) {
+        init {
+            validate()
+        }
+
+        private fun validate() {
+            arrayOf(low, open, close, high).also {
+                it.sort()
+            }.let {
+                if (it.first() != low || it.last() != high) {
+                    throw IllegalArgumentException("잘못된 price 입니다. low($low) =< open($open), close($close) =< high($high)")
+                }
             }
         }
     }

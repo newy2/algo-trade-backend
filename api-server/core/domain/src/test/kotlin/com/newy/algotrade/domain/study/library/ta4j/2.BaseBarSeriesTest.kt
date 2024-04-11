@@ -6,30 +6,29 @@ import org.ta4j.core.BaseBar
 import org.ta4j.core.BaseBarSeries
 import org.ta4j.core.num.DecimalNum
 import org.ta4j.core.num.DoubleNum
-import java.math.BigDecimal
 import java.time.ZonedDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
 
-fun decimalNumBar(endTime: ZonedDateTime, price: BigDecimal = 1000.toBigDecimal()) = BaseBar(
+fun decimalNumBar(endTime: ZonedDateTime, price: Number = 1000) = BaseBar(
     1.minutes.toJavaDuration(),
     endTime,
-    price,
-    price,
-    price,
-    price,
+    price.toDouble().toBigDecimal(),
+    price.toDouble().toBigDecimal(),
+    price.toDouble().toBigDecimal(),
+    price.toDouble().toBigDecimal(),
     0.toBigDecimal(),
 )
 
-fun doubleNumBar(endTime: ZonedDateTime, price: Double = 1000.toDouble()) = BaseBar(
+fun doubleNumBar(endTime: ZonedDateTime, price: Number = 1000) = BaseBar(
     1.minutes.toJavaDuration(),
     endTime,
-    price,
-    price,
-    price,
-    price,
+    price.toDouble(),
+    price.toDouble(),
+    price.toDouble(),
+    price.toDouble(),
     0.toDouble(),
 )
 
@@ -59,14 +58,13 @@ class BaseBarSeriesNumTypeTest {
 
     @Test
     fun `다른 Num 타입의 Bar 를 추가하는 경우 에러 발생한다`() {
-        val notDecimalNumBar = doubleNumBar(ZonedDateTime.now())
-        val notDoubleNumBar = decimalNumBar(ZonedDateTime.now())
-
-        assertThrows<IllegalArgumentException>("다른 Num 타입의 Bar 를 추가한 경우") {
-            decimalNumBarSeries.addBar(notDecimalNumBar)
+        assertThrows<IllegalArgumentException>("Decimal 시리즈에 Double 바를 추가한 경우") {
+            val otherTypeNumBar = doubleNumBar(ZonedDateTime.now())
+            decimalNumBarSeries.addBar(otherTypeNumBar)
         }
-        assertThrows<IllegalArgumentException>("다른 Num 타입의 Bar 를 추가한 경우") {
-            doubleNumBarSeries.addBar(notDoubleNumBar)
+        assertThrows<IllegalArgumentException>("Double 시리즈에 Decimal 바를 추가한 경우") {
+            val otherTypeNumBar = decimalNumBar(ZonedDateTime.now())
+            doubleNumBarSeries.addBar(otherTypeNumBar)
         }
     }
 }
@@ -81,25 +79,26 @@ class BaseBarSeriesAddBarTest {
     fun setUp() {
         endTime = ZonedDateTime.now()
         series = BaseBarSeries().also {
-            it.addBar(decimalNumBar(endTime, 1000.toBigDecimal()))
+            it.addBar(decimalNumBar(endTime, 1000))
         }
     }
 
     @Test
     fun `Bar 추가하기`() {
-        series.addBar(decimalNumBar(endTime.plusMinutes(1), 2000.toBigDecimal()))
-        series.addBar(decimalNumBar(endTime.plusMinutes(2), 3000.toBigDecimal()))
+        val nextEndTime = endTime.plusMinutes(1)
 
-        assertEquals(3, series.barCount)
+        series.addBar(decimalNumBar(nextEndTime, 2000))
+
+        assertEquals(2, series.barCount)
         series.run {
             // 첫 번째 Bar 를 가져오는 방법
-            assertEquals(1000, getBar(beginIndex).closePrice.intValue())
-            assertEquals(1000, firstBar.closePrice.intValue())
+            assertEquals(decimalNumBar(endTime, 1000), getBar(beginIndex))
+            assertEquals(decimalNumBar(endTime, 1000), firstBar)
         }
         series.run {
             // 마지막 Bar 를 가져오는 방법
-            assertEquals(3000, getBar(endIndex).closePrice.intValue())
-            assertEquals(3000, lastBar.closePrice.intValue())
+            assertEquals(decimalNumBar(nextEndTime, 2000), getBar(endIndex))
+            assertEquals(decimalNumBar(nextEndTime, 2000), lastBar)
         }
     }
 
@@ -119,10 +118,11 @@ class BaseBarSeriesAddBarTest {
     fun `BarSeries 의 마지막 Bar 를 교체하는 방법`() {
         val sameEndTime = endTime
         val isReplace = true
-        series.addBar(decimalNumBar(sameEndTime, 2000.toBigDecimal()), isReplace)
+
+        series.addBar(decimalNumBar(sameEndTime, 2000), isReplace)
 
         assertEquals(1, series.barCount)
-        assertEquals(2000, series.lastBar.closePrice.intValue())
+        assertEquals(decimalNumBar(endTime, 2000), series.lastBar)
     }
 }
 
@@ -138,12 +138,12 @@ class BaseBarMaximumBarCountTest {
 
         series.maximumBarCount = 3
 
-        series.addBar(decimalNumBar(endTime.plusMinutes(0), 1000.toBigDecimal()))
-        series.addBar(decimalNumBar(endTime.plusMinutes(1), 2000.toBigDecimal()))
-        series.addBar(decimalNumBar(endTime.plusMinutes(2), 3000.toBigDecimal()))
-        series.addBar(decimalNumBar(endTime.plusMinutes(3), 4000.toBigDecimal()))
-        series.addBar(decimalNumBar(endTime.plusMinutes(4), 5000.toBigDecimal()))
-        series.addBar(decimalNumBar(endTime.plusMinutes(5), 6000.toBigDecimal()))
+        series.addBar(decimalNumBar(endTime.plusMinutes(0), 1000))
+        series.addBar(decimalNumBar(endTime.plusMinutes(1), 2000))
+        series.addBar(decimalNumBar(endTime.plusMinutes(2), 3000))
+        series.addBar(decimalNumBar(endTime.plusMinutes(3), 4000))
+        series.addBar(decimalNumBar(endTime.plusMinutes(4), 5000))
+        series.addBar(decimalNumBar(endTime.plusMinutes(5), 6000))
     }
 
     @Test
@@ -160,8 +160,8 @@ class BaseBarMaximumBarCountTest {
     @Test
     fun `BarSeries 에 등록된 Bar 는 FIFO 방식으로 제거된다`() {
         series.run {
-            assertEquals(4000, getBar(beginIndex).closePrice.intValue())
-            assertEquals(6000, getBar(endIndex).closePrice.intValue())
+            assertEquals(decimalNumBar(endTime.plusMinutes(3), 4000), getBar(beginIndex))
+            assertEquals(decimalNumBar(endTime.plusMinutes(5), 6000), getBar(endIndex))
         }
     }
 
@@ -178,12 +178,12 @@ class BaseBarMaximumBarCountTest {
     @Test
     fun `BarSeries#getBar 함수 사용시, index 에 정확히 매칭되지 않는 경우, 첫번 째 Bar 를 리턴한다`() {
         series.run {
-            assertEquals(4000, getBar(endIndex - 5).closePrice.intValue())
-            assertEquals(4000, getBar(endIndex - 4).closePrice.intValue(), "특이 케이스: firstBar 리턴")
-            assertEquals(4000, getBar(endIndex - 3).closePrice.intValue(), "특이 케이스: firstBar 리턴")
-            assertEquals(4000, getBar(endIndex - 2).closePrice.intValue(), "특이 케이스: firstBar 리턴")
-            assertEquals(5000, getBar(endIndex - 1).closePrice.intValue())
-            assertEquals(6000, getBar(endIndex - 0).closePrice.intValue())
+            assertEquals(decimalNumBar(endTime.plusMinutes(3), 4000), getBar(endIndex - 5))
+            assertEquals(decimalNumBar(endTime.plusMinutes(3), 4000), getBar(endIndex - 4), "특이 케이스: firstBar 리턴")
+            assertEquals(decimalNumBar(endTime.plusMinutes(3), 4000), getBar(endIndex - 3), "특이 케이스: firstBar 리턴")
+            assertEquals(decimalNumBar(endTime.plusMinutes(3), 4000), getBar(endIndex - 2), "특이 케이스: firstBar 리턴")
+            assertEquals(decimalNumBar(endTime.plusMinutes(4), 5000), getBar(endIndex - 1))
+            assertEquals(decimalNumBar(endTime.plusMinutes(5), 6000), getBar(endIndex - 0))
         }
     }
 
@@ -191,8 +191,8 @@ class BaseBarMaximumBarCountTest {
     fun `maximumBarCount 를 나중에 설정해도 효과는 같다`() {
         val series = BaseBarSeries()
         val endTime = ZonedDateTime.now()
-        series.addBar(decimalNumBar(endTime.plusMinutes(0), 1000.toBigDecimal()))
-        series.addBar(decimalNumBar(endTime.plusMinutes(1), 2000.toBigDecimal()))
+        series.addBar(decimalNumBar(endTime.plusMinutes(0), 1000))
+        series.addBar(decimalNumBar(endTime.plusMinutes(1), 2000))
 
         series.maximumBarCount = 1
 

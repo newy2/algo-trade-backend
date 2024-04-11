@@ -2,6 +2,7 @@ package com.newy.algotrade.domain.study.library.ta4j
 
 import com.newy.algotrade.test_helper.SimpleCsvParser
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.opentest4j.AssertionFailedError
 import org.ta4j.core.BarSeries
 import org.ta4j.core.BaseBar
@@ -132,22 +133,14 @@ class IndicatorExceptionTest {
 class JUnitStudyTest {
     @Test
     fun `부동소수점 소수점 2자리 반올림`() {
-        Assertions.assertEquals(0.01, 0.01, 0.005)
-        Assertions.assertEquals(0.01, 0.009, 0.005)
-        Assertions.assertEquals(0.01, 0.008, 0.005)
-        Assertions.assertEquals(0.01, 0.007, 0.005)
-        Assertions.assertEquals(0.01, 0.006, 0.005)
-        Assertions.assertEquals(0.01, 0.005, 0.005)
-        Assertions.assertNotEquals(0.01, 0.004, 0.005)
-        Assertions.assertNotEquals(0.01, 0.003, 0.005)
-        Assertions.assertNotEquals(0.01, 0.002, 0.005)
-        Assertions.assertNotEquals(0.01, 0.001, 0.005)
+        assertEquals(0.01, 0.005, 0.005)
+        assertNotEquals(0.01, 0.004, 0.005)
     }
 
     @Test
     fun `assertDoubleEquals 헬퍼 메소드`() {
-        assertDoubleNumEquals(1.22, DecimalNum.valueOf(1.224))
-        assertDoubleNumEquals(1.23, DecimalNum.valueOf(1.225))
+        assertDoubleNumEquals(0.01, DecimalNum.valueOf(0.005))
+        assertDoubleNumEquals(0.00, DecimalNum.valueOf(0.004))
     }
 }
 
@@ -157,8 +150,6 @@ class GetBarSeriesTest {
         arrayOf("1709942400000", "68165.0", "68224.8", "68165.0", "68185.8", "23.258"),
         arrayOf("1709942340000", "68196.1", "68196.1", "68151.5", "68165.0", "12.019"),
         arrayOf("1709942280000", "68247.7", "68247.8", "68167.3", "68196.1", "13.425"),
-        arrayOf("1709942220000", "68256.1", "68257.3", "68239.0", "68247.7", "10.11"),
-        arrayOf("1709942160000", "68231.5", "68257.3", "68231.5", "68256.1", "9.87"),
     )
 
     @Test

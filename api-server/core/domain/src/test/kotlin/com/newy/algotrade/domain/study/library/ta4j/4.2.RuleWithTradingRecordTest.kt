@@ -31,9 +31,9 @@ class OpenedPositionMinimumBarCountRuleTest {
 
     @Test
     fun `거래가 없는 경우 항상 false 리턴`() {
-        assertFalse(rule.isSatisfied(0, record))
-        assertFalse(rule.isSatisfied(1, record))
-        assertFalse(rule.isSatisfied(2, record))
+        (0..10).forEach { index ->
+            assertFalse(rule.isSatisfied(index, record))
+        }
     }
 
     @Test
@@ -69,9 +69,9 @@ class WaitForRuleTest {
 
     @Test
     fun `거래가 없는 경우 항상 false 리턴`() {
-        assertFalse(rule.isSatisfied(0, record))
-        assertFalse(rule.isSatisfied(1, record))
-        assertFalse(rule.isSatisfied(2, record))
+        (0..10).forEach { index ->
+            assertFalse(rule.isSatisfied(index, record))
+        }
     }
 
     @Test
@@ -135,10 +135,10 @@ class DownFlowStopGainOrLossRuleTest {
     fun setUp() {
         series = BaseBarSeries().also {
             val now = ZonedDateTime.now()
-            it.addBar(baseBar(closePrice = 1000 - (1000 * .00), endTime = now.plusMinutes(0)))
-            it.addBar(baseBar(closePrice = 1000 - (1000 * .09), endTime = now.plusMinutes(1)))
-            it.addBar(baseBar(closePrice = 1000 - (1000 * .10), endTime = now.plusMinutes(2)))
-            it.addBar(baseBar(closePrice = 1000 - (1000 * .11), endTime = now.plusMinutes(3)))
+            it.addBar(baseBar(closePrice = 1000, endTime = now.plusMinutes(0)))
+            it.addBar(baseBar(closePrice = 1000 * (1 - .09), endTime = now.plusMinutes(1)))
+            it.addBar(baseBar(closePrice = 1000 * (1 - .10), endTime = now.plusMinutes(2)))
+            it.addBar(baseBar(closePrice = 1000 * (1 - .11), endTime = now.plusMinutes(3)))
         }
 
         val closePriceIndicator = ClosePriceIndicator(series)
@@ -200,10 +200,10 @@ class UpFlowStopGainOrLossRuleTest {
     fun setUp() {
         series = BaseBarSeries().also {
             val now = ZonedDateTime.now()
-            it.addBar(baseBar(closePrice = 1000 + (1000 * .00), endTime = now.plusMinutes(0)))
-            it.addBar(baseBar(closePrice = 1000 + (1000 * .09), endTime = now.plusMinutes(1)))
-            it.addBar(baseBar(closePrice = 1000 + (1000 * .10), endTime = now.plusMinutes(2)))
-            it.addBar(baseBar(closePrice = 1000 + (1000 * .11), endTime = now.plusMinutes(3)))
+            it.addBar(baseBar(closePrice = 1000, endTime = now.plusMinutes(0)))
+            it.addBar(baseBar(closePrice = 1000 * (1 + .09), endTime = now.plusMinutes(1)))
+            it.addBar(baseBar(closePrice = 1000 * (1 + .10), endTime = now.plusMinutes(2)))
+            it.addBar(baseBar(closePrice = 1000 * (1 + .11), endTime = now.plusMinutes(3)))
         }
 
         val closePriceIndicator = ClosePriceIndicator(series)

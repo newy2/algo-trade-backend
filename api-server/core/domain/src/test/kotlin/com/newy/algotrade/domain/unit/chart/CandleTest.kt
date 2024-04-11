@@ -33,13 +33,13 @@ class CandleTest {
             assertEquals(beginTime.plusMinutes(1), end)
             assertEquals(1.minutes.toJavaDuration(), period)
         }
-        candle.run {
-            assertEquals(1000.toBigDecimal(), openPrice)
-            assertEquals(2000.toBigDecimal(), highPrice)
-            assertEquals(500.toBigDecimal(), lowPrice)
-            assertEquals(1500.toBigDecimal(), closePrice)
-            assertEquals(0.toBigDecimal(), volume)
+        candle.price.run {
+            assertEquals(1000.toBigDecimal(), open)
+            assertEquals(2000.toBigDecimal(), high)
+            assertEquals(500.toBigDecimal(), low)
+            assertEquals(1500.toBigDecimal(), close)
         }
+        assertEquals(0.toBigDecimal(), candle.volume)
     }
 
     @Test
