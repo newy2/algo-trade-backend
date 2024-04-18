@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+    <property name="currentTable" value="market_server" global="false"/>
+    <property name="currentTableComment" value="증권사 서버정보" global="false"/>
+
+    <property name="referenceTable" value="market" global="false"/>
+
+    <changeSet author="newy" id="1">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="${referenceTable}"/>
+        </preConditions>
+
+        <createTable tableName="${currentTable}" remarks="${currentTableComment}">
+            <!-- PK, FK -->
+            <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
+            </column>
+            <column name="${referenceTable}_id" type="BIGINT" remarks="증권사 ID">
+                <constraints
+                        referencedTableName="${referenceTable}"
+                        referencedColumnNames="id"
+                        foreignKeyName="${currentTable}__${referenceTable}_id_fk"
+                        deleteCascade="true"
+                        nullable="false"
+                        unique="true"
+                />
+            </column>
+
+            <!-- 일반 필드 -->
+            <column name="production_server_yn" type="CHAR(1)" remarks="프로덕션 서버 여부" defaultValue="N">
+                <constraints nullable="false"/>
+            </column>
+            <column name="web_server_host" type="VARCHAR2(300)" remarks="웹서버 URL HOST">
+                <constraints nullable="false"/>
+            </column>
+            <column name="web_socket_host" type="VARCHAR2(300)" remarks="웹소켓 URL HOST">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- 생성/변경 일시 -->
+            <column name="created_at" type="DATETIME" remarks="생성일시" defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="DATETIME" remarks="변경일시" defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- pro 모드 대체 로직  -->
+        <sql>
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__production_server_yn_check CHECK (production_server_yn IN ('Y', 'N'))
+        </sql>
+    </changeSet>
+</databaseChangeLog>

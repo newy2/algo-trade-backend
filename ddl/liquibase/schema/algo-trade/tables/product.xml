@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+    <property name="currentTable" value="product" global="false"/>
+    <property name="currentTableComment" value="상품" global="false"/>
+
+    <property name="referenceTable1" value="inventory" global="false"/>
+    <property name="referenceTable2" value="product_code" global="false"/>
+
+    <changeSet author="newy" id="1">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="${referenceTable1}"/>
+            <tableExists tableName="${referenceTable2}"/>
+        </preConditions>
+
+        <createTable tableName="${currentTable}" remarks="${currentTableComment}">
+            <!-- PK, FK -->
+            <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
+            </column>
+            <column name="${referenceTable1}_id" type="BIGINT" remarks="증권거래소 ID">
+                <constraints
+                        referencedTableName="${referenceTable1}"
+                        referencedColumnNames="id"
+                        foreignKeyName="${currentTable}__${referenceTable1}_id_fk"
+                        deleteCascade="true"
+                        nullable="false"
+                        unique="true"
+                />
+            </column>
+            <column name="${referenceTable2}_id" type="BIGINT" remarks="상품코드 ID">
+                <constraints
+                        referencedTableName="${referenceTable2}"
+                        referencedColumnNames="id"
+                        foreignKeyName="${currentTable}__${referenceTable2}_id_fk"
+                        deleteCascade="true"
+                        nullable="false"
+                        unique="true"
+                />
+            </column>
+
+            <!-- 생성/변경 일시 -->
+            <column name="created_at" type="DATETIME" remarks="생성일시" defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

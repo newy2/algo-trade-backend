@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+    <property name="currentTable" value="orders" global="false"/>
+    <property name="currentTableComment" value="주문" global="false"/>
+
+    <property name="referenceTable1" value="market_server_account" global="false"/>
+    <property name="referenceTable2" value="trade_strategy_signal" global="false"/>
+
+    <changeSet author="newy" id="1">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="${referenceTable1}"/>
+            <tableExists tableName="${referenceTable2}"/>
+        </preConditions>
+
+        <createTable tableName="${currentTable}" remarks="${currentTableComment}">
+            <!-- PK, FK -->
+            <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
+            </column>
+            <column name="${referenceTable1}_id" type="BIGINT" remarks="사용자 증권사 계정 ID">
+                <constraints
+                        referencedTableName="${referenceTable1}"
+                        referencedColumnNames="id"
+                        foreignKeyName="${currentTable}__${referenceTable1}_id_fk"
+                        deleteCascade="true"
+                        nullable="false"
+                        unique="true"
+                />
+            </column>
+            <column name="${referenceTable2}_id" type="BIGINT" remarks="자동매매 전략 신호 ID">
+                <constraints
+                        referencedTableName="${referenceTable2}"
+                        referencedColumnNames="id"
+                        foreignKeyName="${currentTable}__${referenceTable2}_id_fk"
+                        deleteCascade="true"
+                        nullable="false"
+                        unique="true"
+                />
+            </column>
+
+            <!-- 일반 필드 -->
+            <column name="currency" type="VARCHAR2(20)" remarks="거래 통화">
+                <constraints nullable="false"/>
+            </column>
+            <column name="unit_price" type="NUMERIC" remarks="주문 단가">
+                <constraints nullable="false"/>
+            </column>
+            <column name="amount" type="DOUBLE" remarks="주문 수량">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trade_average_price" type="NUMERIC" remarks="평균 거래 단가">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trade_amount" type="DOUBLE" remarks="거래 수량">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trade_total_fee" type="NUMERIC" remarks="총 거래 수수료">
+                <constraints nullable="false"/>
+            </column>
+            <column name="trade_total_tax" type="NUMERIC" remarks="총 거래 세금">
+                <constraints nullable="false"/>
+            </column>
+            <column
+                    name="status"
+                    type="VARCHAR2(10)"
+                    remarks="상태 (REQUESTING: 주문요청중, REQUESTED: 주문요청완료, TRADING: 거래중, TRADED: 거래완료, CANCELING: 취소요정중, CANCELED: 취소요청완료, CHANGING: 주문(가격/수량)변경중, CHANGED: 주문(가격/수량)변경완료)"
+                    defaultValue="REQUESTING"
+            >
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- 생성/변경 일시 -->
+            <column name="created_at" type="DATETIME" remarks="생성일시" defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="DATETIME" remarks="변경일시" defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- pro 모드 대체 로직  -->
+        <sql>
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__trade_amount_check CHECK ( trade_amount &lt;= amount );
+
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__status_check CHECK (status IN (
+                                                                               'REQUESTING', 'REQUESTED',
+                                                                               'TRADING', 'TRADED',
+                                                                               'CANCELING', 'CANCELED',
+                                                                               'CHANGING', 'CHANGED'
+                    ));
+        </sql>
+    </changeSet>
+</databaseChangeLog>

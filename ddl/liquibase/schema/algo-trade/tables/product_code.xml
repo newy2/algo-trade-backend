@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+    <property name="currentTable" value="product_code" global="false"/>
+    <property name="currentTableComment" value="상품코드" global="false"/>
+
+    <changeSet author="newy" id="1">
+        <createTable tableName="${currentTable}" remarks="${currentTableComment}">
+            <!-- PK, FK -->
+            <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
+            </column>
+
+            <!-- 일반 필드 -->
+            <!-- TODO code 를 PK 로 사용할까? -->
+            <column name="code" type="VARCHAR2(50)" remarks="코드">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR2(50)" remarks="이름">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- 생성/변경 일시 -->
+            <column name="created_at" type="DATETIME" remarks="생성일시" defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
