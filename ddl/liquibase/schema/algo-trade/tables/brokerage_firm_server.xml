@@ -20,11 +20,11 @@
             <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable}_id" type="CHAR(3)" remarks="증권사 ID">
+            <column name="${referenceTable}_code" type="CHAR(3)" remarks="증권사 코드">
                 <constraints
                         referencedTableName="${referenceTable}"
-                        referencedColumnNames="id"
-                        foreignKeyName="${currentTable}__${referenceTable}_id_fk"
+                        referencedColumnNames="code"
+                        foreignKeyName="${currentTable}__${referenceTable}_code_fk"
                         deleteCascade="true"
                         nullable="false"
                 />
@@ -53,8 +53,8 @@
         <!-- 복합 index -->
         <addUniqueConstraint
                 tableName="${currentTable}"
-                columnNames="${referenceTable}_id, prod_server_yn"
-                constraintName="${currentTable}__${referenceTable}_id_prod_server_yn_uk"
+                columnNames="${referenceTable}_code, prod_server_yn"
+                constraintName="${currentTable}__${referenceTable}_code_prod_server_yn_uk"
         />
 
         <!-- pro 모드 대체 로직  -->

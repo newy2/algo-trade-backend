@@ -17,14 +17,14 @@
 
         <createTable tableName="${currentTable}" remarks="${currentTableComment}">
             <!-- PK, FK -->
-            <column name="id" type="CHAR(3)" remarks="${currentTableComment} ID">
+            <column name="code" type="CHAR(3)" remarks="${currentTableComment} 코드">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable}_id" type="CHAR(3)" remarks="증권 거래소 ID">
+            <column name="${referenceTable}_code" type="CHAR(3)" remarks="증권 거래소 코드">
                 <constraints
                         referencedTableName="${referenceTable}"
-                        referencedColumnNames="id"
-                        foreignKeyName="${currentTable}__${referenceTable}_id_fk"
+                        referencedColumnNames="code"
+                        foreignKeyName="${currentTable}__${referenceTable}_code_fk"
                         deleteCascade="true"
                         nullable="false"
                 />
@@ -50,7 +50,7 @@
         <!-- 복합 index -->
         <addUniqueConstraint
                 tableName="${currentTable}"
-                columnNames="id, ${referenceTable}_id"
-                constraintName="${currentTable}__id_${referenceTable}_id_uk"/>
+                columnNames="code, ${referenceTable}_code"
+                constraintName="${currentTable}__code_${referenceTable}_code_uk"/>
     </changeSet>
 </databaseChangeLog>

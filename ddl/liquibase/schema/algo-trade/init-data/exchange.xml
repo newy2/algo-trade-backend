@@ -14,12 +14,12 @@
         </preConditions>
 
         <insert tableName="${currentTable}">
-            <column name="id" value="CCX"/>
+            <column name="code" value="CCX"/>
             <column name="name_en" value="Cryptocurrency Exchange"/>
             <column name="name_ko" value="가상화폐 거래소"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="id" value="KRX"/>
+            <column name="code" value="KRX"/>
             <column name="name_en" value="Korea Exchange"/>
             <column name="name_ko" value="한국거래소"/>
         </insert>

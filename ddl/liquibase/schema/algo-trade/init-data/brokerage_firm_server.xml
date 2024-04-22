@@ -16,15 +16,13 @@
         </preConditions>
 
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '바이빗')"/>
+            <column name="${referenceTable}_code" value="BBT"/>
             <column name="web_server_host" value="https://api-testnet.bybit.com"/>
             <column name="web_socket_host" value="wss://stream-testnet.bybit.com"/>
             <column name="prod_server_yn" value="N"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '바이빗')"/>
+            <column name="${referenceTable}_code" value="BBT"/>
             <column name="web_server_host" value="https://api.bybit.com"/>
             <column name="web_socket_host" value="wss://stream.bybit.com"/>
             <column name="prod_server_yn" value="Y"/>

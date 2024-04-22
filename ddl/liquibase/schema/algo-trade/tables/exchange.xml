@@ -11,7 +11,7 @@
     <changeSet author="newy" id="1">
         <createTable tableName="${currentTable}" remarks="${currentTableComment}">
             <!-- PK, FK -->
-            <column name="id" type="CHAR(3)" remarks="${currentTableComment} ID">
+            <column name="code" type="CHAR(3)" remarks="${currentTableComment} 코드">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
 

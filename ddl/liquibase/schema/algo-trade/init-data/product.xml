@@ -16,8 +16,7 @@
         </preConditions>
 
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_code" value="CCX"/>
             <column name="type" value="PERPETUAL_FUTURE"/>
             <column name="code" value="BTCUSDT"/>
             <column name="name_ko" value="BTCUSDT"/>
@@ -25,8 +24,7 @@
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_code" value="CCX"/>
             <column name="type" value="PERPETUAL_FUTURE"/>
             <column name="code" value="ETHUSDT"/>
             <column name="name_ko" value="ETHUSDT"/>
@@ -34,8 +32,7 @@
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_code" value="CCX"/>
             <column name="type" value="PERPETUAL_FUTURE"/>
             <column name="code" value="SOLUSDT"/>
             <column name="name_ko" value="SOLUSDT"/>
@@ -43,8 +40,7 @@
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_code" value="CCX"/>
             <column name="type" value="PERPETUAL_FUTURE"/>
             <column name="code" value="1000PEPEUSDT"/>
             <column name="name_ko" value="1000PEPEUSDT"/>
@@ -52,8 +48,7 @@
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_code" value="CCX"/>
             <column name="type" value="PERPETUAL_FUTURE"/>
             <column name="code" value="DOGEUSDT"/>
             <column name="name_ko" value="DOGEUSDT"/>
@@ -62,8 +57,7 @@
         </insert>
 
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_code" value="CCX"/>
             <column name="type" value="SPOT"/>
             <column name="code" value="BTC"/>
             <column name="name_ko" value="BTC"/>
@@ -71,8 +65,7 @@
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_code" value="CCX"/>
             <column name="type" value="SPOT"/>
             <column name="code" value="ETH"/>
             <column name="name_ko" value="ETH"/>
@@ -80,8 +73,7 @@
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_code" value="CCX"/>
             <column name="type" value="SPOT"/>
             <column name="code" value="SOL"/>
             <column name="name_ko" value="SOL"/>
@@ -89,8 +81,7 @@
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_code" value="CCX"/>
             <column name="type" value="SPOT"/>
             <column name="code" value="XRP"/>
             <column name="name_ko" value="XRP"/>
@@ -98,8 +89,7 @@
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_code" value="CCX"/>
             <column name="type" value="SPOT"/>
             <column name="code" value="ONDO"/>
             <column name="name_ko" value="ONDO"/>

@@ -16,16 +16,14 @@
         </preConditions>
 
         <insert tableName="${currentTable}">
-            <column name="id" value="BBT"/>
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="code" value="BBT"/>
+            <column name="${referenceTable}_code" value="CCX"/>
             <column name="name_en" value="ByBit"/>
             <column name="name_ko" value="바이빗"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="id" value="KIS"/>
-            <column name="${referenceTable}_id"
-                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '한국거래소')"/>
+            <column name="code" value="KIS"/>
+            <column name="${referenceTable}_code" value="KRX"/>
             <column name="name_en" value="Korea Investment"/>
             <column name="name_ko" value="한국투자증권"/>
         </insert>
