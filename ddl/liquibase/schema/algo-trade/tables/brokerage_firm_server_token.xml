@@ -5,10 +5,10 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
-    <property name="currentTable" value="user_sns" global="false"/>
-    <property name="currentTableComment" value="사용자 SNS 로그인 계정" global="false"/>
+    <property name="currentTable" value="brokerage_firm_server_token" global="false"/>
+    <property name="currentTableComment" value="증권사 서버 접근 토큰" global="false"/>
 
-    <property name="referenceTable" value="users" global="false"/>
+    <property name="referenceTable" value="brokerage_firm_server_account" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
@@ -31,10 +31,10 @@
             </column>
 
             <!-- 일반 필드 -->
-            <column name="type" type="VARCHAR2(20)" remarks="SNS 계정 종류">
+            <column name="access_token" type="VARCHAR2(300)" remarks="접근 토큰">
                 <constraints nullable="false"/>
             </column>
-            <column name="verify_yn" type="CHAR(1)" remarks="검증여부" defaultValue="N">
+            <column name="expired_at" type="DATETIME" remarks="유효기간">
                 <constraints nullable="false"/>
             </column>
 
@@ -46,18 +46,5 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <!-- 복합 index -->
-        <addUniqueConstraint
-                tableName="${currentTable}"
-                columnNames="${referenceTable}_id, type"
-                constraintName="${currentTable}__${referenceTable}_id_type_uk"
-        />
-
-        <!-- pro 모드 대체 로직  -->
-        <sql>
-            ALTER TABLE ${currentTable}
-                ADD CONSTRAINT ${currentTable}__verify_yn_check CHECK (verify_yn IN ('Y', 'N'));
-        </sql>
     </changeSet>
 </databaseChangeLog>

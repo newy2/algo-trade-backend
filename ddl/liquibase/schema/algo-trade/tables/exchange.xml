@@ -5,8 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
-    <property name="currentTable" value="product_code" global="false"/>
-    <property name="currentTableComment" value="상품코드" global="false"/>
+    <property name="currentTable" value="exchange" global="false"/>
+    <property name="currentTableComment" value="거래소" global="false"/>
 
     <changeSet author="newy" id="1">
         <createTable tableName="${currentTable}" remarks="${currentTableComment}">
@@ -16,16 +16,21 @@
             </column>
 
             <!-- 일반 필드 -->
-            <!-- TODO code 를 PK 로 사용할까? -->
-            <column name="code" type="VARCHAR2(50)" remarks="코드">
-                <constraints nullable="false"/>
+            <column name="code" type="CHAR(3)" remarks="이름">
+                <constraints nullable="false" unique="true"/>
             </column>
-            <column name="name" type="VARCHAR2(50)" remarks="이름">
-                <constraints nullable="false"/>
+            <column name="name_ko" type="VARCHAR2(50)" remarks="한글명">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="name_en" type="VARCHAR2(50)" remarks="영어명">
+                <constraints nullable="false" unique="true"/>
             </column>
 
             <!-- 생성/변경 일시 -->
             <column name="created_at" type="DATETIME" remarks="생성일시" defaultValueDate="now()">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="DATETIME" remarks="변경일시" defaultValueDate="now()">
                 <constraints nullable="false"/>
             </column>
         </createTable>

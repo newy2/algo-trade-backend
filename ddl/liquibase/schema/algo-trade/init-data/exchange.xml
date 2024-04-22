@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+    <property name="currentTable" value="exchange" global="false"/>
+
+    <changeSet author="newy" id="1">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="${currentTable}"/>
+            <rowCount tableName="${currentTable}" expectedRows="0"/>
+        </preConditions>
+
+        <insert tableName="${currentTable}">
+            <column name="code" value="CCX"/>
+            <column name="name_en" value="Cryptocurrency Exchange"/>
+            <column name="name_ko" value="가상화폐 거래소"/>
+        </insert>
+        <insert tableName="${currentTable}">
+            <column name="code" value="KRX"/>
+            <column name="name_en" value="Korea Exchange"/>
+            <column name="name_ko" value="한국거래소"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
