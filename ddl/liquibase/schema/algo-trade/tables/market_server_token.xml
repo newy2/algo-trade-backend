@@ -6,7 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
     <property name="currentTable" value="market_server_token" global="false"/>
-    <property name="currentTableComment" value="거래소/증권사 서버 접근 토큰" global="false"/>
+    <property name="currentTableComment" value="거래소 서버 접근 토큰" global="false"/>
 
     <property name="referenceTable" value="market_server_account" global="false"/>
 
@@ -20,7 +20,7 @@
             <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable}_id" type="BIGINT" remarks="거래소/증권사 서버 계정 ID">
+            <column name="${referenceTable}_id" type="BIGINT" remarks="거래소 서버 계정 ID">
                 <constraints
                         referencedTableName="${referenceTable}"
                         referencedColumnNames="id"

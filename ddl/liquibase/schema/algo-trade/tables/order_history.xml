@@ -31,7 +31,7 @@
             </column>
 
             <!-- 일반 필드 -->
-            <column name="trade_strategy_version" type="INTEGER" remarks="자동매매 전략 version">
+            <column name="trade_strategy_version" type="TINYINT" remarks="자동매매 전략 version">
                 <constraints nullable="false"/>
             </column>
             <column name="currency" type="VARCHAR2(20)" remarks="거래 통화">
@@ -40,19 +40,19 @@
             <column name="unit_price" type="NUMERIC" remarks="주문 단가">
                 <constraints nullable="false"/>
             </column>
-            <column name="amount" type="DOUBLE" remarks="주문 수량">
+            <column name="amount" type="NUMERIC" remarks="주문 수량">
                 <constraints nullable="false"/>
             </column>
             <column name="trade_average_price" type="NUMERIC" remarks="평균 거래 단가">
                 <constraints nullable="false"/>
             </column>
-            <column name="trade_amount" type="DOUBLE" remarks="거래 수량">
+            <column name="trade_amount" type="NUMERIC" remarks="거래 수량">
                 <constraints nullable="false"/>
             </column>
-            <column name="trade_total_fee" type="NUMERIC" remarks="총 거래 수수료">
+            <column name="total_trade_fee" type="NUMERIC" remarks="총 거래 수수료">
                 <constraints nullable="false"/>
             </column>
-            <column name="trade_total_tax" type="NUMERIC" remarks="총 거래 세금">
+            <column name="total_trade_tax" type="NUMERIC" remarks="총 거래 세금">
                 <constraints nullable="false"/>
             </column>
             <column

@@ -8,13 +8,11 @@
     <property name="currentTable" value="orders" global="false"/>
     <property name="currentTableComment" value="주문" global="false"/>
 
-    <property name="referenceTable1" value="market_server_account" global="false"/>
-    <property name="referenceTable2" value="user_trade_strategy_signal" global="false"/>
+    <property name="referenceTable" value="user_trade_strategy_signal" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
-            <tableExists tableName="${referenceTable1}"/>
-            <tableExists tableName="${referenceTable2}"/>
+            <tableExists tableName="${referenceTable}"/>
         </preConditions>
 
         <createTable tableName="${currentTable}" remarks="${currentTableComment}">
@@ -22,20 +20,11 @@
             <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable1}_id" type="BIGINT" remarks="거래소/증권사 서버 계정 ID">
+            <column name="${referenceTable}_id" type="BIGINT" remarks="자동매매 전략 신호 ID">
                 <constraints
-                        referencedTableName="${referenceTable1}"
+                        referencedTableName="${referenceTable}"
                         referencedColumnNames="id"
-                        foreignKeyName="${currentTable}__${referenceTable1}_id_fk"
-                        deleteCascade="true"
-                        nullable="false"
-                />
-            </column>
-            <column name="${referenceTable2}_id" type="BIGINT" remarks="자동매매 전략 신호 ID">
-                <constraints
-                        referencedTableName="${referenceTable2}"
-                        referencedColumnNames="id"
-                        foreignKeyName="${currentTable}__${referenceTable2}_id_fk"
+                        foreignKeyName="${currentTable}__${referenceTable}_id_fk"
                         deleteCascade="true"
                         nullable="false"
                 />
@@ -48,19 +37,19 @@
             <column name="unit_price" type="NUMERIC" remarks="주문 단가">
                 <constraints nullable="false"/>
             </column>
-            <column name="amount" type="DOUBLE" remarks="주문 수량">
+            <column name="amount" type="NUMERIC" remarks="주문 수량">
                 <constraints nullable="false"/>
             </column>
             <column name="trade_average_price" type="NUMERIC" remarks="평균 거래 단가">
                 <constraints nullable="false"/>
             </column>
-            <column name="trade_amount" type="DOUBLE" remarks="거래 수량">
+            <column name="trade_amount" type="NUMERIC" remarks="거래 수량">
                 <constraints nullable="false"/>
             </column>
-            <column name="trade_total_fee" type="NUMERIC" remarks="총 거래 수수료">
+            <column name="total_trade_fee" type="NUMERIC" remarks="총 거래 수수료">
                 <constraints nullable="false"/>
             </column>
-            <column name="trade_total_tax" type="NUMERIC" remarks="총 거래 세금">
+            <column name="total_trade_tax" type="NUMERIC" remarks="총 거래 세금">
                 <constraints nullable="false"/>
             </column>
             <column

@@ -8,7 +8,7 @@
     <property name="currentTable" value="user_trade_strategy_signal" global="false"/>
     <property name="currentTableComment" value="사용자 자동매매 전략 신호" global="false"/>
 
-    <property name="referenceTable" value="trade_strategy" global="false"/>
+    <property name="referenceTable" value="user_trade_strategy" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
@@ -31,16 +31,13 @@
             </column>
 
             <!-- 일반 필드 -->
-            <column name="name" type="VARCHAR2(40)" remarks="이름">
-                <constraints nullable="false"/>
-            </column>
             <column name="signal" type="CHAR(3)" remarks="신호 (ENT: 진입신호, EXT: 진출신호)">
                 <constraints nullable="false"/>
             </column>
             <column name="price" type="NUMERIC" remarks="상품 가격">
                 <constraints nullable="false"/>
             </column>
-            <column name="version" type="TINYINT" remarks="버전" defaultValue="1">
+            <column name="version" type="TINYINT" remarks="자동매매 전략 버전" defaultValue="1">
                 <constraints nullable="false"/>
             </column>
             <column name="candle_time_range" type="NUMERIC" remarks="사용한 분봉">

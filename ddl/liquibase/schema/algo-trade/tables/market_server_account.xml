@@ -6,7 +6,7 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
     <property name="currentTable" value="market_server_account" global="false"/>
-    <property name="currentTableComment" value="거래소/증권사 서버 계정" global="false"/>
+    <property name="currentTableComment" value="거래소 서버 계정" global="false"/>
 
     <property name="referenceTable1" value="users" global="false"/>
     <property name="referenceTable2" value="market_server" global="false"/>
@@ -31,7 +31,7 @@
                         nullable="false"
                 />
             </column>
-            <column name="${referenceTable2}_id" type="BIGINT" remarks="거래소/증권사 서버 ID">
+            <column name="${referenceTable2}_id" type="BIGINT" remarks="거래소 서버 ID">
                 <constraints
                         referencedTableName="${referenceTable2}"
                         referencedColumnNames="id"
@@ -42,13 +42,13 @@
             </column>
 
             <!-- 일반 필드 -->
-            <column name="name" type="VARCHAR2(20)" remarks="알림앱 종류">
+            <column name="name" type="VARCHAR2(50)" remarks="별칭">
                 <constraints nullable="false"/>
             </column>
-            <column name="app_key" type="VARCHAR2(300)" remarks="알림앱 URL">
+            <column name="app_key" type="VARCHAR2(300)" remarks="앱키">
                 <constraints nullable="false"/>
             </column>
-            <column name="app_secret" type="VARCHAR2(300)" remarks="알림앱 URL">
+            <column name="app_secret" type="VARCHAR2(300)" remarks="앱 비밀키">
                 <constraints nullable="false"/>
             </column>
             <column name="verify_yn" type="CHAR(1)" remarks="활성화 여부" defaultValue="N">

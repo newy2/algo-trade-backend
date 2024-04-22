@@ -6,21 +6,21 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
     <property name="currentTable" value="market" global="false"/>
-    <property name="currentTableComment" value="거래소/증권사" global="false"/>
+    <property name="currentTableComment" value="거래소" global="false"/>
 
     <changeSet author="newy" id="1">
         <createTable tableName="${currentTable}" remarks="${currentTableComment}">
             <!-- PK, FK -->
-            <column name="code" type="CHAR(3)" remarks="${currentTableComment} 코드">
+            <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="parent_code" type="CHAR(3)" remarks="부모 ${currentTable} 코드">
+            <column name="parent_id" type="BIGINT" remarks="부모 ${currentTable} ID">
                 <constraints
                         referencedTableName="${currentTable}"
-                        referencedColumnNames="code"
-                        foreignKeyName="${currentTable}__parent_code_fk"
+                        referencedColumnNames="id"
+                        foreignKeyName="${currentTable}__parent_id_fk"
                         deleteCascade="true"
-                        nullable="false"
+                        nullable="true"
                 />
             </column>
 
@@ -44,7 +44,7 @@
         <!-- 복합 index -->
         <addUniqueConstraint
                 tableName="${currentTable}"
-                columnNames="code, parent_code"
-                constraintName="${currentTable}__code_parent_code_uk"/>
+                columnNames="id, parent_id"
+                constraintName="${currentTable}__id_parent_id_uk"/>
     </changeSet>
 </databaseChangeLog>
