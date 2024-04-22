@@ -27,7 +27,6 @@
                         foreignKeyName="${currentTable}__${referenceTable}_id_fk"
                         deleteCascade="true"
                         nullable="false"
-                        unique="true"
                 />
             </column>
 
@@ -48,7 +47,7 @@
         <!-- 복합 index -->
         <addUniqueConstraint
                 tableName="${currentTable}"
-                columnNames="${referenceTable}_id,type"
+                columnNames="${referenceTable}_id, type"
                 constraintName="${currentTable}__${referenceTable}_id_type_uk"
         />
 

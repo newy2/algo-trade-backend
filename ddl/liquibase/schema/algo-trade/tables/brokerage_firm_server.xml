@@ -5,16 +5,14 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
-    <property name="currentTable" value="market_server_account" global="false"/>
-    <property name="currentTableComment" value="증권사 계정 정보" global="false"/>
+    <property name="currentTable" value="brokerage_firm_server" global="false"/>
+    <property name="currentTableComment" value="증권사 서버정보" global="false"/>
 
-    <property name="referenceTable1" value="users" global="false"/>
-    <property name="referenceTable2" value="market_server" global="false"/>
+    <property name="referenceTable" value="brokerage_firm" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
-            <tableExists tableName="${referenceTable1}"/>
-            <tableExists tableName="${referenceTable2}"/>
+            <tableExists tableName="${referenceTable}"/>
         </preConditions>
 
         <createTable tableName="${currentTable}" remarks="${currentTableComment}">
@@ -22,38 +20,24 @@
             <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable1}_id" type="BIGINT" remarks="사용자 ID">
+            <column name="${referenceTable}_id" type="BIGINT" remarks="증권사 ID">
                 <constraints
-                        referencedTableName="${referenceTable1}"
+                        referencedTableName="${referenceTable}"
                         referencedColumnNames="id"
-                        foreignKeyName="${currentTable}__${referenceTable1}_id_fk"
+                        foreignKeyName="${currentTable}__${referenceTable}_id_fk"
                         deleteCascade="true"
                         nullable="false"
-                        unique="true"
-                />
-            </column>
-            <column name="${referenceTable2}_id" type="BIGINT" remarks="증권사 서버정보 ID">
-                <constraints
-                        referencedTableName="${referenceTable2}"
-                        referencedColumnNames="id"
-                        foreignKeyName="${currentTable}__${referenceTable2}_id_fk"
-                        deleteCascade="true"
-                        nullable="false"
-                        unique="true"
                 />
             </column>
 
             <!-- 일반 필드 -->
-            <column name="name" type="VARCHAR2(20)" remarks="알림앱 종류">
+            <column name="web_server_host" type="VARCHAR2(300)" remarks="웹서버 URL HOST">
                 <constraints nullable="false"/>
             </column>
-            <column name="app_key" type="VARCHAR2(300)" remarks="알림앱 URL">
+            <column name="web_socket_host" type="VARCHAR2(300)" remarks="웹소켓 URL HOST">
                 <constraints nullable="false"/>
             </column>
-            <column name="app_secret" type="VARCHAR2(300)" remarks="알림앱 URL">
-                <constraints nullable="false"/>
-            </column>
-            <column name="verify_yn" type="CHAR(1)" remarks="활성화 여부" defaultValue="N">
+            <column name="prod_server_yn" type="CHAR(1)" remarks="프로덕션 서버 여부" defaultValue="N">
                 <constraints nullable="false"/>
             </column>
 
@@ -66,10 +50,17 @@
             </column>
         </createTable>
 
+        <!-- 복합 index -->
+        <addUniqueConstraint
+                tableName="${currentTable}"
+                columnNames="${referenceTable}_id, prod_server_yn"
+                constraintName="${currentTable}__${referenceTable}_id_prod_server_yn_uk"
+        />
+
         <!-- pro 모드 대체 로직  -->
         <sql>
             ALTER TABLE ${currentTable}
-                ADD CONSTRAINT ${currentTable}__verify_yn_check CHECK (verify_yn IN ('Y', 'N'))
+                ADD CONSTRAINT ${currentTable}__prod_server_yn_check CHECK (prod_server_yn IN ('Y', 'N'))
         </sql>
     </changeSet>
 </databaseChangeLog>

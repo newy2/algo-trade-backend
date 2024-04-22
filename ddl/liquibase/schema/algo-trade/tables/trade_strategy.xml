@@ -16,13 +16,13 @@
             </column>
 
             <!-- 일반 필드 -->
-            <column name="name" type="VARCHAR2(40)" remarks="이름">
+            <column name="name_ko" type="VARCHAR2(50)" remarks="이름">
                 <constraints nullable="false"/>
             </column>
             <column name="position" type="CHAR(3)" remarks="포지션 (LNG: 롱 포지션, SHR: 숏 포지션)" defaultValue="LNG">
                 <constraints nullable="false"/>
             </column>
-            <column name="version" type="INTEGER" remarks="버전" defaultValue="1">
+            <column name="version" type="TINYINT" remarks="버전" defaultValue="1">
                 <constraints nullable="false"/>
             </column>
 
@@ -34,6 +34,12 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <!-- 복합 index -->
+        <addUniqueConstraint
+                tableName="${currentTable}"
+                columnNames="name_ko, position, version"
+                constraintName="${currentTable}__name_ko_position_version_uk"/>
 
         <!-- pro 모드 대체 로직  -->
         <sql>

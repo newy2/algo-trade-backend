@@ -8,8 +8,8 @@
     <property name="currentTable" value="orders" global="false"/>
     <property name="currentTableComment" value="주문" global="false"/>
 
-    <property name="referenceTable1" value="market_server_account" global="false"/>
-    <property name="referenceTable2" value="trade_strategy_signal" global="false"/>
+    <property name="referenceTable1" value="brokerage_firm_server_account" global="false"/>
+    <property name="referenceTable2" value="user_trade_strategy_signal" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
@@ -29,7 +29,6 @@
                         foreignKeyName="${currentTable}__${referenceTable1}_id_fk"
                         deleteCascade="true"
                         nullable="false"
-                        unique="true"
                 />
             </column>
             <column name="${referenceTable2}_id" type="BIGINT" remarks="자동매매 전략 신호 ID">
@@ -39,7 +38,6 @@
                         foreignKeyName="${currentTable}__${referenceTable2}_id_fk"
                         deleteCascade="true"
                         nullable="false"
-                        unique="true"
                 />
             </column>
 

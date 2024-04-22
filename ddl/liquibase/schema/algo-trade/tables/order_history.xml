@@ -27,7 +27,6 @@
                         foreignKeyName="${currentTable}__${referenceTable}_id_fk"
                         deleteCascade="true"
                         nullable="false"
-                        unique="true"
                 />
             </column>
 

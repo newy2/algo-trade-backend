@@ -5,14 +5,16 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
-    <property name="currentTable" value="market_server_token" global="false"/>
-    <property name="currentTableComment" value="증권사 서버 접근 토큰" global="false"/>
+    <property name="currentTable" value="user_trade_strategy" global="false"/>
+    <property name="currentTableComment" value="사용자 자동매매 전략" global="false"/>
 
-    <property name="referenceTable" value="market_server_account" global="false"/>
+    <property name="referenceTable1" value="brokerage_firm_server" global="false"/>
+    <property name="referenceTable2" value="trade_strategy" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
-            <tableExists tableName="${referenceTable}"/>
+            <tableExists tableName="${referenceTable1}"/>
+            <tableExists tableName="${referenceTable2}"/>
         </preConditions>
 
         <createTable tableName="${currentTable}" remarks="${currentTableComment}">
@@ -20,24 +22,26 @@
             <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable}_id" type="BIGINT" remarks="사용자 ID">
+            <column name="${referenceTable1}_id" type="BIGINT" remarks="증권사 서버계정 ID">
                 <constraints
-                        referencedTableName="${referenceTable}"
+                        referencedTableName="${referenceTable1}"
                         referencedColumnNames="id"
-                        foreignKeyName="${currentTable}__${referenceTable}_id_fk"
+                        foreignKeyName="${currentTable}__${referenceTable1}_id_fk"
                         deleteCascade="true"
                         nullable="false"
-                        unique="true"
+                />
+            </column>
+            <column name="${referenceTable2}_id" type="BIGINT" remarks="자동매매 전략 ID">
+                <constraints
+                        referencedTableName="${referenceTable2}"
+                        referencedColumnNames="id"
+                        foreignKeyName="${currentTable}__${referenceTable2}_id_fk"
+                        deleteCascade="true"
+                        nullable="false"
                 />
             </column>
 
             <!-- 일반 필드 -->
-            <column name="access_token" type="VARCHAR2(300)" remarks="접근 토큰">
-                <constraints nullable="false"/>
-            </column>
-            <column name="expired_at" type="DATETIME" remarks="유효기간">
-                <constraints nullable="false"/>
-            </column>
 
             <!-- 생성/변경 일시 -->
             <column name="created_at" type="DATETIME" remarks="생성일시" defaultValueDate="now()">
@@ -47,5 +51,12 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
+
+        <!-- 복합 index -->
+        <addUniqueConstraint
+                tableName="${currentTable}"
+                columnNames="${referenceTable1}_id, ${referenceTable2}_id"
+                constraintName="${currentTable}__id2_uk"
+        />
     </changeSet>
 </databaseChangeLog>

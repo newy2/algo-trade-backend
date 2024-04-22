@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+    <property name="currentTable" value="brokerage_firm_server" global="false"/>
+
+    <property name="referenceTable" value="brokerage_firm" global="false"/>
+
+    <changeSet author="newy" id="1">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="${currentTable}"/>
+            <rowCount tableName="${currentTable}" expectedRows="0"/>
+        </preConditions>
+
+        <insert tableName="${currentTable}">
+            <column name="${referenceTable}_id"
+                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '바이빗')"/>
+            <column name="web_server_host" value="https://api-testnet.bybit.com"/>
+            <column name="web_socket_host" value="wss://stream-testnet.bybit.com"/>
+            <column name="prod_server_yn" value="N"/>
+        </insert>
+        <insert tableName="${currentTable}">
+            <column name="${referenceTable}_id"
+                    valueComputed="(SELECT id FROM ${referenceTable} WHERE name_ko = '바이빗')"/>
+            <column name="web_server_host" value="https://api.bybit.com"/>
+            <column name="web_socket_host" value="wss://stream.bybit.com"/>
+            <column name="prod_server_yn" value="Y"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>
