@@ -11,14 +11,11 @@
     <changeSet author="newy" id="1">
         <createTable tableName="${currentTable}" remarks="${currentTableComment}">
             <!-- PK, FK -->
-            <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
+            <column name="id" type="CHAR(3)" remarks="${currentTableComment} ID">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
 
             <!-- 일반 필드 -->
-            <column name="code" type="CHAR(3)" remarks="이름">
-                <constraints nullable="false" unique="true"/>
-            </column>
             <column name="name_ko" type="VARCHAR2(50)" remarks="한글명">
                 <constraints nullable="false" unique="true"/>
             </column>
