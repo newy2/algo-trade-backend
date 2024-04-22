@@ -14,7 +14,7 @@
             <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="parent_id" type="BIGINT" remarks="부모 ${currentTable} ID">
+            <column name="parent_id" type="BIGINT" remarks="부모 ${currentTableComment} ID">
                 <constraints
                         referencedTableName="${currentTable}"
                         referencedColumnNames="id"

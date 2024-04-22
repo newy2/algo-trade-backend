@@ -8,11 +8,13 @@
     <property name="currentTable" value="user_trade_strategy_signal" global="false"/>
     <property name="currentTableComment" value="사용자 자동매매 전략 신호" global="false"/>
 
-    <property name="referenceTable" value="user_trade_strategy" global="false"/>
+    <property name="referenceTable1" value="user_trade_strategy" global="false"/>
+    <property name="referenceTable2" value="product" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
-            <tableExists tableName="${referenceTable}"/>
+            <tableExists tableName="${referenceTable1}"/>
+            <tableExists tableName="${referenceTable2}"/>
         </preConditions>
 
         <createTable tableName="${currentTable}" remarks="${currentTableComment}">
@@ -20,11 +22,20 @@
             <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable}_id" type="BIGINT" remarks="자동매매 전략 신호 ID">
+            <column name="${referenceTable1}_id" type="BIGINT" remarks="자동매매 전략 신호 ID">
                 <constraints
-                        referencedTableName="${referenceTable}"
+                        referencedTableName="${referenceTable1}"
                         referencedColumnNames="id"
-                        foreignKeyName="${currentTable}__${referenceTable}_id_fk"
+                        foreignKeyName="${currentTable}__${referenceTable1}_id_fk"
+                        deleteCascade="true"
+                        nullable="false"
+                />
+            </column>
+            <column name="${referenceTable2}_id" type="BIGINT" remarks="상품 ID">
+                <constraints
+                        referencedTableName="${referenceTable2}"
+                        referencedColumnNames="id"
+                        foreignKeyName="${currentTable}__${referenceTable2}_id_fk"
                         deleteCascade="true"
                         nullable="false"
                 />
