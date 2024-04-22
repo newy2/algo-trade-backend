@@ -5,11 +5,11 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
-    <property name="currentTable" value="brokerage_firm_server_account" global="false"/>
-    <property name="currentTableComment" value="증권사 계정 정보" global="false"/>
+    <property name="currentTable" value="market_server_account" global="false"/>
+    <property name="currentTableComment" value="거래소/증권사 서버 계정" global="false"/>
 
     <property name="referenceTable1" value="users" global="false"/>
-    <property name="referenceTable2" value="brokerage_firm_server" global="false"/>
+    <property name="referenceTable2" value="market_server" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
@@ -31,7 +31,7 @@
                         nullable="false"
                 />
             </column>
-            <column name="${referenceTable2}_id" type="BIGINT" remarks="증권사 서버정보 ID">
+            <column name="${referenceTable2}_id" type="BIGINT" remarks="거래소/증권사 서버 ID">
                 <constraints
                         referencedTableName="${referenceTable2}"
                         referencedColumnNames="id"

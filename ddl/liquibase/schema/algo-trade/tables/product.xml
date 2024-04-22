@@ -8,7 +8,7 @@
     <property name="currentTable" value="product" global="false"/>
     <property name="currentTableComment" value="상품" global="false"/>
 
-    <property name="referenceTable" value="exchange" global="false"/>
+    <property name="referenceTable" value="market" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
@@ -20,7 +20,7 @@
             <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable}_code" type="CHAR(3)" remarks="증권거래소 코드">
+            <column name="${referenceTable}_code" type="CHAR(3)" remarks="거래소/증권사 코드">
                 <constraints
                         referencedTableName="${referenceTable}"
                         referencedColumnNames="code"

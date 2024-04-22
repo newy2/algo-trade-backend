@@ -7,7 +7,7 @@
 >
     <property name="currentTable" value="product" global="false"/>
 
-    <property name="referenceTable" value="exchange" global="false"/>
+    <property name="referenceTable" value="market" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">

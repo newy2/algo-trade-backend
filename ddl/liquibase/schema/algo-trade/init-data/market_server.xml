@@ -5,7 +5,9 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
-    <property name="currentTable" value="exchange" global="false"/>
+    <property name="currentTable" value="market_server" global="false"/>
+
+    <property name="referenceTable" value="market" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
@@ -14,14 +16,16 @@
         </preConditions>
 
         <insert tableName="${currentTable}">
-            <column name="code" value="CCX"/>
-            <column name="name_en" value="Cryptocurrency Exchange"/>
-            <column name="name_ko" value="가상화폐 거래소"/>
+            <column name="${referenceTable}_code" value="BBT"/>
+            <column name="web_server_host" value="https://api-testnet.bybit.com"/>
+            <column name="web_socket_host" value="wss://stream-testnet.bybit.com"/>
+            <column name="prod_server_yn" value="N"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="code" value="KRX"/>
-            <column name="name_en" value="Korea Exchange"/>
-            <column name="name_ko" value="한국거래소"/>
+            <column name="${referenceTable}_code" value="BBT"/>
+            <column name="web_server_host" value="https://api.bybit.com"/>
+            <column name="web_socket_host" value="wss://stream.bybit.com"/>
+            <column name="prod_server_yn" value="Y"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

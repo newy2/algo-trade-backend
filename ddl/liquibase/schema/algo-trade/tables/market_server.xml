@@ -5,10 +5,10 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
-    <property name="currentTable" value="brokerage_firm" global="false"/>
-    <property name="currentTableComment" value="증권사" global="false"/>
+    <property name="currentTable" value="market_server" global="false"/>
+    <property name="currentTableComment" value="거래소/증권사 서버" global="false"/>
 
-    <property name="referenceTable" value="exchange" global="false"/>
+    <property name="referenceTable" value="market" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
@@ -17,10 +17,10 @@
 
         <createTable tableName="${currentTable}" remarks="${currentTableComment}">
             <!-- PK, FK -->
-            <column name="code" type="CHAR(3)" remarks="${currentTableComment} 코드">
+            <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable}_code" type="CHAR(3)" remarks="증권 거래소 코드">
+            <column name="${referenceTable}_code" type="CHAR(3)" remarks="거래소/증권사 코드">
                 <constraints
                         referencedTableName="${referenceTable}"
                         referencedColumnNames="code"
@@ -31,10 +31,13 @@
             </column>
 
             <!-- 일반 필드 -->
-            <column name="name_ko" type="VARCHAR2(50)" remarks="한글명">
+            <column name="web_server_host" type="VARCHAR2(300)" remarks="웹서버 URL HOST">
                 <constraints nullable="false"/>
             </column>
-            <column name="name_en" type="VARCHAR2(50)" remarks="영어명">
+            <column name="web_socket_host" type="VARCHAR2(300)" remarks="웹소켓 URL HOST">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prod_server_yn" type="CHAR(1)" remarks="프로덕션 서버 여부" defaultValue="N">
                 <constraints nullable="false"/>
             </column>
 
@@ -50,7 +53,14 @@
         <!-- 복합 index -->
         <addUniqueConstraint
                 tableName="${currentTable}"
-                columnNames="code, ${referenceTable}_code"
-                constraintName="${currentTable}__code_${referenceTable}_code_uk"/>
+                columnNames="${referenceTable}_code, prod_server_yn"
+                constraintName="${currentTable}__${referenceTable}_code_prod_server_yn_uk"
+        />
+
+        <!-- pro 모드 대체 로직  -->
+        <sql>
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__prod_server_yn_check CHECK (prod_server_yn IN ('Y', 'N'))
+        </sql>
     </changeSet>
 </databaseChangeLog>
