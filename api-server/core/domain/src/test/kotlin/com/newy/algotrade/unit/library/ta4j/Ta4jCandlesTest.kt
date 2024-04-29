@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.unit.library.ta4j
+package com.newy.algotrade.unit.library.ta4j
 
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles

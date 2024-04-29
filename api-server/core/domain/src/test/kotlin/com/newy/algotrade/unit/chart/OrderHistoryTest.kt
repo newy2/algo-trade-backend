@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.unit.chart
+package com.newy.algotrade.unit.chart
 
 import com.newy.algotrade.domain.chart.Order
 import com.newy.algotrade.domain.chart.OrderHistory

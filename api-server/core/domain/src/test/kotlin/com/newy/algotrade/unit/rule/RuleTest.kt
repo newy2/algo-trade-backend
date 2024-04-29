@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.unit.rule
+package com.newy.algotrade.unit.rule
 
 import com.newy.algotrade.domain.chart.Indicator
 import com.newy.algotrade.domain.library.ta4j.indicator.Taj4NumIndicatorWrapper

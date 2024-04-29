@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.study.library.ta4j
+package com.newy.algotrade.study.lib.ta4j
 
 import com.newy.algotrade.test_helper.SimpleCsvParser
 import org.junit.jupiter.api.*
