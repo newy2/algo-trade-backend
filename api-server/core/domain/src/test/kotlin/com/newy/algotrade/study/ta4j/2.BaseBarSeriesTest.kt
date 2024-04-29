@@ -1,4 +1,4 @@
-package com.newy.algotrade.study.lib.ta4j
+package com.newy.algotrade.study.ta4j
 
 import org.junit.jupiter.api.*
 import org.ta4j.core.BarSeries

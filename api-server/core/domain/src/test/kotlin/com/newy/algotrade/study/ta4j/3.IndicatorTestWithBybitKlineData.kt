@@ -1,8 +1,7 @@
-package com.newy.algotrade.study.lib.ta4j
+package com.newy.algotrade.study.ta4j
 
 import com.newy.algotrade.test_helper.SimpleCsvParser
 import org.junit.jupiter.api.*
-import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.opentest4j.AssertionFailedError
 import org.ta4j.core.BarSeries
 import org.ta4j.core.BaseBar
@@ -11,7 +10,6 @@ import org.ta4j.core.indicators.EMAIndicator
 import org.ta4j.core.indicators.RSIIndicator
 import org.ta4j.core.indicators.adx.ADXIndicator
 import org.ta4j.core.indicators.helpers.ClosePriceIndicator
-import org.ta4j.core.num.DecimalNum
 import org.ta4j.core.num.Num
 import java.time.Instant
 import java.time.ZoneOffset
@@ -126,21 +124,6 @@ class IndicatorExceptionTest {
                 )
             }
         }
-    }
-}
-
-@DisplayName("테스트 헬퍼 메소드 테스트")
-class JUnitStudyTest {
-    @Test
-    fun `부동소수점 소수점 2자리 반올림`() {
-        assertEquals(0.01, 0.005, 0.005)
-        assertNotEquals(0.01, 0.004, 0.005)
-    }
-
-    @Test
-    fun `assertDoubleEquals 헬퍼 메소드`() {
-        assertDoubleNumEquals(0.01, DecimalNum.valueOf(0.005))
-        assertDoubleNumEquals(0.00, DecimalNum.valueOf(0.004))
     }
 }
 

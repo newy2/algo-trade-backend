@@ -2,15 +2,11 @@ package com.newy.algotrade.unit.chart
 
 import com.newy.algotrade.domain.chart.Candle
 import org.junit.jupiter.api.Assertions.assertNotEquals
-import org.junit.jupiter.api.Assertions.assertNotSame
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-import java.math.BigDecimal
-import java.time.Duration
 import java.time.ZonedDateTime
 import kotlin.test.assertEquals
-import kotlin.test.assertSame
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
 import kotlin.time.Duration.Companion.minutes
@@ -117,20 +113,5 @@ class CandleTest {
                 closePrice = 1000.toBigDecimal(),
             )
         }
-    }
-}
-
-class KotlinStudyTest {
-    @Test
-    fun `Duration 팩토리 메소드는 객체를 캐싱하지 않는다`() {
-        assertNotSame(Duration.ofMinutes(1), Duration.ofMinutes(1))
-        assertNotSame(Duration.ofMinutes(1), 1.minutes.toJavaDuration())
-    }
-
-    @Test
-    fun `BigDecimal 팩토리 메소드는 객체를 캐싱한다`() {
-        assertSame(BigDecimal.valueOf(0), BigDecimal.valueOf(0))
-        assertSame(BigDecimal.valueOf(0), BigDecimal.ZERO)
-        assertSame(BigDecimal.valueOf(0), 0.toBigDecimal())
     }
 }
