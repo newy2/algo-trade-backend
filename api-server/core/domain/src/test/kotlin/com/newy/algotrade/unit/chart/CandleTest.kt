@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.days
@@ -113,5 +115,29 @@ class CandleTest {
                 closePrice = 1000.toBigDecimal(),
             )
         }
+    }
+
+    @Test
+    fun `팩토리 메소드 오버로드`() {
+        val epochMilli: Long = Instant.now().toEpochMilli()
+        val dateTime: ZonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), ZoneOffset.UTC)
+
+        assertEquals(
+            Candle.TimeFrame.M1(
+                epochMilli,
+                openPrice = 1000.toBigDecimal(),
+                highPrice = 1000.toBigDecimal(),
+                lowPrice = 1000.toBigDecimal(),
+                closePrice = 1000.toBigDecimal(),
+            ),
+            Candle.TimeFrame.M1(
+                dateTime,
+                openPrice = 1000.toBigDecimal(),
+                highPrice = 1000.toBigDecimal(),
+                lowPrice = 1000.toBigDecimal(),
+                closePrice = 1000.toBigDecimal(),
+            )
+        )
+
     }
 }

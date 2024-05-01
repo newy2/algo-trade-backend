@@ -1,13 +1,13 @@
 package com.newy.algotrade.study.libs
 
+import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.databind.InjectableValues
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
-import com.newy.algotrade.domain.common.mapper.toObject
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -16,7 +16,7 @@ import kotlin.test.assertEquals
 
 @DisplayName("Jackson 역질렬화 테스트 (JSON -> Object)")
 class JacksonDeserializeTest {
-    private val converter = JsonConverterByJackson(jacksonObjectMapper())
+    private val jackson = jacksonObjectMapper()
 
     @Test
     fun `DTO 에서 선언하지 않은 key 가 JSON 에 포함된 경우, 에러가 발생한다`() {
@@ -30,7 +30,7 @@ class JacksonDeserializeTest {
         class DTO(val known: String)
 
         assertThrows<UnrecognizedPropertyException> {
-            converter.toObject<DTO>(json)
+            jackson.readValue(json, DTO::class.java)
         }
     }
 
@@ -47,7 +47,7 @@ class JacksonDeserializeTest {
         class DTO(val known: String)
 
         assertDoesNotThrow {
-            converter.toObject<DTO>(json)
+            jackson.readValue(json, DTO::class.java)
         }
     }
 
@@ -64,7 +64,7 @@ class JacksonDeserializeTest {
         class DTO(val known: String)
 
         assertDoesNotThrow {
-            converter.toObject<DTO>(json)
+            jackson.readValue(json, DTO::class.java)
         }
     }
 
@@ -84,7 +84,7 @@ class JacksonDeserializeTest {
             constructor(@JsonProperty("result") node: JsonNode) : this(data = node["key1"].asText())
         }
 
-        assertEquals(DTO("a"), converter.toObject<DTO>(json))
+        assertEquals(DTO("a"), jackson.readValue(json, DTO::class.java))
     }
 
     @Test
@@ -115,7 +115,36 @@ class JacksonDeserializeTest {
 
         assertEquals(
             DTO(symbol = "BTCUSDT", prices = listOf(listOf(1, 2), listOf(3, 4))),
-            converter.toObject<DTO>(json)
+            jackson.readValue(json, DTO::class.java)
+        )
+    }
+
+    @Test
+    fun `JacksonInject - 역직렬화 시, JSON 이외의 데이터를 주입받고 싶을 때 사용한다`() {
+        data class ExtraDTO(
+            val key: Int,
+            val value: String,
+            @JacksonInject("extraValue") val extraValue: String
+        )
+
+        val json = """
+            {
+                "key": 1,
+                "value": "a"
+            }
+        """.trimIndent()
+        val extraValues = mapOf("extraValue" to "b2")
+
+        assertEquals(
+            ExtraDTO(
+                key = 1,
+                value = "a",
+                extraValue = "b2",
+            ),
+            jackson
+                .readerFor(ExtraDTO::class.java)
+                .with(InjectableValues.Std(extraValues))
+                .readValue(json)
         )
     }
 }

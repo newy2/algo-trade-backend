@@ -2,6 +2,8 @@ package com.newy.algotrade.domain.chart
 
 import java.math.BigDecimal
 import java.time.Duration
+import java.time.Instant
+import java.time.ZoneOffset
 import java.time.ZonedDateTime
 
 data class Candle private constructor(
@@ -32,6 +34,22 @@ data class Candle private constructor(
                 lowPrice,
                 closePrice,
             ),
+            volume,
+        )
+
+        operator fun invoke(
+            beginTime: Long,
+            openPrice: BigDecimal = BigDecimal.ZERO,
+            highPrice: BigDecimal = BigDecimal.ZERO,
+            lowPrice: BigDecimal = BigDecimal.ZERO,
+            closePrice: BigDecimal = BigDecimal.ZERO,
+            volume: BigDecimal = BigDecimal.ZERO,
+        ) = this.invoke(
+            Instant.ofEpochMilli(beginTime).atZone(ZoneOffset.UTC),
+            openPrice,
+            highPrice,
+            lowPrice,
+            closePrice,
             volume,
         )
 
