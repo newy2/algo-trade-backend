@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.get
 import com.newy.algotrade.coroutine_based_application.common.web.post
+import helpers.HttpApiClientByOkHttp
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse

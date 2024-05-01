@@ -1,7 +1,7 @@
 package com.newy.algotrade.study.libs
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.integration.common.web.awaitCall
+import helpers.awaitCall
 import kotlinx.coroutines.runBlocking
 import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaType

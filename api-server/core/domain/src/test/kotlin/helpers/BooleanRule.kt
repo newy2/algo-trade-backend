@@ -1,4 +1,4 @@
-package com.newy.algotrade.test_helper
+package helpers
 
 import com.newy.algotrade.domain.chart.Rule
 

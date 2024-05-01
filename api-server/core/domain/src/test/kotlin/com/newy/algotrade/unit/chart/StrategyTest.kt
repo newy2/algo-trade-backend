@@ -4,7 +4,7 @@ import com.newy.algotrade.domain.chart.Order
 import com.newy.algotrade.domain.chart.OrderHistory
 import com.newy.algotrade.domain.chart.OrderType
 import com.newy.algotrade.domain.chart.Strategy
-import com.newy.algotrade.test_helper.BooleanRule
+import helpers.BooleanRule
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

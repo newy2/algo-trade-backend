@@ -1,4 +1,4 @@
-package com.newy.algotrade.test_helper
+package helpers
 
 import java.util.stream.Stream
 

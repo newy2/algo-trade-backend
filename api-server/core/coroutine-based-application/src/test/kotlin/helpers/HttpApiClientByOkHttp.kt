@@ -1,4 +1,4 @@
-package com.newy.algotrade.integration.common.web
+package helpers
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
@@ -62,7 +62,6 @@ class HttpApiClientByOkHttp(
             path = path,
             headers = headers,
             params = params,
-            body = null,
             clazz = clazz,
         )
 
