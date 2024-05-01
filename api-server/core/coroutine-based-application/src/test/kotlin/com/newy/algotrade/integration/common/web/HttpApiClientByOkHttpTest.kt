@@ -1,6 +1,7 @@
 package com.newy.algotrade.integration.common.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.newy.algotrade.coroutine_based_application.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.get
 import com.newy.algotrade.coroutine_based_application.common.web.post
@@ -21,7 +22,7 @@ open class BaseTest {
         client = HttpApiClientByOkHttp(
             OkHttpClient(),
             "http://localhost:$port",
-            jacksonObjectMapper(),
+            JsonConverterByJackson(jacksonObjectMapper()),
         )
         server = MockWebServer().also {
             it.start(port)

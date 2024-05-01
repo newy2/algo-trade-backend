@@ -1,6 +1,7 @@
 package com.newy.algotrade.study.libs
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.newy.algotrade.coroutine_based_application.common.mapper.JsonConverterByJackson
 import helpers.awaitCall
 import kotlinx.coroutines.runBlocking
 import okhttp3.Headers
@@ -16,7 +17,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class OkHttpTest {
-    private val mapper = jacksonObjectMapper()
+    private val jsonConverter = JsonConverterByJackson(jacksonObjectMapper())
     private val client = OkHttpClient()
     private lateinit var baseRequest: Request
     private lateinit var server: MockWebServer
@@ -121,11 +122,9 @@ class OkHttpTest {
     fun `POST - JSON body 전달하기`() = runBlocking {
         val body = SimpleData(key = 1, value = "a")
 
-        mapper.writeValueAsString(body)
-
         val request = baseRequest.newBuilder()
             .post(
-                mapper.writeValueAsString(body).toRequestBody(
+                jsonConverter.toJson(body).toRequestBody(
                     "application/json; charset=utf-8".toMediaType()
                 )
             )

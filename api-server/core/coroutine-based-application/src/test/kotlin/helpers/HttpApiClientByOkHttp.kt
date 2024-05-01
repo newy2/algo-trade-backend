@@ -1,7 +1,7 @@
 package helpers
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
+import com.newy.algotrade.domain.common.mapper.JsonConverter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.*
@@ -16,7 +16,7 @@ import kotlin.reflect.KClass
 class HttpApiClientByOkHttp(
     private val client: OkHttpClient,
     private val host: String = "",
-    private val objectMapper: ObjectMapper,
+    private val jsonConverter: JsonConverter,
 ) : HttpApiClient {
     private suspend fun <T : Any> call(
         method: String,
@@ -48,7 +48,7 @@ class HttpApiClientByOkHttp(
 
         val result = client.newCall(request).awaitCall().body!!.string()
 
-        return objectMapper.readValue(result, clazz)
+        return jsonConverter._toObject(result, clazz)
     }
 
     override suspend fun <T : Any> _get(
@@ -76,19 +76,12 @@ class HttpApiClientByOkHttp(
             method = "POST",
             path = path,
             headers = headers,
-            body = objectMapper.writeValueAsString(body).toRequestBody(
+            body = jsonConverter.toJson(body).toRequestBody(
                 "application/json; charset=utf-8".toMediaType()
             ),
             clazz = clazz,
         )
 }
-
-fun <T : Any> ObjectMapper.readValue(content: String, type: KClass<T>): T =
-    when (type.java) {
-        Unit::class.java -> Unit as T
-        String::class.java -> content as T
-        else -> this.readValue(content, type.java)
-    }
 
 @ExperimentalCoroutinesApi // resume with a resource cleanup.
 suspend fun Call.awaitCall(): Response =

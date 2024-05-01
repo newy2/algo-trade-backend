@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
-    testImplementation(kotlin("test"))
     implementation("org.ta4j:ta4j-core:0.15")
+
+    testImplementation(kotlin("test"))
 }
