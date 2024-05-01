@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.common.mapper
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.common.mapper.JsonConverterByJackson
+import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

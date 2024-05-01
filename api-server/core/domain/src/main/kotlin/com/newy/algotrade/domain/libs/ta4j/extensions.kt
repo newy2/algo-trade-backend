@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.library.ta4j
+package com.newy.algotrade.domain.libs.ta4j
 
 import com.newy.algotrade.domain.chart.Candle
 import org.ta4j.core.Bar

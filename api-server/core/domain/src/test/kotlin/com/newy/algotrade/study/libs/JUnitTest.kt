@@ -1,6 +1,6 @@
-package com.newy.algotrade.study.junit
+package com.newy.algotrade.study.libs
 
-import com.newy.algotrade.study.ta4j.assertDoubleNumEquals
+import com.newy.algotrade.study.libs.ta4j.assertDoubleNumEquals
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

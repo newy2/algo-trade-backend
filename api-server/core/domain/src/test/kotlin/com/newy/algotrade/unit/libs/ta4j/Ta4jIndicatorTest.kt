@@ -1,8 +1,8 @@
-package com.newy.algotrade.unit.library.ta4j
+package com.newy.algotrade.unit.libs.ta4j
 
 import com.newy.algotrade.domain.chart.*
-import com.newy.algotrade.study.ta4j.TEST_TARGET_BAR_EXPECTED_VALUES
-import com.newy.algotrade.study.ta4j.bybitKlineList
+import com.newy.algotrade.study.libs.ta4j.TEST_TARGET_BAR_EXPECTED_VALUES
+import com.newy.algotrade.study.libs.ta4j.bybitKlineList
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

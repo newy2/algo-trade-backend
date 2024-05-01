@@ -1,7 +1,6 @@
-package com.newy.algotrade.coroutine_based_application.common.mapper
+package com.newy.algotrade.domain.common.mapper
 
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.newy.algotrade.domain.common.mapper.JsonConverter
 import kotlin.reflect.KClass
 
 class JsonConverterByJackson(private val mapper: ObjectMapper) : JsonConverter {

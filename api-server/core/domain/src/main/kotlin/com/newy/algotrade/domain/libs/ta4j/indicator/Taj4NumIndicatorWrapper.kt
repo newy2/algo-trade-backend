@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.library.ta4j.indicator
+package com.newy.algotrade.domain.libs.ta4j.indicator
 
 import com.newy.algotrade.domain.chart.Indicator
 import org.ta4j.core.num.DecimalNum

@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.rule
 
 import com.newy.algotrade.domain.chart.Indicator
-import com.newy.algotrade.domain.library.ta4j.indicator.Taj4NumIndicatorWrapper
+import com.newy.algotrade.domain.libs.ta4j.indicator.Taj4NumIndicatorWrapper
 import com.newy.algotrade.domain.rule.CrossedDownRule
 import com.newy.algotrade.domain.rule.CrossedUpRule
 import com.newy.algotrade.domain.rule.OverRule
