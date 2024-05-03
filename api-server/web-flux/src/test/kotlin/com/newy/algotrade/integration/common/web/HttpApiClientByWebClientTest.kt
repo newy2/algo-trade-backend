@@ -1,8 +1,11 @@
 package com.newy.algotrade.integration.common.web
 
+import com.fasterxml.jackson.annotation.JacksonInject
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.get
 import com.newy.algotrade.coroutine_based_application.common.web.post
+import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.web_flux.common.web.HttpApiClientByWebClient
 import helpers.TestServerPort
 import kotlinx.coroutines.runBlocking
@@ -22,7 +25,8 @@ open class BaseTest {
         client = HttpApiClientByWebClient(
             WebClient.builder()
                 .baseUrl("http://localhost:$port")
-                .build()
+                .build(),
+            JsonConverterByJackson(jacksonObjectMapper()),
         )
         server = MockWebServer().also {
             it.start(port)
@@ -61,18 +65,37 @@ class CommonFunctionTest : BaseTest() {
     }
 
     @Test
+    fun `Response 무시하기`() = runBlocking {
+        val parsed = client.get<Unit>(path = "/path")
+        assertEquals(Unit, parsed)
+    }
+
+    @Test
     fun `Response 를 String 으로 파싱하기`() = runBlocking {
-        assertEquals("""{"key":1,"value":"a"}""", client.get<String>(path = "/path"))
+        val parsed = client.get<String>(path = "/path")
+        assertEquals("""{"key":1,"value":"a"}""", parsed)
     }
 
     @Test
     fun `Response 를 Object 로 파싱하기`() = runBlocking {
-        assertEquals(SimpleData(key = 1, value = "a"), client.get<SimpleData>(path = "/path"))
+        val parsed = client.get<SimpleData>(path = "/path")
+        assertEquals(SimpleData(key = 1, value = "a"), parsed)
     }
 
     @Test
-    fun `Response 무시하기`() = runBlocking {
-        assertEquals(Unit, client.get<Unit>(path = "/path"))
+    fun `Response 의 JSON 과 jsonExtraValue 를 더해서 Object 로 파싱하기`() = runBlocking {
+        data class ExtraClass(
+            val key: Int,
+            val value: String,
+            @JacksonInject("extraValue") val extraValue: String
+        )
+
+        val parsed = client.get<ExtraClass>(
+            path = "/path",
+            jsonExtraValues = mapOf("extraValue" to "b2"),
+        )
+
+        assertEquals(ExtraClass(key = 1, value = "a", extraValue = "b2"), parsed)
     }
 }
 

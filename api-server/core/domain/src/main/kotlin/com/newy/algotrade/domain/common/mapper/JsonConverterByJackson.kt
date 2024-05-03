@@ -8,12 +8,12 @@ class JsonConverterByJackson(private val mapper: ObjectMapper) : JsonConverter {
     override fun toJson(source: Any): String =
         mapper.writeValueAsString(source)
 
-    override fun <T : Any> _toObject(source: String, type: KClass<T>, extraValues: Map<String, Any>): T {
-        return when (type.java) {
+    override fun <T : Any> _toObject(source: String, extraValues: Map<String, Any>, clazz: KClass<T>): T {
+        return when (clazz.java) {
             Unit::class.java -> Unit as T
             String::class.java -> source as T
             else -> mapper
-                .readerFor(type.java)
+                .readerFor(clazz.java)
                 .with(if (extraValues.isNotEmpty()) InjectableValues.Std(extraValues) else null)
                 .readValue(source)
         }

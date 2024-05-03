@@ -1,5 +1,6 @@
 package com.newy.algotrade.integration.common.web
 
+import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.get
@@ -63,18 +64,37 @@ class CommonFunctionTest : BaseTest() {
     }
 
     @Test
+    fun `Response 무시하기`() = runBlocking {
+        val parsed = client.get<Unit>(path = "/path")
+        Assertions.assertEquals(Unit, parsed)
+    }
+
+    @Test
     fun `Response 를 String 으로 파싱하기`() = runBlocking {
-        Assertions.assertEquals("""{"key":1,"value":"a"}""", client.get<String>(path = "/path"))
+        val parsed = client.get<String>(path = "/path")
+        Assertions.assertEquals("""{"key":1,"value":"a"}""", parsed)
     }
 
     @Test
     fun `Response 를 Object 로 파싱하기`() = runBlocking {
-        Assertions.assertEquals(SimpleData(key = 1, value = "a"), client.get<SimpleData>(path = "/path"))
+        val parsed = client.get<SimpleData>(path = "/path")
+        Assertions.assertEquals(SimpleData(key = 1, value = "a"), parsed)
     }
 
     @Test
-    fun `Response 무시하기`() = runBlocking {
-        Assertions.assertEquals(Unit, client.get<Unit>(path = "/path"))
+    fun `Response 의 JSON 과 jsonExtraValue 를 더해서 Object 로 파싱하기`() = runBlocking {
+        data class ExtraClass(
+            val key: Int,
+            val value: String,
+            @JacksonInject("extraValue") val extraValue: String
+        )
+
+        val parsed = client.get<ExtraClass>(
+            path = "/path",
+            jsonExtraValues = mapOf("extraValue" to "b2"),
+        )
+
+        Assertions.assertEquals(ExtraClass(key = 1, value = "a", extraValue = "b2"), parsed)
     }
 }
 

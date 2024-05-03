@@ -7,6 +7,7 @@ interface HttpApiClient {
         path: String,
         params: Map<String, String>,
         headers: Map<String, String>,
+        jsonExtraValues: Map<String, Any>,
         clazz: KClass<T>,
     ): T
 
@@ -14,6 +15,7 @@ interface HttpApiClient {
         path: String,
         body: Any,
         headers: Map<String, String>,
+        jsonExtraValues: Map<String, Any>,
         clazz: KClass<T>,
     ): T
 }
@@ -22,10 +24,12 @@ suspend inline fun <reified T : Any> HttpApiClient.get(
     path: String,
     params: Map<String, String> = emptyMap(),
     headers: Map<String, String> = emptyMap(),
-) = _get(path, params, headers, T::class)
+    jsonExtraValues: Map<String, Any> = emptyMap(),
+) = _get(path, params, headers, jsonExtraValues, T::class)
 
 suspend inline fun <reified T : Any> HttpApiClient.post(
     path: String,
     body: Any = Unit,
     headers: Map<String, String> = emptyMap(),
-) = _post(path, body, headers, T::class)
+    jsonExtraValues: Map<String, Any> = emptyMap(),
+) = _post(path, body, headers, jsonExtraValues, T::class)

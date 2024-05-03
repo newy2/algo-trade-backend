@@ -14,6 +14,11 @@ typealias ProductPrice = Candle
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class ByBitProductPriceHttpResponse(override val prices: List<ProductPrice>) : GetProductPriceListResponse {
+    companion object {
+        fun jsonExtraValues(interval: String) =
+            mapOf("interval" to interval)
+    }
+
     @JsonCreator
     constructor(
         @JacksonInject("interval") interval: String,

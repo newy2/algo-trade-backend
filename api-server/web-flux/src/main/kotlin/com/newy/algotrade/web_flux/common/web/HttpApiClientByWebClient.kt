@@ -3,6 +3,7 @@
 package com.newy.algotrade.web_flux.common.web
 
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
+import com.newy.algotrade.domain.common.mapper.JsonConverter
 import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.http.HttpMethod
 import org.springframework.web.reactive.function.client.WebClient
@@ -10,7 +11,8 @@ import org.springframework.web.reactive.function.client.awaitBodilessEntity
 import kotlin.reflect.KClass
 
 class HttpApiClientByWebClient(
-    private val client: WebClient = WebClient.create()
+    private val client: WebClient,
+    private val jsonConverter: JsonConverter,
 ) : HttpApiClient {
     private suspend fun <T : Any> call(
         method: HttpMethod,
@@ -18,6 +20,7 @@ class HttpApiClientByWebClient(
         headers: Map<String, String> = emptyMap(),
         params: Map<String, String> = emptyMap(),
         body: Any = Unit,
+        jsonExtraValues: Map<String, Any> = emptyMap(),
         clazz: KClass<T>,
     ): T {
         return client
@@ -40,13 +43,14 @@ class HttpApiClientByWebClient(
                 }
             }
             .retrieve()
-            .awaitBody(clazz)
+            .awaitBody(jsonConverter, jsonExtraValues, clazz)
     }
 
     override suspend fun <T : Any> _get(
         path: String,
         params: Map<String, String>,
         headers: Map<String, String>,
+        jsonExtraValues: Map<String, Any>,
         clazz: KClass<T>
     ): T {
         return this.call(
@@ -54,6 +58,7 @@ class HttpApiClientByWebClient(
             path = path,
             params = params,
             headers = headers,
+            jsonExtraValues = jsonExtraValues,
             clazz = clazz,
         )
     }
@@ -62,20 +67,36 @@ class HttpApiClientByWebClient(
         path: String,
         body: Any,
         headers: Map<String, String>,
-        clazz: KClass<T>,
+        jsonExtraValues: Map<String, Any>,
+        clazz: KClass<T>
     ): T {
         return this.call(
             method = HttpMethod.POST,
             path = path,
             body = body,
             headers = headers,
+            jsonExtraValues = jsonExtraValues,
             clazz = clazz,
         )
     }
 }
 
-suspend fun <T : Any> WebClient.ResponseSpec.awaitBody(type: KClass<T>): T =
-    when (type.java) {
-        Unit::class.java -> awaitBodilessEntity().let { Unit as T }
-        else -> bodyToMono(type.java).awaitSingle()
+// TODO JSON 파싱 성능이 문제가 되려나..?
+suspend fun <T : Any> WebClient.ResponseSpec.awaitBody(
+    jsonConverter: JsonConverter,
+    jsonExtraValues: Map<String, Any>,
+    clazz: KClass<T>,
+): T {
+    if (clazz.java == Unit::class.java) {
+        return awaitBodilessEntity().let { Unit as T }
     }
+
+    val json = bodyToMono(String::class.java).awaitSingle()
+    return jsonConverter._toObject(source = json, extraValues = jsonExtraValues, clazz)
+}
+//    when (clazz.java) {
+//        Unit::class.java -> awaitBodilessEntity().let { Unit as T }
+//        else -> bodyToMono(String::class.java)
+//            .map { jsonConverter._toObject(source = it, extraValues = jsonExtraValues, clazz) }
+//            .awaitSingle()
+//    }

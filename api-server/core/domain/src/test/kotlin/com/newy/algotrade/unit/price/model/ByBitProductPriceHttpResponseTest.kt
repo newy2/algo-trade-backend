@@ -1,4 +1,4 @@
-package com.newy.algotrade.unit.price
+package com.newy.algotrade.unit.price.model
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.domain.chart.Candle
@@ -12,7 +12,7 @@ import kotlin.test.assertEquals
 
 class ByBitProductPriceHttpResponseTest {
     private val converter = JsonConverterByJackson(jacksonObjectMapper())
-    private val extraValues = mapOf("interval" to "1")
+    private val extraValues = ByBitProductPriceHttpResponse.jsonExtraValues("1")
 
     @Test
     fun `가격 정보가 없는 경우`() {

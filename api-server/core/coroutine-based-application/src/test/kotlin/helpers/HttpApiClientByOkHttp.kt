@@ -24,6 +24,7 @@ class HttpApiClientByOkHttp(
         headers: Map<String, String> = emptyMap(),
         params: Map<String, String> = emptyMap(),
         body: RequestBody? = null,
+        jsonExtraValues: Map<String, Any> = emptyMap(),
         clazz: KClass<T>,
     ): T {
         val request = Request.Builder()
@@ -48,13 +49,14 @@ class HttpApiClientByOkHttp(
 
         val result = client.newCall(request).awaitCall().body!!.string()
 
-        return jsonConverter._toObject(result, clazz)
+        return jsonConverter._toObject(result, jsonExtraValues, clazz)
     }
 
     override suspend fun <T : Any> _get(
         path: String,
         params: Map<String, String>,
         headers: Map<String, String>,
+        jsonExtraValues: Map<String, Any>,
         clazz: KClass<T>
     ): T =
         this.call(
@@ -62,15 +64,16 @@ class HttpApiClientByOkHttp(
             path = path,
             headers = headers,
             params = params,
+            jsonExtraValues = jsonExtraValues,
             clazz = clazz,
         )
 
     override suspend fun <T : Any> _post(
         path: String,
         body: Any,
-        headers:
-        Map<String, String>,
-        clazz: KClass<T>,
+        headers: Map<String, String>,
+        jsonExtraValues: Map<String, Any>,
+        clazz: KClass<T>
     ): T =
         this.call(
             method = "POST",
@@ -79,6 +82,7 @@ class HttpApiClientByOkHttp(
             body = jsonConverter.toJson(body).toRequestBody(
                 "application/json; charset=utf-8".toMediaType()
             ),
+            jsonExtraValues = jsonExtraValues,
             clazz = clazz,
         )
 }
