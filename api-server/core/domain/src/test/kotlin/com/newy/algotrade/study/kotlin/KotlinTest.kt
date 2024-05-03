@@ -7,15 +7,12 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.Duration
-import java.time.ZonedDateTime
 import java.util.stream.Collectors
-import kotlin.system.measureNanoTime
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 import kotlin.test.assertSame
+import kotlin.test.assertTrue
 import kotlin.time.Duration.Companion.minutes
-import kotlin.time.ExperimentalTime
-import kotlin.time.measureTimedValue
 import kotlin.time.toJavaDuration
 
 class KotlinTest {
@@ -31,7 +28,7 @@ class KotlinTest {
         assertSame(BigDecimal.valueOf(0), BigDecimal.ZERO)
         assertSame(BigDecimal.valueOf(0), 0.toBigDecimal())
     }
-    
+
     @Test
     fun `string 을 list 로 변환하는 방법`() {
         val multiLineText = """
@@ -85,5 +82,12 @@ class AccessResourceFolderTest {
             .collect(Collectors.joining("\n"))
 
         assertEquals(RESOURCE_CONTENT, fromStream)
+    }
+}
+
+class GetEnvironmentVariablesTest {
+    @Test
+    fun `환경 변수 읽는 방법`() {
+        assertTrue(System.getenv("JAVA_HOME").isNotEmpty())
     }
 }

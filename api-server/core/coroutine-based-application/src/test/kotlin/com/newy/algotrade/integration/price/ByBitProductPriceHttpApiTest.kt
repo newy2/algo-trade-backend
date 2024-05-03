@@ -5,6 +5,7 @@ import com.newy.algotrade.coroutine_based_application.price.ByBitProductPriceHtt
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import helpers.HttpApiClientByOkHttp
+import helpers.TestEnv
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Test
@@ -12,13 +13,13 @@ import java.time.Duration
 import java.time.ZonedDateTime
 import kotlin.test.assertEquals
 
-class ByBitProductPriceHttpApiTestWithOkHttpClient {
+class ByBitProductPriceHttpApiTest {
     @Test
     fun `BTC 가격 조회 API`() = runBlocking {
         val client = ByBitProductPriceHttpApi(
             HttpApiClientByOkHttp(
                 OkHttpClient(),
-                "https://api-testnet.bybit.com",
+                TestEnv.ByBit.url,
                 JsonConverterByJackson(jacksonObjectMapper())
             )
         )
