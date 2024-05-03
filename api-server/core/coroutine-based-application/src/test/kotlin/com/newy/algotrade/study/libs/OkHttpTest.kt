@@ -2,6 +2,7 @@ package com.newy.algotrade.study.libs
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
+import helpers.TestServerPort
 import helpers.awaitCall
 import kotlinx.coroutines.runBlocking
 import okhttp3.Headers
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 class OkHttpTest {
+    private val port = TestServerPort.nextValue()
     private val jsonConverter = JsonConverterByJackson(jacksonObjectMapper())
     private val client = OkHttpClient()
     private lateinit var baseRequest: Request
@@ -24,7 +26,6 @@ class OkHttpTest {
 
     @BeforeEach
     fun setUp() {
-        val port = 9991
         baseRequest = Request.Builder()
             .url("http://localhost:$port")
             .headers(

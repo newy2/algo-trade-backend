@@ -1,5 +1,6 @@
 package com.newy.algotrade.study.spring
 
+import helpers.TestServerPort
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -12,12 +13,12 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
 
 class WebClientTest {
+    private val port = TestServerPort.nextValue()
     private lateinit var client: WebClient
     private lateinit var server: MockWebServer
 
     @BeforeEach
     fun setUp() {
-        val port = 9991
         client = WebClient.builder()
             .baseUrl("http://localhost:$port")
             .defaultHeaders {

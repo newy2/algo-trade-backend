@@ -28,12 +28,14 @@ class JsonConverterByJacksonTest {
 
     @Test
     fun `toObject - JSON 을 Unit 타입으로 변환하기`() {
-        assertEquals(Unit, converter.toObject<Unit>("OK"))
+        val parsed = converter.toObject<Unit>("OK")
+        assertEquals(Unit, parsed)
     }
 
     @Test
     fun `toObject - JSON 을 String 타입으로 변환하기`() {
-        assertEquals("OK", converter.toObject<String>("OK"))
+        val parsed = converter.toObject<String>("OK")
+        assertEquals("OK", parsed)
     }
 
     @Test

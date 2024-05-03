@@ -4,6 +4,7 @@ import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.get
 import com.newy.algotrade.coroutine_based_application.common.web.post
 import com.newy.algotrade.web_flux.common.web.HttpApiClientByWebClient
+import helpers.TestServerPort
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -12,12 +13,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.springframework.web.reactive.function.client.WebClient
 
 open class BaseTest {
+    private val port = TestServerPort.nextValue()
     protected lateinit var client: HttpApiClient
     protected lateinit var server: MockWebServer
 
     @BeforeEach
     fun setUp() {
-        val port = 9991
         client = HttpApiClientByWebClient(
             WebClient.builder()
                 .baseUrl("http://localhost:$port")
