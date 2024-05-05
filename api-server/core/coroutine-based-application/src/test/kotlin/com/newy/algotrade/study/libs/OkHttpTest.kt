@@ -5,6 +5,7 @@ import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import helpers.TestServerPort
 import helpers.awaitCall
 import kotlinx.coroutines.runBlocking
+import okhttp3.FormBody
 import okhttp3.Headers
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -140,5 +141,23 @@ class OkHttpTest {
         client.newCall(request).awaitCall()
 
         assertEquals("""{"key":1,"value":"a"}""", server.takeRequest().body.readUtf8())
+    }
+
+    @Test
+    fun `POST - Form body 전달하기`() = runBlocking {
+        val request = baseRequest.newBuilder()
+            .url(
+                baseRequest.url
+                    .newBuilder()
+                    .encodedPath("/path")
+                    .build()
+            )
+            .addHeader("Content-Type", "application/x-www-form-urlencoded")
+            .post(FormBody.Builder().addEncoded("value", "a").build())
+            .build()
+
+        client.newCall(request).awaitCall()
+
+        assertEquals("value=a", server.takeRequest().body.readUtf8())
     }
 }

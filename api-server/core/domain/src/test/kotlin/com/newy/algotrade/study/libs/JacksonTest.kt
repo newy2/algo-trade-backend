@@ -4,8 +4,13 @@ import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.core.JsonParser
+import com.fasterxml.jackson.databind.DeserializationContext
 import com.fasterxml.jackson.databind.InjectableValues
 import com.fasterxml.jackson.databind.JsonNode
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.deser.std.StdDeserializer
+import com.fasterxml.jackson.databind.exc.InvalidDefinitionException
 import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import org.junit.jupiter.api.DisplayName
@@ -133,7 +138,7 @@ class JacksonDeserializeTest {
                 "value": "a"
             }
         """.trimIndent()
-        val extraValues = mapOf("extraValue" to "b2")
+        val extraValues = InjectableValues.Std(mapOf("extraValue" to "b2"))
 
         assertEquals(
             ExtraDTO(
@@ -143,8 +148,67 @@ class JacksonDeserializeTest {
             ),
             jackson
                 .readerFor(ExtraDTO::class.java)
-                .with(InjectableValues.Std(extraValues))
+                .with(extraValues)
                 .readValue(json)
         )
+    }
+}
+
+@DisplayName("커스텀 Deserializer 테스트")
+class DeserializerTest {
+    private val jackson = jacksonObjectMapper()
+    private val json = """{ "name": "abc" }""".trimIndent()
+
+    @JsonDeserialize(using = CustomDeserializer::class)
+    data class Data(val name: String)
+
+    class CustomDeserializer : StdDeserializer<Data> {
+        constructor() : this(null)
+        constructor(vc: Class<*>?) : super(vc)
+
+        override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Data {
+            val root = p.codec.readTree<JsonNode>(p)
+
+            val name = root["name"].asText()
+            val code = ctxt.findInjectableValue("code", null, null)
+
+            return Data("$name-$code")
+        }
+    }
+
+    @Test
+    fun `InjectValue 가 있는 경우`() {
+        val extraValues = InjectableValues.Std(mapOf("code" to "t1000"))
+
+        assertEquals(
+            Data(
+                name = "abc-t1000"
+            ),
+            jackson
+                .readerFor(Data::class.java)
+                .with(extraValues)
+                .readValue(json)
+        )
+    }
+
+    @Test
+    fun `InjectValue 가 없는 경우`() {
+        assertThrows<InvalidDefinitionException> {
+            jackson
+                .readerFor(Data::class.java)
+                .readValue(json)
+        }
+    }
+
+    @Test
+    fun `InjectValue 를 못찾는 경우`() {
+        val noExtraValues = InjectableValues.Std()
+
+        assertThrows<NullPointerException> {
+            jackson
+                .readerFor(Data::class.java)
+                .with(noExtraValues)
+                .readValue(json)
+        }
     }
 }

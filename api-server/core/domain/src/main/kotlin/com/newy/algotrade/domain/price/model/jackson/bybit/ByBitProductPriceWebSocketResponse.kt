@@ -1,12 +1,13 @@
-package com.newy.algotrade.domain.price.model
+package com.newy.algotrade.domain.price.model.jackson.bybit
 
 import com.fasterxml.jackson.annotation.JsonCreator
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.JsonNode
 import com.newy.algotrade.domain.chart.Candle
+import com.newy.algotrade.domain.common.extension.ProductPrice
+import com.newy.algotrade.domain.price.model.GetProductPriceResponse
 import java.time.Duration
-import java.time.temporal.ChronoUnit
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 class ByBitProductPriceWebSocketResponse(override val price: ProductPrice) : GetProductPriceResponse {
@@ -16,7 +17,8 @@ class ByBitProductPriceWebSocketResponse(override val price: ProductPrice) : Get
     ) : this(
         price = node[0].let {
             // TODO 사용 가능한 interval (1,3,5,15,30,60,120,240,360,720,D,M,W)
-            Candle.TimeFrame.from(Duration.of(it["interval"].asLong(), ChronoUnit.MINUTES))!!(
+            // TODO 실제로는 좀 줄이자 (1,3,4,15,30,60,D)
+            Candle.TimeFrame.from(Duration.ofMinutes(it["interval"].asLong()))!!(
                 beginTime = it["start"].asLong(),
                 openPrice = it["open"].asDouble().toBigDecimal(),
                 highPrice = it["high"].asDouble().toBigDecimal(),

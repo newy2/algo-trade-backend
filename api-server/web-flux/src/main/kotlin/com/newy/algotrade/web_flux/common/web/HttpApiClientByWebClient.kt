@@ -2,10 +2,13 @@
 
 package com.newy.algotrade.web_flux.common.web
 
+import com.newy.algotrade.coroutine_based_application.common.web.FormData
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
 import com.newy.algotrade.domain.common.mapper.JsonConverter
 import kotlinx.coroutines.reactive.awaitSingle
 import org.springframework.http.HttpMethod
+import org.springframework.util.LinkedMultiValueMap
+import org.springframework.web.reactive.function.BodyInserters
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBodilessEntity
 import kotlin.reflect.KClass
@@ -38,7 +41,15 @@ class HttpApiClientByWebClient(
                 }
             }
             .also {
-                if (body !is Unit) {
+                if (body is FormData) {
+                    // TODO Content-type(application/x-www-form-urlencoded) 에 대한 예외처리
+                    // TODO 지금은 이베스트 access token 얻을 때만 사용됨. 다른 API 에서 form 데이터를 많이 사용하면 그 때 더 추상화 하자.
+                    it.body(BodyInserters.fromFormData(LinkedMultiValueMap<String, String>().also {
+                        body.values.forEach { (key, value) ->
+                            it[key] = value
+                        }
+                    }))
+                } else if (body !is Unit) {
                     it.bodyValue(body)
                 }
             }
@@ -65,6 +76,7 @@ class HttpApiClientByWebClient(
 
     override suspend fun <T : Any> _post(
         path: String,
+        params: Map<String, String>,
         body: Any,
         headers: Map<String, String>,
         jsonExtraValues: Map<String, Any>,
@@ -73,6 +85,7 @@ class HttpApiClientByWebClient(
         return this.call(
             method = HttpMethod.POST,
             path = path,
+            params = params,
             body = body,
             headers = headers,
             jsonExtraValues = jsonExtraValues,

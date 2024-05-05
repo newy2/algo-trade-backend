@@ -1,10 +1,10 @@
-package com.newy.algotrade.unit.price.model
+package com.newy.algotrade.unit.price.model.jackson.bybit
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
-import com.newy.algotrade.domain.price.model.ByBitProductPriceWebSocketResponse
+import com.newy.algotrade.domain.price.model.jackson.bybit.ByBitProductPriceWebSocketResponse
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 

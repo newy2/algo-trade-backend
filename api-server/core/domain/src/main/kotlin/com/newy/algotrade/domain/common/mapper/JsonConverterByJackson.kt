@@ -9,13 +9,20 @@ class JsonConverterByJackson(private val mapper: ObjectMapper) : JsonConverter {
         mapper.writeValueAsString(source)
 
     override fun <T : Any> _toObject(source: String, extraValues: Map<String, Any>, clazz: KClass<T>): T {
-        return when (clazz.java) {
-            Unit::class.java -> Unit as T
-            String::class.java -> source as T
-            else -> mapper
-                .readerFor(clazz.java)
-                .with(if (extraValues.isNotEmpty()) InjectableValues.Std(extraValues) else null)
-                .readValue(source)
+        try {
+            return when (clazz.java) {
+                Unit::class.java -> Unit as T
+                String::class.java -> source as T
+                else -> mapper
+                    .readerFor(clazz.java)
+                    .with(if (extraValues.isNotEmpty()) InjectableValues.Std(extraValues) else null)
+                    .readValue(source)
+            }
+        } catch (e: Exception) {
+            // TODO logger
+            println("JSON")
+            println(source)
+            throw e
         }
     }
 }

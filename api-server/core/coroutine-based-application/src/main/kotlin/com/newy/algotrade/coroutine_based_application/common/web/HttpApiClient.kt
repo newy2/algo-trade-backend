@@ -13,6 +13,7 @@ interface HttpApiClient {
 
     suspend fun <T : Any> _post(
         path: String,
+        params: Map<String, String>,
         body: Any,
         headers: Map<String, String>,
         jsonExtraValues: Map<String, Any>,
@@ -29,7 +30,12 @@ suspend inline fun <reified T : Any> HttpApiClient.get(
 
 suspend inline fun <reified T : Any> HttpApiClient.post(
     path: String,
+    params: Map<String, String> = emptyMap(),
     body: Any = Unit,
     headers: Map<String, String> = emptyMap(),
     jsonExtraValues: Map<String, Any> = emptyMap(),
-) = _post(path, body, headers, jsonExtraValues, T::class)
+) = _post(path, params, body, headers, jsonExtraValues, T::class)
+
+class FormData(val values: Map<String, String>) {
+    constructor(vararg values: Pair<String, String>) : this(values.toMap())
+}

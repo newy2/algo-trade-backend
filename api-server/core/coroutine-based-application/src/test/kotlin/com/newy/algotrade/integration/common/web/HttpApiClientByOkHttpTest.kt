@@ -2,6 +2,7 @@ package com.newy.algotrade.integration.common.web
 
 import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.newy.algotrade.coroutine_based_application.common.web.FormData
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.get
 import com.newy.algotrade.coroutine_based_application.common.web.post
@@ -14,6 +15,7 @@ import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.*
 
+// TODO 테스트 코드 중복 제거(-> HttpApiClientTest)
 open class BaseTest {
     private val port = TestServerPort.nextValue()
     protected lateinit var client: HttpApiClient
@@ -121,5 +123,16 @@ class HttpMethodTest : BaseTest() {
         )
 
         Assertions.assertEquals("""{"key":2,"value":"b"}""", server.takeRequest().body.readUtf8())
+    }
+
+    @Test
+    fun `POST - 전달된 Form body 확인하기`() = runBlocking {
+        client.post<Unit>(
+            path = "/path",
+            headers = mapOf("Content-type" to "application/x-www-form-urlencoded"),
+            body = FormData(Pair("value", "a"))
+        )
+
+        Assertions.assertEquals("value=a", server.takeRequest().body.readUtf8())
     }
 }

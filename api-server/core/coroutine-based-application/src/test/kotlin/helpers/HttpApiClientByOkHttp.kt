@@ -1,5 +1,6 @@
 package helpers
 
+import com.newy.algotrade.coroutine_based_application.common.web.FormData
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
 import com.newy.algotrade.domain.common.mapper.JsonConverter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -70,18 +71,31 @@ class HttpApiClientByOkHttp(
 
     override suspend fun <T : Any> _post(
         path: String,
+        params: Map<String, String>,
         body: Any,
         headers: Map<String, String>,
         jsonExtraValues: Map<String, Any>,
         clazz: KClass<T>
     ): T =
+
         this.call(
             method = "POST",
             path = path,
             headers = headers,
-            body = jsonConverter.toJson(body).toRequestBody(
-                "application/json; charset=utf-8".toMediaType()
-            ),
+            params = params,
+            body = if (body is FormData) {
+                // TODO Content-type(application/x-www-form-urlencoded) 에 대한 예외처리
+                // TODO 지금은 이베스트 access token 얻을 때만 사용됨. 다른 API 에서 form 데이터를 많이 사용하면 그 때 더 추상화 하자.
+                FormBody.Builder().also {
+                    body.values.forEach { (key, value) ->
+                        it.addEncoded(key, value)
+                    }
+                }.build()
+            } else {
+                jsonConverter.toJson(body).toRequestBody(
+                    "application/json; charset=utf-8".toMediaType()
+                )
+            },
             jsonExtraValues = jsonExtraValues,
             clazz = clazz,
         )
