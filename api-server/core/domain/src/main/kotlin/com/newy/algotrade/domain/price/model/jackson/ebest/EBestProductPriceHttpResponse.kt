@@ -9,7 +9,6 @@ import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.EBestTrCode
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.model.GetProductPriceListResponse
 import java.time.Duration
 import java.time.ZoneOffset
 import java.time.ZonedDateTime
@@ -18,7 +17,7 @@ import java.time.format.DateTimeFormatter
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonDeserialize(using = EBestProductPriceDeserializer::class)
-data class EBestProductPriceHttpResponse(override val prices: List<ProductPrice>) : GetProductPriceListResponse {
+data class EBestProductPriceHttpResponse(val prices: List<ProductPrice>) {
     companion object {
         fun jsonExtraValues(code: String, interval: Long) =
             mapOf(

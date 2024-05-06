@@ -6,11 +6,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.JsonNode
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.model.GetProductPriceResponse
 import java.time.Duration
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class ByBitProductPriceWebSocketResponse(override val price: ProductPrice) : GetProductPriceResponse {
+class ByBitProductPriceWebSocketResponse(val price: ProductPrice) {
     @JsonCreator
     constructor(
         @JsonProperty("data") node: JsonNode,

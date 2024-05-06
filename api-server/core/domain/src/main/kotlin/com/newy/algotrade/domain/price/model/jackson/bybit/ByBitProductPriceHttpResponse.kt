@@ -7,11 +7,10 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.fasterxml.jackson.databind.JsonNode
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.model.GetProductPriceListResponse
 import java.time.Duration
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class ByBitProductPriceHttpResponse(override val prices: List<ProductPrice>) : GetProductPriceListResponse {
+class ByBitProductPriceHttpResponse(val prices: List<ProductPrice>) {
     companion object {
         fun jsonExtraValues(interval: Long) =
             mapOf("interval" to interval)
