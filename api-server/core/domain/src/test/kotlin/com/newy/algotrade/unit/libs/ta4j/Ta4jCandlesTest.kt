@@ -3,7 +3,7 @@ package com.newy.algotrade.unit.libs.ta4j
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.ChartFactory
-import com.newy.algotrade.domain.libs.ta4j.Ta4jCandles
+import com.newy.algotrade.domain.chart.libs.ta4j.Ta4jCandles
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

@@ -1,9 +1,9 @@
 package com.newy.algotrade.domain.chart
 
-import com.newy.algotrade.domain.libs.ta4j.Ta4jCandles
-import com.newy.algotrade.domain.libs.ta4j.indicator.Ta4jADXIndicator
-import com.newy.algotrade.domain.libs.ta4j.indicator.Ta4jEMAIndicator
-import com.newy.algotrade.domain.libs.ta4j.indicator.Ta4jRSIIndicator
+import com.newy.algotrade.domain.chart.libs.ta4j.Ta4jCandles
+import com.newy.algotrade.domain.chart.libs.ta4j.indicator.Ta4jADXIndicator
+import com.newy.algotrade.domain.chart.libs.ta4j.indicator.Ta4jEMAIndicator
+import com.newy.algotrade.domain.chart.libs.ta4j.indicator.Ta4jRSIIndicator
 
 enum class ChartFactory {
     TA4J {
