@@ -3,6 +3,7 @@ package com.newy.algotrade.integration.price.adapter.out.web
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.EBestProductPriceHttpApi
+import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.GetProductPriceSelector
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.EBestTrCode
@@ -118,12 +119,16 @@ class EBestProductPriceHttpApiTest {
         JsonConverterByJackson(jacksonObjectMapper())
     )
     private val accessTokenLoader = EBestAccessTokenHttpApi(client)
-    private val api = EBestProductPriceHttpApi(
-        client,
-        accessTokenLoader,
-        PrivateApiInfo(
-            key = TestEnv.EBest.apiKey,
-            secret = TestEnv.EBest.apiSecret,
+    private val api = GetProductPriceSelector(
+        mapOf(
+            "E_BEST" to EBestProductPriceHttpApi(
+                client,
+                accessTokenLoader,
+                PrivateApiInfo(
+                    key = TestEnv.EBest.apiKey,
+                    secret = TestEnv.EBest.apiSecret,
+                )
+            )
         )
     )
 
@@ -141,6 +146,7 @@ class EBestProductPriceHttpApiTest {
                 )
             ),
             api.productPrices(
+                "E_BEST",
                 "spot",
                 "078020",
                 Duration.ofMinutes(1),
@@ -164,6 +170,7 @@ class EBestProductPriceHttpApiTest {
                 )
             ),
             api.productPrices(
+                "E_BEST",
                 "spot",
                 "078020",
                 Duration.ofDays(1),

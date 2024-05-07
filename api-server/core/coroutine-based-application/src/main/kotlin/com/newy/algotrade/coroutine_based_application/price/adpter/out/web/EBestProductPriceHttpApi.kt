@@ -13,11 +13,12 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 class EBestProductPriceHttpApi(
-    client: HttpApiClient,
+    private val client: HttpApiClient,
     private val accessTokenLoader: GetAccessTokenPort<PrivateApiInfo>,
     private val masterUserInfo: PrivateApiInfo,
-) : GetProductPricePort(client) {
+) : GetProductPricePort {
     override suspend fun productPrices(
+        market: String,
         category: String,
         symbol: String,
         interval: Duration,

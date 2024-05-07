@@ -2,6 +2,7 @@ package com.newy.algotrade.integration.price.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.ByBitProductPriceHttpApi
+import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.GetProductPriceSelector
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
@@ -87,11 +88,15 @@ class ByBitProductPriceResponseDtoTest {
 class ByBitProductPriceHttpApiTest {
     @Test
     fun `BTC 가격 조회 API`() = runBlocking {
-        val client = ByBitProductPriceHttpApi(
-            HttpApiClientByOkHttp(
-                OkHttpClient(),
-                TestEnv.ByBit.url,
-                JsonConverterByJackson(jacksonObjectMapper())
+        val client = GetProductPriceSelector(
+            mapOf(
+                "BY_BIT" to ByBitProductPriceHttpApi(
+                    HttpApiClientByOkHttp(
+                        OkHttpClient(),
+                        TestEnv.ByBit.url,
+                        JsonConverterByJackson(jacksonObjectMapper())
+                    )
+                )
             )
         )
 
@@ -107,6 +112,7 @@ class ByBitProductPriceHttpApiTest {
                 )
             ),
             client.productPrices(
+                "BY_BIT",
                 "spot",
                 "BTCUSDT",
                 Duration.ofMinutes(1),

@@ -8,13 +8,14 @@ import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.ByBitProduc
 import java.time.Duration
 import java.time.OffsetDateTime
 
-class ByBitProductPriceHttpApi(client: HttpApiClient) : GetProductPricePort(client) {
+class ByBitProductPriceHttpApi(private val client: HttpApiClient) : GetProductPricePort {
     override suspend fun productPrices(
+        market: String,
         category: String,
         symbol: String,
         interval: Duration,
         endTime: OffsetDateTime,
-        limit: Int
+        limit: Int,
     ): List<ProductPrice> {
         val minuteInterval = interval.toMinutes()
 
