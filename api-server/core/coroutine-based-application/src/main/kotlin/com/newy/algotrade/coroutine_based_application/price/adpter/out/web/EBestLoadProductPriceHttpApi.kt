@@ -3,34 +3,19 @@ package com.newy.algotrade.coroutine_based_application.price.adpter.out.web
 import com.newy.algotrade.coroutine_based_application.auth.port.out.GetAccessTokenPort
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.post
-import com.newy.algotrade.coroutine_based_application.price.port.out.GetProductPricePort
+import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
+import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
-import com.newy.algotrade.domain.common.consts.EBestTrCode
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.EBestProductPriceHttpResponse
-import java.time.Duration
-import java.time.OffsetDateTime
-import java.time.format.DateTimeFormatter
 
-class EBestProductPriceHttpApi(
+class EBestLoadProductPriceHttpApi(
     private val client: HttpApiClient,
     private val accessTokenLoader: GetAccessTokenPort<PrivateApiInfo>,
     private val masterUserInfo: PrivateApiInfo,
-) : GetProductPricePort {
-    override suspend fun productPrices(
-        market: String,
-        category: String,
-        symbol: String,
-        interval: Duration,
-        endTime: OffsetDateTime,
-        limit: Int,
-    ): List<ProductPrice> {
-        val (code, extraBody) = if (interval.toDays() >= 1) {
-            Pair(EBestTrCode.GET_PRODUCT_PRICE_BY_DAY.code, mapOf("gubun" to "2"))
-        } else {
-            Pair(EBestTrCode.GET_PRODUCT_PRICE_BY_MINUTE.code, mapOf("ncnt" to interval.toMinutes()))
-        }
-
+) : LoadProductPricePort {
+    override suspend fun productPrices(param: LoadProductPriceParam): List<ProductPrice> {
+        val trCode = param.trCode()
         val accessToken = accessTokenLoader.accessToken(masterUserInfo)
 
         val response = client.post<EBestProductPriceHttpResponse>(
@@ -38,20 +23,20 @@ class EBestProductPriceHttpApi(
             headers = mapOf(
                 "Content-Type" to "application/json; charset=utf-8",
                 "authorization" to "Bearer $accessToken",
-                "tr_cd" to code,
+                "tr_cd" to trCode,
                 "tr_cont" to "N"
             ),
             body = mapOf(
-                "${code}InBlock" to mapOf<String, Any>(
-                    "shcode" to symbol,
-                    "qrycnt" to limit,
-                    "edate" to endTime.format(DateTimeFormatter.ofPattern("yyyyMMdd")),
+                "${trCode}InBlock" to mapOf<String, Any>(
+                    "shcode" to param.productCode,
+                    "qrycnt" to param.limit,
+                    "edate" to param.endTime(),
                     "comp_yn" to "N",
-                ) + extraBody
+                ) + param.extraBody()
             ),
             jsonExtraValues = EBestProductPriceHttpResponse.jsonExtraValues(
-                code,
-                interval.toMinutes(),
+                trCode,
+                param.intervalMinutes,
             ),
         )
 

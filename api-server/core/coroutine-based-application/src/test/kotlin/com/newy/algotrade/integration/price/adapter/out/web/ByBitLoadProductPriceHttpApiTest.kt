@@ -1,9 +1,12 @@
 package com.newy.algotrade.integration.price.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.ByBitProductPriceHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.GetProductPriceSelector
+import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.ByBitLoadProductPriceHttpApi
+import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceSelector
+import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
 import com.newy.algotrade.domain.chart.Candle
+import com.newy.algotrade.domain.common.consts.Market
+import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
 import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.ByBitProductPriceHttpResponse
@@ -86,20 +89,20 @@ class ByBitProductPriceResponseDtoTest {
 }
 
 class ByBitProductPriceHttpApiTest {
-    @Test
-    fun `BTC 가격 조회 API`() = runBlocking {
-        val client = GetProductPriceSelector(
-            mapOf(
-                "BY_BIT" to ByBitProductPriceHttpApi(
-                    HttpApiClientByOkHttp(
-                        OkHttpClient(),
-                        TestEnv.ByBit.url,
-                        JsonConverterByJackson(jacksonObjectMapper())
-                    )
+    private val client = LoadProductPriceSelector(
+        mapOf(
+            Market.BY_BIT to ByBitLoadProductPriceHttpApi(
+                HttpApiClientByOkHttp(
+                    OkHttpClient(),
+                    TestEnv.ByBit.url,
+                    JsonConverterByJackson(jacksonObjectMapper())
                 )
             )
         )
+    )
 
+    @Test
+    fun `현물 BTC 가격 조회 API`() = runBlocking {
         assertEquals(
             listOf(
                 Candle.TimeFrame.M1(
@@ -112,12 +115,40 @@ class ByBitProductPriceHttpApiTest {
                 )
             ),
             client.productPrices(
-                "BY_BIT",
-                "spot",
-                "BTCUSDT",
-                Duration.ofMinutes(1),
-                OffsetDateTime.parse("2024-05-01T00:00Z"),
-                1
+                LoadProductPriceParam(
+                    Market.BY_BIT,
+                    ProductType.SPOT,
+                    "BTCUSDT",
+                    Duration.ofMinutes(1),
+                    OffsetDateTime.parse("2024-05-01T00:00Z"),
+                    1
+                )
+            )
+        )
+    }
+
+    @Test
+    fun `무기한 선물 BTC 가격 조회 API`() = runBlocking {
+        assertEquals(
+            listOf(
+                Candle.TimeFrame.M1(
+                    beginTime = ZonedDateTime.parse("2024-05-01T00:00Z"),
+                    openPrice = "60686.4".toBigDecimal(),
+                    highPrice = "60758.9".toBigDecimal(),
+                    lowPrice = "60673.4".toBigDecimal(),
+                    closePrice = "60737.2".toBigDecimal(),
+                    volume = "0.632".toBigDecimal(),
+                )
+            ),
+            client.productPrices(
+                LoadProductPriceParam(
+                    Market.BY_BIT,
+                    ProductType.PERPETUAL_FUTURE,
+                    "BTCUSDT",
+                    Duration.ofMinutes(1),
+                    OffsetDateTime.parse("2024-05-01T00:00Z"),
+                    1
+                )
             )
         )
     }

@@ -2,11 +2,14 @@ package com.newy.algotrade.integration.price.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.EBestProductPriceHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.GetProductPriceSelector
+import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.EBestLoadProductPriceHttpApi
+import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceSelector
+import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.EBestTrCode
+import com.newy.algotrade.domain.common.consts.Market
+import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
 import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.EBestProductPriceHttpResponse
@@ -119,9 +122,9 @@ class EBestProductPriceHttpApiTest {
         JsonConverterByJackson(jacksonObjectMapper())
     )
     private val accessTokenLoader = EBestAccessTokenHttpApi(client)
-    private val api = GetProductPriceSelector(
+    private val api = LoadProductPriceSelector(
         mapOf(
-            "E_BEST" to EBestProductPriceHttpApi(
+            Market.E_BEST to EBestLoadProductPriceHttpApi(
                 client,
                 accessTokenLoader,
                 PrivateApiInfo(
@@ -146,12 +149,14 @@ class EBestProductPriceHttpApiTest {
                 )
             ),
             api.productPrices(
-                "E_BEST",
-                "spot",
-                "078020",
-                Duration.ofMinutes(1),
-                OffsetDateTime.parse("2024-05-03T00:00Z"),
-                1
+                LoadProductPriceParam(
+                    Market.E_BEST,
+                    ProductType.SPOT,
+                    "078020",
+                    Duration.ofMinutes(1),
+                    OffsetDateTime.parse("2024-05-03T00:00Z"),
+                    1
+                )
             )
         )
     }
@@ -170,12 +175,14 @@ class EBestProductPriceHttpApiTest {
                 )
             ),
             api.productPrices(
-                "E_BEST",
-                "spot",
-                "078020",
-                Duration.ofDays(1),
-                OffsetDateTime.parse("2024-05-03T00:00Z"),
-                1
+                LoadProductPriceParam(
+                    Market.E_BEST,
+                    ProductType.SPOT,
+                    "078020",
+                    Duration.ofDays(1),
+                    OffsetDateTime.parse("2024-05-03T00:00Z"),
+                    1
+                )
             )
         )
     }

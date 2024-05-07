@@ -2,8 +2,7 @@ package com.newy.algotrade.study.kotlin
 
 import com.newy.algotrade.unit.libs.helper.RESOURCE_CONTENT
 import com.newy.algotrade.unit.libs.helper.RESOURCE_PATH
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.*
@@ -300,5 +299,33 @@ class MacTest {
             "88aab3ede8d3adf94d26ab90d3bafd4a2083070c3bcce9c014ee04a443847c0b",
             HexFormat.of().formatHex(bytes)
         )
+    }
+}
+
+class EnumTest {
+    enum class Enum {
+        HELLO;
+    }
+
+    @Test
+    fun `name - enum 에서 자동으로 생성해주는 변수`() {
+        assertEquals("HELLO", Enum.HELLO.name)
+    }
+
+    @Test
+    fun `문자열로 Enum 객체 찾기`() {
+        assertEquals(Enum.HELLO, Enum.valueOf("HELLO"))
+    }
+}
+
+class AssertTest {
+    @Test
+    fun `코틀린 assert 함수 테스트`() {
+        assertDoesNotThrow {
+            assert(true)
+        }
+        assertThrows<AssertionError> {
+            assert(false)
+        }
     }
 }
