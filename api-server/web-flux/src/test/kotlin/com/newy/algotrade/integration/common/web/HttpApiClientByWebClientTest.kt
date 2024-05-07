@@ -25,9 +25,8 @@ open class BaseTest {
     @BeforeEach
     fun setUp() {
         client = HttpApiClientByWebClient(
-            WebClient.builder()
-                .baseUrl("http://localhost:$port")
-                .build(),
+            WebClient.builder().build(),
+            "http://localhost:$port",
             JsonConverterByJackson(jacksonObjectMapper()),
         )
         server = MockWebServer().also {

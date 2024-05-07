@@ -15,6 +15,7 @@ import kotlin.reflect.KClass
 
 class HttpApiClientByWebClient(
     private val client: WebClient,
+    private val host: String,
     private val jsonConverter: JsonConverter,
 ) : HttpApiClient {
     private suspend fun <T : Any> call(
@@ -28,7 +29,7 @@ class HttpApiClientByWebClient(
     ): T {
         return client
             .method(method)
-            .uri {
+            .uri(host) {
                 it.path(path).also {
                     params.forEach { (key, value) ->
                         it.queryParam(key, value)
