@@ -20,10 +20,7 @@ class ProductPriceProvider(
             ).forEach { (productPriceKey, listeners) ->
                 loader.productPrices(
                     LoadProductPriceParam(
-                        productPriceKey.market,
-                        productPriceKey.productType,
-                        productPriceKey.productCode,
-                        productPriceKey.interval,
+                        productPriceKey,
                         OffsetDateTime.now(),
                         1,
                     )

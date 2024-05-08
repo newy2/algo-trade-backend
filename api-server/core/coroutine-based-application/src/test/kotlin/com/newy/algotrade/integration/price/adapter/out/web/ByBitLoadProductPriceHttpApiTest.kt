@@ -3,6 +3,7 @@ package com.newy.algotrade.integration.price.adapter.out.web
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.ByBitLoadProductPriceHttpApi
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceSelector
+import com.newy.algotrade.coroutine_based_application.price.domain.model.ProductPriceKey
 import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
@@ -116,12 +117,14 @@ class ByBitProductPriceHttpApiTest {
             ),
             client.productPrices(
                 LoadProductPriceParam(
-                    Market.BY_BIT,
-                    ProductType.SPOT,
-                    "BTCUSDT",
-                    Duration.ofMinutes(1),
+                    ProductPriceKey(
+                        Market.BY_BIT,
+                        ProductType.SPOT,
+                        "BTCUSDT",
+                        Duration.ofMinutes(1),
+                    ),
                     OffsetDateTime.parse("2024-05-01T00:00Z"),
-                    1
+                    1,
                 )
             )
         )
@@ -142,12 +145,14 @@ class ByBitProductPriceHttpApiTest {
             ),
             client.productPrices(
                 LoadProductPriceParam(
-                    Market.BY_BIT,
-                    ProductType.PERPETUAL_FUTURE,
-                    "BTCUSDT",
-                    Duration.ofMinutes(1),
+                    ProductPriceKey(
+                        Market.BY_BIT,
+                        ProductType.PERPETUAL_FUTURE,
+                        "BTCUSDT",
+                        Duration.ofMinutes(1),
+                    ),
                     OffsetDateTime.parse("2024-05-01T00:00Z"),
-                    1
+                    1,
                 )
             )
         )
