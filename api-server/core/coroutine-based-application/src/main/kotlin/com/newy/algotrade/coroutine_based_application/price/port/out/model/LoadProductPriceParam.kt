@@ -38,7 +38,7 @@ class LoadProductPriceParam(
         }
     }
 
-    private fun isIntervalByDays(): Boolean {
+    fun isIntervalByDays(): Boolean {
         useOnly(Market.E_BEST)
 
         return productPriceKey.interval.toDays() >= 1

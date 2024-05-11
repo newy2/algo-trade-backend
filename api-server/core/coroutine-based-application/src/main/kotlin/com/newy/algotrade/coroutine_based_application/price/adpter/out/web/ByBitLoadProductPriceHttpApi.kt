@@ -1,5 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.price.adpter.out.web
 
+import com.newy.algotrade.coroutine_based_application.common.consts.ByBitHttpApiInfo
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.get
 import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
@@ -9,8 +10,11 @@ import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.ByBitProduc
 
 class ByBitLoadProductPriceHttpApi(private val client: HttpApiClient) : LoadProductPricePort {
     override suspend fun productPrices(param: LoadProductPriceParam): List<ProductPrice> {
+        val (path, apiRateLimit) = ByBitHttpApiInfo.loadProductPrice()
+        apiRateLimit.await()
+
         val response = client.get<ByBitProductPriceHttpResponse>(
-            path = "/v5/market/kline",
+            path = path,
             params = mapOf(
                 "category" to param.category(),
                 "symbol" to param.productCode,

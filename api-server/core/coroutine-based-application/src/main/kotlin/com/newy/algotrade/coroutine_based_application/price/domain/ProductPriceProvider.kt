@@ -4,10 +4,17 @@ import com.newy.algotrade.coroutine_based_application.price.domain.model.Product
 import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
 import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
 import com.newy.algotrade.domain.common.extension.ProductPrice
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.channels.actor
+import kotlinx.coroutines.channels.consumeEach
+import kotlinx.coroutines.channels.produce
+import kotlinx.coroutines.launch
 import java.time.OffsetDateTime
 
 class ProductPriceProvider(
-    private val loader: LoadProductPricePort
+    private val loader: LoadProductPricePort,
+    private val initDataSize: Int = 400
 ) {
     private val listeners = mutableMapOf<Key, Listener>()
     suspend fun loadInitData() {
@@ -22,7 +29,7 @@ class ProductPriceProvider(
                     LoadProductPriceParam(
                         productPriceKey,
                         OffsetDateTime.now(),
-                        1,
+                        initDataSize,
                     )
                 ).let { productPrices ->
                     listeners.forEach { it.onLoadInitData(productPrices) }

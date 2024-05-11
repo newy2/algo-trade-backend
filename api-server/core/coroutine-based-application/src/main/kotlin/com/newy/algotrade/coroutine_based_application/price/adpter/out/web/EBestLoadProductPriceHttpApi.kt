@@ -1,6 +1,7 @@
 package com.newy.algotrade.coroutine_based_application.price.adpter.out.web
 
 import com.newy.algotrade.coroutine_based_application.auth.port.out.GetAccessTokenPort
+import com.newy.algotrade.coroutine_based_application.common.consts.EBestHttpApiInfo
 import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.post
 import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
@@ -15,11 +16,13 @@ class EBestLoadProductPriceHttpApi(
     private val masterUserInfo: PrivateApiInfo,
 ) : LoadProductPricePort {
     override suspend fun productPrices(param: LoadProductPriceParam): List<ProductPrice> {
-        val trCode = param.trCode()
         val accessToken = accessTokenLoader.accessToken(masterUserInfo)
 
+        val (path, apiRateLimit, trCode) = EBestHttpApiInfo.loadProductPrice(param.isIntervalByDays())
+        apiRateLimit.await()
+
         val response = client.post<EBestProductPriceHttpResponse>(
-            path = "/stock/chart",
+            path = path,
             headers = mapOf(
                 "Content-Type" to "application/json; charset=utf-8",
                 "authorization" to "Bearer $accessToken",

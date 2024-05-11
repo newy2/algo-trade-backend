@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     api(project(":api-server:core:domain"))
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
 
     testImplementation(kotlin("test"))
     testImplementation("com.squareup.okhttp3:okhttp:4.12.0")

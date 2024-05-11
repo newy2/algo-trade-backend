@@ -50,7 +50,7 @@ class OnLoadInitDataListenerTest : LoadProductPricePort, ProductPriceProvider.Li
     fun setUp() {
         apiCallCount = 0
         listenerCallCount = 0
-        provider = ProductPriceProvider(this)
+        provider = ProductPriceProvider(loader = this, initDataSize = 1)
         listener = this
     }
 
@@ -140,7 +140,7 @@ class OnUpdatePriceListenerTest : LoadProductPricePort, ProductPriceProvider.Lis
     @BeforeEach
     fun setUp() {
         listenerCallCount = 0
-        provider = ProductPriceProvider(this)
+        provider = ProductPriceProvider(loader = this, initDataSize = 1)
         listener = this
     }
 
@@ -240,7 +240,7 @@ class ProductPriceProviderTest : LoadProductPricePort, ProductPriceProvider.List
 
     @BeforeEach
     fun setUp() {
-        provider = ProductPriceProvider(this).also {
+        provider = ProductPriceProvider(loader = this, initDataSize = 1).also {
             it.putListener(
                 providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)),
                 this
