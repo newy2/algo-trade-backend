@@ -15,12 +15,12 @@ class HttpApiInfoTest {
         }
         EBestHttpApiInfo.loadProductPrice(true).let { (path, rateLimit, trCode) ->
             assertEquals("/stock/chart", path)
-            assertEquals(1000, rateLimit.delayMillis)
+            assertEquals(1500, rateLimit.delayMillis)
             assertEquals(EBestTrCode.GET_PRODUCT_PRICE_BY_DAY.code, trCode)
         }
         EBestHttpApiInfo.loadProductPrice(false).let { (path, rateLimit, trCode) ->
             assertEquals("/stock/chart", path)
-            assertEquals(1000, rateLimit.delayMillis)
+            assertEquals(1500, rateLimit.delayMillis)
             assertEquals(EBestTrCode.GET_PRODUCT_PRICE_BY_MINUTE.code, trCode)
         }
     }

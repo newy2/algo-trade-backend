@@ -21,12 +21,12 @@ object EBestHttpApiInfo {
     private val infos = mapOf(
         EBestTrCode.GET_PRODUCT_PRICE_BY_DAY to Result(
             "/stock/chart",
-            HttpApiRateLimit(1000),
+            HttpApiRateLimit(1500),
             EBestTrCode.GET_PRODUCT_PRICE_BY_DAY.code
         ),
         EBestTrCode.GET_PRODUCT_PRICE_BY_MINUTE to Result(
             "/stock/chart",
-            HttpApiRateLimit(1000),
+            HttpApiRateLimit(1500),
             EBestTrCode.GET_PRODUCT_PRICE_BY_MINUTE.code
         )
     )

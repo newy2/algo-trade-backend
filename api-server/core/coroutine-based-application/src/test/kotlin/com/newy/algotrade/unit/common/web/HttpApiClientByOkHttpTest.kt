@@ -1,4 +1,4 @@
-package com.newy.algotrade.integration.common.web
+package com.newy.algotrade.unit.common.web
 
 import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

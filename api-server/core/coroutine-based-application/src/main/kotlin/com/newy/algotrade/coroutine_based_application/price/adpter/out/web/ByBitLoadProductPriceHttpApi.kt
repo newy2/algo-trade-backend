@@ -25,6 +25,6 @@ class ByBitLoadProductPriceHttpApi(private val client: HttpApiClient) : LoadProd
             jsonExtraValues = ByBitProductPriceHttpResponse.jsonExtraValues(param.intervalMinutes),
         )
 
-        return response.prices
+        return response.prices.sortedBy { it.time.begin }
     }
 }

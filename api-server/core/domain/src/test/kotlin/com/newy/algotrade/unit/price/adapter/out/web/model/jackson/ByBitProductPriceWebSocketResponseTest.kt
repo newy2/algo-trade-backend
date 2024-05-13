@@ -39,15 +39,17 @@ class ByBitProductPriceWebSocketResponseTest {
         val response = converter.toObject<ByBitProductPriceWebSocketResponse>(json)
 
         assertEquals(
-            Candle.TimeFrame.M1(
-                beginTime = 1672324800000,
-                openPrice = "16649.5".toBigDecimal(),
-                highPrice = "16677".toDouble().toBigDecimal(),
-                lowPrice = "16608".toDouble().toBigDecimal(),
-                closePrice = "16677".toDouble().toBigDecimal(),
-                volume = "2.081".toBigDecimal(),
+            listOf(
+                Candle.TimeFrame.M1(
+                    beginTime = 1672324800000,
+                    openPrice = "16649.5".toBigDecimal(),
+                    highPrice = "16677".toDouble().toBigDecimal(),
+                    lowPrice = "16608".toDouble().toBigDecimal(),
+                    closePrice = "16677".toDouble().toBigDecimal(),
+                    volume = "2.081".toBigDecimal(),
+                ),
             ),
-            response.price
+            response.prices
         )
     }
 }
