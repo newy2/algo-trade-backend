@@ -1,6 +1,7 @@
 package com.newy.algotrade.integration.price.adapter.out.web.worker
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.ByBitLoadProductPriceHttpApi
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceSelector
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.worker.PollingLoadProductPrice
@@ -11,7 +12,6 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
-import helpers.HttpApiClientByOkHttp
 import helpers.TestEnv
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
@@ -43,7 +43,7 @@ class ByBitTestHelper(
 }
 
 class PollingByBitLoadProductPriceTest {
-    private val client = HttpApiClientByOkHttp(
+    private val client = DefaultHttpApiClient(
         OkHttpClient(),
         TestEnv.ByBit.url,
         JsonConverterByJackson(jacksonObjectMapper())

@@ -1,7 +1,5 @@
-package helpers
+package com.newy.algotrade.coroutine_based_application.common.web
 
-import com.newy.algotrade.coroutine_based_application.common.web.FormData
-import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
 import com.newy.algotrade.domain.common.mapper.JsonConverter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
@@ -14,7 +12,7 @@ import java.io.IOException
 import kotlin.coroutines.resumeWithException
 import kotlin.reflect.KClass
 
-class HttpApiClientByOkHttp(
+class DefaultHttpApiClient(
     private val client: OkHttpClient,
     private val host: String = "",
     private val jsonConverter: JsonConverter,

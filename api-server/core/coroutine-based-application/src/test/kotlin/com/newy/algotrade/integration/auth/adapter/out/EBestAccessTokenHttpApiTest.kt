@@ -2,11 +2,11 @@ package com.newy.algotrade.integration.auth.adapter.out
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
+import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.auth.adapter.out.web.model.jackson.EBestAccessTokenHttpResponse
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
-import helpers.HttpApiClientByOkHttp
 import helpers.TestEnv
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
@@ -41,7 +41,7 @@ class EBestGetAccessTokenTest {
     @Test
     fun `엑세스 토큰 발급하기`() = runBlocking {
         val api = EBestAccessTokenHttpApi(
-            HttpApiClientByOkHttp(
+            DefaultHttpApiClient(
                 OkHttpClient(),
                 TestEnv.EBest.url,
                 JsonConverterByJackson(jacksonObjectMapper())

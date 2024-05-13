@@ -2,12 +2,8 @@ package com.newy.algotrade.unit.common.web
 
 import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.common.web.FormData
-import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
-import com.newy.algotrade.coroutine_based_application.common.web.get
-import com.newy.algotrade.coroutine_based_application.common.web.post
+import com.newy.algotrade.coroutine_based_application.common.web.*
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
-import helpers.HttpApiClientByOkHttp
 import helpers.TestServerPort
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
@@ -23,7 +19,7 @@ open class BaseTest {
 
     @BeforeEach
     fun setUp() {
-        client = HttpApiClientByOkHttp(
+        client = DefaultHttpApiClient(
             OkHttpClient(),
             "http://localhost:$port",
             JsonConverterByJackson(jacksonObjectMapper()),

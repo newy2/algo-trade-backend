@@ -1,9 +1,9 @@
 package com.newy.algotrade.study.libs
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.newy.algotrade.coroutine_based_application.common.web.awaitCall
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import helpers.TestServerPort
-import helpers.awaitCall
 import kotlinx.coroutines.runBlocking
 import okhttp3.FormBody
 import okhttp3.Headers
