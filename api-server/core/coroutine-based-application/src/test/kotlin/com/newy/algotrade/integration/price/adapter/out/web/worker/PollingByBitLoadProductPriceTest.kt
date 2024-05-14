@@ -5,13 +5,13 @@ import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiC
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.ByBitLoadProductPriceHttpApi
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceSelector
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.worker.PollingLoadProductPrice
-import com.newy.algotrade.coroutine_based_application.price.domain.model.ProductPriceKey
 import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
+import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.TestEnv
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
@@ -31,7 +31,7 @@ class ByBitTestHelper(
     loader: LoadProductPricePort,
     delayMillis: Long,
     coroutineContext: CoroutineContext,
-    callback: suspend (List<ProductPrice>) -> Unit
+    callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit
 ) : PollingLoadProductPrice(loader, delayMillis, coroutineContext, callback) {
     override fun endTime(): OffsetDateTime {
         return OffsetDateTime.parse("2024-05-09T00:00+09:00")
@@ -56,13 +56,11 @@ class PollingByBitLoadProductPriceTest {
 
     @Test
     fun `바이빗 가격정보 폴링`() = runBlocking {
-        val channel = Channel<ProductPrice>()
-
+        val channel = Channel<Pair<ProductPriceKey, ProductPrice>>()
         var index = 0
-        val results = mutableListOf<ProductPrice>()
 
-        val pollingJob = ByBitTestHelper(api, delayMillis = 1000, coroutineContext) {
-            channel.send(it[index++]) // 실시간 API 흉내를 내기 위해서, index 사용
+        val pollingJob = ByBitTestHelper(api, delayMillis = 1000, coroutineContext) { (key, list) ->
+            channel.send(Pair(key, list[index++])) // 실시간 API 흉내를 내기 위해서, index 사용
         }
 
         pollingJob.start()
@@ -75,10 +73,14 @@ class PollingByBitLoadProductPriceTest {
             )
         )
 
+        var productPriceKey: ProductPriceKey? = null
+        val productPrices = mutableListOf<ProductPrice>()
         val watcher = launch {
             while (isActive) {
-                results.add(channel.receive())
-                if (results.size == 2) {
+                val (key, value) = channel.receive()
+                productPriceKey = key
+                productPrices.add(value)
+                if (productPrices.size == 2) {
                     pollingJob.cancel()
                     cancel()
                 }
@@ -86,6 +88,15 @@ class PollingByBitLoadProductPriceTest {
         }
         watcher.join()
 
+        assertEquals(
+            ProductPriceKey(
+                Market.BY_BIT,
+                ProductType.SPOT,
+                "BTCUSDT",
+                Duration.ofMinutes(1),
+            ),
+            productPriceKey
+        )
         assertEquals(
             listOf(
                 Candle.TimeFrame.M1(
@@ -104,7 +115,7 @@ class PollingByBitLoadProductPriceTest {
                     closePrice = 60379.28.toBigDecimal(),
                     volume = 0.133579.toBigDecimal()
                 )
-            ), results
+            ), productPrices
         )
     }
 }

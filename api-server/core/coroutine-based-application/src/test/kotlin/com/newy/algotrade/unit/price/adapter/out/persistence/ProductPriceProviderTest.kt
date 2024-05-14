@@ -1,13 +1,13 @@
 package com.newy.algotrade.unit.price.adapter.out.persistence
 
 import com.newy.algotrade.coroutine_based_application.price.domain.ProductPriceProvider
-import com.newy.algotrade.coroutine_based_application.price.domain.model.ProductPriceKey
 import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
 import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
+import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

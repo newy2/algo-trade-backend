@@ -4,7 +4,6 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.ByBitLoadProductPriceHttpApi
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceSelector
-import com.newy.algotrade.coroutine_based_application.price.domain.model.ProductPriceKey
 import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
@@ -12,6 +11,7 @@ import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
 import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.ByBitProductPriceHttpResponse
+import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.TestEnv
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient

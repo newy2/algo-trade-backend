@@ -9,7 +9,7 @@ import kotlin.coroutines.CoroutineContext
 abstract class PollingJob<T, R>(
     private val delayMillis: Long,
     private val coroutineContext: CoroutineContext,
-    private val callback: suspend (R) -> Unit
+    private val callback: suspend (Pair<T, R>) -> Unit
 ) : Polling<T> {
     private lateinit var intervalTick: ReceiveChannel<Unit>
     private val channel = Channel<T>()
@@ -21,7 +21,9 @@ abstract class PollingJob<T, R>(
         intervalTick = ticker(delayMillis, initialDelayMillis = 0, coroutineContext)
         CoroutineScope(coroutineContext).launch {
             for (nextTick in intervalTick) {
-                callback(eachProcess(channel.receive()))
+                val key = channel.receive()
+                val value = eachProcess(key)
+                callback(key to value)
             }
         }
     }

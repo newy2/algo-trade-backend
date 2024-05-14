@@ -4,12 +4,12 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.socket.ByBitProductPriceWebSocket
 import com.newy.algotrade.coroutine_based_application.common.web.socket.ByBitWebSocketPing
 import com.newy.algotrade.coroutine_based_application.common.web.socket.DefaultWebSocketClient
-import com.newy.algotrade.coroutine_based_application.price.domain.model.ProductPriceKey
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
+import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.TestServerPort
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
@@ -27,7 +27,10 @@ import kotlin.test.assertNull
 open class BaseByBitProductPriceWebSocketTest {
     protected val port = TestServerPort.nextValue()
 
-    protected fun newClient(coroutineContext: CoroutineContext, callback: suspend (List<ProductPrice>) -> Unit = {}) =
+    protected fun newClient(
+        coroutineContext: CoroutineContext,
+        callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit = {}
+    ) =
         ByBitProductPriceWebSocket(
             DefaultWebSocketClient(
                 OkHttpClient(),
@@ -37,6 +40,7 @@ open class BaseByBitProductPriceWebSocketTest {
                 coroutineContext,
                 ByBitWebSocketPing()
             ),
+            ProductType.SPOT,
             JsonConverterByJackson(jacksonObjectMapper()),
             coroutineContext,
             callback
@@ -198,16 +202,25 @@ class ByBitProductPriceWebSocketReceiveMessageTest : BaseByBitProductPriceWebSoc
 
     @Test
     fun `메세지 파싱 - 결과값이 1개인 경우`() = runBlocking {
-        val receiveMessage = Channel<List<ProductPrice>>()
+        val receiveMessage = Channel<Pair<ProductPriceKey, List<ProductPrice>>>()
         val client = newClient(coroutineContext) {
             receiveMessage.send(it)
         }
 
         client.start()
 
-        val results = receiveMessage.receive()
+        val (productPriceKey, productPrices) = receiveMessage.receive()
         client.cancel()
 
+        assertEquals(
+            ProductPriceKey(
+                Market.BY_BIT,
+                ProductType.SPOT,
+                "BTCUSDT",
+                Duration.ofMinutes(1)
+            ),
+            productPriceKey
+        )
         assertEquals(
             listOf(
                 Candle.TimeFrame.M1(
@@ -219,7 +232,7 @@ class ByBitProductPriceWebSocketReceiveMessageTest : BaseByBitProductPriceWebSoc
                     volume = "0.00010".toBigDecimal(),
                 )
             ),
-            results
+            productPrices
         )
     }
 }
@@ -254,7 +267,7 @@ class ByBitProductPriceWebSocketReceiveMessageTest2 : BaseByBitProductPriceWebSo
 
     @Test
     fun `접속 완료 데이터인 경우 무시한다`() = runTest {
-        val receiveMessage = Channel<List<ProductPrice>>()
+        val receiveMessage = Channel<Pair<ProductPriceKey, List<ProductPrice>>>()
         val client = newClient(coroutineContext) {
             receiveMessage.send(it)
         }

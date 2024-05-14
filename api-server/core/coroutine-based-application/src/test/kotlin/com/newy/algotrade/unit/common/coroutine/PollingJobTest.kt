@@ -10,13 +10,13 @@ import kotlin.coroutines.CoroutineContext
 class StringPollingJob(
     delayMillis: Long,
     coroutineContext: CoroutineContext,
-    callback: suspend (String) -> Unit,
+    callback: suspend (Pair<String, String>) -> Unit,
 ) : PollingJob<String, String>(delayMillis, coroutineContext, callback) {
     companion object {
         suspend fun startWith(
             delayMillis: Long,
             coroutineContext: CoroutineContext,
-            callback: suspend (String) -> Unit,
+            callback: suspend (Pair<String, String>) -> Unit,
         ): StringPollingJob {
             return StringPollingJob(delayMillis, coroutineContext, callback).also { it.start() }
         }
@@ -33,7 +33,7 @@ class PollingTest {
             10,
             coroutineContext
         ) {
-            log += "$it "
+            log += "${it.second} "
         }
 
         polling.subscribe("a")
@@ -52,7 +52,7 @@ class PollingTest {
             10,
             coroutineContext
         ) {
-            log += "$it "
+            log += "${it.second} "
         }
 
         polling.subscribe("a")
@@ -73,7 +73,7 @@ class PollingTest {
             10,
             coroutineContext
         ) {
-            log += "$it "
+            log += "${it.second} "
         }
 
         polling.subscribe("a")
@@ -93,7 +93,7 @@ class PollingTest {
             10,
             coroutineContext
         ) {
-            log += "$it "
+            log += "${it.second} "
         }
 
         polling.subscribe("a")

@@ -12,7 +12,7 @@ abstract class ByBitWebSocket<T, R>(
     private val client: WebSocketClient,
     protected val jsonConverter: JsonConverter,
     private val coroutineContext: CoroutineContext,
-    private val callback: suspend (R) -> Unit,
+    private val callback: suspend (Pair<T, R>) -> Unit,
 ) : Polling<T>, WebSocketClientListener() {
     private val subscribes = mutableSetOf<T>()
 
@@ -20,7 +20,7 @@ abstract class ByBitWebSocket<T, R>(
         client.setListener(this)
     }
 
-    abstract suspend fun eachProcess(message: String): R?
+    abstract suspend fun eachProcess(message: String): Pair<T, R>?
     abstract fun parsing(data: T): String
 
     override fun onOpen() {

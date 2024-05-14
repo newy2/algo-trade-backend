@@ -1,9 +1,9 @@
 package com.newy.algotrade.coroutine_based_application.price.port.out.model
 
-import com.newy.algotrade.coroutine_based_application.price.domain.model.ProductPriceKey
 import com.newy.algotrade.domain.common.consts.EBestTrCode
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
+import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
@@ -45,6 +45,7 @@ class LoadProductPriceParam(
     }
 
     fun trCode(): String {
+        // TODO Remove this
         useOnly(Market.E_BEST)
 
         return if (isIntervalByDays()) {

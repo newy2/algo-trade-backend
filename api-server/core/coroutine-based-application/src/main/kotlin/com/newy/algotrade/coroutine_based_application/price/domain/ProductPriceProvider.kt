@@ -1,9 +1,9 @@
 package com.newy.algotrade.coroutine_based_application.price.domain
 
-import com.newy.algotrade.coroutine_based_application.price.domain.model.ProductPriceKey
 import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
 import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
 import com.newy.algotrade.domain.common.extension.ProductPrice
+import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import java.time.OffsetDateTime
 
 class ProductPriceProvider(
