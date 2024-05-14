@@ -21,9 +21,9 @@ class ByBitProductPriceWebSocket(
     coroutineContext,
     callback,
 ) {
-    override fun parsing(data: ProductPriceKey): String {
-        val interval = if (data.interval.toDays() >= 1) "D" else data.interval.toMinutes().toString()
-        return "kline.$interval.${data.productCode}"
+    override fun parsing(key: ProductPriceKey): String {
+        val interval = if (key.interval.toDays() >= 1) "D" else key.interval.toMinutes().toString()
+        return "kline.$interval.${key.productCode}"
     }
 
     override suspend fun eachProcess(json: String): Pair<ProductPriceKey, List<ProductPrice>>? {

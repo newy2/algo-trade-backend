@@ -6,16 +6,16 @@ import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.ticker
 import kotlin.coroutines.CoroutineContext
 
-abstract class PollingJob<T, R>(
+abstract class PollingJob<K, V>(
     private val delayMillis: Long,
     private val coroutineContext: CoroutineContext,
-    private val callback: suspend (Pair<T, R>) -> Unit
-) : Polling<T> {
+    override val callback: suspend (Pair<K, V>) -> Unit
+) : Polling<K, V> {
     private lateinit var intervalTick: ReceiveChannel<Unit>
-    private val channel = Channel<T>()
-    private val producers: MutableMap<T, Job> = mutableMapOf()
+    private val channel = Channel<K>()
+    private val producers: MutableMap<K, Job> = mutableMapOf()
 
-    abstract suspend fun eachProcess(data: T): R
+    abstract suspend fun eachProcess(key: K): V
 
     override suspend fun start() {
         intervalTick = ticker(delayMillis, initialDelayMillis = 0, coroutineContext)
@@ -23,7 +23,7 @@ abstract class PollingJob<T, R>(
             for (nextTick in intervalTick) {
                 val key = channel.receive()
                 val value = eachProcess(key)
-                callback(key to value)
+                onNextTick(key, value)
             }
         }
     }
@@ -33,16 +33,16 @@ abstract class PollingJob<T, R>(
         coroutineContext.cancelChildren()
     }
 
-    override suspend fun subscribe(data: T) {
-        producers.put(data, CoroutineScope(coroutineContext).launch {
+    override suspend fun subscribe(key: K) {
+        producers.put(key, CoroutineScope(coroutineContext).launch {
             while (isActive) {
-                channel.send(data)
+                channel.send(key)
                 yield()
             }
         })?.cancel()
     }
 
-    override fun unSubscribe(data: T) {
-        producers.getValue(data).cancel()
+    override fun unSubscribe(key: K) {
+        producers.getValue(key).cancel()
     }
 }

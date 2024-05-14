@@ -1,5 +1,6 @@
 package com.newy.algotrade.unit.price.adapter.out.persistence
 
+import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.price.domain.ProductPriceProvider
 import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
 import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
@@ -12,7 +13,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.fail
 import java.time.Duration
 import java.time.ZonedDateTime
 import kotlin.test.assertEquals
@@ -39,266 +39,260 @@ fun productPriceKey(productCode: String, interval: Duration) =
     else
         ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
-@DisplayName("상품 가격 초기 데이터 로드 listener 테스트")
-class OnLoadInitDataListenerTest : LoadProductPricePort, ProductPriceProvider.Listener {
-    private var apiCallCount = 0
-    private var listenerCallCount = 0
-    private lateinit var provider: ProductPriceProvider
-    private lateinit var listener: ProductPriceProvider.Listener
+open class NullListenerForTestHelper(
+    override val callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit = {}
+) : LoadProductPricePort,
+    ProductPriceProvider.Listener,
+    Polling<ProductPriceKey, List<ProductPrice>> {
+    override suspend fun productPrices(param: LoadProductPriceParam): List<ProductPrice> = emptyList()
+    override suspend fun start() {}
+    override fun cancel() {}
+    override fun unSubscribe(key: ProductPriceKey) {}
+    override suspend fun subscribe(key: ProductPriceKey) {}
+    override suspend fun onLoadInitData(prices: List<ProductPrice>) {}
+    override suspend fun onUpdatePrice(key: ProductPriceKey, price: ProductPrice) {}
+}
 
-    @BeforeEach
-    fun setUp() {
-        apiCallCount = 0
-        listenerCallCount = 0
-        provider = ProductPriceProvider(loader = this, initDataSize = 1)
-        listener = this
-    }
+@DisplayName("ProductPriceProvider 초기화 테스트")
+class InitProductPriceProviderTest : NullListenerForTestHelper() {
+    private lateinit var provider: ProductPriceProvider
+    private var apiCallCount = 0
+    private var pollingSubscribeCount = 0
+    private var listenerCallCount = 0
+    private var log = ""
 
     override suspend fun productPrices(param: LoadProductPriceParam): List<ProductPrice> {
         apiCallCount++
+        log += "productPrices -> "
         return emptyList()
     }
 
     override suspend fun onLoadInitData(prices: List<ProductPrice>) {
         listenerCallCount++
+        log += "onLoadInitData -> "
     }
 
-    override suspend fun onUpdatePrice(key: ProductPriceKey, price: ProductPrice) {
-        TODO("Not yet implemented")
+    override suspend fun subscribe(key: ProductPriceKey) {
+        pollingSubscribeCount++
+        log += "subscribe | "
+    }
+
+    @BeforeEach
+    fun setUp() {
+        provider = ProductPriceProvider(
+            initDataLoader = this,
+            pollingDataLoader = this,
+            initDataSize = 1,
+        )
+        apiCallCount = 0
+        pollingSubscribeCount = 0
+        listenerCallCount = 0
+        log = ""
     }
 
     @Test
-    fun `등록된 리스너가 없는 경우`() = runBlocking {
-        provider.loadInitData()
-
-        assertEquals(0, apiCallCount)
-        assertEquals(0, listenerCallCount)
-    }
-
-    @Test
-    fun `리스너를 1개만 등록한 경우`() = runBlocking {
-        provider.putListener(providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)), listener)
-
-        provider.loadInitData()
+    fun `리스너를 1개로 초기화 하는 경우`() = runBlocking {
+        provider.init(
+            providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)) to this@InitProductPriceProviderTest,
+        )
 
         assertEquals(1, apiCallCount)
+        assertEquals(1, pollingSubscribeCount)
         assertEquals(1, listenerCallCount)
+        assertEquals("productPrices -> onLoadInitData -> subscribe | ", log)
     }
 
     @Test
-    fun `같은 상품에 대한 리스너를 여러 개 등록한 경우`() = runBlocking {
-        provider.putListener(providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)), listener)
-        provider.putListener(providerKey("key2", "BTCUSDT", Duration.ofMinutes(1)), listener)
-
-        provider.loadInitData()
+    fun `같은 상품에 대한 2개의 리스너로 초기화 하는 경우`() = runBlocking {
+        provider.init(
+            providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)) to this@InitProductPriceProviderTest,
+            providerKey("key2", "BTCUSDT", Duration.ofMinutes(1)) to this@InitProductPriceProviderTest,
+        )
 
         assertEquals(1, apiCallCount)
+        assertEquals(1, pollingSubscribeCount)
         assertEquals(2, listenerCallCount)
+        assertEquals("productPrices -> onLoadInitData -> onLoadInitData -> subscribe | ", log)
     }
 
     @Test
-    fun `시간값이 다른 상품에 대한 리스너를 여러 개 등록한 경우`() = runBlocking {
-        provider.putListener(providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)), listener)
-        provider.putListener(providerKey("key2", "BTCUSDT", Duration.ofMinutes(5)), listener)
-
-        provider.loadInitData()
+    fun `다른 상품에 대한 2개의 리스너로 초기화 하는 경우`() = runBlocking {
+        provider.init(
+            providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)) to this@InitProductPriceProviderTest,
+            providerKey("key2", "BTCUSDT", Duration.ofMinutes(5)) to this@InitProductPriceProviderTest,
+        )
 
         assertEquals(2, apiCallCount)
+        assertEquals(2, pollingSubscribeCount)
         assertEquals(2, listenerCallCount)
-    }
-
-    @Test
-    fun `다른 시장 상품에 대한 리스너를 여러 개 등록한 경우`() = runBlocking {
-        provider.putListener(providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)), listener)
-        provider.putListener(providerKey("key2", "삼성전자", Duration.ofMinutes(1)), listener)
-
-        provider.loadInitData()
-
-        assertEquals(2, apiCallCount)
-        assertEquals(2, listenerCallCount)
-    }
-
-    @Test
-    fun `리스너 등록후 삭제한 경우`() = runBlocking {
-        provider.putListener(providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)), listener)
-        provider.putListener(providerKey("key2", "삼성전자", Duration.ofMinutes(1)), listener)
-        provider.removeListener(providerKey("key2", "삼성전자", Duration.ofMinutes(1)))
-
-        provider.loadInitData()
-
-        assertEquals(1, apiCallCount)
-        assertEquals(1, listenerCallCount)
+        assertEquals(
+            "productPrices -> onLoadInitData -> subscribe | productPrices -> onLoadInitData -> subscribe | ",
+            log
+        )
     }
 }
 
 @DisplayName("상품 가격 업데이트 listener 테스트")
-class OnUpdatePriceListenerTest : LoadProductPricePort, ProductPriceProvider.Listener {
-    private var listenerCallCount = 0
+class OnUpdatePriceListenerTest : LoadProductPricePort, NullListenerForTestHelper() {
     private lateinit var provider: ProductPriceProvider
-    private lateinit var listener: ProductPriceProvider.Listener
-
-    @BeforeEach
-    fun setUp() {
-        listenerCallCount = 0
-        provider = ProductPriceProvider(loader = this, initDataSize = 1)
-        listener = this
-    }
-
-    override suspend fun productPrices(param: LoadProductPriceParam): List<ProductPrice> {
-        return emptyList()
-    }
-
-    override suspend fun onLoadInitData(prices: List<ProductPrice>) {
-        TODO("Not yet implemented")
-    }
+    private var listenerCallCount = 0
 
     override suspend fun onUpdatePrice(key: ProductPriceKey, price: ProductPrice) {
         listenerCallCount++
     }
 
-    @Test
-    fun `등록된 리스너가 없는 경우`() = runBlocking {
+    private suspend fun setUp() {
+        provider = ProductPriceProvider(
+            initDataLoader = this,
+            pollingDataLoader = this,
+            initDataSize = 1
+        ).also {
+            it.init(
+                providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)) to this@OnUpdatePriceListenerTest,
+                providerKey("key2", "BTCUSDT", Duration.ofMinutes(5)) to this@OnUpdatePriceListenerTest,
+            )
+        }
+    }
+
+    private suspend fun updatePrice() {
         provider.updatePrice(
             productPriceKey("BTCUSDT", Duration.ofMinutes(1)),
             productPrice(1000, Duration.ofMinutes(1))
         )
-
-        assertEquals(0, listenerCallCount)
     }
 
     @Test
-    fun `리스너를 1개만 등록한 경우`() = runBlocking {
-        provider.putListener(providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)), listener)
+    fun `등록한 상품의 가격이 업데이트 된 경우`() = runBlocking {
+        setUp()
 
-        provider.updatePrice(
-            productPriceKey("BTCUSDT", Duration.ofMinutes(1)),
-            productPrice(1000, Duration.ofMinutes(1))
-        )
+        updatePrice()
 
         assertEquals(1, listenerCallCount)
     }
 
     @Test
-    fun `같은 상품에 대한 리스너를 여러 개 등록한 경우`() = runBlocking {
-        provider.putListener(providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)), listener)
-        provider.putListener(providerKey("key2", "BTCUSDT", Duration.ofMinutes(1)), listener)
-
-        provider.updatePrice(
-            productPriceKey("BTCUSDT", Duration.ofMinutes(1)),
-            productPrice(1000, Duration.ofMinutes(1))
+    fun `같은 상품에 대한 리스터를 추가한 경우`() = runBlocking {
+        setUp()
+        provider.putListener(
+            providerKey("key3", "BTCUSDT", Duration.ofMinutes(1)), this@OnUpdatePriceListenerTest
         )
+
+        updatePrice()
 
         assertEquals(2, listenerCallCount)
     }
 
     @Test
-    fun `시간값이 다른 상품에 대한 리스너를 여러 개 등록한 경우`() = runBlocking {
-        provider.putListener(providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)), listener)
-        provider.putListener(providerKey("key2", "BTCUSDT", Duration.ofMinutes(5)), listener)
+    fun `리스너를 삭제한 경우`() = runBlocking {
+        setUp()
+        provider.removeListener(providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)))
 
-        provider.updatePrice(
-            productPriceKey("BTCUSDT", Duration.ofMinutes(1)),
-            productPrice(1000, Duration.ofMinutes(1))
-        )
+        updatePrice()
 
-        assertEquals(1, listenerCallCount)
-    }
-
-    @Test
-    fun `다른 시장 상품에 대한 리스너를 여러 개 등록한 경우`() = runBlocking {
-        provider.putListener(providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)), listener)
-        provider.putListener(providerKey("key2", "삼성전자", Duration.ofMinutes(1)), listener)
-
-        provider.updatePrice(
-            productPriceKey("BTCUSDT", Duration.ofMinutes(1)),
-            productPrice(1000, Duration.ofMinutes(1))
-        )
-
-        assertEquals(1, listenerCallCount)
-    }
-
-    @Test
-    fun `리스너 등록후 삭제한 경우`() = runBlocking {
-        provider.putListener(providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)), listener)
-        provider.putListener(providerKey("key2", "삼성전자", Duration.ofMinutes(1)), listener)
-        provider.removeListener(providerKey("key2", "삼성전자", Duration.ofMinutes(1)))
-
-        provider.updatePrice(
-            productPriceKey("BTCUSDT", Duration.ofMinutes(1)),
-            productPrice(1000, Duration.ofMinutes(1))
-        )
-
-        assertEquals(1, listenerCallCount)
+        assertEquals(0, listenerCallCount)
     }
 }
 
-@DisplayName("notify 된 상품 가격 확인 테스트")
-class ProductPriceProviderTest : LoadProductPricePort, ProductPriceProvider.Listener {
+@DisplayName("리스너 삭제 테스트")
+class UnSubscribeTest : NullListenerForTestHelper() {
     private lateinit var provider: ProductPriceProvider
-    private var loadedInitPrices: List<ProductPrice> = emptyList()
-    private var updatePrice: ProductPrice? = null
+    private var unSubscribeKey: ProductPriceKey? = null
 
-    @BeforeEach
-    fun setUp() {
-        provider = ProductPriceProvider(loader = this, initDataSize = 1).also {
-            it.putListener(
-                providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)),
-                this
+    override fun unSubscribe(key: ProductPriceKey) {
+        unSubscribeKey = key
+    }
+
+    private suspend fun setUp() {
+        provider = ProductPriceProvider(
+            initDataLoader = this,
+            pollingDataLoader = this,
+            initDataSize = 1
+        ).also {
+            it.init(
+                providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)) to this,
+                providerKey("key2", "BTCUSDT", Duration.ofMinutes(1)) to this,
+                providerKey("key3", "BTCUSDT", Duration.ofMinutes(5)) to this,
             )
         }
-        loadedInitPrices = emptyList()
-        updatePrice = null
     }
 
-    override suspend fun productPrices(param: LoadProductPriceParam): List<ProductPrice> {
-        return listOf(productPrice(1000, Duration.ofMinutes(1)))
+    @Test
+    fun `삭제하는 상품을 사용하는 다른 리스너가 있다면, unSubscribe 를 호출하지 않는다`() = runBlocking {
+        setUp()
+
+        provider.removeListener(providerKey("key2", "BTCUSDT", Duration.ofMinutes(1)))
+
+        assertNull(unSubscribeKey)
     }
+
+    @Test
+    fun `삭제하는 상품을 사용하는 다른 리스너가 없다면, unSubscribe 를 호출한다`() = runBlocking {
+        setUp()
+
+        provider.removeListener(providerKey("key3", "BTCUSDT", Duration.ofMinutes(5)))
+
+        assertEquals(unSubscribeKey, productPriceKey("BTCUSDT", Duration.ofMinutes(5)))
+    }
+}
+
+@DisplayName("리스너 등록 테스트")
+class SubscribeTest : NullListenerForTestHelper() {
+    private lateinit var provider: ProductPriceProvider
+    private var subscribeKey: ProductPriceKey? = null
+    private var log = ""
 
     override suspend fun onLoadInitData(prices: List<ProductPrice>) {
-        loadedInitPrices = prices
+        log += "global@onLoadInitData "
     }
 
-    override suspend fun onUpdatePrice(key: ProductPriceKey, price: ProductPrice) {
-        updatePrice = price
+    override suspend fun subscribe(key: ProductPriceKey) {
+        log += "subscribe "
+        subscribeKey = key
     }
 
-    @Test
-    fun `등록한 상품의 초기 데이터 로드가 완료된 경우`() = runBlocking {
-        provider.loadInitData()
-
-        assertEquals(listOf(productPrice(1000, Duration.ofMinutes(1))), loadedInitPrices)
-    }
-
-    @Test
-    fun `등록한 상품의 가격정보가 업데이트 된 경우`() = runBlocking {
-        provider.updatePrice(
-            productPriceKey("BTCUSDT", Duration.ofMinutes(1)),
-            productPrice(1000, Duration.ofMinutes(1))
-        )
-
-        assertEquals(productPrice(1000, Duration.ofMinutes(1)), updatePrice)
-    }
-
-    @Test
-    fun `다른 상품의 가격정보가 업데이트 된 경우`() = runBlocking {
-        provider.updatePrice(
-            productPriceKey("BTCUSDT", Duration.ofMinutes(5)),
-            productPrice(1000, Duration.ofMinutes(5))
-        )
-
-        assertNull(updatePrice)
-    }
-
-    @Test
-    fun `ProductPriceKey 의 interval 과 ProductPrice dml interval 이 다른 경우`() = runBlocking {
-        try {
-            provider.updatePrice(
-                productPriceKey("BTCUSDT", Duration.ofMinutes(1)),
-                productPrice(1000, Duration.ofMinutes(5)),
+    private suspend fun setUp() {
+        provider = ProductPriceProvider(
+            initDataLoader = this,
+            pollingDataLoader = this,
+            initDataSize = 1
+        ).also {
+            it.init(
+                providerKey("key1", "BTCUSDT", Duration.ofMinutes(1)) to this,
             )
-            fail("")
-        } catch (e: IllegalArgumentException) {
-            assertEquals("잘못된 파라미터 입니다.", e.message)
         }
+        subscribeKey = null
+        log = ""
+    }
+
+    @Test
+    fun `이미 subscribe 하고 있는 상품에 대한 리스너를 추가한다면, subscribe 를 호출하지 않는다`() = runBlocking {
+        setUp()
+
+        provider.putListener(
+            providerKey("key2", "BTCUSDT", Duration.ofMinutes(1)),
+            object : NullListenerForTestHelper() {
+                override suspend fun onLoadInitData(prices: List<ProductPrice>) {
+                    log += "onLoadInitData "
+                }
+            })
+
+        assertEquals("onLoadInitData ", log)
+        assertNull(subscribeKey)
+    }
+
+    @Test
+    fun `subscribe 하지 않은 상품을 추가한다면, subscribe 를 호출한다`() = runBlocking {
+        setUp()
+
+        provider.putListener(
+            providerKey("key2", "BTCUSDT", Duration.ofMinutes(5)),
+            object : NullListenerForTestHelper() {
+                override suspend fun onLoadInitData(prices: List<ProductPrice>) {
+                    log += "onLoadInitData -> "
+                }
+            })
+
+        assertEquals("onLoadInitData -> subscribe ", log)
+        assertEquals(subscribeKey, productPriceKey("BTCUSDT", Duration.ofMinutes(5)))
     }
 }

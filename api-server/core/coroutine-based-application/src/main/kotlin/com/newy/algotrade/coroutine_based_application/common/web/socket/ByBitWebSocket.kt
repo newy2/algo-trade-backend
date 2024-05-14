@@ -8,20 +8,20 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext
 
-abstract class ByBitWebSocket<T, R>(
+abstract class ByBitWebSocket<K, V>(
     private val client: WebSocketClient,
     protected val jsonConverter: JsonConverter,
     private val coroutineContext: CoroutineContext,
-    private val callback: suspend (Pair<T, R>) -> Unit,
-) : Polling<T>, WebSocketClientListener() {
-    private val subscribes = mutableSetOf<T>()
+    override val callback: suspend (Pair<K, V>) -> Unit,
+) : Polling<K, V>, WebSocketClientListener() {
+    private val subscribes = mutableSetOf<K>()
 
     init {
         client.setListener(this)
     }
 
-    abstract suspend fun eachProcess(message: String): Pair<T, R>?
-    abstract fun parsing(data: T): String
+    abstract suspend fun eachProcess(message: String): Pair<K, V>?
+    abstract fun parsing(key: K): String
 
     override fun onOpen() {
         sendSubscribeMessage()
@@ -33,8 +33,8 @@ abstract class ByBitWebSocket<T, R>(
 
     override fun onMessage(message: String) {
         CoroutineScope(coroutineContext).launch {
-            eachProcess(message)?.let {
-                callback(it)
+            eachProcess(message)?.let { (key, value) ->
+                onNextTick(key, value)
             }
         }
     }
@@ -43,28 +43,28 @@ abstract class ByBitWebSocket<T, R>(
         client.start()
     }
 
-    override suspend fun subscribe(data: T) {
-        subscribes.add(data)
+    override suspend fun subscribe(key: K) {
+        subscribes.add(key)
         client.send(
             jsonConverter.toJson(
                 mapOf(
                     "op" to "subscribe",
                     "args" to arrayOf(
-                        parsing(data)
+                        parsing(key)
                     )
                 )
             )
         )
     }
 
-    override fun unSubscribe(data: T) {
-        subscribes.remove(data)
+    override fun unSubscribe(key: K) {
+        subscribes.remove(key)
         client.send(
             jsonConverter.toJson(
                 mapOf(
                     "op" to "unsubscribe",
                     "args" to arrayOf(
-                        parsing(data)
+                        parsing(key)
                     )
                 )
             )

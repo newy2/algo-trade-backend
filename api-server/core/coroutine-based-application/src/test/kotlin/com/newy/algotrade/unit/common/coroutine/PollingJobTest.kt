@@ -22,7 +22,7 @@ class StringPollingJob(
         }
     }
 
-    override suspend fun eachProcess(data: String) = data
+    override suspend fun eachProcess(key: String) = key
 }
 
 class PollingTest {

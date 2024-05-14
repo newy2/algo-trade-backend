@@ -14,10 +14,10 @@ open class PollingLoadProductPrice(
     coroutineContext: CoroutineContext,
     callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit
 ) : PollingJob<ProductPriceKey, List<ProductPrice>>(delayMillis, coroutineContext, callback) {
-    override suspend fun eachProcess(data: ProductPriceKey): List<ProductPrice> {
+    override suspend fun eachProcess(key: ProductPriceKey): List<ProductPrice> {
         return loader.productPrices(
             LoadProductPriceParam(
-                data,
+                key,
                 endTime(),
                 limit()
             )
