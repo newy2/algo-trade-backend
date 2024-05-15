@@ -2,8 +2,8 @@ package com.newy.algotrade.domain.chart.strategy
 
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
-import com.newy.algotrade.domain.chart.OrderSignal
-import com.newy.algotrade.domain.chart.OrderSignalHistory
+import com.newy.algotrade.domain.chart.order.OrderSignal
+import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 
 class StrategyRunner(
     private val candles: Candles,

@@ -1,10 +1,10 @@
-package com.newy.algotrade.unit.chart
+package com.newy.algotrade.unit.chart.order
 
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.OrderSignal
-import com.newy.algotrade.domain.chart.OrderSignalHistory
-import com.newy.algotrade.domain.chart.OrderType
-import org.junit.jupiter.api.Assertions.*
+import com.newy.algotrade.domain.chart.order.OrderSignal
+import com.newy.algotrade.domain.chart.order.OrderSignalHistory
+import com.newy.algotrade.domain.chart.order.OrderType
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -26,26 +26,26 @@ class OrderSignalHistoryTest {
 
     @Test
     fun `빈 OrderHistory 인 경우`() {
-        assertEquals(OrderType.NONE, history.firstOrderType())
-        assertEquals(OrderType.NONE, history.lastOrderType())
+        Assertions.assertEquals(OrderType.NONE, history.firstOrderType())
+        Assertions.assertEquals(OrderType.NONE, history.lastOrderType())
     }
 
     @Test
     fun `먼저 Buy Order 를 추가한 경우`() {
         val isAdded = history.add(createOrderSignal(OrderType.BUY))
 
-        assertTrue(isAdded)
-        assertEquals(OrderType.BUY, history.firstOrderType())
-        assertEquals(OrderType.BUY, history.lastOrderType())
+        Assertions.assertTrue(isAdded)
+        Assertions.assertEquals(OrderType.BUY, history.firstOrderType())
+        Assertions.assertEquals(OrderType.BUY, history.lastOrderType())
     }
 
     @Test
     fun `먼저 Sell Order 를 추가한 경우`() {
         val isAdded = history.add(createOrderSignal(OrderType.SELL))
 
-        assertTrue(isAdded)
-        assertEquals(OrderType.SELL, history.firstOrderType())
-        assertEquals(OrderType.SELL, history.lastOrderType())
+        Assertions.assertTrue(isAdded)
+        Assertions.assertEquals(OrderType.SELL, history.firstOrderType())
+        Assertions.assertEquals(OrderType.SELL, history.lastOrderType())
     }
 
     @Test
@@ -53,8 +53,8 @@ class OrderSignalHistoryTest {
         val firstAdded = history.add(createOrderSignal(OrderType.BUY))
         val secondAdded = history.add(createOrderSignal(OrderType.BUY))
 
-        assertTrue(firstAdded)
-        assertFalse(secondAdded)
+        Assertions.assertTrue(firstAdded)
+        Assertions.assertFalse(secondAdded)
     }
 
     @Test
@@ -62,9 +62,9 @@ class OrderSignalHistoryTest {
         val firstAdded = history.add(createOrderSignal(OrderType.BUY))
         val secondAdded = history.add(createOrderSignal(OrderType.SELL))
 
-        assertTrue(firstAdded)
-        assertTrue(secondAdded)
-        assertEquals(OrderType.BUY, history.firstOrderType())
-        assertEquals(OrderType.SELL, history.lastOrderType())
+        Assertions.assertTrue(firstAdded)
+        Assertions.assertTrue(secondAdded)
+        Assertions.assertEquals(OrderType.BUY, history.firstOrderType())
+        Assertions.assertEquals(OrderType.SELL, history.lastOrderType())
     }
 }

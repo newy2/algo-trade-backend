@@ -1,9 +1,9 @@
 package com.newy.algotrade.unit.chart.strategy
 
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.OrderSignal
-import com.newy.algotrade.domain.chart.OrderSignalHistory
-import com.newy.algotrade.domain.chart.OrderType
+import com.newy.algotrade.domain.chart.order.OrderSignal
+import com.newy.algotrade.domain.chart.order.OrderSignalHistory
+import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import helpers.BooleanRule
 import org.junit.jupiter.api.Assertions.assertEquals

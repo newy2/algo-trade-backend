@@ -1,8 +1,8 @@
 package com.newy.algotrade.domain.chart.strategy
 
-import com.newy.algotrade.domain.chart.OrderSignalHistory
-import com.newy.algotrade.domain.chart.OrderType
 import com.newy.algotrade.domain.chart.Rule
+import com.newy.algotrade.domain.chart.order.OrderSignalHistory
+import com.newy.algotrade.domain.chart.order.OrderType
 
 class Strategy(val entryOrderType: OrderType, val entryRule: Rule, val exitRule: Rule) {
     init {

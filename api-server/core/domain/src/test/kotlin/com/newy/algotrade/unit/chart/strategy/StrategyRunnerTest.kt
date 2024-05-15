@@ -1,6 +1,9 @@
 package com.newy.algotrade.unit.chart.strategy
 
 import com.newy.algotrade.domain.chart.*
+import com.newy.algotrade.domain.chart.order.OrderSignal
+import com.newy.algotrade.domain.chart.order.OrderSignalHistory
+import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategyRunner
 import helpers.BooleanRule

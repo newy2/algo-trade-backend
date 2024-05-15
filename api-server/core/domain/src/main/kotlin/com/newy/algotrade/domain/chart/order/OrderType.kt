@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.chart
+package com.newy.algotrade.domain.chart.order
 
 enum class OrderType {
     BUY {

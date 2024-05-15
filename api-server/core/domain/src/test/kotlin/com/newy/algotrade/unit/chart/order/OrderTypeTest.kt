@@ -1,6 +1,6 @@
-package com.newy.algotrade.unit.chart
+package com.newy.algotrade.unit.chart.order
 
-import com.newy.algotrade.domain.chart.OrderType
+import com.newy.algotrade.domain.chart.order.OrderType
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
