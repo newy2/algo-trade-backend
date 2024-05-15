@@ -14,7 +14,10 @@ import helpers.TestServerPort
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.test.runTest
-import okhttp3.*
+import okhttp3.OkHttpClient
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.BeforeEach
@@ -34,17 +37,15 @@ open class BaseByBitProductPriceWebSocketTest {
         ByBitProductPriceWebSocket(
             DefaultWebSocketClient(
                 OkHttpClient(),
-                Request.Builder()
-                    .url("http://localhost:$port")
-                    .build(),
+                "http://localhost:$port",
                 coroutineContext,
-                ByBitWebSocketPing()
             ),
             ProductType.SPOT,
             JsonConverterByJackson(jacksonObjectMapper()),
             coroutineContext,
-            callback
-        )
+        ).also {
+            it.setCallback(callback)
+        }
 
 }
 

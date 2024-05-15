@@ -46,7 +46,7 @@ class PingTest {
     fun `ping 메세지 전송 확인`() = runBlocking {
         client = object : DefaultWebSocketClient(
             OkHttpClient(),
-            Request.Builder().get().url("http://localhost:$port").build(),
+            "http://localhost:$port",
             coroutineContext,
             WebSocketPing(10, "ping"),
         ) {}
@@ -63,7 +63,7 @@ class PingTest {
     fun `restart 하는 경우, ping interval 이 초기화 됨`() = runBlocking {
         client = object : DefaultWebSocketClient(
             OkHttpClient(),
-            Request.Builder().get().url("http://localhost:$port").build(),
+            "http://localhost:$port",
             coroutineContext,
             WebSocketPing(10, "ping"),
         ) {}
@@ -115,7 +115,7 @@ class AutoRestartTest {
     fun `서버 에러시, 자동 재시작`() = runBlocking {
         client = object : DefaultWebSocketClient(
             OkHttpClient(),
-            Request.Builder().get().url("http://localhost:$port").build(),
+            "http://localhost:$port",
             coroutineContext,
         ) {}
 
@@ -183,7 +183,7 @@ class SendReceiveMessageTest {
         val results = mutableListOf<String>()
         client = object : DefaultWebSocketClient(
             OkHttpClient(),
-            Request.Builder().get().url("http://localhost:$port").build(),
+            "http://localhost:$port",
             coroutineContext,
             listener = object : WebSocketClientListener() {
                 override fun onMessage(message: String) {
@@ -208,7 +208,7 @@ class SendReceiveMessageTest {
 
         client = object : DefaultWebSocketClient(
             OkHttpClient(),
-            Request.Builder().get().url("http://localhost:$port").build(),
+            "http://localhost:$port",
             coroutineContext = coroutineContext,
         ) {}
 

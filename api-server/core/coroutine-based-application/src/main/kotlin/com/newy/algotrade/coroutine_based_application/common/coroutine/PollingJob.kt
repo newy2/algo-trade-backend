@@ -9,7 +9,7 @@ import kotlin.coroutines.CoroutineContext
 abstract class PollingJob<K, V>(
     private val delayMillis: Long,
     private val coroutineContext: CoroutineContext,
-    override val callback: suspend (Pair<K, V>) -> Unit
+    override var callback: PollingCallback<K, V>? = null
 ) : Polling<K, V> {
     private lateinit var intervalTick: ReceiveChannel<Unit>
     private val channel = Channel<K>()

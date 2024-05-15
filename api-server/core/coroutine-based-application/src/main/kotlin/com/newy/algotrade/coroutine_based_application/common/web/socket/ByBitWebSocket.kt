@@ -1,6 +1,7 @@
 package com.newy.algotrade.coroutine_based_application.common.web.socket
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
+import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
 import com.newy.algotrade.coroutine_based_application.common.web.WebSocketClient
 import com.newy.algotrade.coroutine_based_application.common.web.WebSocketClientListener
 import com.newy.algotrade.domain.common.mapper.JsonConverter
@@ -12,12 +13,13 @@ abstract class ByBitWebSocket<K, V>(
     private val client: WebSocketClient,
     protected val jsonConverter: JsonConverter,
     private val coroutineContext: CoroutineContext,
-    override val callback: suspend (Pair<K, V>) -> Unit,
+    override var callback: PollingCallback<K, V>? = null,
 ) : Polling<K, V>, WebSocketClientListener() {
     private val subscribes = mutableSetOf<K>()
 
     init {
         client.setListener(this)
+        client.setPingInfo(ByBitWebSocketPing())
     }
 
     abstract suspend fun eachProcess(message: String): Pair<K, V>?

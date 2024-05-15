@@ -1,9 +1,10 @@
 package com.newy.algotrade.integration.price.adapter.out.web.worker
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
 import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.ByBitLoadProductPriceHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceSelector
+import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.worker.PollingLoadProductPrice
 import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
 import com.newy.algotrade.domain.chart.Candle
@@ -27,12 +28,16 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.test.assertEquals
 
 
-class ByBitTestHelper(
+class PollingLoadProductPriceTestHelper(
     loader: LoadProductPricePort,
     delayMillis: Long,
     coroutineContext: CoroutineContext,
-    callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit
-) : PollingLoadProductPrice(loader, delayMillis, coroutineContext, callback) {
+    callback: PollingCallback<ProductPriceKey, List<ProductPrice>>
+) : PollingLoadProductPrice(loader, delayMillis, coroutineContext) {
+    init {
+        setCallback(callback)
+    }
+
     override fun endTime(): OffsetDateTime {
         return OffsetDateTime.parse("2024-05-09T00:00+09:00")
     }
@@ -48,7 +53,7 @@ class PollingByBitLoadProductPriceTest {
         TestEnv.ByBit.url,
         JsonConverterByJackson(jacksonObjectMapper())
     )
-    private val api = LoadProductPriceSelector(
+    private val api = LoadProductPriceProxy(
         mapOf(
             Market.BY_BIT to ByBitLoadProductPriceHttpApi(client)
         )
@@ -59,7 +64,7 @@ class PollingByBitLoadProductPriceTest {
         val channel = Channel<Pair<ProductPriceKey, ProductPrice>>()
         var index = 0
 
-        val pollingJob = ByBitTestHelper(api, delayMillis = 1000, coroutineContext) { (key, list) ->
+        val pollingJob = PollingLoadProductPriceTestHelper(api, delayMillis = 1000, coroutineContext) { (key, list) ->
             channel.send(Pair(key, list[index++])) // 실시간 API 흉내를 내기 위해서, index 사용
         }
 

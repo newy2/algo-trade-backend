@@ -1,6 +1,7 @@
 package com.newy.algotrade.unit.price.adapter.out.persistence
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
+import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
 import com.newy.algotrade.coroutine_based_application.price.domain.ProductPriceProvider
 import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
 import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
@@ -40,7 +41,7 @@ fun productPriceKey(productCode: String, interval: Duration) =
         ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
 open class NullListenerForTestHelper(
-    override val callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit = {}
+    override var callback: PollingCallback<ProductPriceKey, List<ProductPrice>>? = null
 ) : LoadProductPricePort,
     ProductPriceProvider.Listener,
     Polling<ProductPriceKey, List<ProductPrice>> {
@@ -50,7 +51,7 @@ open class NullListenerForTestHelper(
     override fun unSubscribe(key: ProductPriceKey) {}
     override suspend fun subscribe(key: ProductPriceKey) {}
     override suspend fun onLoadInitData(prices: List<ProductPrice>) {}
-    override suspend fun onUpdatePrice(key: ProductPriceKey, price: ProductPrice) {}
+    override suspend fun onUpdatePrice(key: ProductPriceKey, prices: List<ProductPrice>) {}
 }
 
 @DisplayName("ProductPriceProvider 초기화 테스트")
@@ -137,7 +138,7 @@ class OnUpdatePriceListenerTest : LoadProductPricePort, NullListenerForTestHelpe
     private lateinit var provider: ProductPriceProvider
     private var listenerCallCount = 0
 
-    override suspend fun onUpdatePrice(key: ProductPriceKey, price: ProductPrice) {
+    override suspend fun onUpdatePrice(key: ProductPriceKey, prices: List<ProductPrice>) {
         listenerCallCount++
     }
 
@@ -157,7 +158,7 @@ class OnUpdatePriceListenerTest : LoadProductPricePort, NullListenerForTestHelpe
     private suspend fun updatePrice() {
         provider.updatePrice(
             productPriceKey("BTCUSDT", Duration.ofMinutes(1)),
-            productPrice(1000, Duration.ofMinutes(1))
+            listOf(productPrice(1000, Duration.ofMinutes(1)))
         )
     }
 

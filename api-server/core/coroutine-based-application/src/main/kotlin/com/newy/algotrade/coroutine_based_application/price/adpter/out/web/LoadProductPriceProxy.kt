@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadP
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.extension.ProductPrice
 
-class LoadProductPriceSelector(
+class LoadProductPriceProxy(
     private val components: Map<Market, LoadProductPricePort>
 ) : LoadProductPricePort {
     override suspend fun productPrices(param: LoadProductPriceParam): List<ProductPrice> {

@@ -11,13 +11,21 @@ import kotlinx.coroutines.launch
 import okhttp3.*
 import kotlin.coroutines.CoroutineContext
 
+class DefaultWebSocketClientFactory(
+    private val okHttpClient: OkHttpClient,
+    private val coroutineContext: CoroutineContext,
+) {
+    fun create(url: String): DefaultWebSocketClient =
+        DefaultWebSocketClient(okHttpClient, url, coroutineContext)
+}
+
 open class DefaultWebSocketClient(
     val client: OkHttpClient,
-    private val request: Request,
+    private val url: String,
     private val coroutineContext: CoroutineContext,
-    private val pingInfo: WebSocketPing = WebSocketPing(20 * 1000, ""),
+    pingInfo: WebSocketPing = WebSocketPing(20 * 1000, ""),
     listener: WebSocketClientListener = WebSocketClientListener(),
-) : WebSocketClient(listener) {
+) : WebSocketClient(pingInfo, listener) {
     private lateinit var pingTicker: ReceiveChannel<Unit>
     private var isOpened = false
     private val awaitOpened: Channel<Unit> = Channel()
@@ -26,7 +34,7 @@ open class DefaultWebSocketClient(
     private var isRequestClose = false
 
     override suspend fun start() {
-        socket = OkHttpClient().newWebSocket(request, Listener())
+        socket = client.newWebSocket(Request.Builder().get().url(url).build(), Listener())
         awaitOpened.receive()
         setPingTicker()
     }

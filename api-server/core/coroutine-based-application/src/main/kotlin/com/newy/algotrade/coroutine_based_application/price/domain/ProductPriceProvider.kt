@@ -14,6 +14,12 @@ class ProductPriceProvider(
 ) {
     private val listeners = mutableMapOf<Key, Listener>()
 
+    init {
+        pollingDataLoader.setCallback { (productPriceKey, productPriceList) ->
+            updatePrice(productPriceKey, productPriceList)
+        }
+    }
+
     suspend fun init(vararg listeners: Pair<Key, Listener>) {
         // TODO clear listener
         putAllListeners(*listeners)
@@ -39,10 +45,10 @@ class ProductPriceProvider(
         }
     }
 
-    suspend fun updatePrice(productPriceKey: ProductPriceKey, price: ProductPrice) {
+    suspend fun updatePrice(productPriceKey: ProductPriceKey, prices: List<ProductPrice>) {
         listeners
             .filter { (key, _) -> key.productPriceKey == productPriceKey }
-            .forEach { (_, listener) -> listener.onUpdatePrice(productPriceKey, price) }
+            .forEach { (_, listener) -> listener.onUpdatePrice(productPriceKey, prices) }
     }
 
     private fun putAllListeners(vararg listeners: Pair<Key, Listener>) {
@@ -98,6 +104,6 @@ class ProductPriceProvider(
 
     interface Listener {
         suspend fun onLoadInitData(prices: List<ProductPrice>)
-        suspend fun onUpdatePrice(key: ProductPriceKey, price: ProductPrice)
+        suspend fun onUpdatePrice(key: ProductPriceKey, prices: List<ProductPrice>)
     }
 }

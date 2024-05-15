@@ -4,7 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.EBestLoadProductPriceHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceSelector
+import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
@@ -123,7 +123,7 @@ class EBestProductPriceHttpApiTest {
         JsonConverterByJackson(jacksonObjectMapper())
     )
     private val accessTokenLoader = EBestAccessTokenHttpApi(client)
-    private val api = LoadProductPriceSelector(
+    private val api = LoadProductPriceProxy(
         mapOf(
             Market.E_BEST to EBestLoadProductPriceHttpApi(
                 client,

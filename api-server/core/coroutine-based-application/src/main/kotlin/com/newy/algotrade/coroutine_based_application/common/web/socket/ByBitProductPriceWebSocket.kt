@@ -14,12 +14,10 @@ class ByBitProductPriceWebSocket(
     private val productType: ProductType,
     jsonConverter: JsonConverter,
     coroutineContext: CoroutineContext,
-    callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit,
 ) : ByBitWebSocket<ProductPriceKey, List<ProductPrice>>(
     client,
     jsonConverter,
     coroutineContext,
-    callback,
 ) {
     override fun parsing(key: ProductPriceKey): String {
         val interval = if (key.interval.toDays() >= 1) "D" else key.interval.toMinutes().toString()

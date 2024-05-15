@@ -3,7 +3,7 @@ package com.newy.algotrade.integration.price.adapter.out.web
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.ByBitLoadProductPriceHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceSelector
+import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
@@ -90,7 +90,7 @@ class ByBitProductPriceResponseDtoTest {
 }
 
 class ByBitProductPriceHttpApiTest {
-    private val client = LoadProductPriceSelector(
+    private val client = LoadProductPriceProxy(
         mapOf(
             Market.BY_BIT to ByBitLoadProductPriceHttpApi(
                 DefaultHttpApiClient(

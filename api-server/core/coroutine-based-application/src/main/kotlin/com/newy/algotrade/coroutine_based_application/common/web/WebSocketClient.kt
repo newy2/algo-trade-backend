@@ -1,7 +1,10 @@
 package com.newy.algotrade.coroutine_based_application.common.web
 
+import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketPing
+
 abstract class WebSocketClient(
-    protected var listener: WebSocketClientListener
+    protected var pingInfo: WebSocketPing,
+    protected var listener: WebSocketClientListener,
 ) {
 
     abstract suspend fun start()
@@ -17,6 +20,11 @@ abstract class WebSocketClient(
     @JvmName("_setListener")
     fun setListener(listener: WebSocketClientListener) {
         this.listener = listener
+    }
+
+    @JvmName("_setPingInfo")
+    fun setPingInfo(pingInfo: WebSocketPing) {
+        this.pingInfo = pingInfo
     }
 
     abstract fun send(message: String)

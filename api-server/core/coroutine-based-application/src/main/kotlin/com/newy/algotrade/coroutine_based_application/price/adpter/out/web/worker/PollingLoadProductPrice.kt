@@ -12,8 +12,7 @@ open class PollingLoadProductPrice(
     private val loader: LoadProductPricePort,
     delayMillis: Long,
     coroutineContext: CoroutineContext,
-    callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit
-) : PollingJob<ProductPriceKey, List<ProductPrice>>(delayMillis, coroutineContext, callback) {
+) : PollingJob<ProductPriceKey, List<ProductPrice>>(delayMillis, coroutineContext) {
     override suspend fun eachProcess(key: ProductPriceKey): List<ProductPrice> {
         return loader.productPrices(
             LoadProductPriceParam(

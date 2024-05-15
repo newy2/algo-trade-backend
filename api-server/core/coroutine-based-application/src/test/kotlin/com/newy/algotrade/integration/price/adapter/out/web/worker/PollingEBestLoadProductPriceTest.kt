@@ -4,9 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.EBestLoadProductPriceHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceSelector
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.worker.PollingLoadProductPrice
-import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
+import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceProxy
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
@@ -23,26 +21,8 @@ import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Test
 import java.time.Duration
-import java.time.OffsetDateTime
 import java.time.ZonedDateTime
-import kotlin.coroutines.CoroutineContext
 import kotlin.test.assertEquals
-
-
-class TestHelper(
-    loader: LoadProductPricePort,
-    delayMillis: Long,
-    coroutineContext: CoroutineContext,
-    callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit
-) : PollingLoadProductPrice(loader, delayMillis, coroutineContext, callback) {
-    override fun endTime(): OffsetDateTime {
-        return OffsetDateTime.parse("2024-05-09T00:00+09:00")
-    }
-
-    override fun limit(): Int {
-        return 2
-    }
-}
 
 class PollingEBestLoadProductPriceTest {
     private val client = DefaultHttpApiClient(
@@ -51,7 +31,7 @@ class PollingEBestLoadProductPriceTest {
         JsonConverterByJackson(jacksonObjectMapper())
     )
     private val accessTokenLoader = EBestAccessTokenHttpApi(client)
-    private val api = LoadProductPriceSelector(
+    private val api = LoadProductPriceProxy(
         mapOf(
             Market.E_BEST to EBestLoadProductPriceHttpApi(
                 client,
@@ -69,7 +49,7 @@ class PollingEBestLoadProductPriceTest {
         val channel = Channel<Pair<ProductPriceKey, ProductPrice>>()
         var index = 0
 
-        val pollingJob = ByBitTestHelper(api, delayMillis = 1000, coroutineContext) { (key, list) ->
+        val pollingJob = PollingLoadProductPriceTestHelper(api, delayMillis = 1000, coroutineContext) { (key, list) ->
             channel.send(Pair(key, list[index++])) // 실시간 API 흉내를 내기 위해서, index 사용
         }
 
