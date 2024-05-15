@@ -29,11 +29,13 @@ private fun oneMinuteCandle(beginTime: OffsetDateTime, closePrice: Int) =
 class EntryRuleStrategyRunnerTest {
     private val now = OffsetDateTime.now()
     private lateinit var candles: Candles
+    private lateinit var history: OrderSignalHistory
     private lateinit var runner: StrategyRunner
 
     @BeforeEach
     fun setUp() {
         candles = ChartFactory.TA4J.createCandles()
+        history = OrderSignalHistory()
         runner = StrategyRunner(
             candles,
             strategy = Strategy(
@@ -41,7 +43,7 @@ class EntryRuleStrategyRunnerTest {
                 entryRule = BooleanRule(true),
                 exitRule = BooleanRule(false),
             ),
-            orderHistory = OrderSignalHistory()
+            history
         )
     }
 
@@ -65,7 +67,7 @@ class EntryRuleStrategyRunnerTest {
     }
 
     @Test
-    fun `StrategyRunner_run 호출 시, 캔들 가격 정보가 업데이트 됨`() {
+    fun `StrategyRunner_run 호출 시 candles, orderSignalHistory 가 업데이트 됨`() {
         runner.run(
             listOf(
                 oneMinuteCandle(now.plusMinutes(0), 1000),
@@ -73,9 +75,11 @@ class EntryRuleStrategyRunnerTest {
             )
         )
 
-        assertEquals(2, candles.size)
+        assertEquals(2, candles.size, "Candles 업데이트 됨")
         assertEquals(oneMinuteCandle(now.plusMinutes(0), 1000), candles.firstCandle)
         assertEquals(oneMinuteCandle(now.plusMinutes(1), 2000), candles.lastCandle)
+
+        assertEquals(OrderType.BUY, history.lastOrderType(), "OrderSignalHistory 업데이트 됨")
     }
 }
 
@@ -83,10 +87,14 @@ class EntryRuleStrategyRunnerTest {
 class OtherSignalStrategyRunnerTest {
     private val now = OffsetDateTime.now()
     private lateinit var candles: Candles
+    private lateinit var history: OrderSignalHistory
 
     @BeforeEach
     fun setUp() {
         candles = ChartFactory.TA4J.createCandles()
+        history = OrderSignalHistory().also {
+            it.add(OrderSignal(OrderType.BUY, Candle.TimeRange(Duration.ofMinutes(1), now)))
+        }
     }
 
     @Test
@@ -99,14 +107,13 @@ class OtherSignalStrategyRunnerTest {
                 entryRule = BooleanRule(false),
                 exitRule = BooleanRule(true),
             ),
-            orderHistory = OrderSignalHistory().also {
-                it.add(OrderSignal(OrderType.BUY, Candle.TimeRange(Duration.ofMinutes(1), now)))
-            }
+            history
         )
 
         val result = runner.run(listOf(oneMinuteCandle(now, 1000)))
 
         assertEquals(result, OrderSignal(OrderType.SELL, candles.lastCandle.time))
+        assertEquals(OrderType.SELL, history.lastOrderType(), "OrderSignalHistory 업데이트 됨")
     }
 
     @Test
@@ -118,11 +125,12 @@ class OtherSignalStrategyRunnerTest {
                 entryRule = BooleanRule(false),
                 exitRule = BooleanRule(false),
             ),
-            orderHistory = OrderSignalHistory()
+            history
         )
 
         val result = runner.run(listOf(oneMinuteCandle(now, 1000)))
 
         assertEquals(result, OrderSignal(OrderType.NONE, candles.lastCandle.time))
+        assertEquals(OrderType.BUY, history.lastOrderType(), "OrderType.NONE 은 추가하지 않음")
     }
 }
