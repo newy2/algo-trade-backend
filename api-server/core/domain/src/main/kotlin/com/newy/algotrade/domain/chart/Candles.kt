@@ -5,6 +5,8 @@ interface Candles {
     val size: Int
     val firstIndex: Int
     val lastIndex: Int
+    val firstCandle: Candle get() = get(firstIndex)
+    val lastCandle: Candle get() = get(lastIndex)
 
     operator fun get(index: Int): Candle
 
@@ -16,22 +18,24 @@ interface Candles {
     }
 
     fun upsert(candleList: List<Candle>) {
-        val lastCandle = get(lastIndex)
+        val lastCandle = if (isEmpty()) candleList.first() else get(lastIndex)
 
         candleList
             .filter { it.time.begin >= lastCandle.time.begin }
             .forEach { upsert(it) }
     }
 
+    private fun isEmpty(): Boolean = size == 0
+
     private fun validate(candle: Candle) {
-        if (size == 0) {
+        if (isEmpty()) {
             return
         }
         this[lastIndex].time.validate(nextTime = candle.time)
     }
 
     private fun isReplace(candle: Candle) =
-        if (size == 0) {
+        if (isEmpty()) {
             false
         } else {
             this[lastIndex].time == candle.time

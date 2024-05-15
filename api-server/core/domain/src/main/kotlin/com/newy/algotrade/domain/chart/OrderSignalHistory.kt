@@ -1,14 +1,14 @@
 package com.newy.algotrade.domain.chart
 
-class OrderHistory() {
-    private val orders = mutableListOf<Order>()
+class OrderSignalHistory() {
+    private val orders = mutableListOf<OrderSignal>()
 
-    fun add(order: Order): Boolean {
-        if (orders.isNotEmpty() && lastOrderType() == order.type) {
+    fun add(orderSignal: OrderSignal): Boolean {
+        if (orders.isNotEmpty() && lastOrderType() == orderSignal.type) {
             return false
         }
 
-        return orders.add(order)
+        return orders.add(orderSignal)
     }
 
     fun firstOrderType(): OrderType {

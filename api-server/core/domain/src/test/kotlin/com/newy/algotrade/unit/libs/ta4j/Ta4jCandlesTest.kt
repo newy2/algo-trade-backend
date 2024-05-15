@@ -60,6 +60,12 @@ class Ta4jCandlesTest {
     }
 
     @Test
+    fun `getter`() {
+        assertEquals(candles[candles.firstIndex], candles.firstCandle)
+        assertEquals(candles[candles.lastIndex], candles.lastCandle)
+    }
+
+    @Test
     fun `캔들 등록하기`() {
         candles.upsert(oneMinuteCandle(lastBeginTime.plusMinutes(1), 2000))
 

@@ -1,41 +1,43 @@
-package com.newy.algotrade.unit.chart
+package com.newy.algotrade.unit.chart.strategy
 
-import com.newy.algotrade.domain.chart.Order
-import com.newy.algotrade.domain.chart.OrderHistory
+import com.newy.algotrade.domain.chart.Candle
+import com.newy.algotrade.domain.chart.OrderSignal
+import com.newy.algotrade.domain.chart.OrderSignalHistory
 import com.newy.algotrade.domain.chart.OrderType
-import com.newy.algotrade.domain.chart.Strategy
+import com.newy.algotrade.domain.chart.strategy.Strategy
 import helpers.BooleanRule
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
+import java.time.Duration
+import java.time.OffsetDateTime
 
 
-private fun createOrder(tradeType: OrderType) =
-    Order(
+private fun createOrderSignal(tradeType: OrderType) =
+    OrderSignal(
         tradeType,
-        price = 1000.toDouble().toBigDecimal(),
-        quantity = 1.0,
+        Candle.TimeRange(Duration.ofMinutes(1), OffsetDateTime.now())
     )
 
 class StrategyTest {
     private val index = 0
     private val entryType = OrderType.BUY
 
-    private lateinit var emptyHistory: OrderHistory
-    private lateinit var enteredHistory: OrderHistory
-    private lateinit var exitedHistory: OrderHistory
+    private lateinit var emptyHistory: OrderSignalHistory
+    private lateinit var enteredHistory: OrderSignalHistory
+    private lateinit var exitedHistory: OrderSignalHistory
 
     @BeforeEach
     fun setUp() {
-        emptyHistory = OrderHistory()
-        enteredHistory = OrderHistory().also {
-            it.add(createOrder(entryType))
+        emptyHistory = OrderSignalHistory()
+        enteredHistory = OrderSignalHistory().also {
+            it.add(createOrderSignal(entryType))
         }
-        exitedHistory = OrderHistory().also {
-            it.add(createOrder(entryType))
-            it.add(createOrder(entryType.completedType()))
+        exitedHistory = OrderSignalHistory().also {
+            it.add(createOrderSignal(entryType))
+            it.add(createOrderSignal(entryType.completedType()))
         }
     }
 
@@ -103,18 +105,18 @@ class DifferentEntryOrderTypeTest {
     private val index = 0
     private val entryType = OrderType.SELL
 
-    private lateinit var emptyHistory: OrderHistory
-    private lateinit var enteredHistory: OrderHistory
-    private lateinit var enteredHistoryWithDifferentOrderType: OrderHistory
+    private lateinit var emptyHistory: OrderSignalHistory
+    private lateinit var enteredHistory: OrderSignalHistory
+    private lateinit var enteredHistoryWithDifferentOrderType: OrderSignalHistory
 
     @BeforeEach
     fun setUp() {
-        emptyHistory = OrderHistory()
-        enteredHistory = OrderHistory().also {
-            it.add(createOrder(entryType))
+        emptyHistory = OrderSignalHistory()
+        enteredHistory = OrderSignalHistory().also {
+            it.add(createOrderSignal(entryType))
         }
-        enteredHistoryWithDifferentOrderType = OrderHistory().also {
-            it.add(createOrder(entryType.completedType()))
+        enteredHistoryWithDifferentOrderType = OrderSignalHistory().also {
+            it.add(createOrderSignal(entryType.completedType()))
         }
     }
 
@@ -131,6 +133,33 @@ class DifferentEntryOrderTypeTest {
         assertDoesNotThrow { strategy.shouldOperate(index, enteredHistory) }
         assertThrows<IllegalArgumentException>("entryType 이 다른 OrderHistory 를 사용하면 에러") {
             strategy.shouldOperate(index, enteredHistoryWithDifferentOrderType)
+        }
+    }
+}
+
+class ErrorTest {
+    @Test
+    fun `Strategy 생성자에 OrderType_NONE 을 전달할 수 없다`() {
+        assertThrows<IllegalArgumentException> {
+            Strategy(
+                entryOrderType = OrderType.NONE,
+                entryRule = BooleanRule(false),
+                exitRule = BooleanRule(false),
+            )
+        }
+        assertDoesNotThrow {
+            Strategy(
+                entryOrderType = OrderType.BUY,
+                entryRule = BooleanRule(false),
+                exitRule = BooleanRule(false),
+            )
+        }
+        assertDoesNotThrow {
+            Strategy(
+                entryOrderType = OrderType.SELL,
+                entryRule = BooleanRule(false),
+                exitRule = BooleanRule(false),
+            )
         }
     }
 }
