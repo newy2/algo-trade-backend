@@ -15,6 +15,14 @@ interface Candles {
         add(candle, isReplace(candle))
     }
 
+    fun upsert(candleList: List<Candle>) {
+        val lastCandle = get(lastIndex)
+
+        candleList
+            .filter { it.time.begin >= lastCandle.time.begin }
+            .forEach { upsert(it) }
+    }
+
     private fun validate(candle: Candle) {
         if (size == 0) {
             return

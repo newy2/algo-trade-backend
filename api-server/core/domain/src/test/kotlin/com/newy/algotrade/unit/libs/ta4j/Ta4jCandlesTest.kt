@@ -47,39 +47,75 @@ class EmptyTa4jCandlesTest {
 
 @DisplayName("기본 기능 테스트")
 class Ta4jCandlesTest {
-    private lateinit var beginTime: OffsetDateTime
+    private lateinit var lastBeginTime: OffsetDateTime
     private lateinit var candles: Candles
 
     @BeforeEach
     fun setUp() {
-        beginTime = OffsetDateTime.parse("2024-03-09T00:00:00Z")
+        lastBeginTime = OffsetDateTime.parse("2024-03-09T00:00:00Z")
         candles = ChartFactory.TA4J.createCandles().also {
-            it.upsert(oneMinuteCandle(beginTime, 1000))
+            it.upsert(oneMinuteCandle(lastBeginTime.minusMinutes(1), 500))
+            it.upsert(oneMinuteCandle(lastBeginTime, 1000))
         }
     }
 
     @Test
     fun `캔들 등록하기`() {
-        candles.upsert(oneMinuteCandle(beginTime.plusMinutes(1), 2000))
+        candles.upsert(oneMinuteCandle(lastBeginTime.plusMinutes(1), 2000))
 
-        assertEquals(2, candles.size)
-        assertEquals(oneMinuteCandle(beginTime, 1000), candles[candles.firstIndex])
-        assertEquals(oneMinuteCandle(beginTime.plusMinutes(1), 2000), candles[candles.lastIndex])
+        assertEquals(3, candles.size)
+        assertEquals(oneMinuteCandle(lastBeginTime.minusMinutes(1), 500), candles[candles.firstIndex])
+        assertEquals(oneMinuteCandle(lastBeginTime.minusMinutes(0), 1000), candles[candles.firstIndex + 1])
+        assertEquals(oneMinuteCandle(lastBeginTime.plusMinutes(1), 2000), candles[candles.firstIndex + 2])
     }
 
     @Test
     fun `마지막 캔들 replace 하기`() {
-        val sameBeginTime = beginTime
+        val sameBeginTime = lastBeginTime
         candles.upsert(oneMinuteCandle(sameBeginTime, 2000))
 
-        assertEquals(1, candles.size)
-        assertEquals(oneMinuteCandle(beginTime, 2000), candles[candles.firstIndex])
+        assertEquals(2, candles.size)
+        assertEquals(oneMinuteCandle(lastBeginTime, 2000), candles[candles.lastIndex])
+    }
+
+    @Test
+    fun `캔들 리스트로 마지막 캔들 replace 하기`() {
+        val sameBeginTime = lastBeginTime
+        candles.upsert(
+            listOf(
+                oneMinuteCandle(sameBeginTime, 2000),
+                oneMinuteCandle(sameBeginTime.plusMinutes(1), 3000),
+            )
+        )
+
+        assertEquals(3, candles.size)
+        assertEquals(oneMinuteCandle(lastBeginTime, 2000), candles[candles.lastIndex - 1])
+        assertEquals(oneMinuteCandle(lastBeginTime.plusMinutes(1), 3000), candles[candles.lastIndex])
+    }
+
+    @Test
+    fun `캔들 리스트로 마지막 캔들 replace 하기 - 캔들 리스트에 과거 시간의 캔들이 들어있는 경우(이베스트 폴링 데이터)`() {
+        val sameBeginTime = lastBeginTime
+        candles.upsert(
+            listOf(
+                oneMinuteCandle(sameBeginTime.minusMinutes(1), 0),
+                oneMinuteCandle(sameBeginTime, 2000),
+            )
+        )
+
+        assertEquals(2, candles.size)
+        assertEquals(
+            oneMinuteCandle(lastBeginTime.minusMinutes(1), 500),
+            candles[candles.firstIndex],
+            "candles.lastIndex 보다 과거 캔들 값은 무시된다"
+        )
+        assertEquals(oneMinuteCandle(lastBeginTime, 2000), candles[candles.lastIndex])
     }
 
     @Test
     fun `과거 시간 캔들을 등록하는 경우`() {
         assertThrows<IllegalArgumentException>("과거 시간의 Candle 을 등록하면 에러발생") {
-            val beforeBeginTime = beginTime.minusMinutes(1)
+            val beforeBeginTime = lastBeginTime.minusMinutes(1)
             candles.upsert(oneMinuteCandle(beforeBeginTime, 2000))
         }
     }
@@ -87,7 +123,7 @@ class Ta4jCandlesTest {
     @Test
     fun `마지막 캔들 beginTime 과 endTime 사이의 시간으로 Candle 을 등록하는 경우`() {
         assertThrows<IllegalArgumentException>("마지막 beginTime 이 00:00:00 이고, 신규 beginTime 이 00:00:30 이면 에러발생") {
-            val irregularBeginTime = beginTime.plusSeconds(30)
+            val irregularBeginTime = lastBeginTime.plusSeconds(30)
             candles.upsert(oneMinuteCandle(irregularBeginTime, 2000))
         }
     }
@@ -95,7 +131,7 @@ class Ta4jCandlesTest {
     @Test
     fun `시간 간격이 다른 Candle 을 등록하는 경우`() {
         assertThrows<IllegalArgumentException>("1분봉 Candles 에 1시간봉 Candle 을 등록하면 에러발생") {
-            val hour1Candle = oneHourCandle(beginTime.plusMinutes(1), 2000)
+            val hour1Candle = oneHourCandle(lastBeginTime.plusMinutes(1), 2000)
             candles.upsert(hour1Candle)
         }
     }
@@ -106,7 +142,7 @@ class Ta4jCandlesTest {
             candles[candles.firstIndex - 1]
         }
         assertThrows<IndexOutOfBoundsException> {
-            candles[candles.lastIndex - 1]
+            candles[candles.lastIndex + 1]
         }
     }
 
@@ -132,5 +168,4 @@ class Ta4jCandlesMaxSizeTest {
         assertEquals(oneMinuteCandle(beginTime.plusMinutes(1), 2000), candles[candles.firstIndex])
         assertEquals(oneMinuteCandle(beginTime.plusMinutes(3), 4000), candles[candles.lastIndex])
     }
-
 }
