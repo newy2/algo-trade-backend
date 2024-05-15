@@ -10,6 +10,7 @@ class TestEnvTest {
     fun `테스트 환경변수 확인`() {
         TestEnv.ByBit.let {
             assertEquals("https://api-testnet.bybit.com", it.url)
+            assertEquals("wss://stream.bybit.com/v5/public/spot", it.socketUrl)
             assertTrue(it.apiKey.isNotEmpty())
             assertTrue(it.apiSecret.isNotEmpty())
         }
