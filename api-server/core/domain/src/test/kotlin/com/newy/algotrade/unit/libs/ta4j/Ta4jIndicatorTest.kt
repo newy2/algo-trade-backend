@@ -17,7 +17,7 @@ private fun getCandles(length: Int, list: Array<Array<String>> = bybitKlineList)
             .also { it.reverse() }
             .forEach {
                 val beginTimeMillis = it[0].toLong()
-                val beginTime = Instant.ofEpochMilli(beginTimeMillis).atZone(ZoneOffset.UTC)
+                val beginTime = Instant.ofEpochMilli(beginTimeMillis).atOffset(ZoneOffset.UTC)
                 results.upsert(
                     Candle.TimeFrame.M1(
                         beginTime,

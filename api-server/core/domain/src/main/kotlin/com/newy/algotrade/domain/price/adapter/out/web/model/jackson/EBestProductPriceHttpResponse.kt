@@ -10,8 +10,8 @@ import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.EBestTrCode
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import java.time.Duration
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 
 
@@ -61,7 +61,7 @@ class EBestProductPriceDeserializer : StdDeserializer<EBestProductPriceHttpRespo
         interval: Long,
         code: String,
         formatter: DateTimeFormatter,
-    ): ZonedDateTime {
+    ): OffsetDateTime {
         val date = item["date"].asText()
 
         val (time, adjustMinutes) =
@@ -78,7 +78,7 @@ class EBestProductPriceDeserializer : StdDeserializer<EBestProductPriceHttpRespo
                 Pair(endTime, interval)
             }
 
-        return ZonedDateTime
+        return OffsetDateTime
             .parse("$date $time", formatter)
             .minusMinutes(adjustMinutes)
     }

@@ -3,8 +3,8 @@ package com.newy.algotrade.domain.chart
 import java.math.BigDecimal
 import java.time.Duration
 import java.time.Instant
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import java.time.ZonedDateTime
 
 data class Candle private constructor(
     val time: TimeRange,
@@ -20,7 +20,7 @@ data class Candle private constructor(
         D1(Duration.ofDays(1));
 
         operator fun invoke(
-            beginTime: ZonedDateTime,
+            beginTime: OffsetDateTime,
             openPrice: BigDecimal = BigDecimal.ZERO,
             highPrice: BigDecimal = BigDecimal.ZERO,
             lowPrice: BigDecimal = BigDecimal.ZERO,
@@ -45,7 +45,7 @@ data class Candle private constructor(
             closePrice: BigDecimal = BigDecimal.ZERO,
             volume: BigDecimal = BigDecimal.ZERO,
         ) = this.invoke(
-            Instant.ofEpochMilli(beginTime).atZone(ZoneOffset.UTC),
+            Instant.ofEpochMilli(beginTime).atOffset(ZoneOffset.UTC),
             openPrice,
             highPrice,
             lowPrice,
@@ -61,8 +61,8 @@ data class Candle private constructor(
 
     data class TimeRange(
         val period: Duration,
-        val begin: ZonedDateTime,
-        val end: ZonedDateTime = begin.plus(period)
+        val begin: OffsetDateTime,
+        val end: OffsetDateTime = begin.plus(period)
     ) {
         private fun isSamePeriod(other: TimeRange) =
             period == other.period

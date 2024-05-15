@@ -23,7 +23,6 @@ import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.OffsetDateTime
-import java.time.ZonedDateTime
 import kotlin.coroutines.CoroutineContext
 import kotlin.test.assertEquals
 
@@ -105,7 +104,7 @@ class PollingByBitLoadProductPriceTest {
         assertEquals(
             listOf(
                 Candle.TimeFrame.M1(
-                    ZonedDateTime.parse("2024-05-08T14:59Z"),
+                    OffsetDateTime.parse("2024-05-08T14:59Z"),
                     openPrice = 60379.25.toBigDecimal(),
                     highPrice = 60379.31.toBigDecimal(),
                     lowPrice = 60379.23.toBigDecimal(),
@@ -113,7 +112,7 @@ class PollingByBitLoadProductPriceTest {
                     volume = 0.156321.toBigDecimal()
                 ),
                 Candle.TimeFrame.M1(
-                    ZonedDateTime.parse("2024-05-08T15:00Z"),
+                    OffsetDateTime.parse("2024-05-08T15:00Z"),
                     openPrice = 60379.26.toBigDecimal(),
                     highPrice = 60379.29.toBigDecimal(),
                     lowPrice = 60252.4.toBigDecimal(),

@@ -15,11 +15,11 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.Duration
-import java.time.ZonedDateTime
+import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
 
-private val now = ZonedDateTime.parse("2024-05-01T00:00Z")
+private val now = OffsetDateTime.parse("2024-05-01T00:00Z")
 
 private fun productPrice(amount: Int, interval: Duration) =
     Candle.TimeFrame.from(interval)!!(

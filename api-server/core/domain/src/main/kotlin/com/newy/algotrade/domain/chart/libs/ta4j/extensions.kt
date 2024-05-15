@@ -7,7 +7,7 @@ import org.ta4j.core.num.DecimalNum
 
 fun asBar(candle: Candle) = BaseBar(
     candle.time.period,
-    candle.time.end,
+    candle.time.end.toZonedDateTime(),
     candle.price.open,
     candle.price.high,
     candle.price.low,
@@ -17,7 +17,7 @@ fun asBar(candle: Candle) = BaseBar(
 
 fun Bar.toCandle() =
     (Candle.TimeFrame.from(this.timePeriod)!!)(
-        this.beginTime,
+        this.beginTime.toOffsetDateTime(),
         (this.openPrice as DecimalNum).delegate,
         (this.highPrice as DecimalNum).delegate,
         (this.lowPrice as DecimalNum).delegate,

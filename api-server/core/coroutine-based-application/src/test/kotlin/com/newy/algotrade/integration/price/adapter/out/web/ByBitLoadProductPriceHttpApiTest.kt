@@ -77,7 +77,7 @@ class ByBitProductPriceResponseDtoTest {
         assertEquals(
             listOf(
                 Candle.TimeFrame.M1(
-                    beginTime = Instant.ofEpochMilli("1714575660000".toLong()).atZone(ZoneOffset.UTC),
+                    beginTime = Instant.ofEpochMilli("1714575660000".toLong()).atOffset(ZoneOffset.UTC),
                     openPrice = "58189.2".toBigDecimal(),
                     highPrice = "58495.08".toBigDecimal(),
                     lowPrice = "58147.96".toBigDecimal(),
@@ -107,7 +107,7 @@ class ByBitProductPriceHttpApiTest {
         assertEquals(
             listOf(
                 Candle.TimeFrame.M1(
-                    beginTime = ZonedDateTime.parse("2024-05-01T00:00Z"),
+                    beginTime = OffsetDateTime.parse("2024-05-01T00:00Z"),
                     openPrice = "59713.76".toBigDecimal(),
                     highPrice = "59771.9".toBigDecimal(),
                     lowPrice = "59539.96".toBigDecimal(),
@@ -135,7 +135,7 @@ class ByBitProductPriceHttpApiTest {
         assertEquals(
             listOf(
                 Candle.TimeFrame.M1(
-                    beginTime = ZonedDateTime.parse("2024-05-01T00:00Z"),
+                    beginTime = OffsetDateTime.parse("2024-05-01T00:00Z"),
                     openPrice = "60686.4".toBigDecimal(),
                     highPrice = "60758.9".toBigDecimal(),
                     lowPrice = "60673.4".toBigDecimal(),

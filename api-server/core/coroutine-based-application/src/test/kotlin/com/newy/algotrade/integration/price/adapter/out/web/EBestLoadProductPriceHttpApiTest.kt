@@ -22,7 +22,6 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.OffsetDateTime
-import java.time.ZonedDateTime
 import kotlin.test.assertEquals
 
 @DisplayName("상품 가격조회 API Response DTO")
@@ -61,7 +60,7 @@ class EBestProductPriceResponseDtoTest {
         assertEquals(
             listOf(
                 Candle.TimeFrame.M1(
-                    beginTime = ZonedDateTime.parse("2024-04-29T13:22:00+09:00"),
+                    beginTime = OffsetDateTime.parse("2024-04-29T13:22:00+09:00"),
                     openPrice = "5030.0".toBigDecimal(),
                     highPrice = "5080.0".toBigDecimal(),
                     lowPrice = "5020.0".toBigDecimal(),
@@ -104,7 +103,7 @@ class EBestProductPriceResponseDtoTest {
         assertEquals(
             listOf(
                 Candle.TimeFrame.D1(
-                    beginTime = ZonedDateTime.parse("2024-04-29T00:00+09:00"),
+                    beginTime = OffsetDateTime.parse("2024-04-29T00:00+09:00"),
                     openPrice = "6480.0".toBigDecimal(),
                     highPrice = "6550.0".toBigDecimal(),
                     lowPrice = "6390.0".toBigDecimal(),
@@ -141,7 +140,7 @@ class EBestProductPriceHttpApiTest {
         assertEquals(
             listOf(
                 Candle.TimeFrame.M1(
-                    ZonedDateTime.parse("2024-05-03T15:29+09:00"),
+                    OffsetDateTime.parse("2024-05-03T15:29+09:00"),
                     5020.0.toBigDecimal(),
                     5020.0.toBigDecimal(),
                     5020.0.toBigDecimal(),
@@ -169,7 +168,7 @@ class EBestProductPriceHttpApiTest {
         assertEquals(
             listOf(
                 Candle.TimeFrame.D1(
-                    ZonedDateTime.parse("2024-05-03T00:00+09:00"),
+                    OffsetDateTime.parse("2024-05-03T00:00+09:00"),
                     5050.0.toBigDecimal(),
                     5070.0.toBigDecimal(),
                     4860.0.toBigDecimal(),

@@ -114,7 +114,7 @@ class ByBitWebSocketTest {
                 .plusMinutes(if (response.second.size == 2) 0 else 1)
                 .withSecond(0)
                 .withNano(0)
-            val endTime = it.time.end.toOffsetDateTime()
+            val endTime = it.time.end
 
             assertTrue(now.isEqual(endTime))
             it.price.let { price ->

@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 import java.time.Instant
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
-import java.time.ZonedDateTime
 import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.days
 import kotlin.time.Duration.Companion.hours
@@ -17,7 +17,7 @@ import kotlin.time.toJavaDuration
 class CandleTest {
     @Test
     fun `Candle 기본 상태`() {
-        val beginTime = ZonedDateTime.now()
+        val beginTime = OffsetDateTime.now()
         val candle = Candle.TimeFrame.M1(
             beginTime = beginTime,
             openPrice = 1000.toBigDecimal(),
@@ -42,7 +42,7 @@ class CandleTest {
 
     @Test
     fun `Candle 팩토리 메소드`() {
-        val beginTime = ZonedDateTime.now()
+        val beginTime = OffsetDateTime.now()
 
         assertEquals(1.minutes.toJavaDuration(), Candle.TimeFrame.M1(beginTime).time.period)
         assertEquals(3.minutes.toJavaDuration(), Candle.TimeFrame.M3(beginTime).time.period)
@@ -54,7 +54,7 @@ class CandleTest {
 
     @Test
     fun `Candle 동등성 테스트`() {
-        val beginTime = ZonedDateTime.now()
+        val beginTime = OffsetDateTime.now()
 
         assertEquals(Candle.TimeFrame.M1(beginTime), Candle.TimeFrame.M1(beginTime))
         assertNotEquals(Candle.TimeFrame.M1(beginTime), Candle.TimeFrame.M1(beginTime.plusMinutes(1)))
@@ -65,7 +65,7 @@ class CandleTest {
     fun `highPrice 가 lowPrice 보다 작은 경우`() {
         assertThrows<IllegalArgumentException>("lowPrice <= highPrice 이어야 한다") {
             Candle.TimeFrame.M1(
-                ZonedDateTime.now(),
+                OffsetDateTime.now(),
                 highPrice = 1000.toBigDecimal(),
                 lowPrice = 2000.toBigDecimal(),
                 openPrice = 1500.toBigDecimal(),
@@ -79,7 +79,7 @@ class CandleTest {
         arrayOf(100, 3000).forEach { openPrice ->
             assertThrows<IllegalArgumentException>("lowPrice <= openPrice <= highPrice 이어야 한다") {
                 Candle.TimeFrame.H1(
-                    ZonedDateTime.now(),
+                    OffsetDateTime.now(),
                     lowPrice = 1000.toBigDecimal(),
                     openPrice = openPrice.toBigDecimal(),
                     highPrice = 2000.toBigDecimal(),
@@ -94,7 +94,7 @@ class CandleTest {
         arrayOf(100, 3000).forEach { closePrice ->
             assertThrows<IllegalArgumentException>("lowPrice <= closePrice <= highPrice 이어야 한다") {
                 Candle.TimeFrame.M1(
-                    ZonedDateTime.now(),
+                    OffsetDateTime.now(),
                     lowPrice = 1000.toBigDecimal(),
                     closePrice = closePrice.toBigDecimal(),
                     highPrice = 2000.toBigDecimal(),
@@ -108,7 +108,7 @@ class CandleTest {
     fun `가격 정보가 같은 경우`() {
         assertDoesNotThrow("에러가 발생하지 않아야 한다") {
             Candle.TimeFrame.M1(
-                ZonedDateTime.now(),
+                OffsetDateTime.now(),
                 openPrice = 1000.toBigDecimal(),
                 highPrice = 1000.toBigDecimal(),
                 lowPrice = 1000.toBigDecimal(),
@@ -120,7 +120,7 @@ class CandleTest {
     @Test
     fun `팩토리 메소드 오버로드`() {
         val epochMilli: Long = Instant.now().toEpochMilli()
-        val dateTime: ZonedDateTime = ZonedDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), ZoneOffset.UTC)
+        val dateTime: OffsetDateTime = OffsetDateTime.ofInstant(Instant.ofEpochMilli(epochMilli), ZoneOffset.UTC)
 
         assertEquals(
             Candle.TimeFrame.M1(

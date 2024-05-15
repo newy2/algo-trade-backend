@@ -9,10 +9,10 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import java.math.BigDecimal
-import java.time.ZonedDateTime
+import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
-private fun oneMinuteCandle(beginTime: ZonedDateTime, price: Number) =
+private fun oneMinuteCandle(beginTime: OffsetDateTime, price: Number) =
     Candle.TimeFrame.M1(
         beginTime,
         openPrice = price.toDouble().toBigDecimal(),
@@ -22,7 +22,7 @@ private fun oneMinuteCandle(beginTime: ZonedDateTime, price: Number) =
         volume = BigDecimal.ZERO,
     )
 
-private fun oneHourCandle(beginTime: ZonedDateTime, price: Number) =
+private fun oneHourCandle(beginTime: OffsetDateTime, price: Number) =
     Candle.TimeFrame.H1(
         beginTime,
         openPrice = price.toDouble().toBigDecimal(),
@@ -47,12 +47,12 @@ class EmptyTa4jCandlesTest {
 
 @DisplayName("기본 기능 테스트")
 class Ta4jCandlesTest {
-    private lateinit var beginTime: ZonedDateTime
+    private lateinit var beginTime: OffsetDateTime
     private lateinit var candles: Candles
 
     @BeforeEach
     fun setUp() {
-        beginTime = ZonedDateTime.parse("2024-03-09T00:00:00Z")
+        beginTime = OffsetDateTime.parse("2024-03-09T00:00:00Z")
         candles = ChartFactory.TA4J.createCandles().also {
             it.upsert(oneMinuteCandle(beginTime, 1000))
         }
@@ -120,7 +120,7 @@ class Ta4jCandlesTest {
 class Ta4jCandlesMaxSizeTest {
     @Test
     fun `BarSeries 에 등록된 Bar 는 FIFO 방식으로 제거된다`() {
-        val beginTime = ZonedDateTime.parse("2024-03-09T00:00:00Z")
+        val beginTime = OffsetDateTime.parse("2024-03-09T00:00:00Z")
         val candles = Ta4jCandles(maxSize = 3).also {
             it.upsert(oneMinuteCandle(beginTime.plusMinutes(0), 1000))
             it.upsert(oneMinuteCandle(beginTime.plusMinutes(1), 2000))
