@@ -16,9 +16,11 @@ class StrategyRunner(
 
         return OrderSignal(
             strategy.shouldOperate(candles.lastIndex, history),
-            candles.lastCandle.time
+            candles.lastCandle.time,
+            candles.lastCandle.price.close,
         ).also {
             if (it.type != OrderType.NONE) {
+                println(it)
                 history.add(it)
             }
         }

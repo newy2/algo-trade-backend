@@ -18,7 +18,8 @@ import java.time.OffsetDateTime
 private fun createOrderSignal(tradeType: OrderType) =
     OrderSignal(
         tradeType,
-        Candle.TimeRange(Duration.ofMinutes(1), OffsetDateTime.now())
+        Candle.TimeRange(Duration.ofMinutes(1), OffsetDateTime.now()),
+        1000.0.toBigDecimal()
     )
 
 class StrategyTest {
@@ -44,7 +45,7 @@ class StrategyTest {
     @Test
     fun `진입(enter) 신호가 발생하는 경우`() {
         val strategy = Strategy(
-            entryOrderType = entryType,
+            entryType = entryType,
             entryRule = BooleanRule(true),
             exitRule = BooleanRule(false),
         )
@@ -57,7 +58,7 @@ class StrategyTest {
     @Test
     fun `진출(exit) 신호가 발생하는 경우`() {
         val strategy = Strategy(
-            entryOrderType = entryType,
+            entryType = entryType,
             entryRule = BooleanRule(false),
             exitRule = BooleanRule(true),
         )
@@ -70,7 +71,7 @@ class StrategyTest {
     @Test
     fun `진입, 진출 신호가 발생하지 않는 경우`() {
         val strategy = Strategy(
-            entryOrderType = entryType,
+            entryType = entryType,
             entryRule = BooleanRule(false),
             exitRule = BooleanRule(false),
         )
@@ -83,7 +84,7 @@ class StrategyTest {
     @Test
     fun `진입, 진출 신호가 동시에 발생하는 경우`() {
         val strategy = Strategy(
-            entryOrderType = entryType,
+            entryType = entryType,
             entryRule = BooleanRule(true),
             exitRule = BooleanRule(true),
         )
@@ -124,7 +125,7 @@ class DifferentEntryOrderTypeTest {
     @Test
     fun `entryType 이 다른 OrderHistory 를 사용하면 에러`() {
         val strategy = Strategy(
-            entryOrderType = entryType,
+            entryType = entryType,
             entryRule = BooleanRule(false),
             exitRule = BooleanRule(false),
         )
@@ -142,21 +143,21 @@ class ErrorTest {
     fun `Strategy 생성자에 OrderType_NONE 을 전달할 수 없다`() {
         assertThrows<IllegalArgumentException> {
             Strategy(
-                entryOrderType = OrderType.NONE,
+                entryType = OrderType.NONE,
                 entryRule = BooleanRule(false),
                 exitRule = BooleanRule(false),
             )
         }
         assertDoesNotThrow {
             Strategy(
-                entryOrderType = OrderType.BUY,
+                entryType = OrderType.BUY,
                 entryRule = BooleanRule(false),
                 exitRule = BooleanRule(false),
             )
         }
         assertDoesNotThrow {
             Strategy(
-                entryOrderType = OrderType.SELL,
+                entryType = OrderType.SELL,
                 entryRule = BooleanRule(false),
                 exitRule = BooleanRule(false),
             )

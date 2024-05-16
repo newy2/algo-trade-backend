@@ -39,7 +39,7 @@ class EntryRuleStrategyRunnerTest {
         runner = StrategyRunner(
             candles,
             strategy = Strategy(
-                entryOrderType = OrderType.BUY,
+                entryType = OrderType.BUY,
                 entryRule = BooleanRule(true),
                 exitRule = BooleanRule(false),
             ),
@@ -51,7 +51,7 @@ class EntryRuleStrategyRunnerTest {
     fun `가격 정보가 1개만 업데이트 된 경우`() {
         val result = runner.run(listOf(oneMinuteCandle(now, 1000)))
 
-        assertEquals(result, OrderSignal(OrderType.BUY, candles.lastCandle.time))
+        assertEquals(result, OrderSignal(OrderType.BUY, candles.lastCandle.time, candles.lastCandle.price.close))
     }
 
     @Test
@@ -63,7 +63,7 @@ class EntryRuleStrategyRunnerTest {
             )
         )
 
-        assertEquals(result, OrderSignal(OrderType.BUY, candles.lastCandle.time))
+        assertEquals(result, OrderSignal(OrderType.BUY, candles.lastCandle.time, candles.lastCandle.price.close))
     }
 
     @Test
@@ -93,7 +93,7 @@ class OtherSignalStrategyRunnerTest {
     fun setUp() {
         candles = ChartFactory.DEFAULT.createCandles()
         history = OrderSignalHistory().also {
-            it.add(OrderSignal(OrderType.BUY, Candle.TimeRange(Duration.ofMinutes(1), now)))
+            it.add(OrderSignal(OrderType.BUY, Candle.TimeRange(Duration.ofMinutes(1), now), 1000.0.toBigDecimal()))
         }
     }
 
@@ -103,7 +103,7 @@ class OtherSignalStrategyRunnerTest {
         val runner = StrategyRunner(
             candles,
             strategy = Strategy(
-                entryOrderType = OrderType.BUY,
+                entryType = OrderType.BUY,
                 entryRule = BooleanRule(false),
                 exitRule = BooleanRule(true),
             ),
@@ -112,7 +112,7 @@ class OtherSignalStrategyRunnerTest {
 
         val result = runner.run(listOf(oneMinuteCandle(now, 1000)))
 
-        assertEquals(result, OrderSignal(OrderType.SELL, candles.lastCandle.time))
+        assertEquals(result, OrderSignal(OrderType.SELL, candles.lastCandle.time, candles.lastCandle.price.close))
         assertEquals(OrderType.SELL, history.lastOrderType(), "OrderSignalHistory 업데이트 됨")
     }
 
@@ -121,7 +121,7 @@ class OtherSignalStrategyRunnerTest {
         val runner = StrategyRunner(
             candles,
             strategy = Strategy(
-                entryOrderType = OrderType.BUY,
+                entryType = OrderType.BUY,
                 entryRule = BooleanRule(false),
                 exitRule = BooleanRule(false),
             ),
@@ -130,7 +130,7 @@ class OtherSignalStrategyRunnerTest {
 
         val result = runner.run(listOf(oneMinuteCandle(now, 1000)))
 
-        assertEquals(result, OrderSignal(OrderType.NONE, candles.lastCandle.time))
+        assertEquals(result, OrderSignal(OrderType.NONE, candles.lastCandle.time, candles.lastCandle.price.close))
         assertEquals(OrderType.BUY, history.lastOrderType(), "OrderType.NONE 은 추가하지 않음")
     }
 }

@@ -45,8 +45,8 @@ enum class ChartFactory {
     abstract fun createADXIndicator(candles: Candles, candleCount: Int): Indicator
     abstract fun createRSIIndicator(candles: Candles, candleCount: Int): Indicator
     abstract fun createEMAIndicator(candles: Candles, candleCount: Int): Indicator
-    fun openPriceIndicator(candles: Candles): Indicator = OpenPriceIndicator(candles)
-    fun closePriceIndicator(candles: Candles): Indicator = ClosePriceIndicator(candles)
+    fun openPriceIndicator(candles: Candles) = OpenPriceIndicator(candles)
+    fun closePriceIndicator(candles: Candles) = ClosePriceIndicator(candles)
     fun createConstBigDecimalIndicator(constValue: Double): Indicator =
         ConstBigDecimalIndicator(BigDecimal.valueOf(constValue))
 }
