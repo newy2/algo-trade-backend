@@ -36,7 +36,7 @@ private fun oneHourCandle(beginTime: OffsetDateTime, price: Number) =
 class EmptyTa4jCandlesTest {
     @Test
     fun `기본 생성자`() {
-        val candles = ChartFactory.TA4J.createCandles()
+        val candles = ChartFactory.DEFAULT.createCandles()
 
         assertEquals(0, candles.size)
         assertEquals(400, candles.maxSize)
@@ -53,7 +53,7 @@ class Ta4jCandlesTest {
     @BeforeEach
     fun setUp() {
         lastBeginTime = OffsetDateTime.parse("2024-03-09T00:00:00Z")
-        candles = ChartFactory.TA4J.createCandles().also {
+        candles = ChartFactory.DEFAULT.createCandles().also {
             it.upsert(oneMinuteCandle(lastBeginTime.minusMinutes(1), 500))
             it.upsert(oneMinuteCandle(lastBeginTime, 1000))
         }
