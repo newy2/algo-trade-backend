@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.Instant
+import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 private fun getCandles(length: Int, list: Array<Array<String>> = bybitKlineList) =
@@ -76,6 +77,45 @@ class IndicatorTest {
         val indicator = ChartFactory.TA4J.createEMAIndicator(candles, 50)
 
         assertBigDecimalEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("EMA50"), indicator[candles.lastIndex])
+    }
+}
+
+class EtcIndicatorTest {
+    @Test
+    fun `상수 값 지수`() {
+        val indicator = ChartFactory.TA4J.createConstBigDecimalIndicator(20.0)
+        repeat(10) {
+            assertBigDecimalEquals(20.0, indicator[it])
+        }
+    }
+}
+
+class OpenClosePriceIndicatorTest {
+    private val candles = ChartFactory.TA4J.createCandles().also {
+        it.upsert(
+            Candle.TimeFrame.M1(
+                OffsetDateTime.now(),
+                openPrice = 100.0.toBigDecimal(),
+                highPrice = 1000.0.toBigDecimal(),
+                lowPrice = 100.0.toBigDecimal(),
+                closePrice = 500.0.toBigDecimal(),
+                volume = 0.0.toBigDecimal(),
+            )
+        )
+    }
+
+    @Test
+    fun `시가 지수`() {
+        val indicator = ChartFactory.TA4J.openPriceIndicator(candles)
+
+        assertBigDecimalEquals(100.0, indicator[0])
+    }
+
+    @Test
+    fun `종가 지수`() {
+        val indicator = ChartFactory.TA4J.closePriceIndicator(candles)
+
+        assertBigDecimalEquals(500.0, indicator[0])
     }
 }
 

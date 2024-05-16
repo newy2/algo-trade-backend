@@ -1,11 +1,9 @@
 package com.newy.algotrade.unit.chart.rule
 
-import com.newy.algotrade.domain.chart.Indicator
+import com.newy.algotrade.domain.chart.indicator.Indicator
 import com.newy.algotrade.domain.chart.libs.ta4j.indicator.Taj4NumIndicatorWrapper
-import com.newy.algotrade.domain.chart.rule.CrossedDownRule
-import com.newy.algotrade.domain.chart.rule.CrossedUpRule
-import com.newy.algotrade.domain.chart.rule.OverRule
-import com.newy.algotrade.domain.chart.rule.UnderRule
+import com.newy.algotrade.domain.chart.rule.*
+import helpers.BooleanRule
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -179,6 +177,25 @@ class CrossedDownRuleTest {
         assertFalse(rule.isSatisfied(0))
         assertFalse(rule.isSatisfied(1))
         assertTrue(rule.isSatisfied(2), "하락 돌파 (1001 -> 1000 -> 500)")
+    }
+}
+
+@DisplayName("조건 룰 테스트")
+class ConditionRuleTest {
+    @Test
+    fun `AND 조건 룰`() {
+        assertTrue(AndRule(BooleanRule(true), BooleanRule(true)).isSatisfied(0))
+        assertFalse(AndRule(BooleanRule(true), BooleanRule(false)).isSatisfied(0))
+        assertFalse(AndRule(BooleanRule(false), BooleanRule(true)).isSatisfied(0))
+        assertFalse(AndRule(BooleanRule(false), BooleanRule(false)).isSatisfied(0))
+    }
+
+    @Test
+    fun `OR 조건 룰`() {
+        assertTrue(OrRule(BooleanRule(true), BooleanRule(true)).isSatisfied(0))
+        assertTrue(OrRule(BooleanRule(true), BooleanRule(false)).isSatisfied(0))
+        assertTrue(OrRule(BooleanRule(false), BooleanRule(true)).isSatisfied(0))
+        assertFalse(OrRule(BooleanRule(false), BooleanRule(false)).isSatisfied(0))
     }
 }
 

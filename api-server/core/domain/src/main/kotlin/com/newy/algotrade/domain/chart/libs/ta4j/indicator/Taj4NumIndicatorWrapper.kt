@@ -1,6 +1,6 @@
 package com.newy.algotrade.domain.chart.libs.ta4j.indicator
 
-import com.newy.algotrade.domain.chart.Indicator
+import com.newy.algotrade.domain.chart.indicator.Indicator
 import org.ta4j.core.num.DecimalNum
 import org.ta4j.core.num.Num
 import java.math.BigDecimal
