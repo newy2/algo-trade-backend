@@ -131,6 +131,34 @@ class ByBitProductPriceHttpApiTest {
     }
 
     @Test
+    fun `1일봉 - 현물 BTC 가격 조회 API`() = runBlocking {
+        assertEquals(
+            listOf(
+                Candle.TimeFrame.D1(
+                    beginTime = OffsetDateTime.parse("2024-05-01T00:00Z"),
+                    openPrice = "59713.76".toBigDecimal(),
+                    highPrice = "75100.0".toBigDecimal(),
+                    lowPrice = "52241.02".toBigDecimal(),
+                    closePrice = "58034.47".toBigDecimal(),
+                    volume = "291706.443849".toBigDecimal(),
+                )
+            ),
+            client.productPrices(
+                LoadProductPriceParam(
+                    ProductPriceKey(
+                        Market.BY_BIT,
+                        ProductType.SPOT,
+                        "BTCUSDT",
+                        Duration.ofDays(1),
+                    ),
+                    OffsetDateTime.parse("2024-05-01T00:00Z"),
+                    1,
+                )
+            )
+        )
+    }
+
+    @Test
     fun `무기한 선물 BTC 가격 조회 API`() = runBlocking {
         assertEquals(
             listOf(

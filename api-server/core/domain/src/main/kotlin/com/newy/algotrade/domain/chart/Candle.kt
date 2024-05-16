@@ -15,7 +15,8 @@ data class Candle private constructor(
         M1(Duration.ofMinutes(1)),
         M3(Duration.ofMinutes(3)),
         M5(Duration.ofMinutes(5)),
-        M10(Duration.ofMinutes(10)),
+        M15(Duration.ofMinutes(15)),
+        M30(Duration.ofMinutes(30)),
         H1(Duration.ofHours(1)),
         D1(Duration.ofDays(1));
 

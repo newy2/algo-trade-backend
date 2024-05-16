@@ -8,10 +8,10 @@ object SimpleCsvParser {
         .map { it.split(",").map { eachText -> eachText.trim() }.toTypedArray() }
         .toArray { length -> arrayOfNulls(length) }
 
-    fun parseFromResource(resourceName: String) = javaClass.getResourceAsStream(resourceName)!!
-        .bufferedReader()
-        .lines()
-        .let {
+    fun parseFromResource(resourceName: String) = javaClass.getResourceAsStream(resourceName)
+        ?.bufferedReader()
+        ?.lines()
+        ?.let {
             parse(it)
-        }
+        } ?: emptyArray<Array<String>>()
 }

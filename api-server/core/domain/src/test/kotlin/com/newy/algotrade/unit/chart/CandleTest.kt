@@ -47,7 +47,8 @@ class CandleTest {
         assertEquals(1.minutes.toJavaDuration(), Candle.TimeFrame.M1(beginTime).time.period)
         assertEquals(3.minutes.toJavaDuration(), Candle.TimeFrame.M3(beginTime).time.period)
         assertEquals(5.minutes.toJavaDuration(), Candle.TimeFrame.M5(beginTime).time.period)
-        assertEquals(10.minutes.toJavaDuration(), Candle.TimeFrame.M10(beginTime).time.period)
+        assertEquals(15.minutes.toJavaDuration(), Candle.TimeFrame.M15(beginTime).time.period)
+        assertEquals(30.minutes.toJavaDuration(), Candle.TimeFrame.M30(beginTime).time.period)
         assertEquals(1.hours.toJavaDuration(), Candle.TimeFrame.H1(beginTime).time.period)
         assertEquals(1.days.toJavaDuration(), Candle.TimeFrame.D1(beginTime).time.period)
     }

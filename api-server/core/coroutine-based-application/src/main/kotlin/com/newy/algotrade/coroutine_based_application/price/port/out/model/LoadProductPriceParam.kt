@@ -8,7 +8,7 @@ import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
 class LoadProductPriceParam(
-    private val productPriceKey: ProductPriceKey,
+    val productPriceKey: ProductPriceKey,
     private val endTime: OffsetDateTime,
     val limit: Int,
 ) {
@@ -38,9 +38,11 @@ class LoadProductPriceParam(
         }
     }
 
-    fun isIntervalByDays(): Boolean {
-        useOnly(Market.E_BEST)
+    fun formattedInterval(): String {
+        return if (isIntervalByDays()) "D" else intervalMinutes.toString()
+    }
 
+    fun isIntervalByDays(): Boolean {
         return productPriceKey.interval.toDays() >= 1
     }
 

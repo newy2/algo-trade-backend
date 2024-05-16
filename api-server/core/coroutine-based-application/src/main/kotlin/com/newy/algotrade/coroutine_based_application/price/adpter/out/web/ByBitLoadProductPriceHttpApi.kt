@@ -18,7 +18,7 @@ class ByBitLoadProductPriceHttpApi(private val client: HttpApiClient) : LoadProd
             params = mapOf(
                 "category" to param.category(),
                 "symbol" to param.productCode,
-                "interval" to param.intervalMinutes.toString(),
+                "interval" to param.formattedInterval(),
                 "end" to param.endTime(),
                 "limit" to param.limit.toString(),
             ),
