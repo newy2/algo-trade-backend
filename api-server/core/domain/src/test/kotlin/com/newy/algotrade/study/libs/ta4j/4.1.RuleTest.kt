@@ -136,7 +136,7 @@ class EtcRule {
 
         assertTrue(rule.isSatisfied(0))
         assertFalse(rule.isSatisfied(0), "첫 번째 검증 이후, 항상 false 리턴")
-        assertFalse(rule.isSatisfied(0), "첫 번째 검증 이후, 항상 false 리턴")
+        assertFalse(rule.isSatisfied(1), "다른 index 에서도 항상 false 리턴")
     }
 
     @DisplayName("ChainRule - 순차적으로 규칙이 실행되야 하는 경우에 사용. (트리거 Rule 이 성공하면, ChainLink 의 Rule 을 순차적으로 검증한다)")

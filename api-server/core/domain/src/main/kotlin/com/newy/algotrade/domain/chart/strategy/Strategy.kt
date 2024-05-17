@@ -15,11 +15,11 @@ open class Strategy(val entryType: OrderType, val entryRule: Rule, val exitRule:
         validate(history)
 
         val (shouldEnter, shouldExit) = compute(index, history)
-        if (shouldEnter && history.lastOrderType() != entryType) {
+        if (shouldEnter && !history.isOpened()) {
             return entryType
         }
 
-        if (shouldExit && history.lastOrderType() == entryType) {
+        if (shouldExit && history.isOpened()) {
             return entryType.completedType()
         }
 
@@ -37,10 +37,6 @@ open class Strategy(val entryType: OrderType, val entryRule: Rule, val exitRule:
         // TODO Rule#isSatisfied 시간 측정
         val shouldEnter = entryRule.isSatisfied(index, history)
         val shouldExit = exitRule.isSatisfied(index, history)
-
-        if (shouldEnter && shouldExit) {
-            throw IllegalStateException("알고리즘 오류")
-        }
 
         return Pair(shouldEnter, shouldExit)
     }

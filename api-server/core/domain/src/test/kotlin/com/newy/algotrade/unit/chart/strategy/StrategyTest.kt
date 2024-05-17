@@ -6,11 +6,8 @@ import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import helpers.BooleanRule
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertDoesNotThrow
-import org.junit.jupiter.api.assertThrows
 import java.time.Duration
 import java.time.OffsetDateTime
 
@@ -82,6 +79,8 @@ class StrategyTest {
     }
 
     @Test
+    @Disabled
+    @Deprecated("쓸데 없는 테스트임")
     fun `진입, 진출 신호가 동시에 발생하는 경우`() {
         val strategy = Strategy(
             entryType = entryType,

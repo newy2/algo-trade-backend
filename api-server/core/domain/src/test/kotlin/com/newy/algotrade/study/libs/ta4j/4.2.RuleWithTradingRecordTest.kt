@@ -255,6 +255,27 @@ class UpFlowStopGainOrLossRuleTest {
     }
 }
 
+class StopGainRuleTest {
+    @Test
+    fun test() {
+        val series = BaseBarSeries().also {
+            val now = ZonedDateTime.now()
+            it.addBar(baseBar(closePrice = 100, endTime = now.plusMinutes(0)))
+            it.addBar(baseBar(closePrice = 101, endTime = now.plusMinutes(1)))
+            it.addBar(baseBar(closePrice = 110, endTime = now.plusMinutes(2)))
+        }
+
+        val longPositionRecord = BaseTradingRecord(TradeType.BUY).also {
+            it.enter(index = 0, price = 100, amount = 1)
+        }
+        val closePriceIndicator = ClosePriceIndicator(series)
+        val rule = StopGainRule(closePriceIndicator, 5)
+        assertFalse(rule.isSatisfied(0, longPositionRecord))
+        assertFalse(rule.isSatisfied(1, longPositionRecord))
+        assertTrue(rule.isSatisfied(2, longPositionRecord))
+    }
+}
+
 fun TradingRecord.enter(index: Number, price: Number, amount: Number) =
     this.enter(index.toInt(), DecimalNum.valueOf(price), DecimalNum.valueOf(amount))
 

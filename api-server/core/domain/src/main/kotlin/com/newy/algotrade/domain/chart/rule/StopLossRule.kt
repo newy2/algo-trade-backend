@@ -35,14 +35,14 @@ class StopLossRule(
     }
 
     private fun isBuyStopSatisfied(entryPrice: BigDecimal, currentPrice: BigDecimal): Boolean {
-        val lossRatioThreshold = (HUNDRED - lossPercentage) / (HUNDRED);
-        val threshold = entryPrice * lossRatioThreshold
+        val lossRatioThreshold = HUNDRED.minus(lossPercentage).divide(HUNDRED);
+        val threshold = entryPrice.multiply(lossRatioThreshold)
         return currentPrice <= threshold
     }
 
     private fun isSellStopSatisfied(entryPrice: BigDecimal, currentPrice: BigDecimal): Boolean {
-        val lossRatioThreshold = (HUNDRED + lossPercentage) / (HUNDRED);
-        val threshold = entryPrice * lossRatioThreshold
+        val lossRatioThreshold = HUNDRED.plus(lossPercentage).divide(HUNDRED);
+        val threshold = entryPrice.multiply(lossRatioThreshold)
         return currentPrice >= threshold
     }
 }

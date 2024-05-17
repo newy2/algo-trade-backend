@@ -4,6 +4,7 @@ import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.ChartFactory
 import com.newy.algotrade.domain.chart.Rule
+import com.newy.algotrade.domain.chart.indicator.ClosePriceIndicator
 import com.newy.algotrade.domain.chart.order.OrderSignal
 import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 import com.newy.algotrade.domain.chart.order.OrderType
@@ -12,9 +13,50 @@ import com.newy.algotrade.domain.chart.rule.StopLossRule
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
 import java.time.OffsetDateTime
+import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
+
+class StopGainRuleTest {
+    @Test
+    fun exitRule() {
+        val candles = ChartFactory.DEFAULT.createCandles().also {
+            val now = OffsetDateTime.now()
+            it.upsert(baseCandle(closePrice = 1000, startTime = now.plusMinutes(0)))
+            it.upsert(baseCandle(closePrice = 1010, startTime = now.plusMinutes(1)))
+            it.upsert(baseCandle(closePrice = 1100, startTime = now.plusMinutes(2)))
+        }
+
+        val history = OrderSignalHistory().also {
+            it.add(
+                OrderSignal(
+                    OrderType.BUY,
+                    candles.firstCandle.time,
+                    candles.firstCandle.price.close
+                )
+            )
+        }
+
+        val closePriceIndicator = ClosePriceIndicator(candles)
+        val rule = StopGainRule(closePriceIndicator, 5)
+
+        assertFalse(rule.isSatisfied(0, history))
+        assertFalse(rule.isSatisfied(1, history))
+        assertTrue(rule.isSatisfied(2, history))
+    }
+
+    @Test
+    fun `BigDecimal 의 plus operator 는 scale(소수점 자리수)을 변경한다`() {
+        val hundred = 100.toBigDecimal()
+        val decimal = 0.01.toBigDecimal()
+
+        assertEquals(BigDecimal("1.00"), ((hundred + decimal) / hundred))
+        assertEquals(BigDecimal("1.0001"), hundred.plus(decimal).divide(hundred))
+    }
+}
+
 
 @DisplayName("하락 추세일 때, 포지션 별 손절가/익절가 계산")
 class DownFlowStopGainOrLossRuleTest {

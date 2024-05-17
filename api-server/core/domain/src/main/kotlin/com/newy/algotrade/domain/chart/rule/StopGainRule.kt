@@ -21,17 +21,11 @@ class StopGainRule(
 
     override fun isSatisfied(index: Int, history: OrderSignalHistory?): Boolean {
         return history?.let {
-            println(index)
-            println(closePrice[index])
-
             if (!it.isOpened()) {
                 return false
             }
 
             val currentPrice = closePrice[index]
-            if (currentPrice > 30000.0.toBigDecimal()) {
-                println("currentPrice > 30000 : $currentPrice")
-            }
             if (it.lastOrderType() == OrderType.BUY) {
                 isBuyGainSatisfied(history.lastOrderSignal().orderPrice, currentPrice)
             } else {
@@ -41,14 +35,14 @@ class StopGainRule(
     }
 
     private fun isBuyGainSatisfied(entryPrice: BigDecimal, currentPrice: BigDecimal): Boolean {
-        val lossRatioThreshold = (HUNDRED + gainPercentage) / (HUNDRED);
-        val threshold = entryPrice * lossRatioThreshold
+        val lossRatioThreshold = HUNDRED.plus(gainPercentage).divide(HUNDRED)
+        val threshold = entryPrice.multiply(lossRatioThreshold)
         return currentPrice >= threshold
     }
 
     private fun isSellGainSatisfied(entryPrice: BigDecimal, currentPrice: BigDecimal): Boolean {
-        val lossRatioThreshold = (HUNDRED - gainPercentage) / (HUNDRED);
-        val threshold = entryPrice * lossRatioThreshold
+        val lossRatioThreshold = HUNDRED.minus(gainPercentage).divide(HUNDRED)
+        val threshold = entryPrice.multiply(lossRatioThreshold)
         return currentPrice <= threshold
     }
 }

@@ -20,7 +20,6 @@ class StrategyRunner(
             candles.lastCandle.price.close,
         ).also {
             if (it.type != OrderType.NONE) {
-                println(it)
                 history.add(it)
             }
         }

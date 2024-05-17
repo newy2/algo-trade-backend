@@ -8,6 +8,6 @@ class AndRule(
     private val rules: Array<out Rule> = r,
 ) : Rule {
     override fun isSatisfied(index: Int, history: OrderSignalHistory?): Boolean {
-        return rules.all { it.isSatisfied(index) }
+        return rules.all { it.isSatisfied(index, history) }
     }
 }
