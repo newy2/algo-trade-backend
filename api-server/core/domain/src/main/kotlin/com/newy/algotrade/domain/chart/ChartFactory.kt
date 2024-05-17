@@ -1,7 +1,7 @@
 package com.newy.algotrade.domain.chart
 
 import com.newy.algotrade.domain.chart.indicator.ClosePriceIndicator
-import com.newy.algotrade.domain.chart.indicator.ConstBigDecimalIndicator
+import com.newy.algotrade.domain.chart.indicator.ConstDecimalIndicator
 import com.newy.algotrade.domain.chart.indicator.Indicator
 import com.newy.algotrade.domain.chart.indicator.OpenPriceIndicator
 import com.newy.algotrade.domain.chart.libs.ta4j.Ta4jCandles
@@ -48,5 +48,5 @@ enum class ChartFactory {
     fun openPriceIndicator(candles: Candles) = OpenPriceIndicator(candles)
     fun closePriceIndicator(candles: Candles) = ClosePriceIndicator(candles)
     fun createConstBigDecimalIndicator(constValue: Double): Indicator =
-        ConstBigDecimalIndicator(BigDecimal.valueOf(constValue))
+        ConstDecimalIndicator(BigDecimal.valueOf(constValue))
 }
