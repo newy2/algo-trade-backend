@@ -22,7 +22,7 @@ import kotlin.test.assertTrue
 class StopGainRuleTest {
     @Test
     fun exitRule() {
-        val candles = ChartFactory.DEFAULT.createCandles().also {
+        val candles = ChartFactory.DEFAULT.candles().also {
             val now = OffsetDateTime.now()
             it.upsert(baseCandle(closePrice = 1000, startTime = now.plusMinutes(0)))
             it.upsert(baseCandle(closePrice = 1010, startTime = now.plusMinutes(1)))
@@ -66,7 +66,7 @@ class DownFlowStopGainOrLossRuleTest {
 
     @BeforeEach
     fun setUp() {
-        candles = ChartFactory.DEFAULT.createCandles().also {
+        candles = ChartFactory.DEFAULT.candles().also {
             val now = OffsetDateTime.now()
             it.upsert(baseCandle(closePrice = 1000, startTime = now.plusMinutes(0)))
             it.upsert(baseCandle(closePrice = 1000 * (1 - .09), startTime = now.plusMinutes(1)))
@@ -133,7 +133,7 @@ class UpFlowStopGainOrLossRuleTest {
 
     @BeforeEach
     fun setUp() {
-        candles = ChartFactory.DEFAULT.createCandles().also {
+        candles = ChartFactory.DEFAULT.candles().also {
             val now = OffsetDateTime.now()
             it.upsert(baseCandle(closePrice = 1000, startTime = now.plusMinutes(0)))
             it.upsert(baseCandle(closePrice = 1000 * (1 + .09), startTime = now.plusMinutes(1)))

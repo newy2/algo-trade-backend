@@ -12,41 +12,41 @@ import java.math.BigDecimal
 
 enum class ChartFactory {
     DEFAULT {
-        override fun createCandles() = TA4J.createCandles()
+        override fun candles() = TA4J.candles()
 
-        override fun createADXIndicator(candles: Candles, candleCount: Int) =
-            TA4J.createADXIndicator(candles, candleCount)
+        override fun adxIndicator(candles: Candles, candleCount: Int) =
+            TA4J.adxIndicator(candles, candleCount)
 
-        override fun createRSIIndicator(candles: Candles, candleCount: Int) =
-            TA4J.createRSIIndicator(candles, candleCount)
+        override fun rsiIndicator(candles: Candles, candleCount: Int) =
+            TA4J.rsiIndicator(candles, candleCount)
 
-        override fun createEMAIndicator(candles: Candles, candleCount: Int) =
-            TA4J.createEMAIndicator(candles, candleCount)
+        override fun emaIndicator(candles: Candles, candleCount: Int) =
+            TA4J.emaIndicator(candles, candleCount)
     },
     TA4J {
-        override fun createCandles(): Candles {
+        override fun candles(): Candles {
             return Ta4jCandles()
         }
 
-        override fun createADXIndicator(candles: Candles, candleCount: Int): Indicator {
+        override fun adxIndicator(candles: Candles, candleCount: Int): Indicator {
             return Ta4jADXIndicator(candles as Ta4jCandles, candleCount)
         }
 
-        override fun createRSIIndicator(candles: Candles, candleCount: Int): Indicator {
+        override fun rsiIndicator(candles: Candles, candleCount: Int): Indicator {
             return Ta4jRSIIndicator(candles as Ta4jCandles, candleCount)
         }
 
-        override fun createEMAIndicator(candles: Candles, candleCount: Int): Indicator {
+        override fun emaIndicator(candles: Candles, candleCount: Int): Indicator {
             return Ta4jEMAIndicator(candles as Ta4jCandles, candleCount)
         }
     };
 
-    abstract fun createCandles(): Candles
-    abstract fun createADXIndicator(candles: Candles, candleCount: Int): Indicator
-    abstract fun createRSIIndicator(candles: Candles, candleCount: Int): Indicator
-    abstract fun createEMAIndicator(candles: Candles, candleCount: Int): Indicator
+    abstract fun candles(): Candles
+    abstract fun adxIndicator(candles: Candles, candleCount: Int): Indicator
+    abstract fun rsiIndicator(candles: Candles, candleCount: Int): Indicator
+    abstract fun emaIndicator(candles: Candles, candleCount: Int): Indicator
     fun openPriceIndicator(candles: Candles) = OpenPriceIndicator(candles)
     fun closePriceIndicator(candles: Candles) = ClosePriceIndicator(candles)
-    fun createConstBigDecimalIndicator(constValue: Double): Indicator =
+    fun constDecimalIndicator(constValue: Double): Indicator =
         ConstDecimalIndicator(BigDecimal.valueOf(constValue))
 }

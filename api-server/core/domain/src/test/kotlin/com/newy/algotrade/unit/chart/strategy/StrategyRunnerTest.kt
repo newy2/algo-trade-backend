@@ -34,7 +34,7 @@ class EntryRuleStrategyRunnerTest {
 
     @BeforeEach
     fun setUp() {
-        candles = ChartFactory.DEFAULT.createCandles()
+        candles = ChartFactory.DEFAULT.candles()
         history = OrderSignalHistory()
         runner = StrategyRunner(
             candles,
@@ -91,7 +91,7 @@ class OtherSignalStrategyRunnerTest {
 
     @BeforeEach
     fun setUp() {
-        candles = ChartFactory.DEFAULT.createCandles()
+        candles = ChartFactory.DEFAULT.candles()
         history = OrderSignalHistory().also {
             it.add(OrderSignal(OrderType.BUY, Candle.TimeRange(Duration.ofMinutes(1), now), 1000.0.toBigDecimal()))
         }
@@ -99,7 +99,7 @@ class OtherSignalStrategyRunnerTest {
 
     @Test
     fun `진출 신호가 발생하는 경우`() {
-        val candles = ChartFactory.DEFAULT.createCandles()
+        val candles = ChartFactory.DEFAULT.candles()
         val runner = StrategyRunner(
             candles,
             strategy = Strategy(

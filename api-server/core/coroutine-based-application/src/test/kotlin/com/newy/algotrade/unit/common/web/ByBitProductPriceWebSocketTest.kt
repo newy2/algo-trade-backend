@@ -69,8 +69,6 @@ class ByBitProductPriceWebSocketSendMessageTest : BaseByBitProductPriceWebSocket
             CoroutineScope(Dispatchers.Default).launch {
                 receiveMessage.send(text)
             }
-
-            println("text: $text")
         }
     }
 
