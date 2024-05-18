@@ -30,6 +30,7 @@ class OrderSignalHistoryTest {
 
     @Test
     fun `빈 OrderHistory 인 경우`() {
+        assertTrue(history.isEmpty())
         assertFalse(history.isOpened())
         assertEquals(OrderType.NONE, history.firstOrderType())
         assertEquals(OrderType.NONE, history.lastOrderType())
@@ -40,6 +41,7 @@ class OrderSignalHistoryTest {
         val isAdded = history.add(createOrderSignal(OrderType.BUY))
 
         assertTrue(isAdded)
+        assertFalse(history.isEmpty())
         assertTrue(history.isOpened())
         assertEquals(OrderType.BUY, history.firstOrderType())
         assertEquals(OrderType.BUY, history.lastOrderType())
@@ -50,6 +52,7 @@ class OrderSignalHistoryTest {
         val isAdded = history.add(createOrderSignal(OrderType.SELL))
 
         assertTrue(isAdded)
+        assertFalse(history.isEmpty())
         assertTrue(history.isOpened())
         assertEquals(OrderType.SELL, history.firstOrderType())
         assertEquals(OrderType.SELL, history.lastOrderType())

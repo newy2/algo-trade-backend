@@ -27,6 +27,10 @@ class OrderSignalHistory() {
         return orders.last().type
     }
 
+    fun isEmpty(): Boolean {
+        return firstOrderType() == OrderType.NONE
+    }
+
     fun isOpened(): Boolean {
         val first = firstOrderType()
         val last = lastOrderType()
