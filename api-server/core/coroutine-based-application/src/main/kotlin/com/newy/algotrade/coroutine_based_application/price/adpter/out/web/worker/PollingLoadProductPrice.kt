@@ -8,6 +8,7 @@ import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import java.time.OffsetDateTime
 import kotlin.coroutines.CoroutineContext
 
+// TODO Refector name -> PollingLoadProductPriceHttpApi
 open class PollingLoadProductPrice(
     private val loader: LoadProductPricePort,
     delayMillis: Long,
