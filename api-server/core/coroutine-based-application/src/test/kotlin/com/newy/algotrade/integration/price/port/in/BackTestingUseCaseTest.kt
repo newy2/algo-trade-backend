@@ -5,11 +5,11 @@ import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestA
 import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.price.domain.ProductPriceProvider
 import com.newy.algotrade.coroutine_based_application.price.domain.UserStrategyRunner
-import com.newy.algotrade.coroutine_based_application.price.domain.back_test.BackTestDataLoader
-import com.newy.algotrade.coroutine_based_application.price.domain.back_test.StringReporter
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchByBitProductPrice
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchEBestProductPrice
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.GetProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.price2.domain.back_test.BackTestDataLoader
+import com.newy.algotrade.coroutine_based_application.price2.domain.back_test.StringReporter
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
