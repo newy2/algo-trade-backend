@@ -3,7 +3,7 @@ package com.newy.algotrade.unit.common.web
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.by_bit.ByBitWebSocketPing
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
-import com.newy.algotrade.coroutine_based_application.common.web.socket.ByBitProductPriceWebSocket
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.PollingProductPriceWithByBitWebSocket
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -34,7 +34,7 @@ open class BaseByBitProductPriceWebSocketTest {
         coroutineContext: CoroutineContext,
         callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit = {}
     ) =
-        ByBitProductPriceWebSocket(
+        PollingProductPriceWithByBitWebSocket(
             DefaultWebSocketClient(
                 OkHttpClient(),
                 "http://localhost:$port",

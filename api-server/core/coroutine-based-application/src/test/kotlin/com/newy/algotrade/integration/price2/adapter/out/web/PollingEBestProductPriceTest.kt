@@ -1,10 +1,10 @@
-package com.newy.algotrade.integration.price.adapter.out.web.worker
+package com.newy.algotrade.integration.price2.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchEBestProductPrice
-import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.GetProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchProductPriceProxy
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
@@ -24,14 +24,14 @@ import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
-class PollingEBestLoadProductPriceTest {
+class PollingEBestProductPriceTest {
     private val client = DefaultHttpApiClient(
         OkHttpClient(),
         TestEnv.EBest.url,
         JsonConverterByJackson(jacksonObjectMapper())
     )
     private val accessTokenLoader = EBestAccessTokenHttpApi(client)
-    private val api = GetProductPriceProxy(
+    private val api = FetchProductPriceProxy(
         mapOf(
             Market.E_BEST to FetchEBestProductPrice(
                 client,
@@ -49,7 +49,7 @@ class PollingEBestLoadProductPriceTest {
         val channel = Channel<Pair<ProductPriceKey, ProductPrice>>()
         var index = 0
 
-        val pollingJob = PollingLoadProductPriceTestHelper(api, delayMillis = 1000, coroutineContext) { (key, list) ->
+        val pollingJob = PollingProductPriceTestHelper(api, delayMillis = 1000, coroutineContext) { (key, list) ->
             channel.send(Pair(key, list[index++])) // 실시간 API 흉내를 내기 위해서, index 사용
         }
 

@@ -7,7 +7,7 @@ import com.newy.algotrade.coroutine_based_application.price.domain.ProductPriceP
 import com.newy.algotrade.coroutine_based_application.price.domain.UserStrategyRunner
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchByBitProductPrice
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchEBestProductPrice
-import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.GetProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.price2.domain.back_test.BackTestDataLoader
 import com.newy.algotrade.coroutine_based_application.price2.domain.back_test.StringReporter
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
@@ -40,7 +40,7 @@ private fun byBitHttpApiClient() =
     )
 
 private fun loadProductPriceProxy() =
-    GetProductPriceProxy(
+    FetchProductPriceProxy(
         mapOf(
             Market.E_BEST to FetchEBestProductPrice(
                 eBestHttpApiClient(),

@@ -1,7 +1,8 @@
-package com.newy.algotrade.coroutine_based_application.common.web.socket
+package com.newy.algotrade.coroutine_based_application.price2.adpter.out.web
 
 import com.newy.algotrade.coroutine_based_application.common.web.WebSocketClient
 import com.newy.algotrade.coroutine_based_application.common.web.by_bit.ByBitWebSocket
+import com.newy.algotrade.coroutine_based_application.price2.port.out.PollingProductPricePort
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverter
@@ -10,12 +11,13 @@ import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.ByBitProduc
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import kotlin.coroutines.CoroutineContext
 
-class ByBitProductPriceWebSocket(
+class PollingProductPriceWithByBitWebSocket(
     client: WebSocketClient,
     private val productType: ProductType,
     jsonConverter: JsonConverter,
     coroutineContext: CoroutineContext,
-) : ByBitWebSocket<ProductPriceKey, List<ProductPrice>>(client, jsonConverter, coroutineContext) {
+) : PollingProductPricePort,
+    ByBitWebSocket<ProductPriceKey, List<ProductPrice>>(client, jsonConverter, coroutineContext) {
     override fun topic(key: ProductPriceKey): String {
         val interval = if (key.interval.toDays() >= 1) "D" else key.interval.toMinutes().toString()
         return "kline.$interval.${key.productCode}"

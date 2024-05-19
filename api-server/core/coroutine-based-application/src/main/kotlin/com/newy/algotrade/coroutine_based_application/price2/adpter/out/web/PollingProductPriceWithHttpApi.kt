@@ -1,19 +1,20 @@
-package com.newy.algotrade.coroutine_based_application.price.adpter.out.web.worker
+package com.newy.algotrade.coroutine_based_application.price2.adpter.out.web
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingJob
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.PollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import java.time.OffsetDateTime
 import kotlin.coroutines.CoroutineContext
 
-// TODO Refector name -> PollingLoadProductPriceHttpApi
-open class PollingLoadProductPrice(
+open class PollingProductPriceWithHttpApi(
     private val loader: GetProductPricePort,
     delayMillis: Long,
     coroutineContext: CoroutineContext,
-) : PollingJob<ProductPriceKey, List<ProductPrice>>(delayMillis, coroutineContext) {
+) : PollingProductPricePort,
+    PollingJob<ProductPriceKey, List<ProductPrice>>(delayMillis, coroutineContext) {
     override suspend fun eachProcess(key: ProductPriceKey): List<ProductPrice> {
         return loader.getProductPrices(
             GetProductPriceParam(

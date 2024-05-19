@@ -1,15 +1,11 @@
-package com.newy.algotrade.integration.price.adapter.out.web.worker
+package com.newy.algotrade.integration.price2.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
-import com.newy.algotrade.coroutine_based_application.common.web.socket.ByBitProductPriceWebSocket
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.worker.PollingLoadProductPrice
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.worker.PollingLoadProductPriceProxy
-import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchEBestProductPrice
-import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.GetProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.*
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -38,7 +34,7 @@ private fun newClient(
         TestEnv.EBest.url,
         JsonConverterByJackson(jacksonObjectMapper())
     ).let {
-        GetProductPriceProxy(
+        FetchProductPriceProxy(
             mapOf(
                 Market.E_BEST to FetchEBestProductPrice(
                     it,
@@ -52,14 +48,14 @@ private fun newClient(
         )
     }
 
-    return PollingLoadProductPriceProxy(
+    return PollingProductPriceProxy(
         mapOf(
-            PollingLoadProductPriceProxy.Key(Market.E_BEST, ProductType.SPOT) to PollingLoadProductPrice(
+            PollingProductPriceProxy.Key(Market.E_BEST, ProductType.SPOT) to PollingProductPriceWithHttpApi(
                 loadProductPriceProxy,
                 1000,
                 coroutineContext,
             ),
-            PollingLoadProductPriceProxy.Key(Market.BY_BIT, ProductType.SPOT) to ByBitProductPriceWebSocket(
+            PollingProductPriceProxy.Key(Market.BY_BIT, ProductType.SPOT) to PollingProductPriceWithByBitWebSocket(
                 DefaultWebSocketClient(
                     OkHttpClient(),
                     TestEnv.ByBit.socketUrl,
@@ -134,7 +130,9 @@ class ByBitWebSocketTest {
             }
         }
     }
+}
 
+class EBestHttpPollingTest {
     @Test
     fun `이베스트 Http 폴링 response 테스트`() = runBlocking {
         val channel = Channel<Pair<ProductPriceKey, List<ProductPrice>>>()
