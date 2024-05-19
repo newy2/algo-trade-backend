@@ -8,7 +8,7 @@ liquibase {
     activities.register("main") {
         // TODO contexts, defaultSchemaName 중복 제거
         val baseArguments = mapOf(
-            "searchPath" to "liquibase",
+            "searchPath" to "ddl/liquibase",
             "changelogFile" to "main.xml",
             "liquibaseSchemaName" to "liquibase",
             "contexts" to "algo_trade",
