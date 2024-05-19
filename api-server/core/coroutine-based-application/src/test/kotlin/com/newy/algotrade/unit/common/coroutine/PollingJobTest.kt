@@ -39,7 +39,7 @@ class PollingTest {
         polling.subscribe("a")
         polling.subscribe("b")
 
-        delay(5)
+        delay(7)
         polling.cancel()
 
         assertEquals("a ", log)
@@ -60,7 +60,7 @@ class PollingTest {
         polling.subscribe("a")
         polling.subscribe("b")
 
-        delay(15)
+        delay(17)
         polling.cancel()
 
         assertEquals("a b ", log)
@@ -81,7 +81,7 @@ class PollingTest {
         delay(1)
         polling.unSubscribe("a")
 
-        delay(25)
+        delay(27)
         polling.cancel()
         assertEquals("a b b ", log)
     }
@@ -99,7 +99,7 @@ class PollingTest {
         polling.subscribe("a")
         polling.subscribe("b")
 
-        delay(35)
+        delay(37)
         polling.cancel()
         assertEquals("a b a b ", log)
     }

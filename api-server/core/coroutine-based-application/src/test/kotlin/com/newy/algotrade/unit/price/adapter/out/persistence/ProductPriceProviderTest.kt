@@ -3,8 +3,8 @@ package com.newy.algotrade.unit.price.adapter.out.persistence
 import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
 import com.newy.algotrade.coroutine_based_application.price.domain.ProductPriceProvider
-import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
-import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
+import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -42,10 +42,10 @@ fun productPriceKey(productCode: String, interval: Duration) =
 
 open class NullListenerForTestHelper(
     override var callback: PollingCallback<ProductPriceKey, List<ProductPrice>>? = null
-) : LoadProductPricePort,
+) : GetProductPricePort,
     ProductPriceProvider.Listener,
     Polling<ProductPriceKey, List<ProductPrice>> {
-    override suspend fun productPrices(param: LoadProductPriceParam): List<ProductPrice> = emptyList()
+    override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> = emptyList()
     override suspend fun start() {}
     override fun cancel() {}
     override fun unSubscribe(key: ProductPriceKey) {}
@@ -62,7 +62,7 @@ class InitProductPriceProviderTest : NullListenerForTestHelper() {
     private var listenerCallCount = 0
     private var log = ""
 
-    override suspend fun productPrices(param: LoadProductPriceParam): List<ProductPrice> {
+    override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> {
         apiCallCount++
         log += "productPrices -> "
         return emptyList()
@@ -134,7 +134,7 @@ class InitProductPriceProviderTest : NullListenerForTestHelper() {
 }
 
 @DisplayName("상품 가격 업데이트 listener 테스트")
-class OnUpdatePriceListenerTest : LoadProductPricePort, NullListenerForTestHelper() {
+class OnUpdatePriceListenerTest : GetProductPricePort, NullListenerForTestHelper() {
     private lateinit var provider: ProductPriceProvider
     private var listenerCallCount = 0
 

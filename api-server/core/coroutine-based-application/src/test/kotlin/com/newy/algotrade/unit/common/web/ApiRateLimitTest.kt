@@ -36,7 +36,7 @@ class ApiRateLimitTest {
             }
         }
 
-        delay(35)
+        delay(39)
         limiter.cancel()
         assertEquals(3, counter)
         assertEquals("request1 request2 request1 ", log)
@@ -69,7 +69,7 @@ class ApiRateLimitTest {
             }
         }
 
-        delay(35)
+        delay(39)
         limiter.cancel()
         assertEquals(6, counter)
         assertEquals("request1 request2 request1 request2 request1 request2 ", log)

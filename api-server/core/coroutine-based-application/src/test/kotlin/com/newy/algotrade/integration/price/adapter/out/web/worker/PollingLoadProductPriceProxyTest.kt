@@ -6,10 +6,10 @@ import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.socket.ByBitProductPriceWebSocket
 import com.newy.algotrade.coroutine_based_application.common.web.socket.DefaultWebSocketClient
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.EBestLoadProductPriceHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.worker.PollingLoadProductPrice
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.worker.PollingLoadProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchEBestProductPrice
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.GetProductPriceProxy
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -38,9 +38,9 @@ private fun newClient(
         TestEnv.EBest.url,
         JsonConverterByJackson(jacksonObjectMapper())
     ).let {
-        LoadProductPriceProxy(
+        GetProductPriceProxy(
             mapOf(
-                Market.E_BEST to EBestLoadProductPriceHttpApi(
+                Market.E_BEST to FetchEBestProductPrice(
                     it,
                     EBestAccessTokenHttpApi(it),
                     PrivateApiInfo(

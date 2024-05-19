@@ -1,10 +1,10 @@
-package com.newy.algotrade.integration.price.adapter.out.web
+package com.newy.algotrade.integration.price2.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.ByBitLoadProductPriceHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceProxy
-import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchByBitProductPrice
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.GetProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -89,10 +89,10 @@ class ByBitProductPriceResponseDtoTest {
     }
 }
 
-class ByBitProductPriceHttpApiTest {
-    private val client = LoadProductPriceProxy(
+class FetchByBitProductPriceTest {
+    private val client = GetProductPriceProxy(
         mapOf(
-            Market.BY_BIT to ByBitLoadProductPriceHttpApi(
+            Market.BY_BIT to FetchByBitProductPrice(
                 DefaultHttpApiClient(
                     OkHttpClient(),
                     TestEnv.ByBit.url,
@@ -115,8 +115,8 @@ class ByBitProductPriceHttpApiTest {
                     volume = "28.069189".toBigDecimal(),
                 )
             ),
-            client.productPrices(
-                LoadProductPriceParam(
+            client.getProductPrices(
+                GetProductPriceParam(
                     ProductPriceKey(
                         Market.BY_BIT,
                         ProductType.SPOT,
@@ -143,8 +143,8 @@ class ByBitProductPriceHttpApiTest {
                     volume = "291706.443849".toBigDecimal(),
                 )
             ),
-            client.productPrices(
-                LoadProductPriceParam(
+            client.getProductPrices(
+                GetProductPriceParam(
                     ProductPriceKey(
                         Market.BY_BIT,
                         ProductType.SPOT,
@@ -171,8 +171,8 @@ class ByBitProductPriceHttpApiTest {
                     volume = "0.632".toBigDecimal(),
                 )
             ),
-            client.productPrices(
-                LoadProductPriceParam(
+            client.getProductPrices(
+                GetProductPriceParam(
                     ProductPriceKey(
                         Market.BY_BIT,
                         ProductType.PERPETUAL_FUTURE,

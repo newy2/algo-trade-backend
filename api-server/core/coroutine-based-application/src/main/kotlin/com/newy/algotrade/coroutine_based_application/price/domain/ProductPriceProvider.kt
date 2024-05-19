@@ -1,14 +1,14 @@
 package com.newy.algotrade.coroutine_based_application.price.domain
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
-import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
-import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
+import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import java.time.OffsetDateTime
 
 class ProductPriceProvider(
-    private val initDataLoader: LoadProductPricePort,
+    private val initDataLoader: GetProductPricePort,
     private val pollingDataLoader: Polling<ProductPriceKey, List<ProductPrice>>,
     private val initDataSize: Int = 400,
 ) {
@@ -78,8 +78,8 @@ class ProductPriceProvider(
     }
 
     private suspend fun fetchInitData(productPriceKey: ProductPriceKey, listeners: List<Listener>) {
-        initDataLoader.productPrices(
-            LoadProductPriceParam(
+        initDataLoader.getProductPrices(
+            GetProductPriceParam(
                 productPriceKey,
                 OffsetDateTime.now(),
                 initDataSize,

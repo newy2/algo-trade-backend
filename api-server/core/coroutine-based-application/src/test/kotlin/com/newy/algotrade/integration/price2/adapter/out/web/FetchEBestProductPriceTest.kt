@@ -1,11 +1,11 @@
-package com.newy.algotrade.integration.price.adapter.out.web
+package com.newy.algotrade.integration.price2.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.EBestLoadProductPriceHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceProxy
-import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchEBestProductPrice
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.GetProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.EBestTrCode
@@ -115,16 +115,16 @@ class EBestProductPriceResponseDtoTest {
     }
 }
 
-class EBestProductPriceHttpApiTest {
+class FetchEBestProductPriceTest {
     private val client = DefaultHttpApiClient(
         OkHttpClient(),
         TestEnv.EBest.url,
         JsonConverterByJackson(jacksonObjectMapper())
     )
     private val accessTokenLoader = EBestAccessTokenHttpApi(client)
-    private val api = LoadProductPriceProxy(
+    private val api = GetProductPriceProxy(
         mapOf(
-            Market.E_BEST to EBestLoadProductPriceHttpApi(
+            Market.E_BEST to FetchEBestProductPrice(
                 client,
                 accessTokenLoader,
                 PrivateApiInfo(
@@ -148,8 +148,8 @@ class EBestProductPriceHttpApiTest {
                     2650.0.toBigDecimal(),
                 )
             ),
-            api.productPrices(
-                LoadProductPriceParam(
+            api.getProductPrices(
+                GetProductPriceParam(
                     ProductPriceKey(
                         Market.E_BEST,
                         ProductType.SPOT,
@@ -176,8 +176,8 @@ class EBestProductPriceHttpApiTest {
                     104407.0.toBigDecimal(),
                 )
             ),
-            api.productPrices(
-                LoadProductPriceParam(
+            api.getProductPrices(
+                GetProductPriceParam(
                     ProductPriceKey(
                         Market.E_BEST,
                         ProductType.SPOT,

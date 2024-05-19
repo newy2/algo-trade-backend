@@ -2,8 +2,8 @@ package com.newy.algotrade.coroutine_based_application.price.domain.back_test
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
-import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
-import com.newy.algotrade.coroutine_based_application.price.port.out.model.LoadProductPriceParam
+import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.extension.ProductPrice
@@ -16,16 +16,16 @@ import java.time.OffsetDateTime
 import kotlin.coroutines.CoroutineContext
 
 class BackTestDataLoader(
-    private val loader: LoadProductPricePort,
+    private val loader: GetProductPricePort,
     private val startDateTime: OffsetDateTime,
     private val endDateTime: OffsetDateTime,
     private val coroutineContext: CoroutineContext,
     override var callback: PollingCallback<ProductPriceKey, List<ProductPrice>>? = null,
-) : LoadProductPricePort, Polling<ProductPriceKey, List<ProductPrice>> {
+) : GetProductPricePort, Polling<ProductPriceKey, List<ProductPrice>> {
     private val cache = FileCache()
     private val finish = Channel<Unit>()
 
-    override suspend fun productPrices(param: LoadProductPriceParam): List<ProductPrice> {
+    override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> {
         val list = loadProductPrices(
             Key(
                 param.productPriceKey,
@@ -65,8 +65,8 @@ class BackTestDataLoader(
         key.run {
             val results = mutableSetOf<Candle>().also {
                 it.addAll(
-                    loader.productPrices(
-                        LoadProductPriceParam(
+                    loader.getProductPrices(
+                        GetProductPriceParam(
                             productPriceKey,
                             startDateTime,
                             if (productPriceKey.market == Market.BY_BIT) 400 else 399
@@ -78,8 +78,8 @@ class BackTestDataLoader(
 
             var end = endDateTime
             while (startDateTime.isBefore(end)) {
-                val list = loader.productPrices(
-                    LoadProductPriceParam(
+                val list = loader.getProductPrices(
+                    GetProductPriceParam(
                         productPriceKey,
                         end,
                         if (productPriceKey.market == Market.BY_BIT) 1000 else 500

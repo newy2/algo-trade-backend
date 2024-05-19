@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.price.port.out.model
+package com.newy.algotrade.coroutine_based_application.price2.port.out.model
 
 import com.newy.algotrade.domain.common.consts.EBestTrCode
 import com.newy.algotrade.domain.common.consts.Market
@@ -7,7 +7,7 @@ import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-class LoadProductPriceParam(
+class GetProductPriceParam(
     val productPriceKey: ProductPriceKey,
     private val endTime: OffsetDateTime,
     val limit: Int,
@@ -27,7 +27,7 @@ class LoadProductPriceParam(
             else -> throw NotImplementedError()
         }
     }
-    
+
     fun category(): String {
         useOnly(Market.BY_BIT)
 

@@ -3,10 +3,10 @@ package com.newy.algotrade.integration.price.adapter.out.web.worker
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
 import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.ByBitLoadProductPriceHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.worker.PollingLoadProductPrice
-import com.newy.algotrade.coroutine_based_application.price.port.out.LoadProductPricePort
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchByBitProductPrice
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.GetProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -27,7 +27,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.test.assertEquals
 
 class PollingLoadProductPriceTestHelper(
-    loader: LoadProductPricePort,
+    loader: GetProductPricePort,
     delayMillis: Long,
     coroutineContext: CoroutineContext,
     callback: PollingCallback<ProductPriceKey, List<ProductPrice>>
@@ -51,9 +51,9 @@ class PollingByBitLoadProductPriceTest {
         TestEnv.ByBit.url,
         JsonConverterByJackson(jacksonObjectMapper())
     )
-    private val api = LoadProductPriceProxy(
+    private val api = GetProductPriceProxy(
         mapOf(
-            Market.BY_BIT to ByBitLoadProductPriceHttpApi(client)
+            Market.BY_BIT to FetchByBitProductPrice(client)
         )
     )
 

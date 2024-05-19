@@ -3,13 +3,13 @@ package com.newy.algotrade.integration.price.port.`in`
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.ByBitLoadProductPriceHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.EBestLoadProductPriceHttpApi
-import com.newy.algotrade.coroutine_based_application.price.adpter.out.web.LoadProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.price.domain.ProductPriceProvider
 import com.newy.algotrade.coroutine_based_application.price.domain.UserStrategyRunner
 import com.newy.algotrade.coroutine_based_application.price.domain.back_test.BackTestDataLoader
 import com.newy.algotrade.coroutine_based_application.price.domain.back_test.StringReporter
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchByBitProductPrice
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchEBestProductPrice
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.GetProductPriceProxy
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
@@ -40,9 +40,9 @@ private fun byBitHttpApiClient() =
     )
 
 private fun loadProductPriceProxy() =
-    LoadProductPriceProxy(
+    GetProductPriceProxy(
         mapOf(
-            Market.E_BEST to EBestLoadProductPriceHttpApi(
+            Market.E_BEST to FetchEBestProductPrice(
                 eBestHttpApiClient(),
                 EBestAccessTokenHttpApi(eBestHttpApiClient()),
                 PrivateApiInfo(
@@ -50,7 +50,7 @@ private fun loadProductPriceProxy() =
                     secret = TestEnv.EBest.apiSecret,
                 )
             ),
-            Market.BY_BIT to ByBitLoadProductPriceHttpApi(
+            Market.BY_BIT to FetchByBitProductPrice(
                 byBitHttpApiClient()
             )
         )

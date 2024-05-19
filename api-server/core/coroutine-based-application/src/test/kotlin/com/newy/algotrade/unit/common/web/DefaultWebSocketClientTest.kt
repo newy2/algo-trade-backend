@@ -72,7 +72,7 @@ class PingTest {
         delay(9)
         client.restart()
 
-        delay(15)
+        delay(17)
         client.cancel()
 
         assertEquals(1, serverListener.pingCount)

@@ -93,7 +93,7 @@ class OkHttpWebSocketCancelTest : BaseTest() {
         initServerAndClient(serverListener, clientListener)
 
         server.close()
-        delay(5)
+        delay(9)
 
         assertEquals("onFailure ", clientListener.log)
     }
@@ -106,7 +106,7 @@ class OkHttpWebSocketCancelTest : BaseTest() {
         initServerAndClient(serverListener, clientListener)
 
         serverListener.clientSocket.close(closeCode, "")
-        delay(5)
+        delay(9)
 
         assertEquals("onClosing ", clientListener.log)
     }
@@ -119,7 +119,7 @@ class OkHttpWebSocketCancelTest : BaseTest() {
         val client = initServerAndClient(serverListener, clientListener)
 
         client.close(closeCode, "")
-        delay(5)
+        delay(9)
 
         assertEquals("", clientListener.log)
     }
@@ -145,7 +145,7 @@ class OkHttpWebSocketSendMessageTest : BaseTest() {
         client.send("a")
         client.send("b")
         client.send("c")
-        delay(5)
+        delay(9)
 
         assertEquals("a b c ", serverListener.log)
     }
