@@ -1,7 +1,5 @@
 package com.newy.algotrade.coroutine_based_application.common.web
 
-import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketPing
-
 abstract class WebSocketClient(
     protected var pingInfo: WebSocketPing,
     protected var listener: WebSocketClientListener,

@@ -1,6 +1,7 @@
 package com.newy.algotrade.coroutine_based_application.common.web.socket
 
 import com.newy.algotrade.coroutine_based_application.common.web.WebSocketClient
+import com.newy.algotrade.coroutine_based_application.common.web.by_bit.ByBitWebSocket
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverter

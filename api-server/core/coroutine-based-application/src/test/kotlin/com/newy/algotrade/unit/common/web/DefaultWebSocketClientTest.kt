@@ -1,8 +1,8 @@
 package com.newy.algotrade.unit.common.web
 
 import com.newy.algotrade.coroutine_based_application.common.web.WebSocketClientListener
-import com.newy.algotrade.coroutine_based_application.common.web.socket.DefaultWebSocketClient
-import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketPing
+import com.newy.algotrade.coroutine_based_application.common.web.WebSocketPing
+import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
 import helpers.TestServerPort
 import kotlinx.coroutines.*
 import okhttp3.*

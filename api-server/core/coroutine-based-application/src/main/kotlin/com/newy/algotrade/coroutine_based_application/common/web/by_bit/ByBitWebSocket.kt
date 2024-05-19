@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.common.web.socket
+package com.newy.algotrade.coroutine_based_application.common.web.by_bit
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback

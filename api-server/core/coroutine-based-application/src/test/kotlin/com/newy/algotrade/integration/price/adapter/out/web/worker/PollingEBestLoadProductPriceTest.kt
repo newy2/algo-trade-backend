@@ -2,7 +2,7 @@ package com.newy.algotrade.integration.price.adapter.out.web.worker
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
-import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
+import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchEBestProductPrice
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.GetProductPriceProxy
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo

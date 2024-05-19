@@ -1,7 +1,7 @@
 package com.newy.algotrade.integration.price2.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.common.web.DefaultHttpApiClient
+import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchByBitProductPrice
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.GetProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
