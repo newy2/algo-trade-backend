@@ -8,5 +8,4 @@ class UnderRule(private val first: Indicator, private val second: Indicator) : R
     override fun isSatisfied(index: Int, history: OrderSignalHistory?): Boolean {
         return first[index] < second[index]
     }
-
 }

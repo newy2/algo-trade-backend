@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.libs.ta4j
 
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
-import com.newy.algotrade.domain.chart.ChartFactory
+import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.libs.ta4j.Ta4jCandles
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -36,7 +36,7 @@ private fun oneHourCandle(beginTime: OffsetDateTime, price: Number) =
 class EmptyTa4jCandlesTest {
     @Test
     fun `기본 생성자`() {
-        val candles = ChartFactory.DEFAULT.candles()
+        val candles = DEFAULT_CHART_FACTORY.candles()
 
         assertEquals(0, candles.size)
         assertEquals(400, candles.maxSize)
@@ -53,7 +53,7 @@ class Ta4jCandlesTest {
     @BeforeEach
     fun setUp() {
         lastBeginTime = OffsetDateTime.parse("2024-03-09T00:00:00Z")
-        candles = ChartFactory.DEFAULT.candles().also {
+        candles = DEFAULT_CHART_FACTORY.candles().also {
             it.upsert(oneMinuteCandle(lastBeginTime.minusMinutes(1), 500))
             it.upsert(oneMinuteCandle(lastBeginTime, 1000))
         }

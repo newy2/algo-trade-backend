@@ -13,7 +13,7 @@ import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
 private fun getCandles(length: Int, list: Array<Array<String>> = bybitKlineList) =
-    ChartFactory.DEFAULT.candles().also { results ->
+    DEFAULT_CHART_FACTORY.candles().also { results ->
         list.sliceArray(IntRange(0, length - 1))
             .also { it.reverse() }
             .forEach {
@@ -46,35 +46,35 @@ class IndicatorTest {
 
     @Test
     fun `ADX14 지표`() {
-        val indicator = ChartFactory.DEFAULT.adxIndicator(candles, 14)
+        val indicator = DEFAULT_CHART_FACTORY.adxIndicator(candles, 14)
 
         assertBigDecimalEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("ADX14"), indicator[candles.lastIndex])
     }
 
     @Test
     fun `RSI7 지수`() {
-        val indicator = ChartFactory.DEFAULT.rsiIndicator(candles, 7)
+        val indicator = DEFAULT_CHART_FACTORY.rsiIndicator(candles, 7)
 
         assertBigDecimalEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("RSI7"), indicator[candles.lastIndex])
     }
 
     @Test
     fun `RSI14 지수`() {
-        val indicator = ChartFactory.DEFAULT.rsiIndicator(candles, 14)
+        val indicator = DEFAULT_CHART_FACTORY.rsiIndicator(candles, 14)
 
         assertBigDecimalEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("RSI14"), indicator[candles.lastIndex])
     }
 
     @Test
     fun `RSI21 지수`() {
-        val indicator = ChartFactory.DEFAULT.rsiIndicator(candles, 21)
+        val indicator = DEFAULT_CHART_FACTORY.rsiIndicator(candles, 21)
 
         assertBigDecimalEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("RSI21"), indicator[candles.lastIndex])
     }
 
     @Test
     fun `EMA50 지수`() {
-        val indicator = ChartFactory.DEFAULT.emaIndicator(candles, 50)
+        val indicator = DEFAULT_CHART_FACTORY.emaIndicator(candles, 50)
 
         assertBigDecimalEquals(TEST_TARGET_BAR_EXPECTED_VALUES.getValue("EMA50"), indicator[candles.lastIndex])
     }
@@ -83,7 +83,7 @@ class IndicatorTest {
 class EtcIndicatorTest {
     @Test
     fun `상수 값 지수`() {
-        val indicator = ChartFactory.DEFAULT.constDecimalIndicator(20.0)
+        val indicator = DEFAULT_CHART_FACTORY.constDecimalIndicator(20.0)
         repeat(10) {
             assertBigDecimalEquals(20.0, indicator[it])
         }
@@ -91,7 +91,7 @@ class EtcIndicatorTest {
 }
 
 class OpenClosePriceIndicatorTest {
-    private val candles = ChartFactory.DEFAULT.candles().also {
+    private val candles = DEFAULT_CHART_FACTORY.candles().also {
         it.upsert(
             Candle.TimeFrame.M1(
                 OffsetDateTime.now(),
@@ -106,14 +106,14 @@ class OpenClosePriceIndicatorTest {
 
     @Test
     fun `시가 지수`() {
-        val indicator = ChartFactory.DEFAULT.openPriceIndicator(candles)
+        val indicator = DEFAULT_CHART_FACTORY.openPriceIndicator(candles)
 
         assertBigDecimalEquals(100.0, indicator[0])
     }
 
     @Test
     fun `종가 지수`() {
-        val indicator = ChartFactory.DEFAULT.closePriceIndicator(candles)
+        val indicator = DEFAULT_CHART_FACTORY.closePriceIndicator(candles)
 
         assertBigDecimalEquals(500.0, indicator[0])
     }

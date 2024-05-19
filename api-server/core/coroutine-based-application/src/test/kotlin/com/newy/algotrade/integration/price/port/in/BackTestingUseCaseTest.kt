@@ -11,7 +11,7 @@ import com.newy.algotrade.coroutine_based_application.price.domain.UserStrategyR
 import com.newy.algotrade.coroutine_based_application.price.domain.back_test.BackTestDataLoader
 import com.newy.algotrade.coroutine_based_application.price.domain.back_test.StringReporter
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
-import com.newy.algotrade.domain.chart.ChartFactory
+import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -68,7 +68,7 @@ class BackTestingUseCaseTest {
 
         val provider = ProductPriceProvider(dataLoader, dataLoader)
 
-        val candles = ChartFactory.DEFAULT.candles()
+        val candles = DEFAULT_CHART_FACTORY.candles()
         val userStrategyRunner = UserStrategyRunner(
             ProductPriceProvider.Key(
                 "test1",

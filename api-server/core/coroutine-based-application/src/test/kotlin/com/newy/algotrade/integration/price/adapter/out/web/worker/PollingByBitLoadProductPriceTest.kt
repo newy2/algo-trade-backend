@@ -26,7 +26,6 @@ import java.time.OffsetDateTime
 import kotlin.coroutines.CoroutineContext
 import kotlin.test.assertEquals
 
-
 class PollingLoadProductPriceTestHelper(
     loader: LoadProductPricePort,
     delayMillis: Long,

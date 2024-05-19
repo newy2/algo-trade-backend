@@ -11,17 +11,18 @@ abstract class PollingJob<K, V>(
     private val coroutineContext: CoroutineContext,
     override var callback: PollingCallback<K, V>? = null
 ) : Polling<K, V> {
-    private lateinit var intervalTick: ReceiveChannel<Unit>
-    private val channel = Channel<K>()
-    private val producers: MutableMap<K, Job> = mutableMapOf()
+    private lateinit var nextTick: ReceiveChannel<Unit>
+    private val nextJob = Channel<K>()
+    private val jobRequesters: MutableMap<K, Job> = mutableMapOf()
 
     abstract suspend fun eachProcess(key: K): V
 
+    @OptIn(ObsoleteCoroutinesApi::class)
     override suspend fun start() {
-        intervalTick = ticker(delayMillis, initialDelayMillis = 0, coroutineContext)
+        nextTick = ticker(delayMillis, initialDelayMillis = 0, coroutineContext)
         CoroutineScope(coroutineContext).launch {
-            for (nextTick in intervalTick) {
-                val key = channel.receive()
+            for (tick in nextTick) {
+                val key = nextJob.receive()
                 val value = eachProcess(key)
                 onNextTick(key, value)
             }
@@ -29,20 +30,20 @@ abstract class PollingJob<K, V>(
     }
 
     override fun cancel() {
-        intervalTick.cancel()
+        nextTick.cancel()
         coroutineContext.cancelChildren()
     }
 
     override suspend fun subscribe(key: K) {
-        producers.put(key, CoroutineScope(coroutineContext).launch {
+        jobRequesters.put(key, CoroutineScope(coroutineContext).launch {
             while (isActive) {
-                channel.send(key)
+                nextJob.send(key)
                 yield()
             }
         })?.cancel()
     }
 
     override fun unSubscribe(key: K) {
-        producers.getValue(key).cancel()
+        jobRequesters.getValue(key).cancel()
     }
 }

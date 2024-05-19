@@ -14,12 +14,11 @@ open class Strategy(val entryType: OrderType, val entryRule: Rule, val exitRule:
     fun shouldOperate(index: Int, history: OrderSignalHistory): OrderType {
         validate(history)
 
-        val (shouldEnter, shouldExit) = compute(index, history)
-        if (shouldEnter && !history.isOpened()) {
+        if (shouldEnter(index, history)) {
             return entryType
         }
 
-        if (shouldExit && history.isOpened()) {
+        if (shouldExit(index, history)) {
             return entryType.completedType()
         }
 
@@ -33,11 +32,9 @@ open class Strategy(val entryType: OrderType, val entryRule: Rule, val exitRule:
         }
     }
 
-    private fun compute(index: Int, history: OrderSignalHistory): Pair<Boolean, Boolean> {
-        // TODO Rule#isSatisfied 시간 측정
-        val shouldEnter = entryRule.isSatisfied(index, history)
-        val shouldExit = exitRule.isSatisfied(index, history)
+    private fun shouldEnter(index: Int, history: OrderSignalHistory): Boolean =
+        entryRule.isSatisfied(index, history) && !history.isOpened()
 
-        return Pair(shouldEnter, shouldExit)
-    }
+    private fun shouldExit(index: Int, history: OrderSignalHistory): Boolean =
+        exitRule.isSatisfied(index, history) && history.isOpened()
 }

@@ -2,6 +2,7 @@ package com.newy.algotrade.domain.chart.strategy.custom
 
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.ChartFactory
+import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.Rule
 import com.newy.algotrade.domain.chart.indicator.ClosePriceIndicator
 import com.newy.algotrade.domain.chart.indicator.Indicator
@@ -31,7 +32,7 @@ class BuyTripleRSIStrategy(
         StopGainRule(closePriceIndicator, 2.5),
     )
 ) : Strategy(entryOrderType, entryRule, exitRule) {
-    constructor(candles: Candles, factory: ChartFactory = ChartFactory.DEFAULT) : this(
+    constructor(candles: Candles, factory: ChartFactory = DEFAULT_CHART_FACTORY) : this(
         factory.closePriceIndicator(candles),
         factory.adxIndicator(candles, 14),
         factory.emaIndicator(candles, 50),

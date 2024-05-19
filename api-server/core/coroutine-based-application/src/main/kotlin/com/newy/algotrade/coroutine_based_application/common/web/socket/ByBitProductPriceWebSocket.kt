@@ -14,17 +14,13 @@ class ByBitProductPriceWebSocket(
     private val productType: ProductType,
     jsonConverter: JsonConverter,
     coroutineContext: CoroutineContext,
-) : ByBitWebSocket<ProductPriceKey, List<ProductPrice>>(
-    client,
-    jsonConverter,
-    coroutineContext,
-) {
-    override fun parsing(key: ProductPriceKey): String {
+) : ByBitWebSocket<ProductPriceKey, List<ProductPrice>>(client, jsonConverter, coroutineContext) {
+    override fun topic(key: ProductPriceKey): String {
         val interval = if (key.interval.toDays() >= 1) "D" else key.interval.toMinutes().toString()
         return "kline.$interval.${key.productCode}"
     }
 
-    override suspend fun eachProcess(json: String): Pair<ProductPriceKey, List<ProductPrice>>? {
+    override suspend fun parsingJson(json: String): Pair<ProductPriceKey, List<ProductPrice>>? {
         return try {
             val extraValues = mapOf("productType" to productType.name)
             val dto = jsonConverter.toObject<ByBitProductPriceWebSocketResponse>(json, extraValues)

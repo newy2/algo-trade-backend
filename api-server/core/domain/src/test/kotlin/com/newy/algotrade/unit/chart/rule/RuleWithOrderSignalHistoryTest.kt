@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.chart.rule
 
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
-import com.newy.algotrade.domain.chart.ChartFactory
+import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.Rule
 import com.newy.algotrade.domain.chart.indicator.ClosePriceIndicator
 import com.newy.algotrade.domain.chart.order.OrderSignal
@@ -22,7 +22,7 @@ import kotlin.test.assertTrue
 class StopGainRuleTest {
     @Test
     fun exitRule() {
-        val candles = ChartFactory.DEFAULT.candles().also {
+        val candles = DEFAULT_CHART_FACTORY.candles().also {
             val now = OffsetDateTime.now()
             it.upsert(baseCandle(closePrice = 1000, startTime = now.plusMinutes(0)))
             it.upsert(baseCandle(closePrice = 1010, startTime = now.plusMinutes(1)))
@@ -66,7 +66,7 @@ class DownFlowStopGainOrLossRuleTest {
 
     @BeforeEach
     fun setUp() {
-        candles = ChartFactory.DEFAULT.candles().also {
+        candles = DEFAULT_CHART_FACTORY.candles().also {
             val now = OffsetDateTime.now()
             it.upsert(baseCandle(closePrice = 1000, startTime = now.plusMinutes(0)))
             it.upsert(baseCandle(closePrice = 1000 * (1 - .09), startTime = now.plusMinutes(1)))
@@ -74,7 +74,7 @@ class DownFlowStopGainOrLossRuleTest {
             it.upsert(baseCandle(closePrice = 1000 * (1 - .11), startTime = now.plusMinutes(3)))
         }
 
-        val closePriceIndicator = ChartFactory.DEFAULT.closePriceIndicator(candles)
+        val closePriceIndicator = DEFAULT_CHART_FACTORY.closePriceIndicator(candles)
         val percent = 10
         stopGainRule = StopGainRule(closePriceIndicator, percent)
         stopLossRule = StopLossRule(closePriceIndicator, percent)
@@ -133,7 +133,7 @@ class UpFlowStopGainOrLossRuleTest {
 
     @BeforeEach
     fun setUp() {
-        candles = ChartFactory.DEFAULT.candles().also {
+        candles = DEFAULT_CHART_FACTORY.candles().also {
             val now = OffsetDateTime.now()
             it.upsert(baseCandle(closePrice = 1000, startTime = now.plusMinutes(0)))
             it.upsert(baseCandle(closePrice = 1000 * (1 + .09), startTime = now.plusMinutes(1)))
@@ -141,7 +141,7 @@ class UpFlowStopGainOrLossRuleTest {
             it.upsert(baseCandle(closePrice = 1000 * (1 + .11), startTime = now.plusMinutes(3)))
         }
 
-        val closePriceIndicator = ChartFactory.DEFAULT.closePriceIndicator(candles)
+        val closePriceIndicator = DEFAULT_CHART_FACTORY.closePriceIndicator(candles)
         val percent = 10
         stopGainRule = StopGainRule(closePriceIndicator, percent)
         stopLossRule = StopLossRule(closePriceIndicator, percent)

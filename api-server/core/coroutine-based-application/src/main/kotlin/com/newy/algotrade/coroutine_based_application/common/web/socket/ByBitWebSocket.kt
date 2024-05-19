@@ -22,8 +22,8 @@ abstract class ByBitWebSocket<K, V>(
         client.setPingInfo(ByBitWebSocketPing())
     }
 
-    abstract suspend fun eachProcess(message: String): Pair<K, V>?
-    abstract fun parsing(key: K): String
+    abstract suspend fun parsingJson(message: String): Pair<K, V>?
+    abstract fun topic(key: K): String
 
     override fun onOpen() {
         sendSubscribeMessage()
@@ -33,9 +33,9 @@ abstract class ByBitWebSocket<K, V>(
         sendSubscribeMessage()
     }
 
-    override fun onMessage(message: String) {
+    override fun onMessage(json: String) {
         CoroutineScope(coroutineContext).launch {
-            eachProcess(message)?.let { (key, value) ->
+            parsingJson(json)?.let { (key, value) ->
                 onNextTick(key, value)
             }
         }
@@ -51,9 +51,7 @@ abstract class ByBitWebSocket<K, V>(
             jsonConverter.toJson(
                 mapOf(
                     "op" to "subscribe",
-                    "args" to arrayOf(
-                        parsing(key)
-                    )
+                    "args" to arrayOf(topic(key))
                 )
             )
         )
@@ -65,9 +63,7 @@ abstract class ByBitWebSocket<K, V>(
             jsonConverter.toJson(
                 mapOf(
                     "op" to "unsubscribe",
-                    "args" to arrayOf(
-                        parsing(key)
-                    )
+                    "args" to arrayOf(topic(key))
                 )
             )
         )
@@ -86,7 +82,7 @@ abstract class ByBitWebSocket<K, V>(
             jsonConverter.toJson(
                 mapOf(
                     "op" to "subscribe",
-                    "args" to subscribes.map { parsing(it) }
+                    "args" to subscribes.map { topic(it) }
                 )
             )
         )

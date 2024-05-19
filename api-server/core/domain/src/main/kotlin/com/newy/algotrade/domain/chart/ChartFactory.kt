@@ -10,19 +10,9 @@ import com.newy.algotrade.domain.chart.libs.ta4j.indicator.Ta4jEMAIndicator
 import com.newy.algotrade.domain.chart.libs.ta4j.indicator.Ta4jRSIIndicator
 import java.math.BigDecimal
 
+val DEFAULT_CHART_FACTORY = ChartFactory.TA4J
+
 enum class ChartFactory {
-    DEFAULT {
-        override fun candles() = TA4J.candles()
-
-        override fun adxIndicator(candles: Candles, candleCount: Int) =
-            TA4J.adxIndicator(candles, candleCount)
-
-        override fun rsiIndicator(candles: Candles, candleCount: Int) =
-            TA4J.rsiIndicator(candles, candleCount)
-
-        override fun emaIndicator(candles: Candles, candleCount: Int) =
-            TA4J.emaIndicator(candles, candleCount)
-    },
     TA4J {
         override fun candles(): Candles {
             return Ta4jCandles()

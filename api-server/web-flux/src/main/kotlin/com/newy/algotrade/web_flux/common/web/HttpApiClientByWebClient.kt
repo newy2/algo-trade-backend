@@ -13,6 +13,7 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBodilessEntity
 import kotlin.reflect.KClass
 
+@Deprecated("OkHttp 라이브러리 사용으로 인한 WebClient 미사용 처리")
 class HttpApiClientByWebClient(
     private val client: WebClient,
     private val host: String,
