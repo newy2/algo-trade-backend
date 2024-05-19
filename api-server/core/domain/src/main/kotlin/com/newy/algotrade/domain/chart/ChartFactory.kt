@@ -1,14 +1,10 @@
 package com.newy.algotrade.domain.chart
 
-import com.newy.algotrade.domain.chart.indicator.ClosePriceIndicator
-import com.newy.algotrade.domain.chart.indicator.ConstDecimalIndicator
 import com.newy.algotrade.domain.chart.indicator.Indicator
-import com.newy.algotrade.domain.chart.indicator.OpenPriceIndicator
 import com.newy.algotrade.domain.chart.libs.ta4j.Ta4jCandles
 import com.newy.algotrade.domain.chart.libs.ta4j.indicator.Ta4jADXIndicator
 import com.newy.algotrade.domain.chart.libs.ta4j.indicator.Ta4jEMAIndicator
 import com.newy.algotrade.domain.chart.libs.ta4j.indicator.Ta4jRSIIndicator
-import java.math.BigDecimal
 
 val DEFAULT_CHART_FACTORY = ChartFactory.TA4J
 
@@ -35,8 +31,4 @@ enum class ChartFactory {
     abstract fun adxIndicator(candles: Candles, candleCount: Int): Indicator
     abstract fun rsiIndicator(candles: Candles, candleCount: Int): Indicator
     abstract fun emaIndicator(candles: Candles, candleCount: Int): Indicator
-    fun openPriceIndicator(candles: Candles) = OpenPriceIndicator(candles)
-    fun closePriceIndicator(candles: Candles) = ClosePriceIndicator(candles)
-    fun constDecimalIndicator(constValue: Double): Indicator =
-        ConstDecimalIndicator(BigDecimal.valueOf(constValue))
 }

@@ -33,7 +33,7 @@ class BuyTripleRSIStrategy(
     )
 ) : Strategy(entryOrderType, entryRule, exitRule) {
     constructor(candles: Candles, factory: ChartFactory = DEFAULT_CHART_FACTORY) : this(
-        factory.closePriceIndicator(candles),
+        ClosePriceIndicator(candles),
         factory.adxIndicator(candles, 14),
         factory.emaIndicator(candles, 50),
         factory.rsiIndicator(candles, 7),

@@ -1,6 +1,9 @@
 package com.newy.algotrade.unit.libs.ta4j
 
 import com.newy.algotrade.domain.chart.*
+import com.newy.algotrade.domain.chart.indicator.ClosePriceIndicator
+import com.newy.algotrade.domain.chart.indicator.ConstDecimalIndicator
+import com.newy.algotrade.domain.chart.indicator.OpenPriceIndicator
 import com.newy.algotrade.study.libs.ta4j.TEST_TARGET_BAR_EXPECTED_VALUES
 import com.newy.algotrade.study.libs.ta4j.bybitKlineList
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -83,7 +86,7 @@ class IndicatorTest {
 class EtcIndicatorTest {
     @Test
     fun `상수 값 지수`() {
-        val indicator = DEFAULT_CHART_FACTORY.constDecimalIndicator(20.0)
+        val indicator = ConstDecimalIndicator(20.0)
         repeat(10) {
             assertBigDecimalEquals(20.0, indicator[it])
         }
@@ -106,14 +109,14 @@ class OpenClosePriceIndicatorTest {
 
     @Test
     fun `시가 지수`() {
-        val indicator = DEFAULT_CHART_FACTORY.openPriceIndicator(candles)
+        val indicator = OpenPriceIndicator(candles)
 
         assertBigDecimalEquals(100.0, indicator[0])
     }
 
     @Test
     fun `종가 지수`() {
-        val indicator = DEFAULT_CHART_FACTORY.closePriceIndicator(candles)
+        val indicator = ClosePriceIndicator(candles)
 
         assertBigDecimalEquals(500.0, indicator[0])
     }

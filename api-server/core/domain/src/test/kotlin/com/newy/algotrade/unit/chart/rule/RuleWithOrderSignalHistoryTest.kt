@@ -74,7 +74,7 @@ class DownFlowStopGainOrLossRuleTest {
             it.upsert(baseCandle(closePrice = 1000 * (1 - .11), startTime = now.plusMinutes(3)))
         }
 
-        val closePriceIndicator = DEFAULT_CHART_FACTORY.closePriceIndicator(candles)
+        val closePriceIndicator = ClosePriceIndicator(candles)
         val percent = 10
         stopGainRule = StopGainRule(closePriceIndicator, percent)
         stopLossRule = StopLossRule(closePriceIndicator, percent)
@@ -141,7 +141,7 @@ class UpFlowStopGainOrLossRuleTest {
             it.upsert(baseCandle(closePrice = 1000 * (1 + .11), startTime = now.plusMinutes(3)))
         }
 
-        val closePriceIndicator = DEFAULT_CHART_FACTORY.closePriceIndicator(candles)
+        val closePriceIndicator = ClosePriceIndicator(candles)
         val percent = 10
         stopGainRule = StopGainRule(closePriceIndicator, percent)
         stopLossRule = StopLossRule(closePriceIndicator, percent)
