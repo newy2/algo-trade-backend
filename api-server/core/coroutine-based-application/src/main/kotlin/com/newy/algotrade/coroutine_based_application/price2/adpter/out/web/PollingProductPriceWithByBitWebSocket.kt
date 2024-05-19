@@ -1,7 +1,7 @@
 package com.newy.algotrade.coroutine_based_application.price2.adpter.out.web
 
-import com.newy.algotrade.coroutine_based_application.common.web.WebSocketClient
 import com.newy.algotrade.coroutine_based_application.common.web.by_bit.ByBitWebSocket
+import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketClient
 import com.newy.algotrade.coroutine_based_application.price2.port.out.PollingProductPricePort
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice

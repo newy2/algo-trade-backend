@@ -2,8 +2,8 @@ package com.newy.algotrade.coroutine_based_application.price2.adpter.out.web
 
 import com.newy.algotrade.coroutine_based_application.auth.port.out.GetAccessTokenPort
 import com.newy.algotrade.coroutine_based_application.common.consts.EBestHttpApiInfo
-import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
-import com.newy.algotrade.coroutine_based_application.common.web.post
+import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
+import com.newy.algotrade.coroutine_based_application.common.web.http.post
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo

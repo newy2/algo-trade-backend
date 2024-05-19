@@ -1,6 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.common.consts
 
-import com.newy.algotrade.coroutine_based_application.common.web.HttpApiRateLimit
+import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiRateLimit
 import com.newy.algotrade.domain.common.consts.EBestTrCode
 
 object ByBitHttpApiInfo {

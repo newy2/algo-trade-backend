@@ -1,10 +1,9 @@
-package com.newy.algotrade.coroutine_based_application.common.web
+package com.newy.algotrade.coroutine_based_application.common.web.socket
 
 abstract class WebSocketClient(
     protected var pingInfo: WebSocketPing,
     protected var listener: WebSocketClientListener,
 ) {
-
     abstract suspend fun start()
 
     abstract fun cancel()

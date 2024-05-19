@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.common.web
+package com.newy.algotrade.coroutine_based_application.common.web.http
 
 import kotlin.reflect.KClass
 

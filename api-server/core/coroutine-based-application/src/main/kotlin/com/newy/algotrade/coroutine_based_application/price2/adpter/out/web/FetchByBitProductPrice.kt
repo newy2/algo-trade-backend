@@ -1,8 +1,8 @@
 package com.newy.algotrade.coroutine_based_application.price2.adpter.out.web
 
 import com.newy.algotrade.coroutine_based_application.common.consts.ByBitHttpApiInfo
-import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
-import com.newy.algotrade.coroutine_based_application.common.web.get
+import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
+import com.newy.algotrade.coroutine_based_application.common.web.http.get
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.common.extension.ProductPrice

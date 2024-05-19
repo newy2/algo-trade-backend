@@ -1,8 +1,8 @@
 package com.newy.algotrade.coroutine_based_application.common.web.default_implement
 
-import com.newy.algotrade.coroutine_based_application.common.web.WebSocketClient
-import com.newy.algotrade.coroutine_based_application.common.web.WebSocketClientListener
-import com.newy.algotrade.coroutine_based_application.common.web.WebSocketPing
+import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketClient
+import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketClientListener
+import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketPing
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.channels.Channel

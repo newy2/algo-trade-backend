@@ -1,7 +1,7 @@
 package com.newy.algotrade.coroutine_based_application.common.web.default_implement
 
-import com.newy.algotrade.coroutine_based_application.common.web.FormData
-import com.newy.algotrade.coroutine_based_application.common.web.HttpApiClient
+import com.newy.algotrade.coroutine_based_application.common.web.http.FormData
+import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
 import com.newy.algotrade.domain.common.mapper.JsonConverter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine

@@ -1,4 +1,4 @@
-package com.newy.algotrade.unit.common.web
+package com.newy.algotrade.unit.price2.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.by_bit.ByBitWebSocketPing
