@@ -4,9 +4,18 @@ import com.newy.algotrade.coroutine_based_application.price2.port.`in`.model.Use
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
-interface UserStrategyPort {
-    fun hasProductPriceKey(productPriceKey: ProductPriceKey): Boolean
-    fun add(key: UserStrategyKey, strategy: Strategy)
-    fun remove(key: UserStrategyKey)
+interface UserStrategyPort : QueryUserStrategyPort, CreateUserStrategyPort, DeleteUserStrategyPort {
     fun getStrategyList(productPriceKey: ProductPriceKey): List<Strategy>
+}
+
+interface CreateUserStrategyPort {
+    fun add(key: UserStrategyKey, strategy: Strategy)
+}
+
+interface DeleteUserStrategyPort {
+    fun remove(key: UserStrategyKey)
+}
+
+interface QueryUserStrategyPort {
+    fun hasProductPriceKey(productPriceKey: ProductPriceKey): Boolean
 }

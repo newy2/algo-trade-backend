@@ -1,8 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.price2.port.`in`
 
-import com.newy.algotrade.coroutine_based_application.price2.port.out.CandlePort
-import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
-import com.newy.algotrade.coroutine_based_application.price2.port.out.PollingProductPricePort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.*
 import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.chart.DEFAULT_CANDLE_SIZE
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
@@ -37,5 +35,20 @@ class RegisterCandleUseCase(
 
     private suspend fun pollingCandles(productPriceKey: ProductPriceKey) {
         pollingProductPricePort.subscribe(productPriceKey)
+    }
+}
+
+class UnRegisterCandleUseCase(
+    private val userStrategyPort: QueryUserStrategyPort,
+    private val candlePort: DeleteCandlePort,
+    private val pollingProductPricePort: UnSubscribePollingProductPricePort,
+) {
+    fun unRegister(productPriceKey: ProductPriceKey) {
+        if (userStrategyPort.hasProductPriceKey(productPriceKey)) {
+            return
+        }
+
+        candlePort.deleteCandles(productPriceKey)
+        pollingProductPricePort.unSubscribe(productPriceKey)
     }
 }

@@ -1,12 +1,13 @@
 package com.newy.algotrade.coroutine_based_application.price2.adpter.out.persistent
 
 import com.newy.algotrade.coroutine_based_application.price2.port.out.CandlePort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.DeleteCandlePort
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
-class InMemoryCandleStore : CandlePort {
+class InMemoryCandleStore : CandlePort, DeleteCandlePort {
     private val candleMap = mutableMapOf<ProductPriceKey, Candles>()
 
     override fun getCandles(key: ProductPriceKey): Candles =
@@ -23,4 +24,8 @@ class InMemoryCandleStore : CandlePort {
             it.upsert(list)
             candleMap[key] = it
         }
+
+    override fun deleteCandles(key: ProductPriceKey) {
+        candleMap.remove(key)
+    }
 }

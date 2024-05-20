@@ -67,4 +67,12 @@ class InMemoryCandleStoreTest {
             assertEquals(productPrice(2000, now.plusMinutes(1)), it[1])
         }
     }
+
+    @Test
+    fun `candles 삭제하기`() = runBlocking {
+        store.addCandles(key, listOf(productPrice(1000, now)))
+        store.deleteCandles(key)
+
+        assertEquals(0, store.getCandles(key).size)
+    }
 }

@@ -62,7 +62,7 @@ open class NullPollingProductPriceAdapter(
 }
 
 
-class ProductServiceTest : GetProductPricePort, NullPollingProductPriceAdapter() {
+class RegisterCandleUseCaseTest : GetProductPricePort, NullPollingProductPriceAdapter() {
     private var apiCallCount = 0
     private var pollingSubscribeCount = 0
     private lateinit var service: RegisterCandleUseCase
