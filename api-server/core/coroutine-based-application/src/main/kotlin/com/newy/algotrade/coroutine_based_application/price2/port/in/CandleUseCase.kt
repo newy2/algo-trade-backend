@@ -8,7 +8,7 @@ import java.time.OffsetDateTime
 
 class RegisterCandleUseCase(
     private val getProductPricePort: GetProductPricePort,
-    private val pollingProductPricePort: PollingProductPricePort,
+    private val pollingProductPricePort: SubscribePollingProductPricePort,
     private val candlePort: CandlePort,
     private val initDataSize: Int = DEFAULT_CANDLE_SIZE
 ) {

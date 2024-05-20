@@ -1,11 +1,9 @@
 package com.newy.algotrade.unit.price2.port.`in`
 
-import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RegisterCandleUseCase
-import com.newy.algotrade.coroutine_based_application.price2.port.out.CandlePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
-import com.newy.algotrade.coroutine_based_application.price2.port.out.PollingProductPricePort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.SubscribePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
@@ -37,36 +35,10 @@ fun productPriceKey(productCode: String, interval: Duration) =
     else
         ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
-class OnPollingProductPrice(
-    private val candlesStore: CandlePort = InMemoryCandleStore()
-) {
-    fun onPolling(data: Pair<ProductPriceKey, List<ProductPrice>>) {
-        candlesStore.addCandles(data.first, data.second)
-    }
-}
-
-open class NullPollingProductPriceAdapter(
-    private val onPollingProductPrice: OnPollingProductPrice = OnPollingProductPrice(),
-    override var callback: PollingCallback<ProductPriceKey, List<ProductPrice>>? = { onPollingProductPrice.onPolling(it) }
-) : PollingProductPricePort {
-    override suspend fun start() {}
-    override fun cancel() {}
-
-    override suspend fun subscribe(key: ProductPriceKey) {}
-
-    override fun unSubscribe(key: ProductPriceKey) {}
-
-    override suspend fun onNextTick(key: ProductPriceKey, value: List<ProductPrice>) {
-        super.onNextTick(key, value)
-    }
-}
-
-
-class RegisterCandleUseCaseTest : GetProductPricePort, NullPollingProductPriceAdapter() {
+class RegisterCandleUseCaseTest : GetProductPricePort, SubscribePollingProductPricePort {
     private var apiCallCount = 0
     private var pollingSubscribeCount = 0
     private lateinit var service: RegisterCandleUseCase
-    private lateinit var candlesStore: CandlePort
 
     override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> {
         apiCallCount++
@@ -81,11 +53,10 @@ class RegisterCandleUseCaseTest : GetProductPricePort, NullPollingProductPriceAd
     fun setUp() {
         apiCallCount = 0
         pollingSubscribeCount = 0
-        candlesStore = InMemoryCandleStore()
         service = RegisterCandleUseCase(
             getProductPricePort = this,
             pollingProductPricePort = this,
-            candlePort = candlesStore,
+            candlePort = InMemoryCandleStore(),
         )
     }
 
