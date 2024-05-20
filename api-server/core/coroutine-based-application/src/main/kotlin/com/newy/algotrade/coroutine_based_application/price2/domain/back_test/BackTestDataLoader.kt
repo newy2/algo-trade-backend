@@ -5,6 +5,7 @@ import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCa
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.chart.Candle
+import com.newy.algotrade.domain.chart.DEFAULT_CANDLE_SIZE
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
@@ -69,7 +70,7 @@ class BackTestDataLoader(
                         GetProductPriceParam(
                             productPriceKey,
                             startDateTime,
-                            if (productPriceKey.market == Market.BY_BIT) 400 else 399
+                            if (productPriceKey.market == Market.BY_BIT) DEFAULT_CANDLE_SIZE else 399
                         )
                     )
                 )

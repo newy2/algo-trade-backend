@@ -2,10 +2,11 @@ package com.newy.algotrade.domain.chart.libs.ta4j
 
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
+import com.newy.algotrade.domain.chart.DEFAULT_CANDLE_SIZE
 import org.ta4j.core.BaseBarSeries
 
 class Ta4jCandles(
-    maxSize: Int = 400,
+    maxSize: Int = DEFAULT_CANDLE_SIZE,
 ) : Candles, BaseBarSeries() {
     init {
         this.maximumBarCount = maxSize

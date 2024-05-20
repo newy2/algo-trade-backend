@@ -41,5 +41,7 @@ class BuyTripleRSIStrategy(
         factory.rsiIndicator(candles, 21),
         OrderType.BUY
     )
+
+    override fun version() = "0.0.1"
 }
 

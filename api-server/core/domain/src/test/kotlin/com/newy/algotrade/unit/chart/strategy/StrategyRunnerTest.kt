@@ -4,7 +4,6 @@ import com.newy.algotrade.domain.chart.*
 import com.newy.algotrade.domain.chart.order.OrderSignal
 import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 import com.newy.algotrade.domain.chart.order.OrderType
-import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategyRunner
 import helpers.BooleanRule
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -38,7 +37,7 @@ class EntryRuleStrategyRunnerTest {
         history = OrderSignalHistory()
         runner = StrategyRunner(
             candles,
-            strategy = Strategy(
+            strategy = BaseStrategy(
                 entryType = OrderType.BUY,
                 entryRule = BooleanRule(true),
                 exitRule = BooleanRule(false),
@@ -102,7 +101,7 @@ class OtherSignalStrategyRunnerTest {
         val candles = DEFAULT_CHART_FACTORY.candles()
         val runner = StrategyRunner(
             candles,
-            strategy = Strategy(
+            strategy = BaseStrategy(
                 entryType = OrderType.BUY,
                 entryRule = BooleanRule(false),
                 exitRule = BooleanRule(true),
@@ -120,7 +119,7 @@ class OtherSignalStrategyRunnerTest {
     fun `아무 신호도 발생하지 않는 경우`() {
         val runner = StrategyRunner(
             candles,
-            strategy = Strategy(
+            strategy = BaseStrategy(
                 entryType = OrderType.BUY,
                 entryRule = BooleanRule(false),
                 exitRule = BooleanRule(false),

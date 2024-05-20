@@ -1,6 +1,7 @@
 package com.newy.algotrade.unit.chart.strategy
 
 import com.newy.algotrade.domain.chart.Candle
+import com.newy.algotrade.domain.chart.Rule
 import com.newy.algotrade.domain.chart.order.OrderSignal
 import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 import com.newy.algotrade.domain.chart.order.OrderType
@@ -18,6 +19,10 @@ private fun createOrderSignal(tradeType: OrderType) =
         Candle.TimeRange(Duration.ofMinutes(1), OffsetDateTime.now()),
         1000.0.toBigDecimal()
     )
+
+class BaseStrategy(entryType: OrderType, entryRule: Rule, exitRule: Rule) : Strategy(entryType, entryRule, exitRule) {
+    override fun version() = "0"
+}
 
 class StrategyTest {
     private val index = 0
@@ -41,7 +46,7 @@ class StrategyTest {
 
     @Test
     fun `진입(enter) 신호가 발생하는 경우`() {
-        val strategy = Strategy(
+        val strategy = BaseStrategy(
             entryType = entryType,
             entryRule = BooleanRule(true),
             exitRule = BooleanRule(false),
@@ -54,7 +59,7 @@ class StrategyTest {
 
     @Test
     fun `진출(exit) 신호가 발생하는 경우`() {
-        val strategy = Strategy(
+        val strategy = BaseStrategy(
             entryType = entryType,
             entryRule = BooleanRule(false),
             exitRule = BooleanRule(true),
@@ -67,7 +72,7 @@ class StrategyTest {
 
     @Test
     fun `진입, 진출 신호가 발생하지 않는 경우`() {
-        val strategy = Strategy(
+        val strategy = BaseStrategy(
             entryType = entryType,
             entryRule = BooleanRule(false),
             exitRule = BooleanRule(false),
@@ -82,7 +87,7 @@ class StrategyTest {
     @Disabled
     @Deprecated("쓸데 없는 테스트임")
     fun `진입, 진출 신호가 동시에 발생하는 경우`() {
-        val strategy = Strategy(
+        val strategy = BaseStrategy(
             entryType = entryType,
             entryRule = BooleanRule(true),
             exitRule = BooleanRule(true),
@@ -123,7 +128,7 @@ class DifferentEntryOrderTypeTest {
 
     @Test
     fun `entryType 이 다른 OrderHistory 를 사용하면 에러`() {
-        val strategy = Strategy(
+        val strategy = BaseStrategy(
             entryType = entryType,
             entryRule = BooleanRule(false),
             exitRule = BooleanRule(false),
@@ -141,21 +146,21 @@ class ErrorTest {
     @Test
     fun `Strategy 생성자에 OrderType_NONE 을 전달할 수 없다`() {
         assertThrows<IllegalArgumentException> {
-            Strategy(
+            BaseStrategy(
                 entryType = OrderType.NONE,
                 entryRule = BooleanRule(false),
                 exitRule = BooleanRule(false),
             )
         }
         assertDoesNotThrow {
-            Strategy(
+            BaseStrategy(
                 entryType = OrderType.BUY,
                 entryRule = BooleanRule(false),
                 exitRule = BooleanRule(false),
             )
         }
         assertDoesNotThrow {
-            Strategy(
+            BaseStrategy(
                 entryType = OrderType.SELL,
                 entryRule = BooleanRule(false),
                 exitRule = BooleanRule(false),

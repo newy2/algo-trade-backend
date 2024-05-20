@@ -1,7 +1,7 @@
-package com.newy.algotrade.unit.price2.adapter.`in`
+package com.newy.algotrade.unit.price2.adapter.out.persistent
 
-import com.newy.algotrade.coroutine_based_application.price2.adpter.out.persistent.InMemoryCandlesStore
-import com.newy.algotrade.coroutine_based_application.price2.port.out.CandlesPort
+import com.newy.algotrade.coroutine_based_application.price2.adpter.out.persistent.InMemoryCandleStore
+import com.newy.algotrade.coroutine_based_application.price2.port.out.CandlePort
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -14,7 +14,7 @@ import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
 
-val now = OffsetDateTime.parse("2024-05-01T00:00Z")
+private val now = OffsetDateTime.parse("2024-05-01T00:00Z")
 fun productPrice(price: Int, beginTime: OffsetDateTime) =
     Candle.TimeFrame.M1(
         beginTime,
@@ -33,43 +33,38 @@ fun productPriceKey(productCode: String) =
 
 class InMemoryCandleStoreTest {
     private val key = productPriceKey("BTCUSDT")
-    private lateinit var store: CandlesPort
+    private lateinit var store: CandlePort
 
     @BeforeEach
     fun setUp() {
-        store = InMemoryCandlesStore()
+        store = InMemoryCandleStore()
     }
 
     @Test
-    fun getCandles() = runBlocking {
-        val candles = store.getCandles(key)
-
-        assertEquals(0, candles.size)
+    fun `등록하지 않은 candles 조회하기`() = runBlocking {
+        assertEquals(0, store.getCandles(key).size)
     }
 
     @Test
-    fun setCandles() = runBlocking {
+    fun `candles 덮어쓰기`() = runBlocking {
         store.setCandles(key, listOf(productPrice(1000, now)))
         store.setCandles(key, listOf(productPrice(2000, now.plusMinutes(1))))
 
-        val candles = store.getCandles(key)
-
-        assertEquals(1, candles.size)
-        assertEquals(productPrice(2000, now.plusMinutes(1)), candles[0])
+        store.getCandles(key).let {
+            assertEquals(1, it.size)
+            assertEquals(productPrice(2000, now.plusMinutes(1)), it[0])
+        }
     }
 
     @Test
-    fun addCandles() = runBlocking {
-        val store = InMemoryCandlesStore()
-        val key = productPriceKey("BTCUSDT")
-
+    fun `candles 추가하기`() = runBlocking {
         store.addCandles(key, listOf(productPrice(1000, now)))
         store.addCandles(key, listOf(productPrice(2000, now.plusMinutes(1))))
 
-        val candles = store.getCandles(key)
-
-        assertEquals(2, candles.size)
-        assertEquals(productPrice(1000, now), candles[0])
-        assertEquals(productPrice(2000, now.plusMinutes(1)), candles[1])
+        store.getCandles(key).let {
+            assertEquals(2, it.size)
+            assertEquals(productPrice(1000, now), it[0])
+            assertEquals(productPrice(2000, now.plusMinutes(1)), it[1])
+        }
     }
 }
