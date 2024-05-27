@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.price2.adapter.out.persistent
 
-import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryUserStrategySignalHistoryStore
-import com.newy.algotrade.coroutine_based_application.price2.port.out.UserStrategySignalHistoryPort
+import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryStrategySignalHistoryStore
+import com.newy.algotrade.coroutine_based_application.price2.port.out.StrategySignalHistoryPort
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderSignal
 import com.newy.algotrade.domain.chart.order.OrderType
@@ -12,7 +12,7 @@ import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
-class InMemoryUserStrategySignalHistoryStoreTest {
+class InMemoryStrategySignalHistoryStoreTest {
     private val signal = OrderSignal(
         OrderType.BUY,
         Candle.TimeRange(
@@ -22,11 +22,11 @@ class InMemoryUserStrategySignalHistoryStoreTest {
         1000.toBigDecimal()
     )
 
-    private lateinit var store: UserStrategySignalHistoryPort
+    private lateinit var store: StrategySignalHistoryPort
 
     @BeforeEach
     fun setUp() {
-        store = InMemoryUserStrategySignalHistoryStore().also {
+        store = InMemoryStrategySignalHistoryStore().also {
             it.add("id1", signal)
         }
     }

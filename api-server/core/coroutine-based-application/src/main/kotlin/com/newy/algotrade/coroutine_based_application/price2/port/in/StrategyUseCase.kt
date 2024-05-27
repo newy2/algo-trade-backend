@@ -6,7 +6,7 @@ import com.newy.algotrade.coroutine_based_application.price2.port.out.DeleteStra
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetCandlePort
 import com.newy.algotrade.domain.chart.strategy.Strategy
 
-class RegisterUserStrategyUseCase(
+class RegisterStrategyUseCase(
     private val candlePort: GetCandlePort,
     private val strategyPort: CreateStrategyPort,
 ) {
@@ -17,7 +17,7 @@ class RegisterUserStrategyUseCase(
     }
 }
 
-class UnRegisterUserStrategyUseCase(
+class UnRegisterStrategyUseCase(
     private val strategyPort: DeleteStrategyPort
 ) {
     fun unRegister(key: UserStrategyKey) {

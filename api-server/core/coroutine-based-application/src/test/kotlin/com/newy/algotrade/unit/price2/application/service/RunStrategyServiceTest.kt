@@ -1,8 +1,8 @@
 package com.newy.algotrade.unit.price2.application.service
 
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryCandleStore
+import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryStrategyStore
-import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryUserStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.price2.application.service.RunStrategyService
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.model.UserStrategyKey
@@ -61,7 +61,7 @@ private val BTC_1MINUTE = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 private val ETH_1MINUTE = productPriceKey("ETHUSDT", Duration.ofMinutes(1))
 
 @DisplayName("전략 실행하기 테스트")
-class RunStrategyServiceTest : OnCreateUserStrategySignalPort {
+class RunStrategyServiceTest : OnCreateStrategySignalPort {
     private lateinit var service: RunStrategyUseCase
     private lateinit var results: MutableMap<String, OrderSignal>
 
@@ -90,8 +90,8 @@ class RunStrategyServiceTest : OnCreateUserStrategySignalPort {
                 it.add(userStrategyKey("id2", BTC_1MINUTE), BooleanStrategy(entry = false, exit = false))
                 it.add(userStrategyKey("id3", ETH_1MINUTE), BooleanStrategy(entry = true, exit = false))
             },
-            userStrategySignalHistoryPort = InMemoryUserStrategySignalHistoryStore(),
-            userStrategySignalPort = this
+            strategySignalHistoryPort = InMemoryStrategySignalHistoryStore(),
+            strategySignalPort = this
         )
         results = mutableMapOf()
     }

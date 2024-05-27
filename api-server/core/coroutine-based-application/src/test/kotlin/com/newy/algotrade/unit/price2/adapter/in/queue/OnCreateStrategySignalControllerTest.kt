@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.price2.adapter.`in`.queue
 
 import com.newy.algotrade.coroutine_based_application.price2.adapter.`in`.queue.OnCreateStrategySignalController
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.AddUserStrategySignalHistoryUseCase
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.AddStrategySignalHistoryUseCase
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderSignal
 import com.newy.algotrade.domain.chart.order.OrderType
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.OffsetDateTime
 
-class OnCreateStrategySignalControllerTest : AddUserStrategySignalHistoryUseCase {
+class OnCreateStrategySignalControllerTest : AddStrategySignalHistoryUseCase {
     private var log: String = ""
     override fun addHistory(userStrategyId: String, signal: OrderSignal) {
         log += "addHistory "

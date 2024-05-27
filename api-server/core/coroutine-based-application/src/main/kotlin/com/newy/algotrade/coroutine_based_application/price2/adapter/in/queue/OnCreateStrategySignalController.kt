@@ -1,13 +1,13 @@
 package com.newy.algotrade.coroutine_based_application.price2.adapter.`in`.queue
 
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.AddUserStrategySignalHistoryUseCase
-import com.newy.algotrade.coroutine_based_application.price2.port.out.OnCreateUserStrategySignalPort
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.AddStrategySignalHistoryUseCase
+import com.newy.algotrade.coroutine_based_application.price2.port.out.OnCreateStrategySignalPort
 import com.newy.algotrade.domain.chart.order.OrderSignal
 
 class OnCreateStrategySignalController(
-    private val userStrategySignalHistoryUseCase: AddUserStrategySignalHistoryUseCase
-) : OnCreateUserStrategySignalPort {
+    private val strategySignalHistoryUseCase: AddStrategySignalHistoryUseCase
+) : OnCreateStrategySignalPort {
     override fun onCreateSignal(userStrategyId: String, signal: OrderSignal) {
-        userStrategySignalHistoryUseCase.addHistory(userStrategyId, signal)
+        strategySignalHistoryUseCase.addHistory(userStrategyId, signal)
     }
 }
