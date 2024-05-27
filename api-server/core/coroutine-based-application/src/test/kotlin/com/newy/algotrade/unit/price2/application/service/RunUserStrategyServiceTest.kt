@@ -61,7 +61,7 @@ private val BTC_1MINUTE = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 private val ETH_1MINUTE = productPriceKey("ETHUSDT", Duration.ofMinutes(1))
 
 @DisplayName("사용자 전략 실행하기 테스트")
-class RunUserStrategyServiceTest : OnUserStrategySignalPort {
+class RunUserStrategyServiceTest : OnCreateUserStrategySignalPort {
     private lateinit var service: RunUserStrategyUseCase
     private lateinit var results: MutableMap<String, OrderSignal>
 
