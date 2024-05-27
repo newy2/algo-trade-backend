@@ -1,6 +1,7 @@
-package com.newy.algotrade.unit.price2.port.`in`
+package com.newy.algotrade.unit.price2.application.service
 
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.persistent.InMemoryCandleStore
+import com.newy.algotrade.coroutine_based_application.price2.application.service.AddCandleService
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.AddCandleUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.out.CandlePort
 import com.newy.algotrade.domain.chart.Candle
@@ -34,8 +35,9 @@ private fun productPriceKey(productCode: String, interval: Duration) =
     else
         ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
+
 @DisplayName("캔들 저장 테스트")
-class AddCandleUseCaseTest {
+class AddCandleServiceTest {
     private val productPriceKey = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
     private val productPriceList = listOf(
         productPrice(1000, Duration.ofMinutes(1), now.plusMinutes(0)),
@@ -52,7 +54,7 @@ class AddCandleUseCaseTest {
         candleStore = InMemoryCandleStore().also {
             it.setCandles(productPriceKey, listOf(nextPrice.next()))
         }
-        service = AddCandleUseCase(candleStore)
+        service = AddCandleService(candleStore)
     }
 
     @Test

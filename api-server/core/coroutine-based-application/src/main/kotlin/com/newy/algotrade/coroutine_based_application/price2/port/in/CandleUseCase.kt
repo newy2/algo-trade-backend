@@ -55,10 +55,6 @@ class UnRegisterCandleUseCase(
     }
 }
 
-class AddCandleUseCase(
-    private val candlePort: AddCandlePort
-) {
-    fun addCandle(productPriceKey: ProductPriceKey, candleList: List<Candle>): Candles {
-        return candlePort.addCandles(productPriceKey, candleList)
-    }
+interface AddCandleUseCase {
+    fun addCandle(productPriceKey: ProductPriceKey, candleList: List<Candle>): Candles
 }

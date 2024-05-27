@@ -1,8 +1,9 @@
-package com.newy.algotrade.unit.price2.port.`in`
+package com.newy.algotrade.unit.price2.application.service
 
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.persistent.InMemoryUserStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.persistent.InMemoryUserStrategyStore
+import com.newy.algotrade.coroutine_based_application.price2.application.service.RunUserStrategyService
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RunUserStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.price2.port.out.*
@@ -60,13 +61,13 @@ private val BTC_1MINUTE = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 private val ETH_1MINUTE = productPriceKey("ETHUSDT", Duration.ofMinutes(1))
 
 @DisplayName("사용자 전략 실행하기 테스트")
-class RunUserStrategyUseCaseTest : OnUserStrategySignalPort {
+class RunUserStrategyServiceTest : OnUserStrategySignalPort {
     private lateinit var service: RunUserStrategyUseCase
     private lateinit var results: MutableMap<String, OrderSignal>
 
     @BeforeEach
     fun setUp() {
-        service = RunUserStrategyUseCase(
+        service = RunUserStrategyService(
             candlePort = InMemoryCandleStore().also {
                 it.setCandles(
                     BTC_1MINUTE, listOf(
