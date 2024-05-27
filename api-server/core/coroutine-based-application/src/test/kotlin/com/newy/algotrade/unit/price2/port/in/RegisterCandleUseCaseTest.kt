@@ -29,7 +29,7 @@ private fun productPrice(amount: Int, interval: Duration) =
         0.toBigDecimal(),
     )
 
-fun productPriceKey(productCode: String, interval: Duration) =
+private fun productPriceKey(productCode: String, interval: Duration) =
     if (productCode == "BTCUSDT")
         ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
     else
@@ -54,7 +54,7 @@ class RegisterCandleUseCaseTest : GetProductPricePort, SubscribePollingProductPr
         apiCallCount = 0
         pollingSubscribeCount = 0
         service = RegisterCandleUseCase(
-            getProductPricePort = this,
+            productPricePort = this,
             pollingProductPricePort = this,
             candlePort = InMemoryCandleStore(),
         )

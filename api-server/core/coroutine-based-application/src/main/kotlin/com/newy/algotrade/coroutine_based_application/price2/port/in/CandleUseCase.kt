@@ -2,12 +2,14 @@ package com.newy.algotrade.coroutine_based_application.price2.port.`in`
 
 import com.newy.algotrade.coroutine_based_application.price2.port.out.*
 import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
+import com.newy.algotrade.domain.chart.Candle
+import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.DEFAULT_CANDLE_SIZE
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import java.time.OffsetDateTime
 
 class RegisterCandleUseCase(
-    private val getProductPricePort: GetProductPricePort,
+    private val productPricePort: GetProductPricePort,
     private val pollingProductPricePort: SubscribePollingProductPricePort,
     private val candlePort: CandlePort,
     private val initDataSize: Int = DEFAULT_CANDLE_SIZE
@@ -22,7 +24,7 @@ class RegisterCandleUseCase(
             return
         }
 
-        getProductPricePort.getProductPrices(
+        productPricePort.getProductPrices(
             GetProductPriceParam(
                 productPriceKey,
                 OffsetDateTime.now(),
@@ -39,7 +41,7 @@ class RegisterCandleUseCase(
 }
 
 class UnRegisterCandleUseCase(
-    private val userStrategyPort: QueryUserStrategyPort,
+    private val userStrategyPort: HasUserStrategyPort,
     private val candlePort: DeleteCandlePort,
     private val pollingProductPricePort: UnSubscribePollingProductPricePort,
 ) {
@@ -50,5 +52,13 @@ class UnRegisterCandleUseCase(
 
         candlePort.deleteCandles(productPriceKey)
         pollingProductPricePort.unSubscribe(productPriceKey)
+    }
+}
+
+class AddCandleUseCase(
+    private val candlePort: AddCandlePort
+) {
+    fun addCandle(productPriceKey: ProductPriceKey, candleList: List<Candle>): Candles {
+        return candlePort.addCandles(productPriceKey, candleList)
     }
 }

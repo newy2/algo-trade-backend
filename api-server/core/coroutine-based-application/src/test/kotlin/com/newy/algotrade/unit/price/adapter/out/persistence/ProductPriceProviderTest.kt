@@ -31,10 +31,10 @@ private fun productPrice(amount: Int, interval: Duration) =
         0.toBigDecimal(),
     )
 
-fun providerKey(key: String, productCode: String, interval: Duration) =
+private fun providerKey(key: String, productCode: String, interval: Duration) =
     ProductPriceProvider.Key(key, productPriceKey(productCode, interval))
 
-fun productPriceKey(productCode: String, interval: Duration) =
+private fun productPriceKey(productCode: String, interval: Duration) =
     if (productCode == "BTCUSDT")
         ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
     else

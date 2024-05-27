@@ -9,11 +9,20 @@ import com.newy.algotrade.coroutine_based_application.price2.port.out.DeleteUser
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategyId
 import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
+import com.newy.algotrade.domain.common.consts.Market
+import com.newy.algotrade.domain.common.consts.ProductType
+import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import kotlin.test.assertTrue
+
+private fun productPriceKey(productCode: String, interval: Duration) =
+    if (productCode == "BTCUSDT")
+        ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
+    else
+        ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
 private val userStrategyKey = UserStrategyKey(
     "user1",
@@ -48,6 +57,7 @@ class UserStrategyUseCaseTest : CreateUserStrategyPort, DeleteUserStrategyPort {
         service.register(userStrategyKey)
 
         assertEquals(1, addedCount)
+        assertEquals(0, removedCount)
         assertTrue(strategy is BuyTripleRSIStrategy)
     }
 
@@ -57,6 +67,7 @@ class UserStrategyUseCaseTest : CreateUserStrategyPort, DeleteUserStrategyPort {
 
         service.unRegister(userStrategyKey)
 
+        assertEquals(0, addedCount)
         assertEquals(1, removedCount)
     }
 }

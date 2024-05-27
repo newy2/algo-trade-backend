@@ -19,10 +19,8 @@ class InMemoryUserStrategyStore : UserStrategyPort {
         map.remove(key)
     }
 
-    override fun getStrategyList(productPriceKey: ProductPriceKey): List<Strategy> {
+    override fun filterBy(productPriceKey: ProductPriceKey): Map<UserStrategyKey, Strategy> {
         return map
             .filter { it.key.productPriceKey == productPriceKey }
-            .values
-            .toList()
     }
 }

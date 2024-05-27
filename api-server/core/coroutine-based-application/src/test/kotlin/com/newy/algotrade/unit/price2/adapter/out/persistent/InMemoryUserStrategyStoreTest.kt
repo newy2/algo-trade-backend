@@ -6,9 +6,10 @@ import com.newy.algotrade.coroutine_based_application.price2.port.out.UserStrate
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategyId
+import com.newy.algotrade.domain.common.consts.Market
+import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
-import com.newy.algotrade.unit.price2.port.`in`.productPriceKey
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -16,14 +17,21 @@ import java.time.Duration
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
+private fun productPriceKey(productCode: String, interval: Duration) =
+    if (productCode == "BTCUSDT")
+        ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
+    else
+        ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
+
+
 open class BaseTest {
     protected fun createStrategy(key: UserStrategyKey): Strategy {
         return Strategy.create(key.strategyId, DEFAULT_CHART_FACTORY.candles())
     }
 
-    protected fun createUserStrategyKey(userId: String, productPriceKey: ProductPriceKey): UserStrategyKey {
+    protected fun createUserStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey): UserStrategyKey {
         return UserStrategyKey(
-            userId,
+            userStrategyId,
             StrategyId.BuyTripleRSIStrategy,
             productPriceKey
         )
@@ -35,16 +43,16 @@ open class BaseTest {
 }
 
 @DisplayName("InMemoryUserStrategyStore 기본 기능 테스트")
-class SingleElementInMemoryUserStrategyStoreTest : BaseTest() {
+class InMemoryUserStrategyStoreTest : BaseTest() {
     private val productPriceKey = createProductPriceKey("BTCUSDT")
-    private val key = createUserStrategyKey("user1", productPriceKey)
-    private val strategy = createStrategy(key)
+    private val userStrategyKey = createUserStrategyKey("id1", productPriceKey)
+    private val strategy = createStrategy(userStrategyKey)
     private lateinit var store: UserStrategyPort
 
     @BeforeEach
     fun setUp() {
         store = InMemoryUserStrategyStore()
-        store.add(key, strategy)
+        store.add(userStrategyKey, strategy)
     }
 
     @Test
@@ -54,73 +62,45 @@ class SingleElementInMemoryUserStrategyStoreTest : BaseTest() {
 
     @Test
     fun `strategy 삭제하기`() {
-        store.remove(key)
+        store.remove(userStrategyKey)
 
-        Assertions.assertFalse(store.hasProductPriceKey(productPriceKey))
+        assertFalse(store.hasProductPriceKey(productPriceKey))
     }
 
     @Test
-    fun `productPriceKey 에 매칭되는 strategy 리스트 가져오기`() {
-        val list = store.getStrategyList(productPriceKey)
+    fun `productPriceKey 에 매칭되는 strategy 맵 가져오기`() {
+        val filteredMap = store.filterBy(productPriceKey)
 
-        assertEquals(1, list.size)
-        assertEquals(listOf(strategy), list)
-    }
-}
-
-@DisplayName("element 가 여러 개인 경우 InMemoryUserStrategyStore 테스트")
-class MultipleElementsInMemoryUserStrategyStoreTest : BaseTest() {
-    private val key1 = createUserStrategyKey("user1", createProductPriceKey("BTCUSDT"))
-    private val strategy1 = createStrategy(key1)
-    private lateinit var store: UserStrategyPort
-
-    @BeforeEach
-    fun setUp() {
-        store = InMemoryUserStrategyStore()
+        assertEquals(mapOf(userStrategyKey to strategy), filteredMap)
     }
 
     @Test
-    fun `같은 상품을 등록한 경우`() {
-        val key2 = createUserStrategyKey("user2", createProductPriceKey("BTCUSDT"))
-        val strategy2 = createStrategy(key2)
-        store.add(key1, strategy1)
-        store.add(key2, strategy2)
+    fun `같은 productPriceKey 를 가진 사용자 전략을 추가한 경우`() {
+        val sameProduct = createProductPriceKey("BTCUSDT")
+        val userStrategyKey2 = createUserStrategyKey("id2", sameProduct)
+        val strategy2 = createStrategy(userStrategyKey2)
 
-        val list = store.getStrategyList(createProductPriceKey("BTCUSDT"))
+        store.add(userStrategyKey2, strategy2)
+        val filteredMap = store.filterBy(createProductPriceKey("BTCUSDT"))
 
-        assertEquals(listOf(strategy1, strategy2), list)
+        assertEquals(
+            mapOf(
+                userStrategyKey to strategy,
+                userStrategyKey2 to strategy2
+            ),
+            filteredMap
+        )
     }
 
     @Test
-    fun `다른 상품을 등록한 경우`() {
-        val key2 = createUserStrategyKey("user2", createProductPriceKey("ETHUSDT"))
-        val strategy2 = createStrategy(key2)
-        store.add(key1, strategy1)
-        store.add(key2, strategy2)
+    fun `다른 productPriceKey 를 가진 사용자 전략을 추가한 경우`() {
+        val differentProduct = createProductPriceKey("ETHUSDT")
+        val userStrategyKey2 = createUserStrategyKey("id2", differentProduct)
+        val strategy2 = createStrategy(userStrategyKey2)
 
-        val list = store.getStrategyList(createProductPriceKey("BTCUSDT"))
+        store.add(userStrategyKey2, strategy2)
+        val filteredMap = store.filterBy(createProductPriceKey("BTCUSDT"))
 
-        assertEquals(listOf(strategy1), list)
-    }
-}
-
-@DisplayName("빈 InMemoryUserStrategyStore 테스트")
-class EmptyElementInMemoryUserStrategyStoreTest : BaseTest() {
-    private val noAdded = createProductPriceKey("BTCUSDT")
-    private lateinit var store: UserStrategyPort
-
-    @BeforeEach
-    fun setUp() {
-        store = InMemoryUserStrategyStore()
-    }
-
-    @Test
-    fun `hasProductPriceKey`() {
-        Assertions.assertFalse(store.hasProductPriceKey(noAdded))
-    }
-
-    @Test
-    fun `getStrategyList`() {
-        assertEquals(emptyList(), store.getStrategyList(noAdded))
+        assertEquals(mapOf(userStrategyKey to strategy), filteredMap)
     }
 }
