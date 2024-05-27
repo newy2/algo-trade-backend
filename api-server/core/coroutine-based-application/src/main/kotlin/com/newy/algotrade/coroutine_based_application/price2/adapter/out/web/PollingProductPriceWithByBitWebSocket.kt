@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.price2.adpter.out.web
+package com.newy.algotrade.coroutine_based_application.price2.adapter.out.web
 
 import com.newy.algotrade.coroutine_based_application.common.web.by_bit.ByBitWebSocket
 import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketClient

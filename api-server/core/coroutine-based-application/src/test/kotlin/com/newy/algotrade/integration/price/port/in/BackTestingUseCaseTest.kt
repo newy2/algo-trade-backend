@@ -5,9 +5,9 @@ import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestA
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.price.domain.ProductPriceProvider
 import com.newy.algotrade.coroutine_based_application.price.domain.UserStrategyRunner
-import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchByBitProductPrice
-import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchEBestProductPrice
-import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.FetchProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.price2.adapter.out.web.FetchByBitProductPrice
+import com.newy.algotrade.coroutine_based_application.price2.adapter.out.web.FetchEBestProductPrice
+import com.newy.algotrade.coroutine_based_application.price2.adapter.out.web.FetchProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.price2.domain.back_test.BackTestDataLoader
 import com.newy.algotrade.coroutine_based_application.price2.domain.back_test.StringReporter
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo

@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.price2.adpter.out.persistent
+package com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent
 
 import com.newy.algotrade.coroutine_based_application.price2.port.out.UserStrategySignalHistoryPort
 import com.newy.algotrade.domain.chart.order.OrderSignal

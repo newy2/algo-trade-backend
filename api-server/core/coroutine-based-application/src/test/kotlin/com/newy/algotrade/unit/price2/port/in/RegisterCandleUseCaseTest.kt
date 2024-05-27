@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.price2.port.`in`
 
-import com.newy.algotrade.coroutine_based_application.price2.adpter.out.persistent.InMemoryCandleStore
+import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RegisterCandleUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.SubscribePollingProductPricePort

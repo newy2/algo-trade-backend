@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.price2.application.service
 
-import com.newy.algotrade.coroutine_based_application.price2.adpter.out.persistent.InMemoryUserStrategySignalHistoryStore
+import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryUserStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.price2.application.service.AddUserStrategySignalHistoryService
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderSignal

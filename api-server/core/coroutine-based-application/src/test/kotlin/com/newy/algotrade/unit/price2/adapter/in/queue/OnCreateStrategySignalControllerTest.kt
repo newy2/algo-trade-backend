@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.price2.adapter.`in`.queue
 
-import com.newy.algotrade.coroutine_based_application.price2.adpter.`in`.queue.OnCreateStrategySignalController
+import com.newy.algotrade.coroutine_based_application.price2.adapter.`in`.queue.OnCreateStrategySignalController
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.AddUserStrategySignalHistoryUseCase
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderSignal

@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestA
 import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
-import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.*
+import com.newy.algotrade.coroutine_based_application.price2.adapter.out.web.*
 import com.newy.algotrade.coroutine_based_application.price2.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.common.consts.Market

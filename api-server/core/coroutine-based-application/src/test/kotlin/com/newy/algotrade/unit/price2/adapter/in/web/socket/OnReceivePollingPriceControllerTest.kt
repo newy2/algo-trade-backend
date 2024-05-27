@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.price2.adapter.`in`.web.socket
 
-import com.newy.algotrade.coroutine_based_application.price2.adpter.`in`.web.socket.OnReceivePollingPriceController
+import com.newy.algotrade.coroutine_based_application.price2.adapter.`in`.web.socket.OnReceivePollingPriceController
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.AddCandleUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RunUserStrategyUseCase
 import com.newy.algotrade.domain.chart.Candle

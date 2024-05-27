@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.price2.adpter.`in`.queue
+package com.newy.algotrade.coroutine_based_application.price2.adapter.`in`.queue
 
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.AddUserStrategySignalHistoryUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.out.OnCreateUserStrategySignalPort

@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.price2.adpter.`in`.web.socket
+package com.newy.algotrade.coroutine_based_application.price2.adapter.`in`.web.socket
 
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.AddCandleUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RunUserStrategyUseCase
