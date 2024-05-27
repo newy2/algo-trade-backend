@@ -64,6 +64,10 @@ private val ETH_1MINUTE = productPriceKey("ETHUSDT", Duration.ofMinutes(1))
 class RunUserStrategyServiceTest : OnCreateUserStrategySignalPort {
     private lateinit var service: RunUserStrategyUseCase
     private lateinit var results: MutableMap<String, OrderSignal>
+    
+    override fun onCreateSignal(userStrategyId: String, orderSignal: OrderSignal) {
+        results[userStrategyId] = orderSignal
+    }
 
     @BeforeEach
     fun setUp() {
@@ -90,10 +94,6 @@ class RunUserStrategyServiceTest : OnCreateUserStrategySignalPort {
             userStrategySignalPort = this
         )
         results = mutableMapOf()
-    }
-
-    override fun onCreateSignal(userStrategyId: String, orderSignal: OrderSignal) {
-        results[userStrategyId] = orderSignal
     }
 
     @Test
