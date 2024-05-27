@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.price2.adapter.`in`.web.socket
 
 import com.newy.algotrade.coroutine_based_application.price2.adapter.`in`.web.socket.OnReceivePollingPriceController
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.AddCandleUseCase
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RunUserStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
-class OnReceivePollingPriceControllerTest : AddCandleUseCase, RunUserStrategyUseCase {
+class OnReceivePollingPriceControllerTest : AddCandleUseCase, RunStrategyUseCase {
     private var log: String = ""
 
     override fun addCandle(productPriceKey: ProductPriceKey, candleList: List<Candle>): Candles {
@@ -22,7 +22,7 @@ class OnReceivePollingPriceControllerTest : AddCandleUseCase, RunUserStrategyUse
         return DEFAULT_CHART_FACTORY.candles()
     }
 
-    override fun run(productPriceKey: ProductPriceKey) {
+    override fun runStrategy(productPriceKey: ProductPriceKey) {
         log += "run "
     }
 

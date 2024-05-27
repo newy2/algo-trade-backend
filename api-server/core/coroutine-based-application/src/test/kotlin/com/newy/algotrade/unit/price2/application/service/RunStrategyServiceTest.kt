@@ -3,8 +3,8 @@ package com.newy.algotrade.unit.price2.application.service
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryStrategyStore
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryUserStrategySignalHistoryStore
-import com.newy.algotrade.coroutine_based_application.price2.application.service.RunUserStrategyService
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RunUserStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.price2.application.service.RunStrategyService
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.price2.port.out.*
 import com.newy.algotrade.domain.chart.Candle
@@ -60,9 +60,9 @@ class BooleanStrategy(entry: Boolean, exit: Boolean) : Strategy(
 private val BTC_1MINUTE = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 private val ETH_1MINUTE = productPriceKey("ETHUSDT", Duration.ofMinutes(1))
 
-@DisplayName("사용자 전략 실행하기 테스트")
-class RunUserStrategyServiceTest : OnCreateUserStrategySignalPort {
-    private lateinit var service: RunUserStrategyUseCase
+@DisplayName("전략 실행하기 테스트")
+class RunStrategyServiceTest : OnCreateUserStrategySignalPort {
+    private lateinit var service: RunStrategyUseCase
     private lateinit var results: MutableMap<String, OrderSignal>
 
     override fun onCreateSignal(userStrategyId: String, orderSignal: OrderSignal) {
@@ -71,7 +71,7 @@ class RunUserStrategyServiceTest : OnCreateUserStrategySignalPort {
 
     @BeforeEach
     fun setUp() {
-        service = RunUserStrategyService(
+        service = RunStrategyService(
             candlePort = InMemoryCandleStore().also {
                 it.setCandles(
                     BTC_1MINUTE, listOf(
@@ -98,7 +98,7 @@ class RunUserStrategyServiceTest : OnCreateUserStrategySignalPort {
 
     @Test
     fun `BTC 상품코드로 실행`() {
-        service.run(BTC_1MINUTE)
+        service.runStrategy(BTC_1MINUTE)
 
         val lastPrice = productPrice(2000, Duration.ofMinutes(1), now.plusMinutes(1))
         val expected = mapOf("id1" to OrderSignal(OrderType.BUY, lastPrice.time, lastPrice.price.close))
@@ -108,7 +108,7 @@ class RunUserStrategyServiceTest : OnCreateUserStrategySignalPort {
 
     @Test
     fun `ETH 상품 코드로 실행`() {
-        service.run(ETH_1MINUTE)
+        service.runStrategy(ETH_1MINUTE)
 
         val lastPrice = productPrice(1000, Duration.ofMinutes(1), now.plusMinutes(0))
         val expected = mapOf("id3" to OrderSignal(OrderType.BUY, lastPrice.time, lastPrice.price.close))
