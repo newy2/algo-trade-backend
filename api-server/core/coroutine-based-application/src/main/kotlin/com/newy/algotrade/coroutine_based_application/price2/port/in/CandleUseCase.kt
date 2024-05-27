@@ -41,12 +41,12 @@ class RegisterCandleUseCase(
 }
 
 class UnRegisterCandleUseCase(
-    private val userStrategyPort: HasUserStrategyPort,
+    private val strategyPort: HasStrategyPort,
     private val candlePort: DeleteCandlePort,
     private val pollingProductPricePort: UnSubscribePollingProductPricePort,
 ) {
     fun unRegister(productPriceKey: ProductPriceKey) {
-        if (userStrategyPort.hasProductPriceKey(productPriceKey)) {
+        if (strategyPort.hasProductPriceKey(productPriceKey)) {
             return
         }
 

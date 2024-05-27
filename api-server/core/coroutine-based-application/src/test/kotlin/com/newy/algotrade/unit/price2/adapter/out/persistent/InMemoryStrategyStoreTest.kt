@@ -1,8 +1,8 @@
 package com.newy.algotrade.unit.price2.adapter.out.persistent
 
-import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryUserStrategyStore
+import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryStrategyStore
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.model.UserStrategyKey
-import com.newy.algotrade.coroutine_based_application.price2.port.out.UserStrategyPort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.StrategyPort
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategyId
@@ -42,16 +42,16 @@ open class BaseTest {
     }
 }
 
-@DisplayName("InMemoryUserStrategyStore 기본 기능 테스트")
-class InMemoryUserStrategyStoreTest : BaseTest() {
+@DisplayName("InMemoryStrategyStoreTest 기본 기능 테스트")
+class InMemoryStrategyStoreTest : BaseTest() {
     private val productPriceKey = createProductPriceKey("BTCUSDT")
     private val userStrategyKey = createUserStrategyKey("id1", productPriceKey)
     private val strategy = createStrategy(userStrategyKey)
-    private lateinit var store: UserStrategyPort
+    private lateinit var store: StrategyPort
 
     @BeforeEach
     fun setUp() {
-        store = InMemoryUserStrategyStore()
+        store = InMemoryStrategyStore()
         store.add(userStrategyKey, strategy)
     }
 

@@ -4,8 +4,8 @@ import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persist
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RegisterUserStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.UnRegisterUserStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.model.UserStrategyKey
-import com.newy.algotrade.coroutine_based_application.price2.port.out.CreateUserStrategyPort
-import com.newy.algotrade.coroutine_based_application.price2.port.out.DeleteUserStrategyPort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.CreateStrategyPort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.DeleteStrategyPort
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategyId
 import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
@@ -30,7 +30,7 @@ private val userStrategyKey = UserStrategyKey(
     productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 )
 
-class UserStrategyUseCaseTest : CreateUserStrategyPort, DeleteUserStrategyPort {
+class StrategyUseCaseTest : CreateStrategyPort, DeleteStrategyPort {
     private var addedCount = 0
     private var removedCount = 0
     private lateinit var strategy: Strategy

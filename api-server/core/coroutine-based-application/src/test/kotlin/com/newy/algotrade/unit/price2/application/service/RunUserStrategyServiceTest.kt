@@ -1,8 +1,8 @@
 package com.newy.algotrade.unit.price2.application.service
 
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryCandleStore
+import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryStrategyStore
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryUserStrategySignalHistoryStore
-import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryUserStrategyStore
 import com.newy.algotrade.coroutine_based_application.price2.application.service.RunUserStrategyService
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RunUserStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.model.UserStrategyKey
@@ -85,7 +85,7 @@ class RunUserStrategyServiceTest : OnCreateUserStrategySignalPort {
                     )
                 )
             },
-            userStrategyPort = InMemoryUserStrategyStore().also {
+            strategyPort = InMemoryStrategyStore().also {
                 it.add(userStrategyKey("id1", BTC_1MINUTE), BooleanStrategy(entry = true, exit = true))
                 it.add(userStrategyKey("id2", BTC_1MINUTE), BooleanStrategy(entry = false, exit = false))
                 it.add(userStrategyKey("id3", ETH_1MINUTE), BooleanStrategy(entry = true, exit = false))

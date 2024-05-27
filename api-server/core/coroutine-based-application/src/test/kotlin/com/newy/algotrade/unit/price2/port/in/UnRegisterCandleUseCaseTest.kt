@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.price2.port.`in`
 
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.UnRegisterCandleUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.out.DeleteCandlePort
-import com.newy.algotrade.coroutine_based_application.price2.port.out.HasUserStrategyPort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.HasStrategyPort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.UnSubscribePollingProductPricePort
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -20,7 +20,7 @@ private fun productPriceKey(productCode: String, interval: Duration) =
         ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
 
-class UnRegisterCandleUseCaseTest : HasUserStrategyPort, DeleteCandlePort, UnSubscribePollingProductPricePort {
+class UnRegisterCandleUseCaseTest : HasStrategyPort, DeleteCandlePort, UnSubscribePollingProductPricePort {
     private lateinit var service: UnRegisterCandleUseCase
     private var deleteCandleCount = 0
     private var unSubscribeCount = 0
@@ -44,7 +44,7 @@ class UnRegisterCandleUseCaseTest : HasUserStrategyPort, DeleteCandlePort, UnSub
     @BeforeEach
     fun setUp() {
         service = UnRegisterCandleUseCase(
-            userStrategyPort = this,
+            strategyPort = this,
             candlePort = this,
             pollingProductPricePort = this
         )
