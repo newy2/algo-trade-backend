@@ -6,6 +6,7 @@ import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
 import com.newy.algotrade.coroutine_based_application.price2.adpter.out.web.*
+import com.newy.algotrade.coroutine_based_application.price2.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -13,7 +14,9 @@ import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.TestEnv
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Test
@@ -65,10 +68,15 @@ private fun newClient(
                 JsonConverterByJackson(jacksonObjectMapper()),
                 coroutineContext,
             )
-        )
-    ).also {
-        it.setCallback(callback)
-    }
+        ),
+        object : OnReceivePollingPricePort {
+            override fun onReceivePrice(productPriceKey: ProductPriceKey, productPriceList: List<ProductPrice>) {
+                CoroutineScope(coroutineContext).launch {
+                    callback(productPriceKey to productPriceList)
+                }
+            }
+        }
+    )
 }
 
 
