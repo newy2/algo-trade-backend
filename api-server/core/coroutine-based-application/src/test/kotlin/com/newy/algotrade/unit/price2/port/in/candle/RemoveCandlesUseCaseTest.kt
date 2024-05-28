@@ -1,6 +1,6 @@
-package com.newy.algotrade.unit.price2.port.`in`
+package com.newy.algotrade.unit.price2.port.`in`.candle
 
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.UnRegisterCandleUseCase
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.candle.RemoveCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.out.DeleteCandlePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.HasStrategyPort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.UnSubscribePollingProductPricePort
@@ -8,7 +8,7 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import kotlinx.coroutines.runBlocking
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -19,9 +19,8 @@ private fun productPriceKey(productCode: String, interval: Duration) =
     else
         ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
-
-class UnRegisterCandleUseCaseTest : HasStrategyPort, DeleteCandlePort, UnSubscribePollingProductPricePort {
-    private lateinit var service: UnRegisterCandleUseCase
+class RemoveCandlesUseCaseTest : HasStrategyPort, DeleteCandlePort, UnSubscribePollingProductPricePort {
+    private lateinit var service: RemoveCandlesUseCase
     private var deleteCandleCount = 0
     private var unSubscribeCount = 0
 
@@ -43,7 +42,7 @@ class UnRegisterCandleUseCaseTest : HasStrategyPort, DeleteCandlePort, UnSubscri
 
     @BeforeEach
     fun setUp() {
-        service = UnRegisterCandleUseCase(
+        service = RemoveCandlesUseCase(
             strategyPort = this,
             candlePort = this,
             pollingProductPricePort = this
@@ -56,19 +55,19 @@ class UnRegisterCandleUseCaseTest : HasStrategyPort, DeleteCandlePort, UnSubscri
     fun `다른 사용자가 사용 중인 ProductPriceKey 로 unRegister 하는 경우`() = runBlocking {
         val storedProductPriceKey = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 
-        service.unRegister(storedProductPriceKey)
+        service.removeCandles(storedProductPriceKey)
 
-        assertEquals(0, deleteCandleCount)
-        assertEquals(0, unSubscribeCount)
+        Assertions.assertEquals(0, deleteCandleCount)
+        Assertions.assertEquals(0, unSubscribeCount)
     }
 
     @Test
     fun `사용하는 사용자가 없는 ProductPriceKey 로 unRegister 하는 경우`() = runBlocking {
         val unStoredProductPriceKey = productPriceKey("BTCUSDT", Duration.ofMinutes(5))
 
-        service.unRegister(unStoredProductPriceKey)
+        service.removeCandles(unStoredProductPriceKey)
 
-        assertEquals(1, deleteCandleCount)
-        assertEquals(1, unSubscribeCount)
+        Assertions.assertEquals(1, deleteCandleCount)
+        Assertions.assertEquals(1, unSubscribeCount)
     }
 }

@@ -1,7 +1,7 @@
-package com.newy.algotrade.unit.price2.port.`in`
+package com.newy.algotrade.unit.price2.port.`in`.candle
 
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryCandleStore
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RegisterCandleUseCase
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.candle.SetCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.SubscribePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
@@ -35,10 +35,11 @@ private fun productPriceKey(productCode: String, interval: Duration) =
     else
         ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
-class RegisterCandleUseCaseTest : GetProductPricePort, SubscribePollingProductPricePort {
+
+class SetCandlesUseCaseTest : GetProductPricePort, SubscribePollingProductPricePort {
     private var apiCallCount = 0
     private var pollingSubscribeCount = 0
-    private lateinit var service: RegisterCandleUseCase
+    private lateinit var service: SetCandlesUseCase
 
     override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> {
         apiCallCount++
@@ -53,7 +54,7 @@ class RegisterCandleUseCaseTest : GetProductPricePort, SubscribePollingProductPr
     fun setUp() {
         apiCallCount = 0
         pollingSubscribeCount = 0
-        service = RegisterCandleUseCase(
+        service = SetCandlesUseCase(
             productPricePort = this,
             pollingProductPricePort = this,
             candlePort = InMemoryCandleStore(),
@@ -62,7 +63,7 @@ class RegisterCandleUseCaseTest : GetProductPricePort, SubscribePollingProductPr
 
     @Test
     fun `1개 상품만 등록한 경우`() = runBlocking {
-        service.register(productPriceKey("BTCUSDT", Duration.ofMinutes(1)))
+        service.setCandles(productPriceKey("BTCUSDT", Duration.ofMinutes(1)))
 
         assertEquals(1, apiCallCount)
         assertEquals(1, pollingSubscribeCount)
@@ -70,8 +71,8 @@ class RegisterCandleUseCaseTest : GetProductPricePort, SubscribePollingProductPr
 
     @Test
     fun `같은 상품을 등록한 경우`() = runBlocking {
-        service.register(productPriceKey("BTCUSDT", Duration.ofMinutes(1)))
-        service.register(productPriceKey("BTCUSDT", Duration.ofMinutes(1)))
+        service.setCandles(productPriceKey("BTCUSDT", Duration.ofMinutes(1)))
+        service.setCandles(productPriceKey("BTCUSDT", Duration.ofMinutes(1)))
 
         assertEquals(1, apiCallCount)
         assertEquals(2, pollingSubscribeCount, "폴링은 여러번 요청해도 영향 없음")
@@ -79,8 +80,8 @@ class RegisterCandleUseCaseTest : GetProductPricePort, SubscribePollingProductPr
 
     @Test
     fun `다른 상품을 등록한 경우`() = runBlocking {
-        service.register(productPriceKey("BTCUSDT", Duration.ofMinutes(1)))
-        service.register(productPriceKey("BTCUSDT", Duration.ofMinutes(5)))
+        service.setCandles(productPriceKey("BTCUSDT", Duration.ofMinutes(1)))
+        service.setCandles(productPriceKey("BTCUSDT", Duration.ofMinutes(5)))
 
         assertEquals(2, apiCallCount)
         assertEquals(2, pollingSubscribeCount)

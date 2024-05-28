@@ -1,6 +1,6 @@
-package com.newy.algotrade.coroutine_based_application.price2.application.service
+package com.newy.algotrade.coroutine_based_application.price2.application.service.candle
 
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.AddCandleUseCase
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.candle.AddCandleUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.out.AddCandlePort
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
