@@ -1,8 +1,8 @@
-package com.newy.algotrade.unit.price2.port.`in`
+package com.newy.algotrade.unit.price2.port.`in`.strategy
 
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryCandleStore
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RegisterStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.SetStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.price2.port.out.CreateStrategyPort
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategyId
@@ -28,7 +28,7 @@ private val userStrategyKey = UserStrategyKey(
     productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 )
 
-class RegisterStrategyUseCaseTest : CreateStrategyPort {
+class SetStrategyUseCaseTest : CreateStrategyPort {
     private var addedCount = 0
     private lateinit var strategy: Strategy
 
@@ -44,9 +44,9 @@ class RegisterStrategyUseCaseTest : CreateStrategyPort {
 
     @Test
     fun `등록하기`() {
-        val service = RegisterStrategyUseCase(InMemoryCandleStore(), this)
+        val service = SetStrategyUseCase(InMemoryCandleStore(), this)
 
-        service.register(userStrategyKey)
+        service.setStrategy(userStrategyKey)
 
         Assertions.assertEquals(1, addedCount)
         assertTrue(strategy is BuyTripleRSIStrategy)

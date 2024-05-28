@@ -1,13 +1,13 @@
-package com.newy.algotrade.unit.price2.port.`in`
+package com.newy.algotrade.unit.price2.port.`in`.strategy
 
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.UnRegisterStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.RemoveStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.price2.port.out.DeleteStrategyPort
 import com.newy.algotrade.domain.chart.strategy.StrategyId
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -24,7 +24,7 @@ private val userStrategyKey = UserStrategyKey(
     productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 )
 
-class UnRegisterStrategyUseCaseTest : DeleteStrategyPort {
+class RemoveStrategyUseCaseTest : DeleteStrategyPort {
     private var removedCount = 0
 
     override fun remove(key: UserStrategyKey) {
@@ -38,10 +38,10 @@ class UnRegisterStrategyUseCaseTest : DeleteStrategyPort {
 
     @Test
     fun `해제하기`() {
-        val service = UnRegisterStrategyUseCase(this)
+        val service = RemoveStrategyUseCase(this)
 
-        service.unRegister(userStrategyKey)
+        service.removeStrategy(userStrategyKey)
 
-        assertEquals(1, removedCount)
+        Assertions.assertEquals(1, removedCount)
     }
 }

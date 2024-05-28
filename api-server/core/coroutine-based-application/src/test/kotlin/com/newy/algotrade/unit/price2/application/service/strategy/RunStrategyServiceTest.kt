@@ -1,11 +1,11 @@
-package com.newy.algotrade.unit.price2.application.service
+package com.newy.algotrade.unit.price2.application.service.strategy
 
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryStrategyStore
-import com.newy.algotrade.coroutine_based_application.price2.application.service.RunStrategyService
+import com.newy.algotrade.coroutine_based_application.price2.application.service.strategy.RunStrategyService
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RunStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.price2.port.out.*
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderSignal
