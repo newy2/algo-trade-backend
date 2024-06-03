@@ -7,20 +7,12 @@ import com.newy.algotrade.coroutine_based_application.price2.port.out.CreateStra
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategyId
 import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import helpers.productPriceKey
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import kotlin.test.assertTrue
-
-private fun productPriceKey(productCode: String, interval: Duration) =
-    if (productCode == "BTCUSDT")
-        ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
-    else
-        ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
 private val userStrategyKey = UserStrategyKey(
     "user1",

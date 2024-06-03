@@ -6,19 +6,12 @@ import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.user_strategy.GetAllUserStrategyQuery
 import com.newy.algotrade.domain.chart.strategy.StrategyId
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import helpers.productPriceKey
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.Duration
-
-private fun productPriceKey(productCode: String, interval: Duration) =
-    if (productCode == "BTCUSDT")
-        ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
-    else
-        ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
 private fun userStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey) =
     UserStrategyKey(

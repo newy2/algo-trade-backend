@@ -7,10 +7,9 @@ import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProduct
 import com.newy.algotrade.coroutine_based_application.price2.port.out.SubscribePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -30,13 +29,6 @@ private fun productPrice(amount: Int, interval: Duration) =
         0.toBigDecimal(),
     )
 
-private fun productPriceKey(productCode: String, interval: Duration) =
-    if (productCode == "BTCUSDT")
-        ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
-    else
-        ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
-
-
 class SetCandlesServiceTest : GetProductPricePort, SubscribePollingProductPricePort {
     private var apiCallCount = 0
     private var pollingSubscribeCount = 0
@@ -45,10 +37,7 @@ class SetCandlesServiceTest : GetProductPricePort, SubscribePollingProductPriceP
     override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> {
         apiCallCount++
         return listOf(
-            productPrice(
-                1000,
-                param.productPriceKey.interval
-            )
+            productPrice(1000, param.productPriceKey.interval)
         )
     }
 
@@ -69,12 +58,7 @@ class SetCandlesServiceTest : GetProductPricePort, SubscribePollingProductPriceP
 
     @Test
     fun `1개 상품만 등록한 경우`() = runBlocking {
-        service.setCandles(
-            productPriceKey(
-                "BTCUSDT",
-                Duration.ofMinutes(1)
-            )
-        )
+        service.setCandles(productPriceKey("BTCUSDT", Duration.ofMinutes(1)))
 
         assertEquals(1, apiCallCount)
         assertEquals(1, pollingSubscribeCount)
@@ -82,18 +66,8 @@ class SetCandlesServiceTest : GetProductPricePort, SubscribePollingProductPriceP
 
     @Test
     fun `같은 상품을 등록한 경우`() = runBlocking {
-        service.setCandles(
-            productPriceKey(
-                "BTCUSDT",
-                Duration.ofMinutes(1)
-            )
-        )
-        service.setCandles(
-            productPriceKey(
-                "BTCUSDT",
-                Duration.ofMinutes(1)
-            )
-        )
+        service.setCandles(productPriceKey("BTCUSDT", Duration.ofMinutes(1)))
+        service.setCandles(productPriceKey("BTCUSDT", Duration.ofMinutes(1)))
 
         assertEquals(1, apiCallCount)
         assertEquals(2, pollingSubscribeCount, "폴링은 여러번 요청해도 영향 없음")
@@ -101,18 +75,8 @@ class SetCandlesServiceTest : GetProductPricePort, SubscribePollingProductPriceP
 
     @Test
     fun `다른 상품을 등록한 경우`() = runBlocking {
-        service.setCandles(
-            productPriceKey(
-                "BTCUSDT",
-                Duration.ofMinutes(1)
-            )
-        )
-        service.setCandles(
-            productPriceKey(
-                "BTCUSDT",
-                Duration.ofMinutes(5)
-            )
-        )
+        service.setCandles(productPriceKey("BTCUSDT", Duration.ofMinutes(1)))
+        service.setCandles(productPriceKey("BTCUSDT", Duration.ofMinutes(5)))
 
         assertEquals(2, apiCallCount)
         assertEquals(2, pollingSubscribeCount)

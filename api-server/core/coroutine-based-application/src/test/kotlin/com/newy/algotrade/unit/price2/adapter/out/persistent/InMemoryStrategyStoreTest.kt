@@ -6,9 +6,8 @@ import com.newy.algotrade.coroutine_based_application.price2.port.out.StrategyPo
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategyId
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import helpers.productPriceKey
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -16,12 +15,6 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
-
-private fun productPriceKey(productCode: String, interval: Duration) =
-    if (productCode == "BTCUSDT")
-        ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
-    else
-        ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
 
 open class BaseTest {

@@ -12,10 +12,9 @@ import com.newy.algotrade.domain.chart.order.OrderSignal
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategyId
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.BooleanRule
+import helpers.productPriceKey
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -35,12 +34,6 @@ private fun productPrice(amount: Int, interval: Duration, beginTime: OffsetDateT
         amount.toBigDecimal(),
         0.toBigDecimal(),
     )
-
-private fun productPriceKey(productCode: String, interval: Duration) =
-    if (productCode == "BTCUSDT")
-        ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
-    else
-        ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
 private fun userStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey) =
     UserStrategyKey(

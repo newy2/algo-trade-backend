@@ -4,20 +4,13 @@ import com.newy.algotrade.coroutine_based_application.price2.port.`in`.candle.Re
 import com.newy.algotrade.coroutine_based_application.price2.port.out.DeleteCandlePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.HasStrategyPort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.UnSubscribePollingProductPricePort
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
-
-private fun productPriceKey(productCode: String, interval: Duration) =
-    if (productCode == "BTCUSDT")
-        ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
-    else
-        ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
 
 class RemoveCandlesUseCaseTest : HasStrategyPort, DeleteCandlePort, UnSubscribePollingProductPricePort {
     private lateinit var service: RemoveCandlesUseCase

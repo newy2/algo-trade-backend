@@ -3,13 +3,10 @@ package com.newy.algotrade.unit.price2.adapter.out.persistent
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.price2.port.out.CandlePort
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
@@ -24,12 +21,6 @@ fun productPrice(price: Int, beginTime: OffsetDateTime) =
         price.toBigDecimal(),
         0.toBigDecimal()
     )
-
-private fun productPriceKey(productCode: String) =
-    if (productCode == "BTCUSDT")
-        ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, Duration.ofMinutes(1))
-    else
-        ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, Duration.ofMinutes(1))
 
 class InMemoryCandleStoreTest {
     private val productPriceKey = productPriceKey("BTCUSDT")

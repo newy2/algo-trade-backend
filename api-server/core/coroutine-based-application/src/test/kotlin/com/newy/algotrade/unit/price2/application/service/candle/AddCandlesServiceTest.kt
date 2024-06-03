@@ -5,10 +5,8 @@ import com.newy.algotrade.coroutine_based_application.price2.application.service
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.candle.AddCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.out.CandlePort
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import helpers.productPriceKey
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -28,13 +26,6 @@ private fun productPrice(amount: Int, interval: Duration, beginTime: OffsetDateT
         amount.toBigDecimal(),
         0.toBigDecimal(),
     )
-
-private fun productPriceKey(productCode: String, interval: Duration) =
-    if (productCode == "BTCUSDT")
-        ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
-    else
-        ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
-
 
 @DisplayName("캔들 저장 테스트")
 class AddCandlesServiceTest {
