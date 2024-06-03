@@ -4,8 +4,8 @@ import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persist
 import com.newy.algotrade.coroutine_based_application.price2.application.service.candle.AddCandlesService
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.candle.AddCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.out.CandlePort
-import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.extension.ProductPrice
+import helpers.productPrice
 import helpers.productPriceKey
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -15,17 +15,6 @@ import java.time.Duration
 import java.time.OffsetDateTime
 
 private val now = OffsetDateTime.parse("2024-05-01T00:00Z")
-
-// TODO 테스트 헬퍼 메소드로 옮기자
-private fun productPrice(amount: Int, interval: Duration, beginTime: OffsetDateTime = now) =
-    Candle.TimeFrame.from(interval)!!(
-        beginTime,
-        amount.toBigDecimal(),
-        amount.toBigDecimal(),
-        amount.toBigDecimal(),
-        amount.toBigDecimal(),
-        0.toBigDecimal(),
-    )
 
 @DisplayName("캔들 저장 테스트")
 class AddCandlesServiceTest {

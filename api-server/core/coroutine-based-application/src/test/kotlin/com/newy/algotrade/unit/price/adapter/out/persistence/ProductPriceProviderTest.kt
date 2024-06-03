@@ -5,30 +5,17 @@ import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCa
 import com.newy.algotrade.coroutine_based_application.price.domain.ProductPriceProvider
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
-import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import helpers.productPrice
 import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.Duration
-import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertNull
-
-private val now = OffsetDateTime.parse("2024-05-01T00:00Z")
-
-private fun productPrice(amount: Int, interval: Duration) =
-    Candle.TimeFrame.from(interval)!!(
-        now,
-        amount.toBigDecimal(),
-        amount.toBigDecimal(),
-        amount.toBigDecimal(),
-        amount.toBigDecimal(),
-        0.toBigDecimal(),
-    )
 
 private fun providerKey(key: String, productCode: String, interval: Duration) =
     ProductPriceProvider.Key(key, productPriceKey(productCode, interval))

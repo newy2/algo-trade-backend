@@ -6,11 +6,11 @@ import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persist
 import com.newy.algotrade.coroutine_based_application.price2.application.service.strategy.RunStrategyService
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.out.*
-import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderSignal
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import helpers.BooleanRule
+import helpers.productPrice
 import helpers.productPriceKey
 import helpers.userStrategyKey
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -21,17 +21,6 @@ import java.time.Duration
 import java.time.OffsetDateTime
 
 private val now = OffsetDateTime.parse("2024-05-01T00:00Z")
-
-// TODO 테스트 헬퍼 메소드로 옮기자
-private fun productPrice(amount: Int, interval: Duration, beginTime: OffsetDateTime = now) =
-    Candle.TimeFrame.from(interval)!!(
-        beginTime,
-        amount.toBigDecimal(),
-        amount.toBigDecimal(),
-        amount.toBigDecimal(),
-        amount.toBigDecimal(),
-        0.toBigDecimal(),
-    )
 
 class BooleanStrategy(entry: Boolean, exit: Boolean) : Strategy(
     OrderType.BUY,
