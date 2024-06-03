@@ -1,7 +1,7 @@
-package com.newy.algotrade.unit.price2.port.`in`.strategy
+package com.newy.algotrade.unit.price2.application.service.strategy
 
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryCandleStore
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.SetStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.price2.application.service.strategy.SetStrategyService
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.price2.port.out.CreateStrategyPort
 import com.newy.algotrade.domain.chart.strategy.Strategy
@@ -28,7 +28,7 @@ private val userStrategyKey = UserStrategyKey(
     productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 )
 
-class SetStrategyUseCaseTest : CreateStrategyPort {
+class SetStrategyServiceTest : CreateStrategyPort {
     private var addedCount = 0
     private lateinit var strategy: Strategy
 
@@ -44,7 +44,7 @@ class SetStrategyUseCaseTest : CreateStrategyPort {
 
     @Test
     fun `등록하기`() {
-        val service = SetStrategyUseCase(InMemoryCandleStore(), this)
+        val service = SetStrategyService(InMemoryCandleStore(), this)
 
         service.setStrategy(userStrategyKey)
 
