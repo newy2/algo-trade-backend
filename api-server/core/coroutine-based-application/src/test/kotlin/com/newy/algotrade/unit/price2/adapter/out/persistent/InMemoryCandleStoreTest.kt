@@ -74,7 +74,7 @@ class InMemoryCandleStoreTest {
     @Test
     fun `candles 삭제하기`() = runBlocking {
         store.setCandles(productPriceKey, listOf(productPriceWith(1000, now)))
-        store.deleteCandles(productPriceKey)
+        store.removeCandles(productPriceKey)
 
         assertEquals(0, store.getCandles(productPriceKey).size)
     }

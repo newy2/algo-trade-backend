@@ -50,7 +50,7 @@ class AddCandlesServiceTest {
 
     @Test
     fun `제거된 candles 업데이트 하는 경우 - 업데이트가 무시된다`() {
-        candleStore.deleteCandles(productPriceKey)
+        candleStore.removeCandles(productPriceKey)
 
         val candles = service.addCandles(productPriceKey, listOf(nextPrice.next()))
 

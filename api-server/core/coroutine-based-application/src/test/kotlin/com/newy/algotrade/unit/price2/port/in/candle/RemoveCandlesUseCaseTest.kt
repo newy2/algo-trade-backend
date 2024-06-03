@@ -1,8 +1,8 @@
 package com.newy.algotrade.unit.price2.port.`in`.candle
 
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.candle.RemoveCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.price2.port.out.DeleteCandlePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.HasStrategyPort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.RemoveCandlePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.UnSubscribePollingProductPricePort
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.productPriceKey
@@ -12,12 +12,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
-class RemoveCandlesUseCaseTest : HasStrategyPort, DeleteCandlePort, UnSubscribePollingProductPricePort {
+class RemoveCandlesUseCaseTest : HasStrategyPort, RemoveCandlePort, UnSubscribePollingProductPricePort {
     private lateinit var service: RemoveCandlesUseCase
     private var deleteCandleCount = 0
     private var unSubscribeCount = 0
 
-    override fun deleteCandles(key: ProductPriceKey) {
+    override fun removeCandles(key: ProductPriceKey) {
         deleteCandleCount++
     }
 

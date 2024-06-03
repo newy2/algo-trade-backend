@@ -27,7 +27,7 @@ class InMemoryCandleStore : CandlePort {
             it.upsert(list)
         }
 
-    override fun deleteCandles(key: ProductPriceKey) {
+    override fun removeCandles(key: ProductPriceKey) {
         candleMap.remove(key)
     }
 }
