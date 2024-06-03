@@ -4,7 +4,7 @@ import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persist
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryStrategyStore
 import com.newy.algotrade.coroutine_based_application.price2.application.service.strategy.RunStrategyService
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RunStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.price2.port.out.*
 import com.newy.algotrade.domain.chart.Candle

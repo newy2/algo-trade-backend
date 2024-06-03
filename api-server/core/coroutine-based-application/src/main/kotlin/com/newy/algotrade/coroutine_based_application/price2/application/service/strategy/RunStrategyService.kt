@@ -1,6 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.price2.application.service.strategy
 
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.RunStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetCandlePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetStrategyPort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetStrategySignalHistoryPort
