@@ -1,9 +1,9 @@
-package com.newy.algotrade.unit.chart.order
+package com.newy.algotrade.unit.chart.strategy
 
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.order.OrderSignal
-import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 import com.newy.algotrade.domain.chart.order.OrderType
+import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -14,22 +14,22 @@ import java.time.OffsetDateTime
 import kotlin.test.assertFalse
 
 private fun createOrderSignal(tradeType: OrderType) =
-    OrderSignal(
+    StrategySignal(
         tradeType,
         Candle.TimeRange(Duration.ofMinutes(1), OffsetDateTime.now()),
         1000.0.toBigDecimal()
     )
 
-class OrderSignalHistoryTest {
-    private lateinit var history: OrderSignalHistory
+class StrategySignalHistoryTest {
+    private lateinit var history: StrategySignalHistory
 
     @BeforeEach
     fun setUp() {
-        history = OrderSignalHistory()
+        history = StrategySignalHistory()
     }
 
     @Test
-    fun `빈 OrderHistory 인 경우`() {
+    fun `빈 StrategyHistory 인 경우`() {
         assertTrue(history.isEmpty())
         assertFalse(history.isOpened())
         assertEquals(OrderType.NONE, history.firstOrderType())

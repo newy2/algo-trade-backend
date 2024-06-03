@@ -6,9 +6,9 @@ import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persist
 import com.newy.algotrade.coroutine_based_application.price2.application.service.strategy.RunStrategyService
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.out.*
-import com.newy.algotrade.domain.chart.order.OrderSignal
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
+import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import helpers.BooleanRule
 import helpers.productPrice
 import helpers.productPriceKey
@@ -36,9 +36,9 @@ private val ETH_1MINUTE = productPriceKey("ETHUSDT", Duration.ofMinutes(1))
 @DisplayName("전략 실행하기 테스트")
 class RunStrategyServiceTest : OnCreateStrategySignalPort {
     private lateinit var service: RunStrategyUseCase
-    private lateinit var results: MutableMap<String, OrderSignal>
+    private lateinit var results: MutableMap<String, StrategySignal>
 
-    override fun onCreateSignal(userStrategyId: String, orderSignal: OrderSignal) {
+    override fun onCreateSignal(userStrategyId: String, orderSignal: StrategySignal) {
         results[userStrategyId] = orderSignal
     }
 
@@ -74,7 +74,7 @@ class RunStrategyServiceTest : OnCreateStrategySignalPort {
         service.runStrategy(BTC_1MINUTE)
 
         val lastPrice = productPrice(2000, Duration.ofMinutes(1), now.plusMinutes(1))
-        val expected = mapOf("id1" to OrderSignal(OrderType.BUY, lastPrice.time, lastPrice.price.close))
+        val expected = mapOf("id1" to StrategySignal(OrderType.BUY, lastPrice.time, lastPrice.price.close))
 
         assertEquals(expected, results, "OrderSignal 은 Candles#lastCandle 값으로 생성되야 한다")
     }
@@ -84,7 +84,7 @@ class RunStrategyServiceTest : OnCreateStrategySignalPort {
         service.runStrategy(ETH_1MINUTE)
 
         val lastPrice = productPrice(1000, Duration.ofMinutes(1), now.plusMinutes(0))
-        val expected = mapOf("id3" to OrderSignal(OrderType.BUY, lastPrice.time, lastPrice.price.close))
+        val expected = mapOf("id3" to StrategySignal(OrderType.BUY, lastPrice.time, lastPrice.price.close))
 
         assertEquals(expected, results, "OrderSignal 은 Candles#lastCandle 값으로 생성되야 한다")
     }

@@ -1,7 +1,7 @@
 package com.newy.algotrade.domain.chart
 
-import com.newy.algotrade.domain.chart.order.OrderSignalHistory
+import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 
 interface Rule {
-    fun isSatisfied(index: Int, history: OrderSignalHistory? = null): Boolean
+    fun isSatisfied(index: Int, history: StrategySignalHistory? = null): Boolean
 }

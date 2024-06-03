@@ -1,9 +1,11 @@
-package com.newy.algotrade.domain.chart.order
+package com.newy.algotrade.domain.chart.strategy
 
-class OrderSignalHistory() {
-    private val orders = mutableListOf<OrderSignal>()
+import com.newy.algotrade.domain.chart.order.OrderType
 
-    fun add(orderSignal: OrderSignal): Boolean {
+class StrategySignalHistory() {
+    private val orders = mutableListOf<StrategySignal>()
+
+    fun add(orderSignal: StrategySignal): Boolean {
         if (orders.isNotEmpty() && lastOrderType() == orderSignal.type) {
             return false
         }
@@ -38,9 +40,9 @@ class OrderSignalHistory() {
         return first != OrderType.NONE && first == last
     }
 
-    fun lastOrderSignal(): OrderSignal {
+    fun lastOrderSignal(): StrategySignal {
         return orders.last()
     }
 
-    fun orders(): List<OrderSignal> = orders.toList()
+    fun orders(): List<StrategySignal> = orders.toList()
 }

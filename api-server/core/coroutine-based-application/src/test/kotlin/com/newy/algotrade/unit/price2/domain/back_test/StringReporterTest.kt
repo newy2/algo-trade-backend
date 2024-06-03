@@ -2,9 +2,9 @@ package com.newy.algotrade.unit.price2.domain.back_test
 
 import com.newy.algotrade.coroutine_based_application.price2.domain.back_test.StringReporter
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.order.OrderSignal
-import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 import com.newy.algotrade.domain.chart.order.OrderType
+import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -14,14 +14,14 @@ import java.time.OffsetDateTime
 
 @DisplayName("롱주문 문자열 리포트")
 class LongOrderStringReporterTest {
-    private val emptyHistory = OrderSignalHistory()
-    private lateinit var history: OrderSignalHistory
+    private val emptyHistory = StrategySignalHistory()
+    private lateinit var history: StrategySignalHistory
 
     @BeforeEach
     fun setUp() {
-        history = OrderSignalHistory().also {
+        history = StrategySignalHistory().also {
             it.add(
-                OrderSignal(
+                StrategySignal(
                     OrderType.BUY,
                     Candle.TimeRange(
                         Duration.ofMinutes(1),
@@ -60,7 +60,7 @@ class LongOrderStringReporterTest {
     @Test
     fun `entry, exit 주문이 있는 경우`() {
         history.add(
-            OrderSignal(
+            StrategySignal(
                 history.lastOrderType().completedType(),
                 Candle.TimeRange(
                     Duration.ofMinutes(1),
@@ -89,7 +89,7 @@ class LongOrderStringReporterTest {
     @Test
     fun `entry, exit, entry 주문이 있는 경우`() {
         history.add(
-            OrderSignal(
+            StrategySignal(
                 history.lastOrderType().completedType(),
                 Candle.TimeRange(
                     Duration.ofMinutes(1),
@@ -99,7 +99,7 @@ class LongOrderStringReporterTest {
             )
         )
         history.add(
-            OrderSignal(
+            StrategySignal(
                 history.lastOrderType().completedType(),
                 Candle.TimeRange(
                     Duration.ofMinutes(1),
@@ -133,13 +133,13 @@ class LongOrderStringReporterTest {
 
 @DisplayName("숏주문 문자열 리포트")
 class ShortOrderStringReporterTest {
-    private lateinit var history: OrderSignalHistory
+    private lateinit var history: StrategySignalHistory
 
     @BeforeEach
     fun setUp() {
-        history = OrderSignalHistory().also {
+        history = StrategySignalHistory().also {
             it.add(
-                OrderSignal(
+                StrategySignal(
                     OrderType.SELL,
                     Candle.TimeRange(
                         Duration.ofMinutes(1),
@@ -172,7 +172,7 @@ class ShortOrderStringReporterTest {
     @Test
     fun `entry, exit 주문이 있는 경우`() {
         history.add(
-            OrderSignal(
+            StrategySignal(
                 history.lastOrderType().completedType(),
                 Candle.TimeRange(
                     Duration.ofMinutes(1),
@@ -201,7 +201,7 @@ class ShortOrderStringReporterTest {
     @Test
     fun `entry, exit, entry 주문이 있는 경우`() {
         history.add(
-            OrderSignal(
+            StrategySignal(
                 history.lastOrderType().completedType(),
                 Candle.TimeRange(
                     Duration.ofMinutes(1),
@@ -211,7 +211,7 @@ class ShortOrderStringReporterTest {
             )
         )
         history.add(
-            OrderSignal(
+            StrategySignal(
                 history.lastOrderType().completedType(),
                 Candle.TimeRange(
                     Duration.ofMinutes(1),

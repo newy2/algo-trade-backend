@@ -3,8 +3,8 @@ package com.newy.algotrade.unit.price2.adapter.out.persistent
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.price2.port.out.StrategySignalHistoryPort
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.order.OrderSignal
 import com.newy.algotrade.domain.chart.order.OrderType
+import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -13,7 +13,7 @@ import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
 class InMemoryStrategySignalHistoryStoreTest {
-    private val signal = OrderSignal(
+    private val signal = StrategySignal(
         OrderType.BUY,
         Candle.TimeRange(
             Duration.ofMinutes(1),

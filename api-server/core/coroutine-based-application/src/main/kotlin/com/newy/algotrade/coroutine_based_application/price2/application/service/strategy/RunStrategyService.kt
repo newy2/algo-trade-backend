@@ -5,8 +5,8 @@ import com.newy.algotrade.coroutine_based_application.price2.port.out.GetCandleP
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetStrategyPort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetStrategySignalHistoryPort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.OnCreateStrategySignalPort
-import com.newy.algotrade.domain.chart.order.OrderSignal
 import com.newy.algotrade.domain.chart.order.OrderType
+import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
 class RunStrategyService(
@@ -29,7 +29,7 @@ class RunStrategyService(
 
                 strategySignalPort.onCreateSignal(
                     userStrategyId,
-                    OrderSignal(orderType, candles.lastCandle.time, candles.lastCandle.price.close),
+                    StrategySignal(orderType, candles.lastCandle.time, candles.lastCandle.price.close),
                 )
             }
         }

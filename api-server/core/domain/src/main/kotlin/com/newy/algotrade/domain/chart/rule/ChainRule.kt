@@ -1,7 +1,7 @@
 package com.newy.algotrade.domain.chart.rule
 
 import com.newy.algotrade.domain.chart.Rule
-import com.newy.algotrade.domain.chart.order.OrderSignalHistory
+import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 
 class ChainRule(
     private val initialRule: Rule,
@@ -9,7 +9,7 @@ class ChainRule(
     private val chainLinks: List<ChainLink> = c.toList()
 ) : Rule {
     // TODO 나중에 리팩토링 하자. 현재는 Ta4j 의 구현코드로 복붙함
-    override fun isSatisfied(index: Int, history: OrderSignalHistory?): Boolean {
+    override fun isSatisfied(index: Int, history: StrategySignalHistory?): Boolean {
         var lastRuleWasSatisfiedAfterBars = 0
         var startIndex = index
 

@@ -2,7 +2,6 @@ package com.newy.algotrade.domain.chart.strategy
 
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.Rule
-import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
 
@@ -32,7 +31,7 @@ abstract class Strategy(private val entryType: OrderType, private val entryRule:
 
     abstract fun version(): String
 
-    fun shouldOperate(index: Int, history: OrderSignalHistory): OrderType {
+    fun shouldOperate(index: Int, history: StrategySignalHistory): OrderType {
         validate(history)
 
         if (shouldEnter(index, history)) {
@@ -46,16 +45,16 @@ abstract class Strategy(private val entryType: OrderType, private val entryRule:
         return OrderType.NONE
     }
 
-    private fun validate(history: OrderSignalHistory) {
+    private fun validate(history: StrategySignalHistory) {
         // TODO 이거 수상하다. 나중에 필요 없으면 삭제해도 될듯.
         if (!arrayOf(OrderType.NONE, entryType).contains(history.firstOrderType())) {
             throw IllegalArgumentException("entryOrderType 이 다릅니다")
         }
     }
 
-    private fun shouldEnter(index: Int, history: OrderSignalHistory): Boolean =
+    private fun shouldEnter(index: Int, history: StrategySignalHistory): Boolean =
         entryRule.isSatisfied(index, history) && !history.isOpened()
 
-    private fun shouldExit(index: Int, history: OrderSignalHistory): Boolean =
+    private fun shouldExit(index: Int, history: StrategySignalHistory): Boolean =
         exitRule.isSatisfied(index, history) && history.isOpened()
 }

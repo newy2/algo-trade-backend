@@ -1,10 +1,10 @@
 package com.newy.algotrade.unit.chart.strategy
 
 import com.newy.algotrade.domain.chart.*
-import com.newy.algotrade.domain.chart.order.OrderSignal
-import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategyRunner
+import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import helpers.BooleanRule
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -28,13 +28,13 @@ private fun oneMinuteCandle(beginTime: OffsetDateTime, closePrice: Int) =
 class EntryRuleStrategyRunnerTest {
     private val now = OffsetDateTime.now()
     private lateinit var candles: Candles
-    private lateinit var history: OrderSignalHistory
+    private lateinit var history: StrategySignalHistory
     private lateinit var runner: StrategyRunner
 
     @BeforeEach
     fun setUp() {
         candles = DEFAULT_CHART_FACTORY.candles()
-        history = OrderSignalHistory()
+        history = StrategySignalHistory()
         runner = StrategyRunner(
             candles,
             strategy = BaseStrategy(
@@ -50,7 +50,7 @@ class EntryRuleStrategyRunnerTest {
     fun `가격 정보가 1개만 업데이트 된 경우`() {
         val result = runner.run(listOf(oneMinuteCandle(now, 1000)))
 
-        assertEquals(result, OrderSignal(OrderType.BUY, candles.lastCandle.time, candles.lastCandle.price.close))
+        assertEquals(result, StrategySignal(OrderType.BUY, candles.lastCandle.time, candles.lastCandle.price.close))
     }
 
     @Test
@@ -62,7 +62,7 @@ class EntryRuleStrategyRunnerTest {
             )
         )
 
-        assertEquals(result, OrderSignal(OrderType.BUY, candles.lastCandle.time, candles.lastCandle.price.close))
+        assertEquals(result, StrategySignal(OrderType.BUY, candles.lastCandle.time, candles.lastCandle.price.close))
     }
 
     @Test
@@ -86,13 +86,13 @@ class EntryRuleStrategyRunnerTest {
 class OtherSignalStrategyRunnerTest {
     private val now = OffsetDateTime.now()
     private lateinit var candles: Candles
-    private lateinit var history: OrderSignalHistory
+    private lateinit var history: StrategySignalHistory
 
     @BeforeEach
     fun setUp() {
         candles = DEFAULT_CHART_FACTORY.candles()
-        history = OrderSignalHistory().also {
-            it.add(OrderSignal(OrderType.BUY, Candle.TimeRange(Duration.ofMinutes(1), now), 1000.0.toBigDecimal()))
+        history = StrategySignalHistory().also {
+            it.add(StrategySignal(OrderType.BUY, Candle.TimeRange(Duration.ofMinutes(1), now), 1000.0.toBigDecimal()))
         }
     }
 
@@ -111,7 +111,7 @@ class OtherSignalStrategyRunnerTest {
 
         val result = runner.run(listOf(oneMinuteCandle(now, 1000)))
 
-        assertEquals(result, OrderSignal(OrderType.SELL, candles.lastCandle.time, candles.lastCandle.price.close))
+        assertEquals(result, StrategySignal(OrderType.SELL, candles.lastCandle.time, candles.lastCandle.price.close))
         assertEquals(OrderType.SELL, history.lastOrderType(), "OrderSignalHistory 업데이트 됨")
     }
 
@@ -129,7 +129,7 @@ class OtherSignalStrategyRunnerTest {
 
         val result = runner.run(listOf(oneMinuteCandle(now, 1000)))
 
-        assertEquals(result, OrderSignal(OrderType.NONE, candles.lastCandle.time, candles.lastCandle.price.close))
+        assertEquals(result, StrategySignal(OrderType.NONE, candles.lastCandle.time, candles.lastCandle.price.close))
         assertEquals(OrderType.BUY, history.lastOrderType(), "OrderType.NONE 은 추가하지 않음")
     }
 }

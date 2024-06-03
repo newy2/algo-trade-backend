@@ -2,10 +2,10 @@ package com.newy.algotrade.unit.chart.strategy
 
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Rule
-import com.newy.algotrade.domain.chart.order.OrderSignal
-import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
+import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import helpers.BooleanRule
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -14,7 +14,7 @@ import java.time.OffsetDateTime
 
 
 private fun createOrderSignal(tradeType: OrderType) =
-    OrderSignal(
+    StrategySignal(
         tradeType,
         Candle.TimeRange(Duration.ofMinutes(1), OffsetDateTime.now()),
         1000.0.toBigDecimal()
@@ -28,17 +28,17 @@ class StrategyTest {
     private val index = 0
     private val entryType = OrderType.BUY
 
-    private lateinit var emptyHistory: OrderSignalHistory
-    private lateinit var enteredHistory: OrderSignalHistory
-    private lateinit var exitedHistory: OrderSignalHistory
+    private lateinit var emptyHistory: StrategySignalHistory
+    private lateinit var enteredHistory: StrategySignalHistory
+    private lateinit var exitedHistory: StrategySignalHistory
 
     @BeforeEach
     fun setUp() {
-        emptyHistory = OrderSignalHistory()
-        enteredHistory = OrderSignalHistory().also {
+        emptyHistory = StrategySignalHistory()
+        enteredHistory = StrategySignalHistory().also {
             it.add(createOrderSignal(entryType))
         }
-        exitedHistory = OrderSignalHistory().also {
+        exitedHistory = StrategySignalHistory().also {
             it.add(createOrderSignal(entryType))
             it.add(createOrderSignal(entryType.completedType()))
         }
@@ -110,17 +110,17 @@ class DifferentEntryOrderTypeTest {
     private val index = 0
     private val entryType = OrderType.SELL
 
-    private lateinit var emptyHistory: OrderSignalHistory
-    private lateinit var enteredHistory: OrderSignalHistory
-    private lateinit var enteredHistoryWithDifferentOrderType: OrderSignalHistory
+    private lateinit var emptyHistory: StrategySignalHistory
+    private lateinit var enteredHistory: StrategySignalHistory
+    private lateinit var enteredHistoryWithDifferentOrderType: StrategySignalHistory
 
     @BeforeEach
     fun setUp() {
-        emptyHistory = OrderSignalHistory()
-        enteredHistory = OrderSignalHistory().also {
+        emptyHistory = StrategySignalHistory()
+        enteredHistory = StrategySignalHistory().also {
             it.add(createOrderSignal(entryType))
         }
-        enteredHistoryWithDifferentOrderType = OrderSignalHistory().also {
+        enteredHistoryWithDifferentOrderType = StrategySignalHistory().also {
             it.add(createOrderSignal(entryType.completedType()))
         }
     }

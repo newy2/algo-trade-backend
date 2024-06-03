@@ -5,11 +5,11 @@ import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.Rule
 import com.newy.algotrade.domain.chart.indicator.ClosePriceIndicator
-import com.newy.algotrade.domain.chart.order.OrderSignal
-import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.rule.StopGainRule
 import com.newy.algotrade.domain.chart.rule.StopLossRule
+import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -29,9 +29,9 @@ class StopGainRuleTest {
             it.upsert(baseCandle(closePrice = 1100, startTime = now.plusMinutes(2)))
         }
 
-        val history = OrderSignalHistory().also {
+        val history = StrategySignalHistory().also {
             it.add(
-                OrderSignal(
+                StrategySignal(
                     OrderType.BUY,
                     candles.firstCandle.time,
                     candles.firstCandle.price.close
@@ -82,9 +82,9 @@ class DownFlowStopGainOrLossRuleTest {
 
     @Test
     fun `하락 추세일 때, 숏 포지션인 경우 StopGainRule 이 통과됨`() {
-        val shortPositionHistory = OrderSignalHistory().also {
+        val shortPositionHistory = StrategySignalHistory().also {
             val firstCandle = candles.firstCandle
-            it.add(OrderSignal(OrderType.SELL, firstCandle.time, firstCandle.price.close))
+            it.add(StrategySignal(OrderType.SELL, firstCandle.time, firstCandle.price.close))
         }
 
         stopGainRule.run {
@@ -104,9 +104,9 @@ class DownFlowStopGainOrLossRuleTest {
 
     @Test
     fun `하락 추세일 때, 롱 포지션(또는 현물)인 경우 StopLossRule 이 통과됨`() {
-        val longPositionHistory = OrderSignalHistory().also {
+        val longPositionHistory = StrategySignalHistory().also {
             val firstCandle = candles.firstCandle
-            it.add(OrderSignal(OrderType.BUY, firstCandle.time, firstCandle.price.close))
+            it.add(StrategySignal(OrderType.BUY, firstCandle.time, firstCandle.price.close))
         }
 
         stopGainRule.run {
@@ -149,9 +149,9 @@ class UpFlowStopGainOrLossRuleTest {
 
     @Test
     fun `상승 추세일 때, 숏 포지션인 경우 StopLossRule 이 통과됨`() {
-        val shortPositionHistory = OrderSignalHistory().also {
+        val shortPositionHistory = StrategySignalHistory().also {
             val firstCandle = candles.firstCandle
-            it.add(OrderSignal(OrderType.SELL, firstCandle.time, firstCandle.price.close))
+            it.add(StrategySignal(OrderType.SELL, firstCandle.time, firstCandle.price.close))
         }
 
         stopGainRule.run {
@@ -171,9 +171,9 @@ class UpFlowStopGainOrLossRuleTest {
 
     @Test
     fun `상승 추세일 때, 롱 포지션(또는 현물)인 경우 StopGainRule 이 통과됨`() {
-        val longPositionHistory = OrderSignalHistory().also {
+        val longPositionHistory = StrategySignalHistory().also {
             val firstCandle = candles.firstCandle
-            it.add(OrderSignal(OrderType.BUY, firstCandle.time, firstCandle.price.close))
+            it.add(StrategySignal(OrderType.BUY, firstCandle.time, firstCandle.price.close))
         }
 
         stopGainRule.run {

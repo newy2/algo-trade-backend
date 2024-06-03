@@ -1,10 +1,10 @@
 package com.newy.algotrade.coroutine_based_application.price2.domain.back_test
 
-import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 import com.newy.algotrade.domain.chart.order.OrderType
+import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import java.math.BigDecimal
 
-class StringReporter(private val history: OrderSignalHistory) {
+class StringReporter(private val history: StrategySignalHistory) {
     fun report(): String {
         if (history.isEmpty()) {
             return ""

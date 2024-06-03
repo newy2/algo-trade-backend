@@ -2,8 +2,8 @@ package com.newy.algotrade.domain.chart.rule
 
 import com.newy.algotrade.domain.chart.Rule
 import com.newy.algotrade.domain.chart.indicator.ClosePriceIndicator
-import com.newy.algotrade.domain.chart.order.OrderSignalHistory
 import com.newy.algotrade.domain.chart.order.OrderType
+import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import java.math.BigDecimal
 
 class StopGainRule(
@@ -19,7 +19,7 @@ class StopGainRule(
         gainPercentage.toDouble().toBigDecimal()
     )
 
-    override fun isSatisfied(index: Int, history: OrderSignalHistory?): Boolean {
+    override fun isSatisfied(index: Int, history: StrategySignalHistory?): Boolean {
         return history?.let {
             if (!it.isOpened()) {
                 return false
