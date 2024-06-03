@@ -59,9 +59,9 @@ class RunStrategyServiceTest : OnCreateStrategySignalPort {
                 )
             },
             strategyPort = InMemoryStrategyStore().also {
-                it.add(userStrategyKey("id1", BTC_1MINUTE), BooleanStrategy(entry = true, exit = true))
-                it.add(userStrategyKey("id2", BTC_1MINUTE), BooleanStrategy(entry = false, exit = false))
-                it.add(userStrategyKey("id3", ETH_1MINUTE), BooleanStrategy(entry = true, exit = false))
+                it.addStrategy(userStrategyKey("id1", BTC_1MINUTE), BooleanStrategy(entry = true, exit = true))
+                it.addStrategy(userStrategyKey("id2", BTC_1MINUTE), BooleanStrategy(entry = false, exit = false))
+                it.addStrategy(userStrategyKey("id3", ETH_1MINUTE), BooleanStrategy(entry = true, exit = false))
             },
             strategySignalHistoryPort = InMemoryStrategySignalHistoryStore(),
             strategySignalPort = this

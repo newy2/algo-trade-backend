@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.price2.port.`in`.strategy
 
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.RemoveStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.model.UserStrategyKey
-import com.newy.algotrade.coroutine_based_application.price2.port.out.DeleteStrategyPort
+import com.newy.algotrade.coroutine_based_application.price2.port.out.RemoveStrategyPort
 import com.newy.algotrade.domain.chart.strategy.StrategyId
 import helpers.productPriceKey
 import org.junit.jupiter.api.Assertions
@@ -16,10 +16,10 @@ private val userStrategyKey = UserStrategyKey(
     productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 )
 
-class RemoveStrategyUseCaseTest : DeleteStrategyPort {
+class RemoveStrategyUseCaseTest : RemoveStrategyPort {
     private var removedCount = 0
 
-    override fun remove(key: UserStrategyKey) {
+    override fun removeStrategy(key: UserStrategyKey) {
         removedCount++
     }
 
