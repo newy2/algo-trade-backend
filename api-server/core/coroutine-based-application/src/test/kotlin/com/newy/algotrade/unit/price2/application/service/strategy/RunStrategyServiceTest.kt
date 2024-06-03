@@ -5,16 +5,14 @@ import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persist
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.persistent.InMemoryStrategyStore
 import com.newy.algotrade.coroutine_based_application.price2.application.service.strategy.RunStrategyService
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.RunStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.price2.port.out.*
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderSignal
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
-import com.newy.algotrade.domain.chart.strategy.StrategyId
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.BooleanRule
 import helpers.productPriceKey
+import helpers.userStrategyKey
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -33,13 +31,6 @@ private fun productPrice(amount: Int, interval: Duration, beginTime: OffsetDateT
         amount.toBigDecimal(),
         amount.toBigDecimal(),
         0.toBigDecimal(),
-    )
-
-private fun userStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey) =
-    UserStrategyKey(
-        userStrategyId,
-        StrategyId.BuyTripleRSIStrategy,
-        productPriceKey
     )
 
 class BooleanStrategy(entry: Boolean, exit: Boolean) : Strategy(

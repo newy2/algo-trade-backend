@@ -5,20 +5,13 @@ import com.newy.algotrade.coroutine_based_application.price2.port.`in`.candle.Se
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.SetStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.user_strategy.GetAllUserStrategyQuery
-import com.newy.algotrade.domain.chart.strategy.StrategyId
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.productPriceKey
+import helpers.userStrategyKey
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.Duration
-
-private fun userStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey) =
-    UserStrategyKey(
-        userStrategyId,
-        StrategyId.BuyTripleRSIStrategy,
-        productPriceKey
-    )
 
 class InitControllerTest : GetAllUserStrategyQuery, SetCandlesUseCase, SetStrategyUseCase {
     private var log: String = ""
