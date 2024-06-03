@@ -8,6 +8,6 @@ class AddStrategySignalHistoryService(
     private val strategySignalHistoryPort: AddStrategySignalHistoryPort
 ) : AddStrategySignalHistoryUseCase {
     override fun addHistory(userStrategyId: String, signal: StrategySignal) {
-        strategySignalHistoryPort.add(userStrategyId, signal)
+        strategySignalHistoryPort.addHistory(userStrategyId, signal)
     }
 }

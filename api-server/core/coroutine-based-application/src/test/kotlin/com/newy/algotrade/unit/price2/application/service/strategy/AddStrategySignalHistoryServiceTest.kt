@@ -26,6 +26,6 @@ class AddStrategySignalHistoryServiceTest {
 
         service.addHistory("id1", signal)
 
-        assertEquals(signal, store.get("id1").lastOrderSignal())
+        assertEquals(signal, store.getHistory("id1").lastOrderSignal())
     }
 }

@@ -20,7 +20,7 @@ class RunStrategyService(
 
         strategyPort.filterBy(productPriceKey).forEach { (userStrategyKey, strategy) ->
             val userStrategyId = userStrategyKey.userStrategyId
-            val history = strategySignalHistoryPort.get(userStrategyId)
+            val history = strategySignalHistoryPort.getHistory(userStrategyId)
 
             strategy.shouldOperate(candles.lastIndex, history).let { orderType ->
                 if (orderType == OrderType.NONE) {

@@ -27,14 +27,14 @@ class InMemoryStrategySignalHistoryStoreTest {
     @BeforeEach
     fun setUp() {
         store = InMemoryStrategySignalHistoryStore().also {
-            it.add("id1", signal)
+            it.addHistory("id1", signal)
         }
     }
 
     @Test
     fun `등록한 히스토리 가져오기`() {
         val registeredId = "id1"
-        val history = store.get(registeredId)
+        val history = store.getHistory(registeredId)
 
         history.orders().let {
             assertEquals(1, it.size)
@@ -45,17 +45,17 @@ class InMemoryStrategySignalHistoryStoreTest {
     @Test
     fun `등록하지 않은 히스토리 가져오기`() {
         val unRegisteredId = "id2"
-        val history = store.get(unRegisteredId)
+        val history = store.getHistory(unRegisteredId)
 
         assertTrue(history.isEmpty())
     }
 
     @Test
     fun `등록한 히스토리 삭제하기`() {
-        store.remove("id1")
+        store.removeHistory("id1")
 
         val removedId = "id1"
-        val history = store.get(removedId)
+        val history = store.getHistory(removedId)
 
         assertTrue(history.isEmpty())
     }
