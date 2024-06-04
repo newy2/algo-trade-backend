@@ -27,9 +27,9 @@ class StopGainRule(
 
             val currentPrice = closePrice[index]
             if (it.lastOrderType() == OrderType.BUY) {
-                isBuyGainSatisfied(history.lastOrderSignal().orderPrice, currentPrice)
+                isBuyGainSatisfied(history.lastStrategySignal().price, currentPrice)
             } else {
-                isSellGainSatisfied(history.lastOrderSignal().orderPrice, currentPrice)
+                isSellGainSatisfied(history.lastStrategySignal().price, currentPrice)
             }
         } ?: false
     }

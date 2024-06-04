@@ -7,6 +7,7 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
+@Deprecated("미사용 코드")
 class UserStrategyRunner(
     val productPriceProviderKey: ProductPriceProvider.Key,
     private val candles: Candles,

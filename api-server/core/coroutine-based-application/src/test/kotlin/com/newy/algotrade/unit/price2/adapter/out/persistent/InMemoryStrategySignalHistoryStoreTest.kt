@@ -42,7 +42,7 @@ class InMemoryStrategySignalHistoryStoreTest {
         val registeredId = "id1"
         val history = store.getHistory(registeredId)
 
-        history.orders().let {
+        history.strategySignals().let {
             assertEquals(1, it.size)
             assertEquals(signal, it.first())
         }

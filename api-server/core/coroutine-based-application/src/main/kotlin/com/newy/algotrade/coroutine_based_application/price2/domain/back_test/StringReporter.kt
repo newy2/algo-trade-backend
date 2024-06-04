@@ -15,31 +15,31 @@ class StringReporter(private val history: StrategySignalHistory) {
         var entryCount = 0
         var exitCount = 0
         val revenues = mutableListOf<BigDecimal>()
-        history.orders().chunked(2).forEach {
+        history.strategySignals().chunked(2).forEach {
             val entry = it[0]
             val exit = it.getOrNull(1)
 
             result.appendLine("ENTRY TIME: ${entry.timeFrame.begin}")
             result.appendLine("EXIT TIME: ${exit?.timeFrame?.begin ?: "-"}")
-            result.appendLine("ENTRY PRICE: ${entry.orderPrice}")
-            result.appendLine("EXIT PRICE: ${exit?.orderPrice ?: "-"}")
+            result.appendLine("ENTRY PRICE: ${entry.price}")
+            result.appendLine("EXIT PRICE: ${exit?.price ?: "-"}")
             result.appendLine("--------------------")
 
             entryCount++
             if (exit != null) {
                 exitCount++
                 revenues.add(
-                    if (entry.type == OrderType.BUY)
-                        exit.orderPrice - entry.orderPrice
+                    if (entry.orderType == OrderType.BUY)
+                        exit.price - entry.price
                     else
-                        entry.orderPrice - exit.orderPrice
+                        entry.price - exit.price
                 )
             }
         }
 
         val (totalRevenue, totalRevenueRate) = if (revenues.isNotEmpty()) {
             val revenue = revenues.sumOf { it }
-            val revenueRate = revenue.setScale(2) / history.orders().first().orderPrice * 100.toBigDecimal()
+            val revenueRate = revenue.setScale(2) / history.strategySignals().first().price * 100.toBigDecimal()
             revenue to "${revenueRate}%"
         } else {
             "-" to "-"

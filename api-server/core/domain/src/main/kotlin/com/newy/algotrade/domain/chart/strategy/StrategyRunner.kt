@@ -4,6 +4,7 @@ import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.order.OrderType
 
+@Deprecated("미사용 코드")
 class StrategyRunner(
     private val candles: Candles,
     private val strategy: Strategy,
@@ -17,7 +18,7 @@ class StrategyRunner(
             candles.lastCandle.time,
             candles.lastCandle.price.close,
         ).also {
-            if (it.type != OrderType.NONE) {
+            if (it.orderType != OrderType.NONE) {
                 history.add(it)
             }
         }
