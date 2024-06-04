@@ -1,6 +1,7 @@
 package com.newy.algotrade.unit.price2.adapter.`in`.system
 
 import com.newy.algotrade.coroutine_based_application.price2.adapter.`in`.system.InitController
+import com.newy.algotrade.coroutine_based_application.price2.adapter.`in`.web.SetUserStrategyController
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.candle.SetCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.SetStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.model.UserStrategyKey
@@ -33,7 +34,10 @@ class InitControllerTest : GetAllUserStrategyQuery, SetCandlesUseCase, SetStrate
 
     @Test
     fun `UseCase 호출 순서 확인`() = runTest {
-        val controller = InitController(this@InitControllerTest, this@InitControllerTest, this@InitControllerTest)
+        val controller = InitController(
+            SetUserStrategyController(this@InitControllerTest, this@InitControllerTest),
+            this@InitControllerTest,
+        )
 
         controller.init()
 
