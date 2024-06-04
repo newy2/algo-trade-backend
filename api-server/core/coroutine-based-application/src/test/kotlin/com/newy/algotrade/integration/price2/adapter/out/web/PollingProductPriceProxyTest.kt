@@ -70,7 +70,10 @@ private fun newClient(
             )
         ),
         object : OnReceivePollingPricePort {
-            override fun onReceivePrice(productPriceKey: ProductPriceKey, productPriceList: List<ProductPrice>) {
+            override suspend fun onReceivePrice(
+                productPriceKey: ProductPriceKey,
+                productPriceList: List<ProductPrice>
+            ) {
                 CoroutineScope(coroutineContext).launch {
                     callback(productPriceKey to productPriceList)
                 }

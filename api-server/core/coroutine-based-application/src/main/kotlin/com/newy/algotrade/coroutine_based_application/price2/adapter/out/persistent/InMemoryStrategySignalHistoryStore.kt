@@ -7,16 +7,16 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 class InMemoryStrategySignalHistoryStore : StrategySignalHistoryPort {
     private val historyMap = mutableMapOf<String, StrategySignalHistory>()
 
-    override fun getHistory(userStrategyId: String): StrategySignalHistory {
+    override suspend fun getHistory(userStrategyId: String): StrategySignalHistory {
         return historyMap[userStrategyId] ?: StrategySignalHistory()
     }
 
-    override fun addHistory(userStrategyId: String, signal: StrategySignal) {
+    override suspend fun addHistory(userStrategyId: String, signal: StrategySignal) {
         val history = historyMap[userStrategyId] ?: StrategySignalHistory().also { historyMap[userStrategyId] = it }
         history.add(signal)
     }
 
-    override fun removeHistory(userStrategyId: String) {
+    override suspend fun removeHistory(userStrategyId: String) {
         historyMap.remove(userStrategyId)
     }
 }

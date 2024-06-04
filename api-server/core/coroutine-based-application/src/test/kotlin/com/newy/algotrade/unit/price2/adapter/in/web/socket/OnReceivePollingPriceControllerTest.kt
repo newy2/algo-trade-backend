@@ -10,6 +10,7 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -22,14 +23,17 @@ class OnReceivePollingPriceControllerTest : AddCandlesUseCase, RunStrategyUseCas
         return DEFAULT_CHART_FACTORY.candles()
     }
 
-    override fun runStrategy(productPriceKey: ProductPriceKey) {
+    override suspend fun runStrategy(productPriceKey: ProductPriceKey) {
         log += "run "
     }
 
 
     @Test
-    fun `UseCase 호출 순서 확인`() {
-        val controller = OnReceivePollingPriceController(this, this)
+    fun `UseCase 호출 순서 확인`() = runTest {
+        val controller = OnReceivePollingPriceController(
+            this@OnReceivePollingPriceControllerTest,
+            this@OnReceivePollingPriceControllerTest,
+        )
         val productPriceKey = ProductPriceKey(Market.BY_BIT, ProductType.SPOT, "BTCUSDT", Duration.ofMinutes(1))
         val productPriceList = emptyList<ProductPrice>()
 

@@ -7,7 +7,7 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignal
 class AddStrategySignalHistoryService(
     private val strategySignalHistoryPort: AddStrategySignalHistoryPort
 ) : AddStrategySignalHistoryUseCase {
-    override fun addHistory(userStrategyId: String, signal: StrategySignal) {
+    override suspend fun addHistory(userStrategyId: String, signal: StrategySignal) {
         strategySignalHistoryPort.addHistory(userStrategyId, signal)
     }
 }

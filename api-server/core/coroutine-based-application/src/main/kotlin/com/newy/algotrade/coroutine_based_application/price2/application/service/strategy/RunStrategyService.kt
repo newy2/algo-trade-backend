@@ -15,7 +15,7 @@ class RunStrategyService(
     private val strategySignalHistoryPort: GetStrategySignalHistoryPort,
     private val strategySignalPort: OnCreateStrategySignalPort,
 ) : RunStrategyUseCase {
-    override fun runStrategy(productPriceKey: ProductPriceKey) {
+    override suspend fun runStrategy(productPriceKey: ProductPriceKey) {
         val candles = candlePort.getCandles(productPriceKey).takeIf { it.size > 0 } ?: return
 
         strategyPort.filterBy(productPriceKey).forEach { (userStrategyKey, strategy) ->

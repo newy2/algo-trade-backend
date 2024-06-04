@@ -5,6 +5,10 @@ import com.newy.algotrade.coroutine_based_application.price2.port.out.StrategySi
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -26,13 +30,15 @@ class InMemoryStrategySignalHistoryStoreTest {
 
     @BeforeEach
     fun setUp() {
-        store = InMemoryStrategySignalHistoryStore().also {
-            it.addHistory("id1", signal)
+        CoroutineScope(Dispatchers.Default).launch {
+            store = InMemoryStrategySignalHistoryStore().also {
+                it.addHistory("id1", signal)
+            }
         }
     }
 
     @Test
-    fun `등록한 히스토리 가져오기`() {
+    fun `등록한 히스토리 가져오기`() = runTest {
         val registeredId = "id1"
         val history = store.getHistory(registeredId)
 
@@ -43,7 +49,7 @@ class InMemoryStrategySignalHistoryStoreTest {
     }
 
     @Test
-    fun `등록하지 않은 히스토리 가져오기`() {
+    fun `등록하지 않은 히스토리 가져오기`() = runTest {
         val unRegisteredId = "id2"
         val history = store.getHistory(unRegisteredId)
 
@@ -51,7 +57,7 @@ class InMemoryStrategySignalHistoryStoreTest {
     }
 
     @Test
-    fun `등록한 히스토리 삭제하기`() {
+    fun `등록한 히스토리 삭제하기`() = runTest {
         store.removeHistory("id1")
 
         val removedId = "id1"

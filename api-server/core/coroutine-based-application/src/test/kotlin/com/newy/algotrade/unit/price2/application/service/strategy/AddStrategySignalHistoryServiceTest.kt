@@ -5,6 +5,7 @@ import com.newy.algotrade.coroutine_based_application.price2.application.service
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -12,7 +13,7 @@ import kotlin.test.assertEquals
 
 class AddStrategySignalHistoryServiceTest {
     @Test
-    fun `OrderSignal 추가하기`() {
+    fun `OrderSignal 추가하기`() = runTest {
         val store = InMemoryStrategySignalHistoryStore()
         val service = AddStrategySignalHistoryService(store)
         val signal = StrategySignal(

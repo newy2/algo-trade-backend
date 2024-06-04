@@ -7,7 +7,7 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignal
 class OnCreateStrategySignalController(
     private val strategySignalHistoryUseCase: AddStrategySignalHistoryUseCase
 ) : OnCreateStrategySignalPort {
-    override fun onCreateSignal(userStrategyId: String, signal: StrategySignal) {
+    override suspend fun onCreateSignal(userStrategyId: String, signal: StrategySignal) {
         strategySignalHistoryUseCase.addHistory(userStrategyId, signal)
     }
 }

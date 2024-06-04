@@ -4,5 +4,5 @@ import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
 interface OnReceivePollingPricePort {
-    fun onReceivePrice(productPriceKey: ProductPriceKey, productPriceList: List<ProductPrice>)
+    suspend fun onReceivePrice(productPriceKey: ProductPriceKey, productPriceList: List<ProductPrice>)
 }

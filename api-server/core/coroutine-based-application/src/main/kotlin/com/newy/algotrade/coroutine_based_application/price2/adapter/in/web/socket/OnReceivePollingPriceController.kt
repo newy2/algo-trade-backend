@@ -10,7 +10,7 @@ class OnReceivePollingPriceController(
     private val candleUseCase: AddCandlesUseCase,
     private val runStrategyUseCase: RunStrategyUseCase,
 ) : OnReceivePollingPricePort {
-    override fun onReceivePrice(productPriceKey: ProductPriceKey, productPriceList: List<ProductPrice>) {
+    override suspend fun onReceivePrice(productPriceKey: ProductPriceKey, productPriceList: List<ProductPrice>) {
         candleUseCase.addCandles(productPriceKey, productPriceList)
         runStrategyUseCase.runStrategy(productPriceKey)
     }

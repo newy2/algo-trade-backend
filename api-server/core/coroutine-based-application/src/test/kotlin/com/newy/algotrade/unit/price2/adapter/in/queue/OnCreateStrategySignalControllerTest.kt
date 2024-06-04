@@ -5,6 +5,7 @@ import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -12,7 +13,7 @@ import java.time.OffsetDateTime
 
 class OnCreateStrategySignalControllerTest : AddStrategySignalHistoryUseCase {
     private var log: String = ""
-    override fun addHistory(userStrategyId: String, signal: StrategySignal) {
+    override suspend fun addHistory(userStrategyId: String, signal: StrategySignal) {
         log += "addHistory "
     }
 
@@ -21,8 +22,8 @@ class OnCreateStrategySignalControllerTest : AddStrategySignalHistoryUseCase {
     // TODO 주문 API 호출
 
     @Test
-    fun `UseCase 호출 순서 확인`() {
-        val controller = OnCreateStrategySignalController(this)
+    fun `UseCase 호출 순서 확인`() = runTest {
+        val controller = OnCreateStrategySignalController(this@OnCreateStrategySignalControllerTest)
         val signal = StrategySignal(
             OrderType.BUY,
             Candle.TimeRange(

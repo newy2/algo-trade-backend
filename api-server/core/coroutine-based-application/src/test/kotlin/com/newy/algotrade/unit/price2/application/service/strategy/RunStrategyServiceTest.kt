@@ -13,6 +13,7 @@ import helpers.BooleanRule
 import helpers.productPrice
 import helpers.productPriceKey
 import helpers.userStrategyKey
+import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -38,7 +39,7 @@ class RunStrategyServiceTest : OnCreateStrategySignalPort {
     private lateinit var service: RunStrategyUseCase
     private lateinit var results: MutableMap<String, StrategySignal>
 
-    override fun onCreateSignal(userStrategyId: String, orderSignal: StrategySignal) {
+    override suspend fun onCreateSignal(userStrategyId: String, orderSignal: StrategySignal) {
         results[userStrategyId] = orderSignal
     }
 
@@ -70,7 +71,7 @@ class RunStrategyServiceTest : OnCreateStrategySignalPort {
     }
 
     @Test
-    fun `BTC 상품코드로 실행`() {
+    fun `BTC 상품코드로 실행`() = runTest {
         service.runStrategy(BTC_1MINUTE)
 
         val lastPrice = productPrice(2000, Duration.ofMinutes(1), now.plusMinutes(1))
@@ -80,7 +81,7 @@ class RunStrategyServiceTest : OnCreateStrategySignalPort {
     }
 
     @Test
-    fun `ETH 상품 코드로 실행`() {
+    fun `ETH 상품 코드로 실행`() = runTest {
         service.runStrategy(ETH_1MINUTE)
 
         val lastPrice = productPrice(1000, Duration.ofMinutes(1), now.plusMinutes(0))
