@@ -35,16 +35,18 @@ private val BTC_1MINUTE = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 private val ETH_1MINUTE = productPriceKey("ETHUSDT", Duration.ofMinutes(1))
 
 @DisplayName("전략 실행하기 테스트")
-class RunStrategyServiceTest : OnCreateStrategySignalPort {
+class RunStrategyServiceTest : OnCreatedStrategySignalPort {
     private lateinit var service: RunStrategyUseCase
+    private lateinit var strategySignalHistoryPort: StrategySignalHistoryPort
     private lateinit var results: MutableMap<String, StrategySignal>
 
-    override suspend fun onCreateSignal(userStrategyId: String, orderSignal: StrategySignal) {
+    override suspend fun onCreatedSignal(userStrategyId: String, orderSignal: StrategySignal) {
         results[userStrategyId] = orderSignal
     }
 
     @BeforeEach
     fun setUp() {
+        strategySignalHistoryPort = InMemoryStrategySignalHistoryStore()
         service = RunStrategyService(
             candlePort = InMemoryCandleStore().also {
                 it.setCandles(
@@ -64,8 +66,8 @@ class RunStrategyServiceTest : OnCreateStrategySignalPort {
                 it.addStrategy(userStrategyKey("id2", BTC_1MINUTE), BooleanStrategy(entry = false, exit = false))
                 it.addStrategy(userStrategyKey("id3", ETH_1MINUTE), BooleanStrategy(entry = true, exit = false))
             },
-            strategySignalHistoryPort = InMemoryStrategySignalHistoryStore(),
-            strategySignalPort = this
+            strategySignalHistoryPort = strategySignalHistoryPort,
+            onCreatedStrategySignalPort = this
         )
         results = mutableMapOf()
     }
@@ -75,9 +77,13 @@ class RunStrategyServiceTest : OnCreateStrategySignalPort {
         service.runStrategy(BTC_1MINUTE)
 
         val lastPrice = productPrice(2000, Duration.ofMinutes(1), now.plusMinutes(1))
-        val expected = mapOf("id1" to StrategySignal(OrderType.BUY, lastPrice.time, lastPrice.price.close))
+        val signal = StrategySignal(OrderType.BUY, lastPrice.time, lastPrice.price.close)
 
-        assertEquals(expected, results, "OrderSignal 은 Candles#lastCandle 값으로 생성되야 한다")
+        assertEquals(mapOf("id1" to signal), results, "OrderSignal 은 Candles#lastCandle 값으로 생성되야 한다")
+        strategySignalHistoryPort.getHistory("id1").let {
+            assertEquals(1, it.strategySignals().size)
+            assertEquals(signal, it.lastStrategySignal())
+        }
     }
 
     @Test
@@ -85,8 +91,12 @@ class RunStrategyServiceTest : OnCreateStrategySignalPort {
         service.runStrategy(ETH_1MINUTE)
 
         val lastPrice = productPrice(1000, Duration.ofMinutes(1), now.plusMinutes(0))
-        val expected = mapOf("id3" to StrategySignal(OrderType.BUY, lastPrice.time, lastPrice.price.close))
+        val signal = StrategySignal(OrderType.BUY, lastPrice.time, lastPrice.price.close)
 
-        assertEquals(expected, results, "OrderSignal 은 Candles#lastCandle 값으로 생성되야 한다")
+        assertEquals(mapOf("id3" to signal), results, "OrderSignal 은 Candles#lastCandle 값으로 생성되야 한다")
+        strategySignalHistoryPort.getHistory("id3").let {
+            assertEquals(1, it.strategySignals().size)
+            assertEquals(signal, it.lastStrategySignal())
+        }
     }
 }
