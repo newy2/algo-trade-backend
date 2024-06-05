@@ -7,7 +7,7 @@ import com.newy.algotrade.domain.chart.libs.ta4j.indicator.Ta4jEMAIndicator
 import com.newy.algotrade.domain.chart.libs.ta4j.indicator.Ta4jRSIIndicator
 
 val DEFAULT_CHART_FACTORY = ChartFactory.TA4J
-val DEFAULT_CANDLE_SIZE = 400
+const val DEFAULT_CANDLE_SIZE = 400
 
 enum class ChartFactory {
     TA4J {
