@@ -1,9 +1,10 @@
-package com.newy.algotrade.unit.libs.helper
+package com.newy.algotrade.unit.common.helper
 
-import helpers.SimpleCsvParser
+import com.newy.algotrade.domain.common.helper.SimpleCsvParser
 import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import java.io.File
 
 const val RESOURCE_PATH = "/csv/for-unit-test-file.csv"
 val RESOURCE_CONTENT = """
@@ -54,6 +55,16 @@ class SimpleCsvParserTest {
                 arrayOf("1709942400000", "68180.0", "68236.5", "68179.8", "68236.4", "18.308"),
             ),
             SimpleCsvParser.parseFromResource(RESOURCE_PATH)
+        )
+    }
+
+    @Test
+    fun `파일 객체로 파싱하는 방법`() {
+        assertArrayEquals(
+            arrayOf(
+                arrayOf("1709942400000", "68180.0", "68236.5", "68179.8", "68236.4", "18.308"),
+            ),
+            SimpleCsvParser.parseFromFile(File(javaClass.getResource(RESOURCE_PATH)!!.file))
         )
     }
 }

@@ -1,6 +1,6 @@
 package com.newy.algotrade.study.libs.ta4j
 
-import helpers.SimpleCsvParser
+import com.newy.algotrade.domain.common.helper.SimpleCsvParser
 import org.junit.jupiter.api.*
 import org.opentest4j.AssertionFailedError
 import org.ta4j.core.BarSeries

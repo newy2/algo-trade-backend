@@ -1,7 +1,7 @@
 package com.newy.algotrade.coroutine_based_application.price2.domain.back_test
 
-import com.newy.algotrade.coroutine_based_application.common.helper.SimpleCsvParser
 import com.newy.algotrade.domain.chart.Candle
+import com.newy.algotrade.domain.common.helper.SimpleCsvParser
 import java.io.File
 import java.time.Instant
 

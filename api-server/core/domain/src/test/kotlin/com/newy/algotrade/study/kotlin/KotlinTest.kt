@@ -1,7 +1,7 @@
 package com.newy.algotrade.study.kotlin
 
-import com.newy.algotrade.unit.libs.helper.RESOURCE_CONTENT
-import com.newy.algotrade.unit.libs.helper.RESOURCE_PATH
+import com.newy.algotrade.unit.common.helper.RESOURCE_CONTENT
+import com.newy.algotrade.unit.common.helper.RESOURCE_PATH
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
