@@ -1,6 +1,7 @@
 package com.newy.algotrade.coroutine_based_application.price2.application.service
 
 import com.newy.algotrade.coroutine_based_application.price2.port.`in`.CreateBackTestingDataUseCase
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.price2.port.out.GetProductPricePort
 import com.newy.algotrade.coroutine_based_application.price2.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.common.consts.Market
@@ -12,14 +13,9 @@ import java.util.*
 class CreateBackTestingDataService(
     private val productPricePort: GetProductPricePort,
 ) : CreateBackTestingDataUseCase {
-    override suspend fun createData(
-        productPriceKey: ProductPriceKey,
-        searchBeginTime: OffsetDateTime,
-        searchEndTime: OffsetDateTime,
-        seedSize: Int,
-    ): List<ProductPrice> {
-        val seedList = createSeedList(productPriceKey, searchBeginTime, seedSize)
-        val backTestingList = createBackTestingList(productPriceKey, searchBeginTime, searchEndTime)
+    override suspend fun createData(key: BackTestingDataKey, seedSize: Int): List<ProductPrice> {
+        val seedList = createSeedList(key.productPriceKey, key.searchBeginTime, seedSize)
+        val backTestingList = createBackTestingList(key.productPriceKey, key.searchBeginTime, key.searchEndTime)
         return seedList + backTestingList
     }
 

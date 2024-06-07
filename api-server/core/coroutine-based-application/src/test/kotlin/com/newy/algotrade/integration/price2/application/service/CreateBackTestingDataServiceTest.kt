@@ -7,6 +7,7 @@ import com.newy.algotrade.coroutine_based_application.price2.adapter.out.web.Fet
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.web.FetchEBestProductPrice
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.web.FetchProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.price2.application.service.CreateBackTestingDataService
+import com.newy.algotrade.coroutine_based_application.price2.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -71,7 +72,7 @@ class EBestCreateBackTestingDataServiceTest {
         val endTime = OffsetDateTime.parse("2024-05-31T09:00+09:00")
         val seedSize = 0
 
-        val list = service.createData(productPriceKey, beginTime, endTime, seedSize)
+        val list = service.createData(BackTestingDataKey(productPriceKey, beginTime, endTime), seedSize)
 
         assertEquals(emptyList(), list)
     }
@@ -82,7 +83,7 @@ class EBestCreateBackTestingDataServiceTest {
         val endTime = OffsetDateTime.parse("2024-05-31T09:00+09:00")
         val seedSize = 0
 
-        val list = service.createData(productPriceKey, beginTime, endTime, seedSize)
+        val list = service.createData(BackTestingDataKey(productPriceKey, beginTime, endTime), seedSize)
 
         assertEquals(emptyList(), list)
     }
@@ -93,7 +94,7 @@ class EBestCreateBackTestingDataServiceTest {
         val endTime = OffsetDateTime.parse("2024-05-31T09:01+09:00")
         val seedSize = 0
 
-        val list = service.createData(productPriceKey, beginTime, endTime, seedSize)
+        val list = service.createData(BackTestingDataKey(productPriceKey, beginTime, endTime), seedSize)
 
         assertEquals(1, list.size)
         assertTrue(OffsetDateTime.parse("2024-05-31T09:00+09:00").isEqual(list.first().time.begin))
@@ -105,7 +106,7 @@ class EBestCreateBackTestingDataServiceTest {
         val endTime = OffsetDateTime.parse("2024-05-31T09:01+09:00")
         val seedSize = 1
 
-        val list = service.createData(productPriceKey, beginTime, endTime, seedSize)
+        val list = service.createData(BackTestingDataKey(productPriceKey, beginTime, endTime), seedSize)
 
         assertEquals(2, list.size)
         assertTrue(OffsetDateTime.parse("2024-05-30T15:29+09:00").isEqual(list.first().time.begin), "seedList")
@@ -118,7 +119,7 @@ class EBestCreateBackTestingDataServiceTest {
         val endTime = OffsetDateTime.parse("2024-06-03T09:01+09:00")
         val seedSize = 0
 
-        val list = service.createData(productPriceKey, beginTime, endTime, seedSize)
+        val list = service.createData(BackTestingDataKey(productPriceKey, beginTime, endTime), seedSize)
 
         assertEquals(DayOfWeek.FRIDAY, beginTime.dayOfWeek)
         assertEquals(DayOfWeek.MONDAY, endTime.dayOfWeek)
@@ -135,7 +136,7 @@ class EBestCreateBackTestingDataServiceTest {
         val endTime = OffsetDateTime.parse("2024-05-31T08:59+09:00")
         val seedSize = 400
 
-        val list = service.createData(productPriceKey, beginTime, endTime, seedSize)
+        val list = service.createData(BackTestingDataKey(productPriceKey, beginTime, endTime), seedSize)
 
         assertEquals(400, list.size)
         assertTrue(OffsetDateTime.parse("2024-05-29T15:02+09:00").isEqual(list.first().time.begin))
@@ -159,7 +160,7 @@ class ByBitCreateBackTestingDataServiceTest {
         val endTime = OffsetDateTime.parse("2024-05-31T09:00+09:00")
         val seedSize = 0
 
-        val list = service.createData(productPriceKey, beginTime, endTime, seedSize)
+        val list = service.createData(BackTestingDataKey(productPriceKey, beginTime, endTime), seedSize)
 
         assertEquals(emptyList(), list)
     }
@@ -170,7 +171,7 @@ class ByBitCreateBackTestingDataServiceTest {
         val endTime = OffsetDateTime.parse("2024-05-31T09:01+09:00")
         val seedSize = 0
 
-        val list = service.createData(productPriceKey, beginTime, endTime, seedSize)
+        val list = service.createData(BackTestingDataKey(productPriceKey, beginTime, endTime), seedSize)
 
         assertEquals(1, list.size)
         assertTrue(OffsetDateTime.parse("2024-05-31T09:00+09:00").isEqual(list.first().time.begin))
@@ -182,7 +183,7 @@ class ByBitCreateBackTestingDataServiceTest {
         val endTime = OffsetDateTime.parse("2024-05-31T09:01+09:00")
         val seedSize = 1
 
-        val list = service.createData(productPriceKey, beginTime, endTime, seedSize)
+        val list = service.createData(BackTestingDataKey(productPriceKey, beginTime, endTime), seedSize)
 
         assertEquals(2, list.size)
         assertTrue(OffsetDateTime.parse("2024-05-31T08:59+09:00").isEqual(list.first().time.begin), "seedList")
@@ -195,7 +196,7 @@ class ByBitCreateBackTestingDataServiceTest {
         val endTime = OffsetDateTime.parse("2024-05-31T08:59+09:00")
         val seedSize = 400
 
-        val list = service.createData(productPriceKey, beginTime, endTime, seedSize)
+        val list = service.createData(BackTestingDataKey(productPriceKey, beginTime, endTime), seedSize)
 
         assertEquals(400, list.size)
         assertTrue(
