@@ -31,6 +31,7 @@ class InMemoryStrategySignalHistoryStoreTest {
     @BeforeEach
     fun setUp() {
         CoroutineScope(Dispatchers.Default).launch {
+            // TODO Remove CoroutineScope
             store = InMemoryStrategySignalHistoryStore().also {
                 it.addHistory("id1", signal)
             }

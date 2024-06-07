@@ -23,8 +23,8 @@ class FileCacheTest {
                 "BTCUSDT",
                 Duration.ofMinutes(1)
             ),
-            startDateTime = OffsetDateTime.parse("0000-01-01T00:00Z"),
-            endDateTime = OffsetDateTime.parse("0000-01-01T00:01Z"),
+            startDateTime = OffsetDateTime.parse("0000-01-01T00:00+09:00"),
+            endDateTime = OffsetDateTime.parse("0000-01-01T00:01+09:00"),
         )
 
         assertEquals(emptyList(), cache.load(noFileKey))
@@ -39,12 +39,12 @@ class FileCacheTest {
                 "BTCUSDT",
                 Duration.ofMinutes(1)
             ),
-            startDateTime = OffsetDateTime.parse("9999-01-01T00:00Z"),
-            endDateTime = OffsetDateTime.parse("9999-01-01T00:01Z"),
+            startDateTime = OffsetDateTime.parse("9999-01-01T00:00+09:00"),
+            endDateTime = OffsetDateTime.parse("9999-01-01T00:01+09:00"),
         )
         val list = listOf(
             Candle.TimeFrame.M1(
-                OffsetDateTime.parse("9999-01-01T00:00Z"),
+                OffsetDateTime.parse("9999-01-01T00:00+09:00"),
                 openPrice = 200.0.toBigDecimal(),
                 highPrice = 1000.0.toBigDecimal(),
                 lowPrice = 100.0.toBigDecimal(),
