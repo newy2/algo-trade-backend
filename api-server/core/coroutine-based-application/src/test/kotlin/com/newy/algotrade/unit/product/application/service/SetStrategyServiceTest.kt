@@ -1,8 +1,8 @@
-package com.newy.algotrade.unit.product.application.service.strategy
+package com.newy.algotrade.unit.product.application.service
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
-import com.newy.algotrade.coroutine_based_application.product.application.service.strategy.SetStrategyService
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.product.application.service.SetStrategyService
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.AddStrategyPort
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategyId

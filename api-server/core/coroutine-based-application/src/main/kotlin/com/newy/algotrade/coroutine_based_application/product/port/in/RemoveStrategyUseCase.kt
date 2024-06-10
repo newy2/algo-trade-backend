@@ -1,6 +1,6 @@
-package com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy
+package com.newy.algotrade.coroutine_based_application.product.port.`in`
 
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.RemoveStrategyPort
 
 class RemoveStrategyUseCase(

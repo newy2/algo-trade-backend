@@ -1,7 +1,7 @@
-package com.newy.algotrade.coroutine_based_application.product.application.service.strategy
+package com.newy.algotrade.coroutine_based_application.product.application.service
 
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.SetStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.AddStrategyPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.GetCandlePort
 import com.newy.algotrade.domain.chart.strategy.Strategy

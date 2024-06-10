@@ -1,6 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.product.port.out
 
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 

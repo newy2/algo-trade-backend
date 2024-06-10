@@ -1,8 +1,8 @@
 package com.newy.algotrade.unit.product.adapter.`in`.web.socket
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.socket.OnReceivePollingPriceController
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.candle.AddCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.RunStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.AddCandlesUseCase
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY

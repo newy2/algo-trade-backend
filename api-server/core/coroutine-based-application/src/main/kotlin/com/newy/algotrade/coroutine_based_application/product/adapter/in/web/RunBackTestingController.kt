@@ -2,13 +2,13 @@ package com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.socket.OnReceivePollingPriceController
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.*
-import com.newy.algotrade.coroutine_based_application.product.application.service.candle.AddCandlesService
-import com.newy.algotrade.coroutine_based_application.product.application.service.candle.SetCandlesService
-import com.newy.algotrade.coroutine_based_application.product.application.service.strategy.RunStrategyService
-import com.newy.algotrade.coroutine_based_application.product.application.service.strategy.SetStrategyService
+import com.newy.algotrade.coroutine_based_application.product.application.service.AddCandlesService
+import com.newy.algotrade.coroutine_based_application.product.application.service.RunStrategyService
+import com.newy.algotrade.coroutine_based_application.product.application.service.SetCandlesService
+import com.newy.algotrade.coroutine_based_application.product.application.service.SetStrategyService
 import com.newy.algotrade.coroutine_based_application.product.domain.BackTestingFileManager
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.BackTestingDataKey
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnCreatedStrategySignalPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.domain.chart.strategy.StrategyId

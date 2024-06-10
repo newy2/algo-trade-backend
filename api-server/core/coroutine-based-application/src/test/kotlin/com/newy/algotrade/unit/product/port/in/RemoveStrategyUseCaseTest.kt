@@ -1,7 +1,7 @@
-package com.newy.algotrade.unit.product.port.`in`.strategy
+package com.newy.algotrade.unit.product.port.`in`
 
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.RemoveStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.RemoveStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.RemoveStrategyPort
 import com.newy.algotrade.domain.chart.strategy.StrategyId
 import helpers.productPriceKey
@@ -15,6 +15,7 @@ private val userStrategyKey = UserStrategyKey(
     StrategyId.BuyTripleRSIStrategy,
     productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 )
+
 
 class RemoveStrategyUseCaseTest : RemoveStrategyPort {
     private var removedCount = 0

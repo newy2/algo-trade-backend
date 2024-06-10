@@ -1,6 +1,6 @@
-package com.newy.algotrade.coroutine_based_application.product.application.service.strategy
+package com.newy.algotrade.coroutine_based_application.product.application.service
 
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.RunStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.GetCandlePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.GetStrategyPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnCreatedStrategySignalPort

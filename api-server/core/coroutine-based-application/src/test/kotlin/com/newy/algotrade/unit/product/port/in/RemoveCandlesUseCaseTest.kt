@@ -1,6 +1,6 @@
-package com.newy.algotrade.unit.product.port.`in`.candle
+package com.newy.algotrade.unit.product.port.`in`
 
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.candle.RemoveCandlesUseCase
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.RemoveCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.HasStrategyPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.RemoveCandlePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.UnSubscribePollingProductPricePort

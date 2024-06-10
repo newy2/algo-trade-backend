@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.product.adapter.out.persistent
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryStrategyStore
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.StrategyPort
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.Strategy

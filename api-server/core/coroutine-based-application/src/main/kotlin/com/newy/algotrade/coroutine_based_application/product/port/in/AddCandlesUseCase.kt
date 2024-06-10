@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.product.port.`in`.candle
+package com.newy.algotrade.coroutine_based_application.product.port.`in`
 
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.common.extension.ProductPrice

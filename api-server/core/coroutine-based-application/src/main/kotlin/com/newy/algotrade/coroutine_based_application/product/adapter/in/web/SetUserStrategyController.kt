@@ -1,8 +1,8 @@
 package com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web
 
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.candle.SetCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.SetStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 
 class SetUserStrategyController(
     private val candlesUseCase: SetCandlesUseCase,

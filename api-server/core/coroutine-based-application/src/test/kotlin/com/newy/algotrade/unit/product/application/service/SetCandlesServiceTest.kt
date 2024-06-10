@@ -1,8 +1,8 @@
-package com.newy.algotrade.unit.product.application.service.candle
+package com.newy.algotrade.unit.product.application.service
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
-import com.newy.algotrade.coroutine_based_application.product.application.service.candle.SetCandlesService
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.candle.SetCandlesUseCase
+import com.newy.algotrade.coroutine_based_application.product.application.service.SetCandlesService
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.GetProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
