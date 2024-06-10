@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.price2.domain.back_test
+package com.newy.algotrade.coroutine_based_application.price2.domain
 
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.helper.SimpleCsvParser
@@ -7,6 +7,7 @@ import java.time.Instant
 
 private const val FOLDER_NAME = "/back-testing-source-data"
 
+@Deprecated("미사용 클래스")
 class FileCache {
     fun insert(key: BackTestDataLoader.Key, list: List<Candle>) {
         file(key).bufferedWriter().use { file ->

@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.price2.domain.back_test
+package com.newy.algotrade.coroutine_based_application.price2.domain
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import java.time.OffsetDateTime
 import kotlin.coroutines.CoroutineContext
 
+@Deprecated("미사용 클래스")
 class BackTestDataLoader(
     private val loader: GetProductPricePort,
     private val startDateTime: OffsetDateTime,

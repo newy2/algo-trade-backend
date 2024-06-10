@@ -4,9 +4,11 @@ import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.Rule
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
+import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategyV2
 
 enum class StrategyId(val id: String) {
-    BuyTripleRSIStrategy("1");
+    BuyTripleRSIStrategy("1"),
+    BuyTripleRSIStrategyV2("2");
 
     companion object {
         private val map = StrategyId.values().associateBy { it.id }
@@ -19,6 +21,7 @@ abstract class Strategy(private val entryType: OrderType, private val entryRule:
         fun create(id: StrategyId, candles: Candles): Strategy {
             return when (id) {
                 StrategyId.BuyTripleRSIStrategy -> BuyTripleRSIStrategy(candles)
+                StrategyId.BuyTripleRSIStrategyV2 -> BuyTripleRSIStrategyV2(candles)
             }
         }
     }

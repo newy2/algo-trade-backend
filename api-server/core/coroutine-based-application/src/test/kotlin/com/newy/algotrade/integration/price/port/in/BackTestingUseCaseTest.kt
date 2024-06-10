@@ -8,8 +8,8 @@ import com.newy.algotrade.coroutine_based_application.price.domain.UserStrategyR
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.web.FetchByBitProductPrice
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.web.FetchEBestProductPrice
 import com.newy.algotrade.coroutine_based_application.price2.adapter.out.web.FetchProductPriceProxy
-import com.newy.algotrade.coroutine_based_application.price2.domain.back_test.BackTestDataLoader
-import com.newy.algotrade.coroutine_based_application.price2.domain.back_test.StringReporter
+import com.newy.algotrade.coroutine_based_application.price2.domain.BackTestDataLoader
+import com.newy.algotrade.coroutine_based_application.price2.domain.StringReporter
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy

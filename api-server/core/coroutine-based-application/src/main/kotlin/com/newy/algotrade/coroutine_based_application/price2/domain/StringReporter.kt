@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.price2.domain.back_test
+package com.newy.algotrade.coroutine_based_application.price2.domain
 
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory

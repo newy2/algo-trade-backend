@@ -1,7 +1,7 @@
-package com.newy.algotrade.unit.price2.domain.back_test
+package com.newy.algotrade.unit.price2.domain
 
-import com.newy.algotrade.coroutine_based_application.price2.domain.back_test.BackTestDataLoader
-import com.newy.algotrade.coroutine_based_application.price2.domain.back_test.FileCache
+import com.newy.algotrade.coroutine_based_application.price2.domain.BackTestDataLoader
+import com.newy.algotrade.coroutine_based_application.price2.domain.FileCache
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType

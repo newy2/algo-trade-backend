@@ -11,8 +11,8 @@ const val DEFAULT_CANDLE_SIZE = 400
 
 enum class ChartFactory {
     TA4J {
-        override fun candles(): Candles {
-            return Ta4jCandles()
+        override fun candles(candleSize: Int): Candles {
+            return Ta4jCandles(candleSize)
         }
 
         override fun adxIndicator(candles: Candles, candleCount: Int): Indicator {
@@ -28,7 +28,7 @@ enum class ChartFactory {
         }
     };
 
-    abstract fun candles(): Candles
+    abstract fun candles(candleSize: Int = DEFAULT_CANDLE_SIZE): Candles
     abstract fun adxIndicator(candles: Candles, candleCount: Int): Indicator
     abstract fun rsiIndicator(candles: Candles, candleCount: Int): Indicator
     abstract fun emaIndicator(candles: Candles, candleCount: Int): Indicator
