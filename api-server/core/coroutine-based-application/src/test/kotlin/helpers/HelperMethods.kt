@@ -1,6 +1,6 @@
 package helpers
 
-import com.newy.algotrade.coroutine_based_application.price2.port.`in`.strategy.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.strategy.model.UserStrategyKey
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.strategy.StrategyId
 import com.newy.algotrade.domain.common.consts.Market
