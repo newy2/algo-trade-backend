@@ -1,18 +1,24 @@
+sourceSets {
+    main {
+        resources {
+            srcDirs("./")
+        }
+    }
+}
+
 plugins {
     id("kotlin-conventions")
     id("org.liquibase.gradle") version "2.2.1"
 }
 
 liquibase {
-
     activities.register("main") {
-        // TODO contexts, defaultSchemaName 중복 제거
+        // TODO defaultSchemaName 변경 (스키마, 데이터베이스 자동 생성기능 확인)
         val baseArguments = mapOf(
             "searchPath" to "ddl/liquibase",
-            "changelogFile" to "main.xml",
+            "changelogFile" to "master_change_log.xml",
             "liquibaseSchemaName" to "liquibase",
-            "contexts" to "algo_trade",
-            "defaultSchemaName" to "algo_trade",
+            "defaultSchemaName" to "public",
         )
 
         // TODO 프로덕션 서버는 CLI 프로퍼티로 사용하기
@@ -29,8 +35,8 @@ liquibase {
             ),
         )
 
-        this.arguments = baseArguments + dbArguments["mysql"]!!
-//        this.arguments = baseArguments + dbArguments["postgres"]!!
+//        this.arguments = baseArguments + dbArguments["mysql"]!!
+        this.arguments = baseArguments + dbArguments["postgres"]!!
     }
 }
 
