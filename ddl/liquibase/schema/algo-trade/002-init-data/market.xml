@@ -26,14 +26,16 @@
         <insert tableName="${currentTable}">
             <column name="parent_id"
                     valueComputed="(SELECT id FROM (SELECT id FROM ${currentTable} WHERE name_ko = '가상화폐 거래소') as t)"/>
+            <column name="code" value="BY_BIT"/>
             <column name="name_en" value="ByBit"/>
             <column name="name_ko" value="바이빗"/>
         </insert>
         <insert tableName="${currentTable}">
             <column name="parent_id"
                     valueComputed="(SELECT id FROM (SELECT id FROM ${currentTable} WHERE name_ko = '한국거래소') as t)"/>
-            <column name="name_en" value="Korea Investment"/>
-            <column name="name_ko" value="한국투자증권"/>
+            <column name="code" value="E_BEST"/>
+            <column name="name_en" value="EBest Securities"/>
+            <column name="name_ko" value="이베스트투자증권"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

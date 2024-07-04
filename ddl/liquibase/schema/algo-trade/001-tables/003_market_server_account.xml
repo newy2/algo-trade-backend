@@ -42,7 +42,7 @@
             </column>
 
             <!-- 일반 필드 -->
-            <column name="name" type="VARCHAR2(50)" remarks="별칭">
+            <column name="display_name" type="VARCHAR2(50)" remarks="별칭">
                 <constraints nullable="false"/>
             </column>
             <column name="app_key" type="VARCHAR2(300)" remarks="앱키">
@@ -63,13 +63,7 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-
-        <!-- 복합 index -->
-        <addUniqueConstraint
-                tableName="${currentTable}"
-                columnNames="${referenceTable1}_id, ${referenceTable2}_id"
-                constraintName="${currentTable}__id2_uk"/>
-
+        
         <!-- pro 모드 대체 로직  -->
         <sql>
             ALTER TABLE ${currentTable}
