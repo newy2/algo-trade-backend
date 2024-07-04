@@ -15,8 +15,8 @@ class TestEnvTest {
             assertTrue(it.apiSecret.isNotEmpty())
         }
 
-        TestEnv.EBest.let {
-            assertEquals("https://openapi.ebestsec.co.kr:8080", it.url)
+        TestEnv.LsSec.let {
+            assertEquals("https://openapi.ls-sec.co.kr:8080", it.url)
             assertTrue(it.apiKey.isNotEmpty())
             assertTrue(it.apiSecret.isNotEmpty())
         }

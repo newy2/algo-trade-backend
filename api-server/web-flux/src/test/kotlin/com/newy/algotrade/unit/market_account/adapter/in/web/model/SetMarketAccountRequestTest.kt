@@ -7,7 +7,7 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
 val dto = SetMarketAccountRequest(
-    market = "E_BEST",
+    market = "LS_SEC",
     isProduction = true,
     displayName = "displayName",
     appKey = "key",
@@ -27,7 +27,7 @@ class SetMarketAccountRequestTest {
             dto.copy(market = "BY_BIT")
         }
         assertDoesNotThrow {
-            dto.copy(market = "E_BEST")
+            dto.copy(market = "LS_SEC")
         }
     }
 

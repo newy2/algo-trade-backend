@@ -1,12 +1,12 @@
 package com.newy.algotrade.integration.product.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
+import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.CreateBackTestingDataController
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.FileBackTestingDataStore
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchByBitProductPrice
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchEBestProductPrice
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchLsSecProductPrice
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.product.application.service.CreateBackTestingDataService
 import com.newy.algotrade.coroutine_based_application.product.application.service.SetBackTestingDataService
@@ -25,10 +25,10 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.OffsetDateTime
 
-private fun eBestHttpApiClient() =
+private fun lsSecHttpApiClient() =
     DefaultHttpApiClient(
         OkHttpClient(),
-        TestEnv.EBest.url, // TODO 프로덕션 서버 데이터 사용하기
+        TestEnv.LsSec.url, // TODO 프로덕션 서버 데이터 사용하기
         JsonConverterByJackson(jacksonObjectMapper())
     )
 
@@ -42,12 +42,12 @@ private fun byBitHttpApiClient() =
 private fun loadProductPriceProxy() =
     FetchProductPriceProxy(
         mapOf(
-            Market.E_BEST to FetchEBestProductPrice(
-                eBestHttpApiClient(),
-                EBestAccessTokenHttpApi(eBestHttpApiClient()),
+            Market.LS_SEC to FetchLsSecProductPrice(
+                lsSecHttpApiClient(),
+                LsSecAccessTokenHttpApi(lsSecHttpApiClient()),
                 PrivateApiInfo(
-                    key = TestEnv.EBest.apiKey,
-                    secret = TestEnv.EBest.apiSecret,
+                    key = TestEnv.LsSec.apiKey,
+                    secret = TestEnv.LsSec.apiSecret,
                 )
             ),
             Market.BY_BIT to FetchByBitProductPrice(

@@ -5,13 +5,13 @@ import com.newy.algotrade.coroutine_based_application.common.web.http.FormData
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.http.post
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
-import com.newy.algotrade.domain.auth.adapter.out.web.model.jackson.EBestAccessTokenHttpResponse
+import com.newy.algotrade.domain.auth.adapter.out.web.model.jackson.LsSecAccessTokenHttpResponse
 
-class EBestAccessTokenHttpApi(
+class LsSecAccessTokenHttpApi(
     private val client: HttpApiClient,
 ) : GetAccessTokenPort<PrivateApiInfo> {
     override suspend fun accessToken(info: PrivateApiInfo): String =
-        client.post<EBestAccessTokenHttpResponse>(
+        client.post<LsSecAccessTokenHttpResponse>(
             path = "/oauth2/token",
             headers = mapOf("Content-Type" to "application/x-www-form-urlencoded"),
             params = mapOf(

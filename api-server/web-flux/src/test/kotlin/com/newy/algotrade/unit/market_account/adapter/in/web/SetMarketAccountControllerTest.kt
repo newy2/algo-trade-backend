@@ -17,7 +17,7 @@ class SetMarketAccountControllerTest : SetMarketAccountUseCase {
         val controller = SetMarketAccountController(this@SetMarketAccountControllerTest)
         controller.setMarketAccount(
             SetMarketAccountRequest(
-                market = "E_BEST",
+                market = "LS_SEC",
                 isProduction = true,
                 displayName = "name",
                 appKey = "key",
@@ -27,7 +27,7 @@ class SetMarketAccountControllerTest : SetMarketAccountUseCase {
 
         assertEquals(
             SetMarketAccountCommand(
-                market = Market.E_BEST,
+                market = Market.LS_SEC,
                 isProduction = true,
                 displayName = "name",
                 appKey = "key",

@@ -1,10 +1,10 @@
 package com.newy.algotrade.integration.auth.adapter.out
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
+import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
-import com.newy.algotrade.domain.auth.adapter.out.web.model.jackson.EBestAccessTokenHttpResponse
+import com.newy.algotrade.domain.auth.adapter.out.web.model.jackson.LsSecAccessTokenHttpResponse
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
 import helpers.TestEnv
@@ -29,7 +29,7 @@ class ResponseDtoTest {
             }
         """.trimIndent()
 
-        converter.toObject<EBestAccessTokenHttpResponse>(json).let {
+        converter.toObject<LsSecAccessTokenHttpResponse>(json).let {
             assertEquals("eyJ0eX...qM7OwQ", it.accessToken)
             assertEquals("Bearer", it.tokenType)
         }
@@ -37,21 +37,21 @@ class ResponseDtoTest {
     }
 }
 
-class EBestGetAccessTokenTest {
+class LsSecGetAccessTokenTest {
     @Test
     fun `엑세스 토큰 발급하기`() = runBlocking {
-        val api = EBestAccessTokenHttpApi(
+        val api = LsSecAccessTokenHttpApi(
             DefaultHttpApiClient(
                 OkHttpClient(),
-                TestEnv.EBest.url,
+                TestEnv.LsSec.url,
                 JsonConverterByJackson(jacksonObjectMapper())
             )
         )
 
         val accessToken = api.accessToken(
             PrivateApiInfo(
-                key = TestEnv.EBest.apiKey,
-                secret = TestEnv.EBest.apiSecret,
+                key = TestEnv.LsSec.apiKey,
+                secret = TestEnv.LsSec.apiSecret,
             )
         )
 

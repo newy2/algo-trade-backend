@@ -1,6 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.product.port.out.model
 
-import com.newy.algotrade.domain.common.consts.EBestTrCode
+import com.newy.algotrade.domain.common.consts.LsSecTrCode
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
@@ -23,7 +23,7 @@ class GetProductPriceParam(
     fun endTime(): String {
         return when (market) {
             Market.BY_BIT -> endTime.toInstant().toEpochMilli().toString()
-            Market.E_BEST -> endTime.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
+            Market.LS_SEC -> endTime.format(DateTimeFormatter.ofPattern("yyyyMMdd"))
             else -> throw NotImplementedError()
         }
     }
@@ -48,17 +48,17 @@ class GetProductPriceParam(
 
     fun trCode(): String {
         // TODO Remove this
-        useOnly(Market.E_BEST)
+        useOnly(Market.LS_SEC)
 
         return if (isIntervalByDays()) {
-            EBestTrCode.GET_PRODUCT_PRICE_BY_DAY.code
+            LsSecTrCode.GET_PRODUCT_PRICE_BY_DAY.code
         } else {
-            EBestTrCode.GET_PRODUCT_PRICE_BY_MINUTE.code
+            LsSecTrCode.GET_PRODUCT_PRICE_BY_MINUTE.code
         }
     }
 
     fun extraBody(): Map<String, Any> {
-        useOnly(Market.E_BEST)
+        useOnly(Market.LS_SEC)
 
         return if (isIntervalByDays()) {
             mapOf("gubun" to "2")

@@ -1,16 +1,16 @@
 package com.newy.algotrade.coroutine_based_application.product.adapter.out.web
 
 import com.newy.algotrade.coroutine_based_application.auth.port.out.GetAccessTokenPort
-import com.newy.algotrade.coroutine_based_application.common.consts.EBestHttpApiInfo
+import com.newy.algotrade.coroutine_based_application.common.consts.LsSecHttpApiInfo
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.http.post
 import com.newy.algotrade.coroutine_based_application.product.port.out.GetProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.EBestProductPriceHttpResponse
+import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.LsSecProductPriceHttpResponse
 
-class FetchEBestProductPrice(
+class FetchLsSecProductPrice(
     private val client: HttpApiClient,
     private val accessTokenLoader: GetAccessTokenPort<PrivateApiInfo>,
     private val masterUserInfo: PrivateApiInfo,
@@ -18,10 +18,10 @@ class FetchEBestProductPrice(
     override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> {
         val accessToken = accessTokenLoader.accessToken(masterUserInfo)
 
-        val (path, apiRateLimit, trCode) = EBestHttpApiInfo.loadProductPrice(param.isIntervalByDays())
+        val (path, apiRateLimit, trCode) = LsSecHttpApiInfo.loadProductPrice(param.isIntervalByDays())
         apiRateLimit.await()
 
-        val response = client.post<EBestProductPriceHttpResponse>(
+        val response = client.post<LsSecProductPriceHttpResponse>(
             path = path,
             headers = mapOf(
                 "Content-Type" to "application/json; charset=utf-8",
@@ -37,7 +37,7 @@ class FetchEBestProductPrice(
                     "comp_yn" to "N",
                 ) + param.extraBody()
             ),
-            jsonExtraValues = EBestProductPriceHttpResponse.jsonExtraValues(
+            jsonExtraValues = LsSecProductPriceHttpResponse.jsonExtraValues(
                 trCode,
                 param.intervalMinutes,
             ),

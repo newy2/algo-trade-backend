@@ -1,7 +1,7 @@
 package com.newy.algotrade.integration.product.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
+import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
@@ -34,17 +34,17 @@ private fun newClient(
 ): Polling<ProductPriceKey, List<ProductPrice>> {
     val loadProductPriceProxy = DefaultHttpApiClient(
         OkHttpClient(),
-        TestEnv.EBest.url,
+        TestEnv.LsSec.url,
         JsonConverterByJackson(jacksonObjectMapper())
     ).let {
         FetchProductPriceProxy(
             mapOf(
-                Market.E_BEST to FetchEBestProductPrice(
+                Market.LS_SEC to FetchLsSecProductPrice(
                     it,
-                    EBestAccessTokenHttpApi(it),
+                    LsSecAccessTokenHttpApi(it),
                     PrivateApiInfo(
-                        key = TestEnv.EBest.apiKey,
-                        secret = TestEnv.EBest.apiSecret,
+                        key = TestEnv.LsSec.apiKey,
+                        secret = TestEnv.LsSec.apiSecret,
                     )
                 )
             )
@@ -53,7 +53,7 @@ private fun newClient(
 
     return PollingProductPriceProxy(
         mapOf(
-            PollingProductPriceProxy.Key(Market.E_BEST, ProductType.SPOT) to PollingProductPriceWithHttpApi(
+            PollingProductPriceProxy.Key(Market.LS_SEC, ProductType.SPOT) to PollingProductPriceWithHttpApi(
                 loadProductPriceProxy,
                 1000,
                 coroutineContext,
@@ -143,9 +143,9 @@ class ByBitWebSocketTest {
     }
 }
 
-class EBestHttpPollingTest {
+class LsSecHttpPollingTest {
     @Test
-    fun `이베스트 Http 폴링 response 테스트`() = runBlocking {
+    fun `LS증권 Http 폴링 response 테스트`() = runBlocking {
         val channel = Channel<Pair<ProductPriceKey, List<ProductPrice>>>()
 
         val client = newClient(coroutineContext) {
@@ -154,7 +154,7 @@ class EBestHttpPollingTest {
 
         client.subscribe(
             ProductPriceKey(
-                Market.E_BEST,
+                Market.LS_SEC,
                 ProductType.SPOT,
                 "078020",
                 Duration.ofMinutes(1),
@@ -167,7 +167,7 @@ class EBestHttpPollingTest {
 
         assertEquals(
             ProductPriceKey(
-                Market.E_BEST,
+                Market.LS_SEC,
                 ProductType.SPOT,
                 "078020",
                 Duration.ofMinutes(1),

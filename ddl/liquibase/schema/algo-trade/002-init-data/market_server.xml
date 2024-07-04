@@ -17,15 +17,28 @@
 
         <insert tableName="${currentTable}">
             <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '바이빗')"/>
+            <column name="web_server_host" value="https://api.bybit.com"/>
+            <column name="web_socket_host" value="wss://stream.bybit.com"/>
+            <column name="prod_server_yn" value="Y"/>
+        </insert>
+        <insert tableName="${currentTable}">
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '바이빗')"/>
             <column name="web_server_host" value="https://api-testnet.bybit.com"/>
             <column name="web_socket_host" value="wss://stream-testnet.bybit.com"/>
             <column name="prod_server_yn" value="N"/>
         </insert>
+
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '바이빗')"/>
-            <column name="web_server_host" value="https://api.bybit.com"/>
-            <column name="web_socket_host" value="wss://stream.bybit.com"/>
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = 'LS증권')"/>
+            <column name="web_server_host" value="https://openapi.ls-sec.co.kr:8080"/>
+            <column name="web_socket_host" value="wss://openapi.ls-sec.co.kr:9443"/>
             <column name="prod_server_yn" value="Y"/>
+        </insert>
+        <insert tableName="${currentTable}">
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = 'LS증권')"/>
+            <column name="web_server_host" value="https://openapi.ls-sec.co.kr:8080"/>
+            <column name="web_socket_host" value="wss://openapi.ls-sec.co.kr:29443"/>
+            <column name="prod_server_yn" value="N"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

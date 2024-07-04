@@ -8,9 +8,9 @@ object TestEnv {
         val apiSecret: String = System.getenv("X-BY-BIT-API-SECRET")
     }
 
-    object EBest {
-        const val url: String = "https://openapi.ebestsec.co.kr:8080"
-        val apiKey: String = System.getenv("X-E-BEST-API-KEY")
-        val apiSecret: String = System.getenv("X-E-BEST-API-SECRET")
+    object LsSec {
+        const val url: String = "https://openapi.ls-sec.co.kr:8080"
+        val apiKey: String = System.getenv("X-LS-SEC-API-KEY")
+        val apiSecret: String = System.getenv("X-LS-SEC-API-SECRET")
     }
 }

@@ -1,10 +1,10 @@
 package com.newy.algotrade.integration.product.application.service
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
+import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchByBitProductPrice
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchEBestProductPrice
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchLsSecProductPrice
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.product.application.service.CreateBackTestingDataService
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.BackTestingDataKey
@@ -25,10 +25,10 @@ import java.time.OffsetDateTime
 import java.util.*
 import kotlin.test.assertEquals
 
-private fun eBestHttpApiClient() =
+private fun lsSecHttpApiClient() =
     DefaultHttpApiClient(
         OkHttpClient(),
-        TestEnv.EBest.url,
+        TestEnv.LsSec.url,
         JsonConverterByJackson(jacksonObjectMapper())
     )
 
@@ -42,12 +42,12 @@ private fun byBitHttpApiClient() =
 private fun loadProductPriceProxy() =
     FetchProductPriceProxy(
         mapOf(
-            Market.E_BEST to FetchEBestProductPrice(
-                eBestHttpApiClient(),
-                EBestAccessTokenHttpApi(eBestHttpApiClient()),
+            Market.LS_SEC to FetchLsSecProductPrice(
+                lsSecHttpApiClient(),
+                LsSecAccessTokenHttpApi(lsSecHttpApiClient()),
                 PrivateApiInfo(
-                    key = TestEnv.EBest.apiKey,
-                    secret = TestEnv.EBest.apiSecret,
+                    key = TestEnv.LsSec.apiKey,
+                    secret = TestEnv.LsSec.apiSecret,
                 )
             ),
             Market.BY_BIT to FetchByBitProductPrice(
@@ -56,11 +56,11 @@ private fun loadProductPriceProxy() =
         )
     )
 
-@DisplayName("이베스트 백테스팅 데이터 조회 테스트")
-class EBestCreateBackTestingDataServiceTest {
+@DisplayName("LS증권 백테스팅 데이터 조회 테스트")
+class LsSecCreateBackTestingDataServiceTest {
     private val service = CreateBackTestingDataService(loadProductPriceProxy())
     private val productPriceKey = ProductPriceKey(
-        Market.E_BEST,
+        Market.LS_SEC,
         ProductType.SPOT,
         "005930",
         Duration.ofMinutes(1),

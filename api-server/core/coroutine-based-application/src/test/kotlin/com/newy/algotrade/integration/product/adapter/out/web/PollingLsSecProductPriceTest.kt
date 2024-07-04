@@ -1,9 +1,9 @@
 package com.newy.algotrade.integration.product.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
+import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchEBestProductPrice
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchLsSecProductPrice
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchProductPriceProxy
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
@@ -24,28 +24,28 @@ import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
-class PollingEBestProductPriceTest {
+class PollingLsSecProductPriceTest {
     private val client = DefaultHttpApiClient(
         OkHttpClient(),
-        TestEnv.EBest.url,
+        TestEnv.LsSec.url,
         JsonConverterByJackson(jacksonObjectMapper())
     )
-    private val accessTokenLoader = EBestAccessTokenHttpApi(client)
+    private val accessTokenLoader = LsSecAccessTokenHttpApi(client)
     private val api = FetchProductPriceProxy(
         mapOf(
-            Market.E_BEST to FetchEBestProductPrice(
+            Market.LS_SEC to FetchLsSecProductPrice(
                 client,
                 accessTokenLoader,
                 PrivateApiInfo(
-                    key = TestEnv.EBest.apiKey,
-                    secret = TestEnv.EBest.apiSecret,
+                    key = TestEnv.LsSec.apiKey,
+                    secret = TestEnv.LsSec.apiSecret,
                 )
             )
         )
     )
 
     @Test
-    fun `이베스트 가격정보 폴링`() = runBlocking {
+    fun `LS증권 가격정보 폴링`() = runBlocking {
         val channel = Channel<Pair<ProductPriceKey, ProductPrice>>()
         var index = 0
 
@@ -56,7 +56,7 @@ class PollingEBestProductPriceTest {
         pollingJob.start()
         pollingJob.subscribe(
             ProductPriceKey(
-                Market.E_BEST,
+                Market.LS_SEC,
                 ProductType.SPOT,
                 "078020",
                 Duration.ofMinutes(1),
@@ -80,7 +80,7 @@ class PollingEBestProductPriceTest {
 
         assertEquals(
             ProductPriceKey(
-                Market.E_BEST,
+                Market.LS_SEC,
                 ProductType.SPOT,
                 "078020",
                 Duration.ofMinutes(1),

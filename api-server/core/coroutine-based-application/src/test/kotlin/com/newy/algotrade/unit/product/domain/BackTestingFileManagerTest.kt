@@ -65,7 +65,7 @@ class ExistsFileBackTestingFileManagerTest {
 class EmptyFileBackTestingFileManagerTest {
     private val key = BackTestingDataKey(
         ProductPriceKey(
-            Market.E_BEST,
+            Market.LS_SEC,
             ProductType.PERPETUAL_FUTURE,
             "078020",
             Duration.ofDays(1),
@@ -78,7 +78,7 @@ class EmptyFileBackTestingFileManagerTest {
     @Test
     fun `파일 이름`() {
         assertEquals(
-            "[E_BEST][PERPETUAL_FUTURE][078020][D1][0000-01-01T09:00+09:00 - 0000-01-01T09:01+09:00].csv",
+            "[LS_SEC][PERPETUAL_FUTURE][078020][D1][0000-01-01T09:00+09:00 - 0000-01-01T09:01+09:00].csv",
             manager.fileName(key)
         )
     }

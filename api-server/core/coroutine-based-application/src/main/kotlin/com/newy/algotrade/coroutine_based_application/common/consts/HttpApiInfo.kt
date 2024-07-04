@@ -1,7 +1,7 @@
 package com.newy.algotrade.coroutine_based_application.common.consts
 
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiRateLimit
-import com.newy.algotrade.domain.common.consts.EBestTrCode
+import com.newy.algotrade.domain.common.consts.LsSecTrCode
 
 object ByBitHttpApiInfo {
     data class Result(val path: String, val apiRateLimit: HttpApiRateLimit)
@@ -15,7 +15,7 @@ object ByBitHttpApiInfo {
     }
 }
 
-object EBestHttpApiInfo {
+object LsSecHttpApiInfo {
     data class Result(val path: String, val apiRateLimit: HttpApiRateLimit, val trCode: String)
 
     private val rateLimitMap = mapOf("/stock/chart" to HttpApiRateLimit(1500))
@@ -26,9 +26,9 @@ object EBestHttpApiInfo {
                 path,
                 rateLimitMap.getValue(path),
                 if (isIntervalByDays)
-                    EBestTrCode.GET_PRODUCT_PRICE_BY_DAY.code
+                    LsSecTrCode.GET_PRODUCT_PRICE_BY_DAY.code
                 else
-                    EBestTrCode.GET_PRODUCT_PRICE_BY_MINUTE.code
+                    LsSecTrCode.GET_PRODUCT_PRICE_BY_MINUTE.code
             )
         }
     }

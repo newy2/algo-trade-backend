@@ -1,19 +1,19 @@
 package com.newy.algotrade.integration.product.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.EBestAccessTokenHttpApi
+import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchEBestProductPrice
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchLsSecProductPrice
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.EBestTrCode
+import com.newy.algotrade.domain.common.consts.LsSecTrCode
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
-import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.EBestProductPriceHttpResponse
+import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.LsSecProductPriceHttpResponse
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.TestEnv
 import kotlinx.coroutines.runBlocking
@@ -25,7 +25,7 @@ import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
 @DisplayName("상품 가격조회 API Response DTO")
-class EBestProductPriceResponseDtoTest {
+class LsSecProductPriceResponseDtoTest {
     private val converter = JsonConverterByJackson(jacksonObjectMapper())
 
     @Test
@@ -49,10 +49,10 @@ class EBestProductPriceResponseDtoTest {
             }
         """.trimIndent()
 
-        val response = converter.toObject<EBestProductPriceHttpResponse>(
+        val response = converter.toObject<LsSecProductPriceHttpResponse>(
             json,
-            EBestProductPriceHttpResponse.jsonExtraValues(
-                code = EBestTrCode.GET_PRODUCT_PRICE_BY_MINUTE.code,
+            LsSecProductPriceHttpResponse.jsonExtraValues(
+                code = LsSecTrCode.GET_PRODUCT_PRICE_BY_MINUTE.code,
                 interval = Duration.ofMinutes(1).toMinutes(),
             )
         )
@@ -92,10 +92,10 @@ class EBestProductPriceResponseDtoTest {
         """.trimIndent()
 
 
-        val response = converter.toObject<EBestProductPriceHttpResponse>(
+        val response = converter.toObject<LsSecProductPriceHttpResponse>(
             json,
-            EBestProductPriceHttpResponse.jsonExtraValues(
-                code = EBestTrCode.GET_PRODUCT_PRICE_BY_DAY.code,
+            LsSecProductPriceHttpResponse.jsonExtraValues(
+                code = LsSecTrCode.GET_PRODUCT_PRICE_BY_DAY.code,
                 interval = Duration.ofDays(1).toMinutes(),
             )
         )
@@ -115,21 +115,21 @@ class EBestProductPriceResponseDtoTest {
     }
 }
 
-class FetchEBestProductPriceTest {
+class FetchLsSecProductPriceTest {
     private val client = DefaultHttpApiClient(
         OkHttpClient(),
-        TestEnv.EBest.url,
+        TestEnv.LsSec.url,
         JsonConverterByJackson(jacksonObjectMapper())
     )
-    private val accessTokenLoader = EBestAccessTokenHttpApi(client)
+    private val accessTokenLoader = LsSecAccessTokenHttpApi(client)
     private val api = FetchProductPriceProxy(
         mapOf(
-            Market.E_BEST to FetchEBestProductPrice(
+            Market.LS_SEC to FetchLsSecProductPrice(
                 client,
                 accessTokenLoader,
                 PrivateApiInfo(
-                    key = TestEnv.EBest.apiKey,
-                    secret = TestEnv.EBest.apiSecret,
+                    key = TestEnv.LsSec.apiKey,
+                    secret = TestEnv.LsSec.apiSecret,
                 )
             )
         )
@@ -151,7 +151,7 @@ class FetchEBestProductPriceTest {
             api.getProductPrices(
                 GetProductPriceParam(
                     ProductPriceKey(
-                        Market.E_BEST,
+                        Market.LS_SEC,
                         ProductType.SPOT,
                         "078020",
                         Duration.ofMinutes(1),
@@ -179,7 +179,7 @@ class FetchEBestProductPriceTest {
             api.getProductPrices(
                 GetProductPriceParam(
                     ProductPriceKey(
-                        Market.E_BEST,
+                        Market.LS_SEC,
                         ProductType.SPOT,
                         "078020",
                         Duration.ofDays(1),

@@ -7,7 +7,7 @@ import jakarta.validation.constraints.NotBlank
 import jakarta.validation.constraints.Pattern
 
 data class SetMarketAccountRequest(
-    @field:Pattern(regexp = "E_BEST|BY_BIT") val market: String,
+    @field:Pattern(regexp = "LS_SEC|BY_BIT") val market: String,
     val isProduction: Boolean,
     @field:NotBlank val displayName: String,
     @field:NotBlank val appKey: String,

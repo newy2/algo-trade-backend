@@ -100,7 +100,7 @@ class Ta4jCandlesTest {
     }
 
     @Test
-    fun `캔들 리스트로 마지막 캔들 replace 하기 - 캔들 리스트에 과거 시간의 캔들이 들어있는 경우(이베스트 폴링 데이터)`() {
+    fun `캔들 리스트로 마지막 캔들 replace 하기 - 캔들 리스트에 과거 시간의 캔들이 들어있는 경우(LS증권 폴링 데이터)`() {
         val sameBeginTime = lastBeginTime
         candles.upsert(
             listOf(

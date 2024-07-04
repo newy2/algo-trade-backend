@@ -41,15 +41,15 @@ class ValidateTest {
     @Test
     fun `Pattern 애너테이션`() {
         class TestDto(
-            @field:Pattern(regexp = "BY_BIT|E_BEST") val market: String
+            @field:Pattern(regexp = "BY_BIT|LS_SEC") val market: String
         )
 
         assertEquals(0, validator.validate(TestDto("BY_BIT")).size)
-        assertEquals(0, validator.validate(TestDto("E_BEST")).size)
+        assertEquals(0, validator.validate(TestDto("LS_SEC")).size)
         validator.validate(TestDto("not market name")).let { results ->
             assertEquals(1, results.size)
             results.first().let {
-                assertEquals("\"BY_BIT|E_BEST\"와 일치해야 합니다", it.message)
+                assertEquals("\"BY_BIT|LS_SEC\"와 일치해야 합니다", it.message)
                 assertEquals("market", it.propertyPath.toString())
             }
         }

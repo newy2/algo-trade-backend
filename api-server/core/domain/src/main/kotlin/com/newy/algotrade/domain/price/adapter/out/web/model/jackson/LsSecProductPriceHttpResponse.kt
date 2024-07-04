@@ -7,7 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.EBestTrCode
+import com.newy.algotrade.domain.common.consts.LsSecTrCode
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -16,8 +16,8 @@ import java.time.format.DateTimeFormatter
 
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-@JsonDeserialize(using = EBestProductPriceDeserializer::class)
-data class EBestProductPriceHttpResponse(val prices: List<ProductPrice>) {
+@JsonDeserialize(using = LsSecProductPriceDeserializer::class)
+data class LsSecProductPriceHttpResponse(val prices: List<ProductPrice>) {
     companion object {
         fun jsonExtraValues(code: String, interval: Long) =
             mapOf(
@@ -27,11 +27,11 @@ data class EBestProductPriceHttpResponse(val prices: List<ProductPrice>) {
     }
 }
 
-class EBestProductPriceDeserializer : StdDeserializer<EBestProductPriceHttpResponse> {
+class LsSecProductPriceDeserializer : StdDeserializer<LsSecProductPriceHttpResponse> {
     constructor() : this(null)
     constructor(vc: Class<*>?) : super(vc)
 
-    override fun deserialize(parser: JsonParser, context: DeserializationContext): EBestProductPriceHttpResponse {
+    override fun deserialize(parser: JsonParser, context: DeserializationContext): LsSecProductPriceHttpResponse {
         val code = context.findInjectableValue("code", null, null) as String
         val interval = context.findInjectableValue("interval", null, null) as Long
 
@@ -42,7 +42,7 @@ class EBestProductPriceDeserializer : StdDeserializer<EBestProductPriceHttpRespo
             .ofPattern("yyyyMMdd HHmmss")
             .withZone(ZoneOffset.ofHours(9))
 
-        return EBestProductPriceHttpResponse(
+        return LsSecProductPriceHttpResponse(
             list.map {
                 Candle.TimeFrame.from(Duration.ofMinutes(interval))!!(
                     beginTime = beginTime(it, interval, code, formatter),
@@ -65,7 +65,7 @@ class EBestProductPriceDeserializer : StdDeserializer<EBestProductPriceHttpRespo
         val date = item["date"].asText()
 
         val (time, adjustMinutes) =
-            if (code == EBestTrCode.GET_PRODUCT_PRICE_BY_DAY.code) {
+            if (code == LsSecTrCode.GET_PRODUCT_PRICE_BY_DAY.code) {
                 /***
                  * TODO 일봉 데이터에서 시간값이 필요하다면, `metadata["e_time"].asText()` 사용을 고려할 것
                  * 현재, 캔들 데이터의 시간 간격이 동일하다는 가정을 하고 있음.

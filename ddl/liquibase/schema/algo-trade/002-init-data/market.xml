@@ -33,9 +33,9 @@
         <insert tableName="${currentTable}">
             <column name="parent_id"
                     valueComputed="(SELECT id FROM (SELECT id FROM ${currentTable} WHERE name_ko = '한국거래소') as t)"/>
-            <column name="code" value="E_BEST"/>
-            <column name="name_en" value="EBest Securities"/>
-            <column name="name_ko" value="이베스트투자증권"/>
+            <column name="code" value="LS_SEC"/>
+            <column name="name_en" value="LS Securities"/>
+            <column name="name_ko" value="LS증권"/>
         </insert>
     </changeSet>
 </databaseChangeLog>

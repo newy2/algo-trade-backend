@@ -45,7 +45,7 @@ class HttpApiClientByWebClient(
             .also {
                 if (body is FormData) {
                     // TODO Content-type(application/x-www-form-urlencoded) 에 대한 예외처리
-                    // TODO 지금은 이베스트 access token 얻을 때만 사용됨. 다른 API 에서 form 데이터를 많이 사용하면 그 때 더 추상화 하자.
+                    // TODO 지금은 LS증권 access token 얻을 때만 사용됨. 다른 API 에서 form 데이터를 많이 사용하면 그 때 더 추상화 하자.
                     it.body(BodyInserters.fromFormData(LinkedMultiValueMap<String, String>().also {
                         body.values.forEach { (key, value) ->
                             it[key] = value

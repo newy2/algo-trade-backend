@@ -13,7 +13,7 @@ fun productPriceKey(productCode: String, interval: Duration = Duration.ofMinutes
     if (productCode == "BTCUSDT")
         ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
     else
-        ProductPriceKey(Market.E_BEST, ProductType.SPOT, productCode, interval)
+        ProductPriceKey(Market.LS_SEC, ProductType.SPOT, productCode, interval)
 
 fun userStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey) =
     UserStrategyKey(
