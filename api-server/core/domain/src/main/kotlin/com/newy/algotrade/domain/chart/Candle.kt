@@ -11,7 +11,7 @@ data class Candle private constructor(
     val price: Price,
     val volume: BigDecimal,
 ) {
-    enum class TimeFrame(private val timePeriod: Duration) {
+    enum class TimeFrame(val timePeriod: Duration) {
         M1(Duration.ofMinutes(1)),
         M3(Duration.ofMinutes(3)),
         M5(Duration.ofMinutes(5)),
