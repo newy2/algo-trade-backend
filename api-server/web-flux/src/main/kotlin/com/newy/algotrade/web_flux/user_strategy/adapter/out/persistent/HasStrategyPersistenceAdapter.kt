@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 class HasStrategyPersistenceAdapter(
     private val repository: StrategyRepository,
 ) : HasStrategyPort {
-    override suspend fun hasStrategy(strategyId: Long): Boolean {
-        return repository.existsById(strategyId)
+    override suspend fun hasStrategyByClassName(strategyClassName: String): Boolean {
+        return repository.existsByClassName(strategyClassName)
     }
 }

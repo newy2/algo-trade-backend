@@ -4,7 +4,10 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
-interface StrategyRepository : CoroutineCrudRepository<StrategyEntity, Long>
+interface StrategyRepository : CoroutineCrudRepository<StrategyEntity, Long> {
+    suspend fun existsByClassName(className: String): Boolean
+    suspend fun findByClassName(className: String): Long?
+}
 
 @Table("trade_strategy")
 data class StrategyEntity(

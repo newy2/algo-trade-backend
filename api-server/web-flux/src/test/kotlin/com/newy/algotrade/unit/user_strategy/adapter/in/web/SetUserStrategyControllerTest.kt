@@ -19,7 +19,7 @@ class SetUserStrategyControllerTest : SetUserStrategyUseCase {
         controller.setMarketAccount(
             SetUserStrategyRequest(
                 marketAccountId = 1,
-                strategyId = 2,
+                strategyClassName = "BuyTripleRSIStrategy",
                 productCategory = "USER_PICK",
                 productType = "SPOT",
                 productCodes = listOf("BTC", "ETH"),
@@ -29,7 +29,7 @@ class SetUserStrategyControllerTest : SetUserStrategyUseCase {
         Assertions.assertEquals(
             SetUserStrategyCommand(
                 marketAccountId = 1,
-                strategyId = 2,
+                strategyClassName = "BuyTripleRSIStrategy",
                 productCategory = ProductCategory.USER_PICK,
                 productType = ProductType.SPOT,
                 productCodes = listOf("BTC", "ETH"),

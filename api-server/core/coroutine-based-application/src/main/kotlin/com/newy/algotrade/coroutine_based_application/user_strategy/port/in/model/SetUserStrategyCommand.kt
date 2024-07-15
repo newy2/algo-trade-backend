@@ -5,10 +5,11 @@ import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.helper.SelfValidating
 import com.newy.algotrade.domain.common.libs.validation.NotBlankElements
 import jakarta.validation.constraints.Min
+import jakarta.validation.constraints.NotBlank
 
 data class SetUserStrategyCommand(
     @field:Min(1) val marketAccountId: Long,
-    @field:Min(1) val strategyId: Long,
+    @field:NotBlank val strategyClassName: String,
     val productCategory: ProductCategory,
     val productType: ProductType,
     @field:NotBlankElements val productCodes: List<String>,

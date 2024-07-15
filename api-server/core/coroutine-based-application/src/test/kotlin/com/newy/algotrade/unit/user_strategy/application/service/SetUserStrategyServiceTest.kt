@@ -20,7 +20,7 @@ class FakeGetMarketAdapter : GetMarketPort {
 }
 
 class FakeHasStrategyAdapter : HasStrategyPort {
-    override suspend fun hasStrategy(strategyId: Long): Boolean {
+    override suspend fun hasStrategyByClassName(strategyClassName: String): Boolean {
         return true
     }
 }
@@ -40,14 +40,14 @@ class FakeGetProductAdapter : GetProductPort {
 open class FakeUserStrategyAdapter : UserStrategyPort {
     override suspend fun setUserStrategy(
         marketServerAccountId: Long,
-        strategyId: Long,
+        strategyClassName: String,
         productType: ProductType,
         productCategory: ProductCategory
     ): Long = 1
 
     override suspend fun hasUserStrategy(
         marketServerAccountId: Long,
-        strategyId: Long,
+        strategyClassName: String,
         productType: ProductType
     ): Boolean = false
 }
@@ -60,7 +60,7 @@ class FakeSetUserStrategyProductAdapter : SetUserStrategyProductPort {
 class DefaultSetUserStrategyServiceTest {
     private val strategyCommand = SetUserStrategyCommand(
         marketAccountId = 1,
-        strategyId = 1,
+        strategyClassName = "BuyTripleRSIStrategy",
         productCategory = ProductCategory.TOP_TRADING_VALUE,
         productType = ProductType.SPOT,
         productCodes = emptyList(),
@@ -91,7 +91,7 @@ class DefaultSetUserStrategyServiceTest {
     @Test
     fun `strategyId 가 없는 경우`() = runTest {
         class NullHasStrategyAdapter : HasStrategyPort {
-            override suspend fun hasStrategy(strategyId: Long): Boolean = false
+            override suspend fun hasStrategyByClassName(strategyClassName: String): Boolean = false
         }
 
         val service = SetUserStrategyService(
@@ -114,7 +114,7 @@ class DefaultSetUserStrategyServiceTest {
     fun `이미 등록한 userStrategy 인 경우`() = runTest {
         class AlreadyRegisteredUserStrategyAdapter : FakeUserStrategyAdapter() {
             override suspend fun hasUserStrategy(
-                marketServerAccountId: Long, strategyId: Long, productType: ProductType
+                marketServerAccountId: Long, strategyClassName: String, productType: ProductType
             ): Boolean {
                 return true
             }
@@ -163,7 +163,7 @@ class UserPickSetUserStrategyServiceTest {
             service.setUserStrategy(
                 SetUserStrategyCommand(
                     marketAccountId = 1,
-                    strategyId = 1,
+                    strategyClassName = "BuyTripleRSIStrategy",
                     productCategory = ProductCategory.USER_PICK,
                     productType = ProductType.SPOT,
                     productCodes = listOf("BTC", "ETH"),
@@ -193,7 +193,7 @@ class UserPickProductSetUserStrategyServiceTest : FakeUserStrategyAdapter(), Set
         service.setUserStrategy(
             SetUserStrategyCommand(
                 marketAccountId = 1,
-                strategyId = 1,
+                strategyClassName = "BuyTripleRSIStrategy",
                 productCategory = ProductCategory.USER_PICK,
                 productType = ProductType.SPOT,
                 productCodes = listOf("BTC", "ETH"),
@@ -205,7 +205,7 @@ class UserPickProductSetUserStrategyServiceTest : FakeUserStrategyAdapter(), Set
 
     override suspend fun setUserStrategy(
         marketAccountId: Long,
-        strategyId: Long,
+        strategyClassName: String,
         productType: ProductType,
         productCategory: ProductCategory
     ): Long {

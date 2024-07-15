@@ -24,11 +24,11 @@ class UserStrategyPersistenceAdapterTest(
 ) : BaseDbTest() {
     @Test
     fun `userStrategy 등록하기`() = runTransactional {
-        val (marketAccountId, strategyId) = setInitData()
+        val (marketAccountId, strategyClassName, strategyId) = setInitData()
 
         val userStrategyId = adapter.setUserStrategy(
             marketServerAccountId = marketAccountId,
-            strategyId = strategyId,
+            strategyClassName = strategyClassName,
             productType = ProductType.SPOT,
             productCategory = ProductCategory.USER_PICK,
         )
@@ -47,24 +47,24 @@ class UserStrategyPersistenceAdapterTest(
 
     @Test
     fun `등록한 userStrategy 확인하기`() = runTransactional {
-        val (marketAccountId, strategyId) = setInitData()
+        val (marketAccountId, strategyClassName) = setInitData()
 
         val beforeSaved = adapter.hasUserStrategy(
             marketServerAccountId = marketAccountId,
-            strategyId = strategyId,
+            strategyClassName = strategyClassName,
             productType = ProductType.SPOT,
         )
 
         adapter.setUserStrategy(
             marketServerAccountId = marketAccountId,
-            strategyId = strategyId,
+            strategyClassName = strategyClassName,
             productType = ProductType.SPOT,
             productCategory = ProductCategory.USER_PICK,
         )
 
         val afterSaved = adapter.hasUserStrategy(
             marketServerAccountId = marketAccountId,
-            strategyId = strategyId,
+            strategyClassName = strategyClassName,
             productType = ProductType.SPOT,
         )
 
@@ -75,30 +75,30 @@ class UserStrategyPersistenceAdapterTest(
     @Test
     fun `중복된 userStrategy 를 등록하는 경우`() = runTransactional {
         // TODO Remove this? ("등록한 userStrategy 확인하기" 테스트 때문에 지워도 될듯)
-        val (marketAccountId, strategyId) = setInitData()
+        val (marketAccountId, strategyClassName) = setInitData()
 
         adapter.setUserStrategy(
             marketServerAccountId = marketAccountId,
-            strategyId = strategyId,
+            strategyClassName = strategyClassName,
             productType = ProductType.SPOT,
             productCategory = ProductCategory.USER_PICK,
         )
 
         assertThrows<DuplicateKeyException> {
             val sameMarketAccountId = marketAccountId
-            val sameStrategyId = strategyId
+            val sameStrategyClassName = strategyClassName
             val sameProductType = ProductType.SPOT
 
             adapter.setUserStrategy(
                 marketServerAccountId = sameMarketAccountId,
-                strategyId = sameStrategyId,
+                strategyClassName = sameStrategyClassName,
                 productType = sameProductType,
                 productCategory = ProductCategory.TOP_TRADING_VALUE,
             )
         }
     }
 
-    private suspend fun setInitData(): Pair<Long, Long> {
+    private suspend fun setInitData(): Triple<Long, String, Long> {
         val marketAccountId = marketAccountRepository.setMarketAccount(
             isProductionServer = false,
             code = Market.BY_BIT.name,
@@ -114,15 +114,15 @@ class UserStrategyPersistenceAdapterTest(
             )!!
         }
 
-        val strategyId = strategyRepository.save(
+        val savedStrategy = strategyRepository.save(
             StrategyEntity(
                 id = 0,
                 className = "SomethingStrategyClass",
                 nameKo = "테스트",
                 nameEn = "test",
             )
-        ).let { it.id }
+        )
 
-        return Pair(marketAccountId, strategyId)
+        return Triple(marketAccountId, savedStrategy.className, savedStrategy.id)
     }
 }

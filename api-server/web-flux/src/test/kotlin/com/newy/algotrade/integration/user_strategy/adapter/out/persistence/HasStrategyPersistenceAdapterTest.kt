@@ -23,7 +23,7 @@ class HasStrategyPersistenceAdapterTest(
     }
 
     @Test
-    fun `등록된 strategy ID 로 조회하는 경우`() = runTransactional {
+    fun `등록된 strategy class name 으로 조회하는 경우`() = runTransactional {
         val savedStrategy = strategyRepository.save(
             StrategyEntity(
                 className = "SomethingStrategyClass",
@@ -31,15 +31,15 @@ class HasStrategyPersistenceAdapterTest(
                 nameEn = "test",
             )
         )
-        val registeredId = savedStrategy.id
+        val savedStrategyClassName = savedStrategy.className
 
-        assertTrue(adapter.hasStrategy(registeredId))
+        assertTrue(adapter.hasStrategyByClassName(savedStrategyClassName))
     }
 
     @Test
-    fun `등록하지 않은 strategy ID 로 조회하는 경우`() = runBlocking {
-        val unRegisteredId = 100.toLong()
-        assertFalse(adapter.hasStrategy(unRegisteredId))
+    fun `등록하지 않은 strategy class name 으로 조회하는 경우`() = runBlocking {
+        val notSavedStrategyClassName = "NotRegisteredStrategy"
+        assertFalse(adapter.hasStrategyByClassName(notSavedStrategyClassName))
     }
 }
 

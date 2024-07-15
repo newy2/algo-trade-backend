@@ -11,7 +11,7 @@ import org.junit.jupiter.api.assertThrows
 
 val dto = SetUserStrategyCommand(
     marketAccountId = 1,
-    strategyId = 1,
+    strategyClassName = "BuyTripleRSIStrategy",
     productCategory = ProductCategory.USER_PICK,
     productType = ProductType.SPOT,
     productCodes = listOf("BTC"),
@@ -29,12 +29,11 @@ class SetUserStrategyCommandTest {
     }
 
     @Test
-    fun strategyId() {
-        assertThrows<ConstraintViolationException> { dto.copy(strategyId = -1) }
-        assertThrows<ConstraintViolationException> { dto.copy(strategyId = 0) }
+    fun strategyClassName() {
+        assertThrows<ConstraintViolationException> { dto.copy(strategyClassName = "") }
+        assertThrows<ConstraintViolationException> { dto.copy(strategyClassName = " ") }
         assertDoesNotThrow {
-            dto.copy(strategyId = 1)
-            dto.copy(strategyId = 2)
+            dto.copy(strategyClassName = "NotBlankString")
         }
     }
 

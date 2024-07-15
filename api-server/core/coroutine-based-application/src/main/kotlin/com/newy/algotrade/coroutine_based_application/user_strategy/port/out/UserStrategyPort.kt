@@ -8,7 +8,7 @@ interface UserStrategyPort : SetUserStrategyPort, HasUserStrategyPort
 interface SetUserStrategyPort {
     suspend fun setUserStrategy(
         marketServerAccountId: Long,
-        strategyId: Long,
+        strategyClassName: String,
         productType: ProductType,
         productCategory: ProductCategory,
     ): Long
@@ -17,7 +17,7 @@ interface SetUserStrategyPort {
 interface HasUserStrategyPort {
     suspend fun hasUserStrategy(
         marketServerAccountId: Long,
-        strategyId: Long,
+        strategyClassName: String,
         productType: ProductType,
     ): Boolean
 }

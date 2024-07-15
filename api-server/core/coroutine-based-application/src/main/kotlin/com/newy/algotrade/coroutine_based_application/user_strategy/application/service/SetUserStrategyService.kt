@@ -19,11 +19,11 @@ open class SetUserStrategyService(
     override suspend fun setUserStrategy(userStrategy: SetUserStrategyCommand): Boolean = withContext(Dispatchers.IO) {
         val (marketIds, hasStrategy, hasUserStrategy) = listOf(
             async { marketPort.getMarketIdsBy(userStrategy.marketAccountId) },
-            async { strategyPort.hasStrategy(userStrategy.strategyId) },
+            async { strategyPort.hasStrategyByClassName(userStrategy.strategyClassName) },
             async {
                 userStrategyPort.hasUserStrategy(
                     marketServerAccountId = userStrategy.marketAccountId,
-                    strategyId = userStrategy.strategyId,
+                    strategyClassName = userStrategy.strategyClassName,
                     productType = userStrategy.productType,
                 )
             }
@@ -58,7 +58,7 @@ open class SetUserStrategyService(
 
         val userStrategyId = userStrategyPort.setUserStrategy(
             marketServerAccountId = userStrategy.marketAccountId,
-            strategyId = userStrategy.strategyId,
+            strategyClassName = userStrategy.strategyClassName,
             productType = userStrategy.productType,
             productCategory = userStrategy.productCategory,
         )

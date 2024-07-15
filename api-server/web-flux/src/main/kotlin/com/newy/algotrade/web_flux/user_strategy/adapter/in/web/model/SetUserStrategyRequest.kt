@@ -6,7 +6,7 @@ import com.newy.algotrade.domain.common.consts.ProductType
 
 data class SetUserStrategyRequest(
     val marketAccountId: Long,
-    val strategyId: Long,
+    val strategyClassName: String,
     val productCategory: String,
     val productType: String,
     val productCodes: List<String>,
@@ -14,7 +14,7 @@ data class SetUserStrategyRequest(
     fun toDomainModel() =
         SetUserStrategyCommand(
             marketAccountId,
-            strategyId,
+            strategyClassName,
             ProductCategory.valueOf(productCategory),
             ProductType.valueOf(productType),
             productCodes,
