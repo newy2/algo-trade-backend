@@ -59,8 +59,7 @@ class SetMarketAccountUseCaseTest : HasMarketAccountPort, SetMarketAccountPort {
     }
 
     override suspend fun setMarketAccount(marketAccount: SetMarketAccountCommand): Boolean {
-        repository.add(marketAccount)
-        return true
+        return repository.add(marketAccount)
     }
 
     override suspend fun hasMarketAccount(marketAccount: SetMarketAccountCommand): Boolean {

@@ -9,43 +9,42 @@ import org.springframework.stereotype.Repository
 interface MarketAccountRepository : CoroutineCrudRepository<MarketAccountEntity, Long> {
     @Query(
         """
-        select exists(
-            select 'X'
-            from   market_server_account msa
-            inner join market_server ms on msa.market_server_id = ms.id
-            inner join market m on ms.market_id = m.id
-            where  ms.prod_server_yn = case when :isProductionServer then 'Y' else 'N' end
-            and    m.code = :code
-            and    msa.app_key = :appKey
-            and    msa.app_secret = :appSecret
-        );
+        SELECT msa.id
+        FROM   market_server_account msa
+        INNER JOIN market_server ms ON msa.market_server_id = ms.id
+        INNER JOIN market m ON ms.market_id = m.id
+        WHERE  ms.prod_server_yn = CASE WHEN :isProductionServer THEN 'Y' ELSE 'N' END
+        AND    m.code = :code
+        AND    msa.app_key = :appKey
+        AND    msa.app_secret = :appSecret
+        ;
     """
     )
-    suspend fun existsMarketAccount(
+    suspend fun getMarketAccountId(
         isProductionServer: Boolean,
         code: String,
         appKey: String,
         appSecret: String,
-    ): Boolean
+    ): Long?
 
     @Modifying
     @Query(
         """
-        insert into market_server_account (
+        INSERT INTO market_server_account (
                                             users_id
                                           , market_server_id
                                           , display_name
                                           , app_key
                                           , app_secret
                                           )
-        values                            (
-                                            (select id from users where email = 'admin')
+        VALUES                            (
+                                            (SELECT id FROM users WHERE email = 'admin')
                                           , (
-                                             select ms.id
-                                             from   market_server ms
-                                             inner join market m on m.id = ms.market_id
-                                             where  ms.prod_server_yn = case when :isProductionServer then 'Y' else 'N' end
-                                             and    m.code = :code
+                                             SELECT ms.id
+                                             FROM   market_server ms
+                                             INNER JOIN market m ON m.id = ms.market_id
+                                             WHERE  ms.prod_server_yn = CASE WHEN :isProductionServer THEN 'Y' ELSE 'N' END
+                                             AND    m.code = :code
                                             )
                                           , :displayName
                                           , :appKey
@@ -59,5 +58,5 @@ interface MarketAccountRepository : CoroutineCrudRepository<MarketAccountEntity,
         appKey: String,
         appSecret: String,
         displayName: String,
-    ): Int
+    ): Boolean
 }

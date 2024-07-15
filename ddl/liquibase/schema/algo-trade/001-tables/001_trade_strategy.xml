@@ -16,16 +16,13 @@
             </column>
 
             <!-- 일반 필드 -->
+            <column name="class_name" type="VARCHAR2(50)" remarks="클래스명">
+                <constraints nullable="false"/>
+            </column>
             <column name="name_ko" type="VARCHAR2(50)" remarks="한글명">
                 <constraints nullable="false"/>
             </column>
             <column name="name_en" type="VARCHAR2(50)" remarks="영문명">
-                <constraints nullable="false"/>
-            </column>
-            <column name="position" type="CHAR(3)" remarks="포지션 (LNG: 롱 포지션, SHR: 숏 포지션)" defaultValue="LNG">
-                <constraints nullable="false"/>
-            </column>
-            <column name="version" type="TINYINT" remarks="버전" defaultValue="1">
                 <constraints nullable="false"/>
             </column>
 
@@ -41,13 +38,7 @@
         <!-- 복합 index -->
         <addUniqueConstraint
                 tableName="${currentTable}"
-                columnNames="name_ko, position, version"
-                constraintName="${currentTable}__name_ko_position_version_uk"/>
-
-        <!-- pro 모드 대체 로직  -->
-        <sql>
-            ALTER TABLE ${currentTable}
-                ADD CONSTRAINT ${currentTable}__position_check CHECK (position IN ('LNG', 'SHR'));
-        </sql>
+                columnNames="class_name"
+                constraintName="${currentTable}__class_name_uk"/>
     </changeSet>
 </databaseChangeLog>

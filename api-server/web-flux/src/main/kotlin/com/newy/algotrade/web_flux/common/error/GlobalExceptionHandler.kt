@@ -1,6 +1,7 @@
 package com.newy.algotrade.web_flux.common.error
 
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
+import com.newy.algotrade.domain.common.exception.NotFoundRowException
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -28,6 +29,17 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(DuplicateDataException::class)
     fun handleException(exception: DuplicateDataException) =
+        defaultClientErrorMessage(exception)
+
+    @ExceptionHandler(IllegalArgumentException::class)
+    fun handleException(exception: IllegalArgumentException) =
+        defaultClientErrorMessage(exception)
+
+    @ExceptionHandler(NotFoundRowException::class)
+    fun handleException(exception: NotFoundRowException) =
+        defaultClientErrorMessage(exception)
+
+    private fun defaultClientErrorMessage(exception: Exception) =
         HttpStatus.BAD_REQUEST.let { httpStatus ->
             ResponseEntity
                 .status(httpStatus)

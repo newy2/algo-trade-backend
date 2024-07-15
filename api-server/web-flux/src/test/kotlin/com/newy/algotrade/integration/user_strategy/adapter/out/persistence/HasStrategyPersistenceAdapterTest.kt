@@ -1,0 +1,45 @@
+package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
+
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.HasStrategyPersistenceAdapter
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyEntity
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyRepository
+import helpers.BaseDbTest
+import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Test
+import org.springframework.beans.factory.annotation.Autowired
+
+class HasStrategyPersistenceAdapterTest(
+    @Autowired val strategyRepository: StrategyRepository,
+    @Autowired val adapter: HasStrategyPersistenceAdapter,
+) : BaseDbTest() {
+    @Test
+    fun `DB 에 입력된 데이터 확인`() = runBlocking {
+        val strategies = strategyRepository.findAll().toList()
+
+        assertEquals(1, strategies.size)
+        assertEquals("BuyTripleRSIStrategy", strategies[0].className)
+    }
+
+    @Test
+    fun `등록된 strategy ID 로 조회하는 경우`() = runTransactional {
+        val savedStrategy = strategyRepository.save(
+            StrategyEntity(
+                className = "SomethingStrategyClass",
+                nameKo = "테스트",
+                nameEn = "test",
+            )
+        )
+        val registeredId = savedStrategy.id
+
+        assertTrue(adapter.hasStrategy(registeredId))
+    }
+
+    @Test
+    fun `등록하지 않은 strategy ID 로 조회하는 경우`() = runBlocking {
+        val unRegisteredId = 100.toLong()
+        assertFalse(adapter.hasStrategy(unRegisteredId))
+    }
+}
+

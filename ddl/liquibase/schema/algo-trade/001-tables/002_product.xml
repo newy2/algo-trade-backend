@@ -66,6 +66,14 @@
         <sql>
             ALTER TABLE ${currentTable}
                 ADD CONSTRAINT ${currentTable}__use_yn_check CHECK (use_yn IN ('Y', 'N'));
+
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__type_check CHECK (type IN (
+                                                                           'SPOT',
+                                                                           'SPOT_MARGIN',
+                                                                           'FUTURE',
+                                                                           'PERPETUAL_FUTURE'
+                    ));
         </sql>
     </changeSet>
 </databaseChangeLog>

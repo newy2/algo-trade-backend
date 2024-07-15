@@ -10,23 +10,21 @@ class MarketAccountPersistenceAdapter(
     private val repository: MarketAccountRepository
 ) : HasMarketAccountPort, SetMarketAccountPort {
     override suspend fun hasMarketAccount(marketAccount: SetMarketAccountCommand): Boolean {
-        return repository.existsMarketAccount(
+        return repository.getMarketAccountId(
             isProductionServer = marketAccount.isProduction,
             code = marketAccount.market.name,
             appKey = marketAccount.appKey,
             appSecret = marketAccount.appSecret,
-        )
+        ) != null
     }
 
     override suspend fun setMarketAccount(marketAccount: SetMarketAccountCommand): Boolean {
-        val runCount = repository.setMarketAccount(
+        return repository.setMarketAccount(
             isProductionServer = marketAccount.isProduction,
             code = marketAccount.market.name,
             appKey = marketAccount.appKey,
             appSecret = marketAccount.appSecret,
             displayName = marketAccount.displayName,
         )
-
-        return runCount > 0
     }
 }

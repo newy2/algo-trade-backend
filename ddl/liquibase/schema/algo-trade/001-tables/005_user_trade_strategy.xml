@@ -42,6 +42,12 @@
             </column>
 
             <!-- 일반 필드 -->
+            <column name="product_category" type="VARCHAR2(50)" remarks="상품 카테고리">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_type" type="VARCHAR2(50)" remarks="상품 유형">
+                <constraints nullable="false"/>
+            </column>
 
             <!-- 생성/변경 일시 -->
             <column name="created_at" type="DATETIME" remarks="생성일시" defaultValueDate="now()">
@@ -55,8 +61,25 @@
         <!-- 복합 index -->
         <addUniqueConstraint
                 tableName="${currentTable}"
-                columnNames="${referenceTable1}_id, ${referenceTable2}_id"
-                constraintName="${currentTable}__id2_uk"
+                columnNames="${referenceTable1}_id, ${referenceTable2}_id, product_type"
+                constraintName="${currentTable}__strategy_id_product_type_uk"
         />
+
+        <!-- pro 모드 대체 로직  -->
+        <sql>
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__product_category_check CHECK (product_category IN (
+                                                                                                   'USER_PICK',
+                                                                                                   'TOP_TRADING_VALUE'
+                    ));
+
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__product_type_check CHECK (product_type IN (
+                                                                                           'SPOT',
+                                                                                           'SPOT_MARGIN',
+                                                                                           'FUTURE',
+                                                                                           'PERPETUAL_FUTURE'
+                    ));
+        </sql>
     </changeSet>
 </databaseChangeLog>

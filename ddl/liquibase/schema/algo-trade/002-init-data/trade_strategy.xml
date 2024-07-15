@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+    <property name="currentTable" value="trade_strategy" global="false"/>
+
+    <property name="referenceTable" value="market" global="false"/>
+
+    <changeSet author="newy" id="1">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="${currentTable}"/>
+            <rowCount tableName="${currentTable}" expectedRows="0"/>
+        </preConditions>
+
+        <insert tableName="${currentTable}">
+            <column name="class_name" value="BuyTripleRSIStrategy"/>
+            <column name="name_ko" value="(롱) 트리플 RSI 전략"/>
+            <column name="name_en" value="(Long) Triple RSI Strategy"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

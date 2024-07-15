@@ -13,7 +13,7 @@ class SetMarketAccountControllerTest : SetMarketAccountUseCase {
     private var domainModel: SetMarketAccountCommand? = null
 
     @Test
-    fun test() = runBlocking {
+    fun `request 모델을 command 모델로 변경하기`() = runBlocking {
         val controller = SetMarketAccountController(this@SetMarketAccountControllerTest)
         controller.setMarketAccount(
             SetMarketAccountRequest(

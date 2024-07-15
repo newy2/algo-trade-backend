@@ -1,6 +1,7 @@
 package com.newy.algotrade.unit.common.error
 
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
+import com.newy.algotrade.domain.common.exception.NotFoundRowException
 import com.newy.algotrade.web_flux.common.error.ErrorResponse
 import com.newy.algotrade.web_flux.common.error.FieldError
 import com.newy.algotrade.web_flux.common.error.GlobalExceptionHandler
@@ -19,19 +20,17 @@ class ConstraintViolationExceptionTest {
     @Test
     fun `FieldError 가 없는 경우`() {
         val exception = ConstraintViolationException(emptySet())
-        val response = handler.handleException(exception)
+        val result = handler.handleException(exception)
 
-        assertEquals(
-            response,
-            ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(
-                    ErrorResponse(
-                        message = "Bad Request",
-                        errors = emptyList()
-                    )
+        val expected = ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(
+                ErrorResponse(
+                    message = "Bad Request",
+                    errors = emptyList()
                 )
-        )
+            )
+        assertEquals(expected, result)
     }
 
     @Test
@@ -48,65 +47,81 @@ class ConstraintViolationExceptionTest {
                 override fun getMessage() = "reason"
             }
         ))
-        val response = handler.handleException(exception)
+        val result = handler.handleException(exception)
 
-        assertEquals(
-            response,
-            ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(
-                    ErrorResponse(
-                        message = "Bad Request",
-                        errors = listOf(
-                            FieldError(
-                                field = "fieldName",
-                                value = "fieldValue",
-                                reason = "reason",
-                            )
+        val expected = ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(
+                ErrorResponse(
+                    message = "Bad Request",
+                    errors = listOf(
+                        FieldError(
+                            field = "fieldName",
+                            value = "fieldValue",
+                            reason = "reason",
                         )
                     )
                 )
+            )
+        assertEquals(expected, result)
+    }
+}
+
+class DuplicateDataExceptionHandlerTest : ClientErrorHandlerTest() {
+    @Test
+    fun `에러 메세지 테스트`() {
+        assertErrorMessage(
+            "이미 등록된 데이터 입니다.",
+            handler.handleException(DuplicateDataException("이미 등록된 데이터 입니다.")),
+        )
+        assertErrorMessage(
+            "Data already exists",
+            handler.handleException(DuplicateDataException()),
         )
     }
 }
 
-class DuplicateDataExceptionHandlerTest {
-    private val handler = GlobalExceptionHandler()
-
+class IllegalArgumentHandlerTest : ClientErrorHandlerTest() {
     @Test
-    fun `메세지가 있는 경우`() {
-        val exception = DuplicateDataException("이미 등록된 데이터 입니다.")
-        val response = handler.handleException(exception)
-
-        assertEquals(
-            response,
-            ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(
-                    ErrorResponse(
-                        message = "이미 등록된 데이터 입니다.",
-                        errors = emptyList()
-                    )
-                )
+    fun `에러 메세지 테스트`() {
+        assertErrorMessage(
+            "잘못된 데이터 입니다.",
+            handler.handleException(IllegalArgumentException("잘못된 데이터 입니다.")),
+        )
+        assertErrorMessage(
+            "Bad Request",
+            handler.handleException(IllegalArgumentException()),
         )
     }
+}
 
+class NotFoundRowExceptionHandlerTest : ClientErrorHandlerTest() {
     @Test
-    fun `메세지가 없는 경우`() {
-        val exception = DuplicateDataException()
-        val response = handler.handleException(exception)
-
-        assertEquals(
-            response,
-            ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(
-                    ErrorResponse(
-                        message = "Data already exists",
-                        errors = emptyList()
-                    )
-                )
+    fun `에러 메세지 테스트`() {
+        assertErrorMessage(
+            "데이터를 찾을 수 없습니다.",
+            handler.handleException(NotFoundRowException("데이터를 찾을 수 없습니다.")),
         )
+        assertErrorMessage(
+            "Can not found row",
+            handler.handleException(NotFoundRowException()),
+        )
+    }
+}
+
+open class ClientErrorHandlerTest {
+    protected val handler = GlobalExceptionHandler()
+
+    protected fun assertErrorMessage(expectedErrorMessage: String, actual: ResponseEntity<ErrorResponse>) {
+        val expected = ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(
+                ErrorResponse(
+                    message = expectedErrorMessage,
+                    errors = emptyList()
+                )
+            )
+        assertEquals(expected, actual)
     }
 }
 

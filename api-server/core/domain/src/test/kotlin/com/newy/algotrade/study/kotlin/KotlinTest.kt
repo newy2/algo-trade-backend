@@ -1,5 +1,10 @@
 package com.newy.algotrade.study.kotlin
 
+import com.newy.algotrade.domain.chart.Candles
+import com.newy.algotrade.domain.chart.ChartFactory
+import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
+import com.newy.algotrade.domain.chart.strategy.Strategy
+import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
 import com.newy.algotrade.unit.common.helper.RESOURCE_CONTENT
 import com.newy.algotrade.unit.common.helper.RESOURCE_PATH
 import org.junit.jupiter.api.*
@@ -188,6 +193,13 @@ class EnumTest {
     @Test
     fun `문자열로 Enum 객체 찾기`() {
         assertEquals(Enum.HELLO, Enum.valueOf("HELLO"))
+    }
+
+    @Test
+    fun `등록되지 않은 문자열로 찾기`() {
+        assertThrows<IllegalArgumentException> {
+            Enum.valueOf("NOT_REGISTERED_VALUE")
+        }
     }
 }
 
