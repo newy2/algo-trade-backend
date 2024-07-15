@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.product.adapter.`in`.system
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.system.InitController
-import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.SetUserStrategyController
+import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.SetRunnableStrategyController
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.GetAllUserStrategyQuery
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetStrategyUseCase
@@ -35,7 +35,7 @@ class InitControllerTest : GetAllUserStrategyQuery, SetCandlesUseCase, SetStrate
     @Test
     fun `UseCase 호출 순서 확인`() = runTest {
         val controller = InitController(
-            SetUserStrategyController(this@InitControllerTest, this@InitControllerTest),
+            SetRunnableStrategyController(this@InitControllerTest, this@InitControllerTest),
             this@InitControllerTest,
         )
 

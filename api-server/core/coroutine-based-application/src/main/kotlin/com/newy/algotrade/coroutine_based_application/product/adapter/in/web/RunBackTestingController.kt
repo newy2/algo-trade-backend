@@ -101,7 +101,7 @@ class RunBackTestingController {
         candleStore: InMemoryCandleStore,
         strategyStore: InMemoryStrategyStore,
         backTestingDataLoader: LoadBackTestingDataAdapter
-    ): SetUserStrategyController {
+    ): SetRunnableStrategyController {
         val candleService = SetCandlesService(
             backTestingDataLoader,
             backTestingDataLoader,
@@ -109,6 +109,6 @@ class RunBackTestingController {
         )
         val strategyService = SetStrategyService(candleStore, strategyStore)
 
-        return SetUserStrategyController(candleService, strategyService)
+        return SetRunnableStrategyController(candleService, strategyService)
     }
 }

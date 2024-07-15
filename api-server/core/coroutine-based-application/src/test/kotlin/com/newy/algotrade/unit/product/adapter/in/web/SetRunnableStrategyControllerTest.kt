@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.product.adapter.`in`.web
 
-import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.SetUserStrategyController
+import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.SetRunnableStrategyController
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
@@ -11,7 +11,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class SetUserStrategyControllerTest : SetCandlesUseCase, SetStrategyUseCase {
+class SetRunnableStrategyControllerTest : SetCandlesUseCase, SetStrategyUseCase {
     private var log: String = ""
 
     override suspend fun setCandles(productPriceKey: ProductPriceKey) {
@@ -24,9 +24,9 @@ class SetUserStrategyControllerTest : SetCandlesUseCase, SetStrategyUseCase {
 
     @Test
     fun `UseCase 호출 순서 확인`() = runTest {
-        val controller = SetUserStrategyController(
-            this@SetUserStrategyControllerTest,
-            this@SetUserStrategyControllerTest
+        val controller = SetRunnableStrategyController(
+            this@SetRunnableStrategyControllerTest,
+            this@SetRunnableStrategyControllerTest
         )
 
         val key = userStrategyKey("id1", productPriceKey("BTCUSDT"))
