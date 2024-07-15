@@ -3,7 +3,6 @@ package com.newy.algotrade.unit.product.port.`in`
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.RemoveStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.RemoveStrategyPort
-import com.newy.algotrade.domain.chart.strategy.StrategyId
 import helpers.productPriceKey
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -12,7 +11,7 @@ import java.time.Duration
 
 private val userStrategyKey = UserStrategyKey(
     "user1",
-    StrategyId.BuyTripleRSIStrategy,
+    "BuyTripleRSIStrategy",
     productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 )
 

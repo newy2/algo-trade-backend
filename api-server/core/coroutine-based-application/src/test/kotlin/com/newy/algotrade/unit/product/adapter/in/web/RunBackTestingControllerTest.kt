@@ -4,7 +4,6 @@ import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.R
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
-import com.newy.algotrade.domain.chart.strategy.StrategyId
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -29,9 +28,9 @@ class RunBackTestingControllerTest {
             OffsetDateTime.parse("2024-06-01T00:00+09:00"),
             OffsetDateTime.parse("2024-06-05T00:00+09:00"),
         )
-        val strategyId = StrategyId.from("1")
+        val strategyClassName = "BuyTripleRSIStrategy"
 
-        val strategySignalHistory = controller.runBackTesting(backTestingDataKey, strategyId)
+        val strategySignalHistory = controller.runBackTesting(backTestingDataKey, strategyClassName)
 
         assertEquals(
             listOf(
@@ -77,9 +76,9 @@ class RunBackTestingControllerTest {
             OffsetDateTime.parse("2024-06-01T00:00+09:00"),
             OffsetDateTime.parse("2024-06-05T00:00+09:00"),
         )
-        val strategyId = StrategyId.from("2")
+        val strategyClassName = "BuyTripleRSIStrategyV2"
 
-        val strategySignalHistory = controller.runBackTesting(backTestingDataKey, strategyId)
+        val strategySignalHistory = controller.runBackTesting(backTestingDataKey, strategyClassName)
 
         assertEquals(
             listOf(

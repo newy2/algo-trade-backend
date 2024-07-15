@@ -1,10 +1,8 @@
 package com.newy.algotrade.study.kotlin
 
-import com.newy.algotrade.domain.chart.Candles
-import com.newy.algotrade.domain.chart.ChartFactory
-import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
-import com.newy.algotrade.domain.chart.strategy.Strategy
-import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
+import com.newy.algotrade.domain.common.consts.Market
+import com.newy.algotrade.domain.common.consts.ProductType
+import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import com.newy.algotrade.unit.common.helper.RESOURCE_CONTENT
 import com.newy.algotrade.unit.common.helper.RESOURCE_PATH
 import org.junit.jupiter.api.*
@@ -237,5 +235,36 @@ class ListTest {
                 val last = it.lastOrNull()
             }
         }
+    }
+}
+
+class ReflectionTest {
+    @Test
+    fun `클래스 이름으로 객체 생성하기`() {
+        val packageName = "com.newy.algotrade.domain.price.domain.model"
+        val className = "ProductPriceKey"
+
+        val clazz = Class.forName("$packageName.$className")
+        val constructor = clazz.getConstructor(
+            Market::class.java,
+            ProductType::class.java,
+            String::class.java,
+            Duration::class.java,
+        )
+
+        assertEquals(
+            ProductPriceKey(
+                market = Market.BY_BIT,
+                productType = ProductType.SPOT,
+                productCode = "BTC",
+                interval = Duration.ofMinutes(1),
+            ),
+            constructor.newInstance(
+                Market.BY_BIT,
+                ProductType.SPOT,
+                "BTC",
+                Duration.ofMinutes(1),
+            )
+        )
     }
 }

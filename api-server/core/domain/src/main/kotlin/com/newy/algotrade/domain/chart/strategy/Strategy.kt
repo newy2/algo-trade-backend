@@ -1,28 +1,19 @@
 package com.newy.algotrade.domain.chart.strategy
 
 import com.newy.algotrade.domain.chart.Candles
+import com.newy.algotrade.domain.chart.ChartFactory
+import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.Rule
 import com.newy.algotrade.domain.chart.order.OrderType
-import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
-import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategyV2
 
-enum class StrategyId(val id: String) {
-    BuyTripleRSIStrategy("1"),
-    BuyTripleRSIStrategyV2("2");
-
+open class Strategy(private val entryType: OrderType, private val entryRule: Rule, private val exitRule: Rule) {
     companion object {
-        private val map = StrategyId.values().associateBy { it.id }
-        infix fun from(id: String) = map.getValue(id)
-    }
-}
+        fun fromClassName(strategyClassName: String, candles: Candles): Strategy {
+            val packageName = "com.newy.algotrade.domain.chart.strategy.custom"
+            val clazz = Class.forName("$packageName.$strategyClassName")
+            val constructor = clazz.getConstructor(Candles::class.java, ChartFactory::class.java)
 
-abstract class Strategy(private val entryType: OrderType, private val entryRule: Rule, private val exitRule: Rule) {
-    companion object {
-        fun create(id: StrategyId, candles: Candles): Strategy {
-            return when (id) {
-                StrategyId.BuyTripleRSIStrategy -> BuyTripleRSIStrategy(candles)
-                StrategyId.BuyTripleRSIStrategyV2 -> BuyTripleRSIStrategyV2(candles)
-            }
+            return constructor.newInstance(candles, DEFAULT_CHART_FACTORY) as Strategy
         }
     }
 
@@ -31,8 +22,6 @@ abstract class Strategy(private val entryType: OrderType, private val entryRule:
             throw IllegalArgumentException("사용할 수 없는 OrderType 입니다")
         }
     }
-
-    abstract fun version(): String
 
     fun shouldOperate(index: Int, history: StrategySignalHistory): OrderType {
         validate(history)

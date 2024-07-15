@@ -12,7 +12,7 @@ class SetStrategyService(
 ) : SetStrategyUseCase {
     override fun setStrategy(key: UserStrategyKey) {
         val candles = candlePort.getCandles(key.productPriceKey)
-        val strategy = Strategy.create(key.strategyId, candles)
+        val strategy = Strategy.fromClassName(key.strategyClassName, candles)
         strategyPort.addStrategy(key, strategy)
     }
 }

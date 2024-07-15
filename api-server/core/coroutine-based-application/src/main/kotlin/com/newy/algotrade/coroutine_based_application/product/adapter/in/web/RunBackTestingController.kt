@@ -11,13 +11,15 @@ import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.Ba
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnCreatedStrategySignalPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
-import com.newy.algotrade.domain.chart.strategy.StrategyId
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import com.newy.algotrade.domain.chart.strategy.TrafficLight
 
 class RunBackTestingController {
-    suspend fun runBackTesting(backTestingDataKey: BackTestingDataKey, strategyId: StrategyId): StrategySignalHistory {
+    suspend fun runBackTesting(
+        backTestingDataKey: BackTestingDataKey,
+        strategyClassName: String
+    ): StrategySignalHistory {
         val candleStore = InMemoryCandleStore()
         val strategyStore = InMemoryStrategyStore()
         val strategySignalHistoryStore = InMemoryStrategySignalHistoryStore()
@@ -56,7 +58,7 @@ class RunBackTestingController {
         setUserStrategyController.setUserStrategy(
             UserStrategyKey(
                 "backTesting",
-                strategyId,
+                strategyClassName,
                 backTestingDataKey.productPriceKey
             )
         )

@@ -5,7 +5,6 @@ import com.newy.algotrade.coroutine_based_application.product.application.servic
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.AddStrategyPort
 import com.newy.algotrade.domain.chart.strategy.Strategy
-import com.newy.algotrade.domain.chart.strategy.StrategyId
 import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
 import helpers.productPriceKey
 import org.junit.jupiter.api.Assertions
@@ -16,7 +15,7 @@ import kotlin.test.assertTrue
 
 private val userStrategyKey = UserStrategyKey(
     "user1",
-    StrategyId.BuyTripleRSIStrategy,
+    "BuyTripleRSIStrategy",
     productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 )
 

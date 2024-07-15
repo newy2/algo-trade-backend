@@ -27,9 +27,7 @@ class BooleanStrategy(entry: Boolean, exit: Boolean) : Strategy(
     OrderType.BUY,
     BooleanRule(entry),
     BooleanRule(exit),
-) {
-    override fun version() = "0"
-}
+)
 
 private val BTC_1MINUTE = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 private val ETH_1MINUTE = productPriceKey("ETHUSDT", Duration.ofMinutes(1))

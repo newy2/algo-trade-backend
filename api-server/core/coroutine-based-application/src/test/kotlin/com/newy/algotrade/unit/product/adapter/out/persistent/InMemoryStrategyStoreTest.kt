@@ -5,7 +5,6 @@ import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.Us
 import com.newy.algotrade.coroutine_based_application.product.port.out.StrategyPort
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.Strategy
-import com.newy.algotrade.domain.chart.strategy.StrategyId
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.productPriceKey
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -19,13 +18,13 @@ import kotlin.test.assertTrue
 
 open class BaseTest {
     protected fun createStrategy(key: UserStrategyKey): Strategy {
-        return Strategy.create(key.strategyId, DEFAULT_CHART_FACTORY.candles())
+        return Strategy.fromClassName(key.strategyClassName, DEFAULT_CHART_FACTORY.candles())
     }
 
     protected fun createUserStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey): UserStrategyKey {
         return UserStrategyKey(
             userStrategyId,
-            StrategyId.BuyTripleRSIStrategy,
+            "BuyTripleRSIStrategy",
             productPriceKey
         )
     }

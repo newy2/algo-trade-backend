@@ -2,7 +2,6 @@ package helpers
 
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.strategy.StrategyId
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
@@ -18,7 +17,7 @@ fun productPriceKey(productCode: String, interval: Duration = Duration.ofMinutes
 fun userStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey) =
     UserStrategyKey(
         userStrategyId,
-        StrategyId.BuyTripleRSIStrategy,
+        "BuyTripleRSIStrategy",
         productPriceKey
     )
 
