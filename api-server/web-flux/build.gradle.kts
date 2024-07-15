@@ -20,6 +20,10 @@ dependencies {
     testImplementation("io.projectreactor:reactor-test")
     testImplementation("com.squareup.okhttp3:mockwebserver")
 
+    // for mysql testing
+    testImplementation("org.testcontainers:mysql")
+    testImplementation("com.github.jasync-sql:jasync-r2dbc-mysql:2.2.4")
+
     // Mac OS 버그 픽스를 위한 플러그인 (참고: https://github.com/reactor/reactor-netty/issues/2245)
     testImplementation("io.netty:netty-resolver-dns-native-macos:4.1.68.Final:osx-aarch_64")
 }

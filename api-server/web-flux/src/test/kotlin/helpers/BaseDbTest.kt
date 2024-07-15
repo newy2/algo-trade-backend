@@ -10,6 +10,8 @@ import org.springframework.test.context.DynamicPropertySource
 import org.springframework.transaction.ReactiveTransactionManager
 import org.springframework.transaction.reactive.TransactionalOperator
 import org.springframework.transaction.reactive.executeAndAwait
+import org.testcontainers.containers.JdbcDatabaseContainer
+import org.testcontainers.containers.MySQLContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.junit.jupiter.Testcontainers
 import org.testcontainers.utility.DockerImageName
@@ -22,7 +24,13 @@ open class BaseDbTest {
     private lateinit var reactiveTransactionManager: ReactiveTransactionManager
 
     companion object {
-        private val dbms = PostgreSQLContainer(DockerImageName.parse("postgres:13.3"))
+        private const val IS_POSTGRES = true // TODO 환경변수로 뺄까?
+        private val dbms: JdbcDatabaseContainer<*> =
+            if (IS_POSTGRES)
+                PostgreSQLContainer(DockerImageName.parse("postgres:13.3"))
+            else
+                MySQLContainer(DockerImageName.parse("mysql:8"))
+                    .withDatabaseName("public")
 
         @JvmStatic
         @DynamicPropertySource
@@ -36,7 +44,8 @@ open class BaseDbTest {
         }
 
         private fun dbmsUrl(): String {
-            return "postgresql://${dbms.host}:${dbms.firstMappedPort}/${dbms.databaseName}"
+            val dbmsName = if (IS_POSTGRES) "postgresql" else "mysql"
+            return "$dbmsName://${dbms.host}:${dbms.firstMappedPort}/${dbms.databaseName}"
         }
 
         @JvmStatic

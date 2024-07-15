@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.dao.DuplicateKeyException
+import org.springframework.dao.DataIntegrityViolationException
 
 class UserStrategyPersistenceAdapterTest(
     @Autowired private val marketAccountRepository: MarketAccountRepository,
@@ -84,7 +84,7 @@ class UserStrategyPersistenceAdapterTest(
             productCategory = ProductCategory.USER_PICK,
         )
 
-        assertThrows<DuplicateKeyException> {
+        assertThrows<DataIntegrityViolationException> {
             val sameMarketAccountId = marketAccountId
             val sameStrategyClassName = strategyClassName
             val sameProductType = ProductType.SPOT
