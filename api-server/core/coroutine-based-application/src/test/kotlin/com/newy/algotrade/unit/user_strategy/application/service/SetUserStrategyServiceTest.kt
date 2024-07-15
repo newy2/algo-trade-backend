@@ -4,6 +4,7 @@ import com.newy.algotrade.coroutine_based_application.user_strategy.application.
 import com.newy.algotrade.coroutine_based_application.user_strategy.domain.Product
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model.SetUserStrategyCommand
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.*
+import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
@@ -42,7 +43,8 @@ open class FakeUserStrategyAdapter : UserStrategyPort {
         marketServerAccountId: Long,
         strategyClassName: String,
         productType: ProductType,
-        productCategory: ProductCategory
+        productCategory: ProductCategory,
+        timeFrame: Candle.TimeFrame,
     ): Long = 1
 
     override suspend fun hasUserStrategy(
@@ -64,6 +66,7 @@ class DefaultSetUserStrategyServiceTest {
         productCategory = ProductCategory.TOP_TRADING_VALUE,
         productType = ProductType.SPOT,
         productCodes = emptyList(),
+        timeFrame = Candle.TimeFrame.M1,
     )
 
     @Test
@@ -167,6 +170,7 @@ class UserPickSetUserStrategyServiceTest {
                     productCategory = ProductCategory.USER_PICK,
                     productType = ProductType.SPOT,
                     productCodes = listOf("BTC", "ETH"),
+                    timeFrame = Candle.TimeFrame.M1,
                 )
             )
             fail()
@@ -197,6 +201,7 @@ class UserPickProductSetUserStrategyServiceTest : FakeUserStrategyAdapter(), Set
                 productCategory = ProductCategory.USER_PICK,
                 productType = ProductType.SPOT,
                 productCodes = listOf("BTC", "ETH"),
+                timeFrame = Candle.TimeFrame.M1,
             )
         )
 
@@ -207,7 +212,8 @@ class UserPickProductSetUserStrategyServiceTest : FakeUserStrategyAdapter(), Set
         marketAccountId: Long,
         strategyClassName: String,
         productType: ProductType,
-        productCategory: ProductCategory
+        productCategory: ProductCategory,
+        timeFrame: Candle.TimeFrame,
     ): Long {
         log += "setUserStrategy "
         return 1

@@ -1,6 +1,7 @@
 package com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent
 
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.UserStrategyPort
+import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyRepository
@@ -17,7 +18,8 @@ class UserStrategyPersistenceAdapter(
         marketServerAccountId: Long,
         strategyClassName: String,
         productType: ProductType,
-        productCategory: ProductCategory
+        productCategory: ProductCategory,
+        timeFrame: Candle.TimeFrame,
     ): Long =
         userStrategyRepository.save(
             UserStrategyEntity(
@@ -25,6 +27,7 @@ class UserStrategyPersistenceAdapter(
                 strategyId = strategyRepository.findByClassName(strategyClassName)!!,
                 productType = productType.name,
                 productCategory = productCategory.name,
+                timeFrame = timeFrame.name,
             )
         ).id
 

@@ -20,4 +20,5 @@ data class UserStrategyEntity(
     @Column("trade_strategy_id") val strategyId: Long,
     val productType: String,
     val productCategory: String,
+    val timeFrame: String,
 )

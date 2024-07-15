@@ -48,6 +48,9 @@
             <column name="product_type" type="VARCHAR2(50)" remarks="상품 유형">
                 <constraints nullable="false"/>
             </column>
+            <column name="time_frame" type="VARCHAR2(3)" remarks="candle 차트 기준 시간">
+                <constraints nullable="false"/>
+            </column>
 
             <!-- 생성/변경 일시 -->
             <column name="created_at" type="DATETIME" remarks="생성일시" defaultValueDate="now()">
@@ -79,6 +82,17 @@
                                                                                            'SPOT_MARGIN',
                                                                                            'FUTURE',
                                                                                            'PERPETUAL_FUTURE'
+                    ));
+
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__time_frame_check CHECK (time_frame IN (
+                                                                                       'M1',
+                                                                                       'M3',
+                                                                                       'M5',
+                                                                                       'M15',
+                                                                                       'M30',
+                                                                                       'H1',
+                                                                                       'D1'
                     ));
         </sql>
     </changeSet>

@@ -1,6 +1,7 @@
 package com.newy.algotrade.unit.user_strategy.port.`in`.model
 
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model.SetUserStrategyCommand
+import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import jakarta.validation.ConstraintViolationException
@@ -15,6 +16,7 @@ val dto = SetUserStrategyCommand(
     productCategory = ProductCategory.USER_PICK,
     productType = ProductType.SPOT,
     productCodes = listOf("BTC"),
+    timeFrame = Candle.TimeFrame.M1,
 )
 
 class SetUserStrategyCommandTest {

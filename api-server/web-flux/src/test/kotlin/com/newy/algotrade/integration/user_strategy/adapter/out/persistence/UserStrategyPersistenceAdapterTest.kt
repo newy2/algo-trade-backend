@@ -1,5 +1,6 @@
 package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
+import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -31,6 +32,7 @@ class UserStrategyPersistenceAdapterTest(
             strategyClassName = strategyClassName,
             productType = ProductType.SPOT,
             productCategory = ProductCategory.USER_PICK,
+            timeFrame = Candle.TimeFrame.M1,
         )
 
         assertEquals(
@@ -39,7 +41,8 @@ class UserStrategyPersistenceAdapterTest(
                 marketAccountId = marketAccountId,
                 strategyId = strategyId,
                 productType = ProductType.SPOT.name,
-                productCategory = ProductCategory.USER_PICK.name
+                productCategory = ProductCategory.USER_PICK.name,
+                timeFrame = Candle.TimeFrame.M1.name,
             ),
             userStrategyRepository.findById(userStrategyId)!!
         )
@@ -60,6 +63,7 @@ class UserStrategyPersistenceAdapterTest(
             strategyClassName = strategyClassName,
             productType = ProductType.SPOT,
             productCategory = ProductCategory.USER_PICK,
+            timeFrame = Candle.TimeFrame.M1,
         )
 
         val afterSaved = adapter.hasUserStrategy(
@@ -82,6 +86,7 @@ class UserStrategyPersistenceAdapterTest(
             strategyClassName = strategyClassName,
             productType = ProductType.SPOT,
             productCategory = ProductCategory.USER_PICK,
+            timeFrame = Candle.TimeFrame.M1,
         )
 
         assertThrows<DataIntegrityViolationException> {
@@ -94,6 +99,7 @@ class UserStrategyPersistenceAdapterTest(
                 strategyClassName = sameStrategyClassName,
                 productType = sameProductType,
                 productCategory = ProductCategory.TOP_TRADING_VALUE,
+                timeFrame = Candle.TimeFrame.M1,
             )
         }
     }

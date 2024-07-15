@@ -1,5 +1,6 @@
 package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
+import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -110,6 +111,7 @@ class SetUserStrategyProductPersistenceAdapterTest(
                 strategyId = strategyId,
                 productType = ProductType.SPOT.name,
                 productCategory = ProductCategory.USER_PICK.name,
+                timeFrame = Candle.TimeFrame.M1.name,
             )
         ).id
 

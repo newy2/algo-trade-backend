@@ -1,5 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model
 
+import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.helper.SelfValidating
@@ -13,6 +14,7 @@ data class SetUserStrategyCommand(
     val productCategory: ProductCategory,
     val productType: ProductType,
     @field:NotBlankElements val productCodes: List<String>,
+    val timeFrame: Candle.TimeFrame
 ) : SelfValidating() {
     init {
         validate()

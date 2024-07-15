@@ -61,6 +61,7 @@ open class SetUserStrategyService(
             strategyClassName = userStrategy.strategyClassName,
             productType = userStrategy.productType,
             productCategory = userStrategy.productCategory,
+            timeFrame = userStrategy.timeFrame
         )
 
         userStrategyProductPort.setUserStrategyProducts(

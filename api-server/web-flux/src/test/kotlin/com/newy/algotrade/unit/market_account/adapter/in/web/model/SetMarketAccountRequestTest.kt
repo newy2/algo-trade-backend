@@ -1,5 +1,6 @@
 package com.newy.algotrade.unit.market_account.adapter.`in`.web.model
 
+import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.web_flux.market_account.adapter.`in`.web.model.SetMarketAccountRequest
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Test
@@ -24,10 +25,9 @@ class SetMarketAccountRequestTest {
             dto.copy(market = "NOT_REGISTERED_MARKET_NAME")
         }
         assertDoesNotThrow {
-            dto.copy(market = "BY_BIT")
-        }
-        assertDoesNotThrow {
-            dto.copy(market = "LS_SEC")
+            Market.values().forEach {
+                dto.copy(market = it.name)
+            }
         }
     }
 
