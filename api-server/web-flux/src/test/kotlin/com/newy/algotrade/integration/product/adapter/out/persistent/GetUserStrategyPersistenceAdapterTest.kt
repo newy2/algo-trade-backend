@@ -39,7 +39,7 @@ class GetUserStrategyPersistenceAdapterTest(
 
     @Test
     fun `user strategy 가 1개인 경우`() = runTransactional {
-        val userStrategyId = setInitData(strategyClassName = "A", listOf("BTC"))
+        val userStrategyId = setInitData(strategyClassName = "A", listOf("BTCUSDT"))
 
         val actualList = adapter.getAllUserStrategies()
         val expectedList = listOf(
@@ -49,7 +49,7 @@ class GetUserStrategyPersistenceAdapterTest(
                 productPriceKey = ProductPriceKey(
                     market = Market.BY_BIT,
                     productType = ProductType.SPOT,
-                    productCode = "BTC",
+                    productCode = "BTCUSDT",
                     interval = Candle.TimeFrame.M1.timePeriod,
                 ),
             ),
@@ -61,8 +61,8 @@ class GetUserStrategyPersistenceAdapterTest(
 
     @Test
     fun `user strategy 가 2개 이상인 경우`() = runTransactional {
-        val userStrategyId1 = setInitData(strategyClassName = "A", listOf("BTC"))
-        val userStrategyId2 = setInitData(strategyClassName = "B", listOf("ETH", "SOL"))
+        val userStrategyId1 = setInitData(strategyClassName = "A", listOf("BTCUSDT"))
+        val userStrategyId2 = setInitData(strategyClassName = "B", listOf("ETHUSDT", "SOLUSDT"))
 
         val actualList = adapter.getAllUserStrategies()
         val expectedList = listOf(
@@ -72,7 +72,7 @@ class GetUserStrategyPersistenceAdapterTest(
                 productPriceKey = ProductPriceKey(
                     market = Market.BY_BIT,
                     productType = ProductType.SPOT,
-                    productCode = "BTC",
+                    productCode = "BTCUSDT",
                     interval = Candle.TimeFrame.M1.timePeriod,
                 ),
             ),
@@ -82,7 +82,7 @@ class GetUserStrategyPersistenceAdapterTest(
                 productPriceKey = ProductPriceKey(
                     market = Market.BY_BIT,
                     productType = ProductType.SPOT,
-                    productCode = "ETH",
+                    productCode = "ETHUSDT",
                     interval = Candle.TimeFrame.M1.timePeriod,
                 ),
             ),
@@ -92,7 +92,7 @@ class GetUserStrategyPersistenceAdapterTest(
                 productPriceKey = ProductPriceKey(
                     market = Market.BY_BIT,
                     productType = ProductType.SPOT,
-                    productCode = "SOL",
+                    productCode = "SOLUSDT",
                     interval = Candle.TimeFrame.M1.timePeriod,
                 ),
             )
@@ -136,7 +136,7 @@ class GetUserStrategyPersistenceAdapterTest(
             )
         ).id
 
-        val marketId = marketRepository.findByCode("BY_BIT")!!.parentMarketId
+        val marketId = marketRepository.findByCode("BY_BIT")!!.id
         val productIds = productRepository.findAll()
             .filter { it.marketId == marketId && it.type == "SPOT" && productCodes.contains(it.code) }
             .map { it.id }

@@ -23,7 +23,7 @@ class SetUserStrategyControllerTest : SetUserStrategyUseCase {
                 strategyClassName = "BuyTripleRSIStrategy",
                 productCategory = "USER_PICK",
                 productType = "SPOT",
-                productCodes = listOf("BTC", "ETH"),
+                productCodes = listOf("BTCUSDT", "ETHUSDT"),
                 timeFrame = "M1",
             )
         )
@@ -34,7 +34,7 @@ class SetUserStrategyControllerTest : SetUserStrategyUseCase {
                 strategyClassName = "BuyTripleRSIStrategy",
                 productCategory = ProductCategory.USER_PICK,
                 productType = ProductType.SPOT,
-                productCodes = listOf("BTC", "ETH"),
+                productCodes = listOf("BTCUSDT", "ETHUSDT"),
                 timeFrame = Candle.TimeFrame.M1,
             ),
             domainModel

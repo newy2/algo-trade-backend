@@ -27,16 +27,16 @@ class SetUserStrategyProductPersistenceAdapterTest(
 ) : BaseDbTest() {
     @Test
     fun `DB 에 입력된 데이터 확인`() = runBlocking {
-        val marketId = marketRepository.findByCode("BY_BIT")!!.parentMarketId
+        val marketId = marketRepository.findByCode("BY_BIT")!!.id
         val products = productRepository.findAll().toList()
-        assertTrue(products.any { it.marketId == marketId && it.type == "SPOT" && it.code == "BTC" })
-        assertTrue(products.any { it.marketId == marketId && it.type == "SPOT" && it.code == "ETH" })
-        assertFalse(products.any { it.marketId == marketId && it.type == "SPOT" && it.code == "XXX" })
+        assertTrue(products.any { it.marketId == marketId && it.type == "SPOT" && it.code == "BTCUSDT" })
+        assertTrue(products.any { it.marketId == marketId && it.type == "SPOT" && it.code == "ETHUSDT" })
+        assertFalse(products.any { it.marketId == marketId && it.type == "SPOT" && it.code == "XXXUSDT" })
     }
 
     @Test
     fun `strategy product 등록하기`() = runTransactional {
-        val (userStrategyId, productIds) = setInitData(productCodes = listOf("BTC", "ETH"))
+        val (userStrategyId, productIds) = setInitData(productCodes = listOf("BTCUSDT", "ETHUSDT"))
 
         val isSaved = adapter.setUserStrategyProducts(
             userStrategyId = userStrategyId,
@@ -115,7 +115,7 @@ class SetUserStrategyProductPersistenceAdapterTest(
             )
         ).id
 
-        val marketId = marketRepository.findByCode("BY_BIT")!!.parentMarketId
+        val marketId = marketRepository.findByCode("BY_BIT")!!.id
         val productIds = productRepository.findAll()
             .filter { it.marketId == marketId && it.type == "SPOT" && productCodes.contains(it.code) }
             .map { it.id }

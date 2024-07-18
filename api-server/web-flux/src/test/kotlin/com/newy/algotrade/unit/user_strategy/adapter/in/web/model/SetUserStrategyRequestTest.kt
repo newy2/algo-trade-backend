@@ -14,7 +14,7 @@ val dto = SetUserStrategyRequest(
     strategyClassName = "BuyTripleRSIStrategy",
     productCategory = "USER_PICK",
     productType = "SPOT",
-    productCodes = listOf("BTC"),
+    productCodes = listOf("BTCUSDT"),
     timeFrame = "M1",
 )
 

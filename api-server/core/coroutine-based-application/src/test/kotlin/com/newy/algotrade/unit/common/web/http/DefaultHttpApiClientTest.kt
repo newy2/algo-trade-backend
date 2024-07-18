@@ -109,11 +109,11 @@ class HttpMethodTest : BaseTest() {
             path = "/path",
             params = mapOf(
                 "category" to "spot",
-                "symbol" to "BTC",
+                "symbol" to "BTCUSDT",
             )
         )
 
-        Assertions.assertEquals("/path?category=spot&symbol=BTC", server.takeRequest().path)
+        Assertions.assertEquals("/path?category=spot&symbol=BTCUSDT", server.takeRequest().path)
     }
 
     @Test

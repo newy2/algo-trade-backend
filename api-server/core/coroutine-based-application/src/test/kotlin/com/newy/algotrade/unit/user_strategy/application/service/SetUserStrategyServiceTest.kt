@@ -150,7 +150,7 @@ class UserPickSetUserStrategyServiceTest {
                 productType: ProductType,
                 productCodes: List<String>
             ): List<Product> {
-                return listOf(Product(1, "BTC"))
+                return listOf(Product(1, "BTCUSDT"))
             }
         }
 
@@ -169,13 +169,13 @@ class UserPickSetUserStrategyServiceTest {
                     strategyClassName = "BuyTripleRSIStrategy",
                     productCategory = ProductCategory.USER_PICK,
                     productType = ProductType.SPOT,
-                    productCodes = listOf("BTC", "ETH"),
+                    productCodes = listOf("BTCUSDT", "ETHUSDT"),
                     timeFrame = Candle.TimeFrame.M1,
                 )
             )
             fail()
         } catch (e: NotFoundRowException) {
-            assertEquals("productCode 를 찾을 수 없습니다. ([ETH])", e.message)
+            assertEquals("productCode 를 찾을 수 없습니다. ([ETHUSDT])", e.message)
         }
     }
 }
@@ -200,7 +200,7 @@ class UserPickProductSetUserStrategyServiceTest : FakeUserStrategyAdapter(), Set
                 strategyClassName = "BuyTripleRSIStrategy",
                 productCategory = ProductCategory.USER_PICK,
                 productType = ProductType.SPOT,
-                productCodes = listOf("BTC", "ETH"),
+                productCodes = listOf("BTCUSDT", "ETHUSDT"),
                 timeFrame = Candle.TimeFrame.M1,
             )
         )

@@ -78,20 +78,20 @@ class WebClientTest {
             .uri {
                 it.path("/path")
                     .queryParam("category", "spot")
-                    .queryParam("symbol", "BTC")
+                    .queryParam("symbol", "BTCUSDT")
                     .build()
             }
             .retrieve()
             .awaitBodyOrNull<Unit>()
 
-        assertEquals("/path?category=spot&symbol=BTC", server.takeRequest().path)
+        assertEquals("/path?category=spot&symbol=BTCUSDT", server.takeRequest().path)
     }
 
     @Test
     fun `GET - 동적으로 Query Params 생성하기`() = runBlocking {
         val map = mapOf(
             "category" to "spot",
-            "symbol" to "BTC",
+            "symbol" to "BTCUSDT",
         )
 
         client
@@ -106,7 +106,7 @@ class WebClientTest {
             .retrieve()
             .awaitBodyOrNull<Unit>()
 
-        assertEquals("/path?category=spot&symbol=BTC", server.takeRequest().path)
+        assertEquals("/path?category=spot&symbol=BTCUSDT", server.takeRequest().path)
     }
 
     class SimpleData(val key: Int, val value: String)

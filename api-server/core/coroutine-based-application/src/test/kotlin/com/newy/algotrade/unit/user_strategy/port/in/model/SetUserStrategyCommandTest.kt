@@ -15,7 +15,7 @@ val dto = SetUserStrategyCommand(
     strategyClassName = "BuyTripleRSIStrategy",
     productCategory = ProductCategory.USER_PICK,
     productType = ProductType.SPOT,
-    productCodes = listOf("BTC"),
+    productCodes = listOf("BTCUSDT"),
     timeFrame = Candle.TimeFrame.M1,
 )
 
@@ -72,7 +72,7 @@ class SetUserStrategyCommandTest {
         assertDoesNotThrow {
             dto.copy(
                 productCategory = ProductCategory.USER_PICK,
-                productCodes = listOf("BTC")
+                productCodes = listOf("BTCUSDT")
             )
         }
     }
@@ -82,7 +82,7 @@ class SetUserStrategyCommandTest {
         assertThrows<IllegalArgumentException> {
             dto.copy(
                 productCategory = ProductCategory.TOP_TRADING_VALUE,
-                productCodes = listOf("BTC")
+                productCodes = listOf("BTCUSDT")
             )
         }
         assertDoesNotThrow {

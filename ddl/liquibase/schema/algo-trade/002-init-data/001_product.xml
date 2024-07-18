@@ -16,7 +16,7 @@
         </preConditions>
 
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE code = 'BY_BIT')"/>
             <column name="type" value="PERPETUAL_FUTURE"/>
             <column name="code" value="BTCUSDT"/>
             <column name="name_ko" value="BTCUSDT"/>
@@ -24,7 +24,7 @@
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE code = 'BY_BIT')"/>
             <column name="type" value="PERPETUAL_FUTURE"/>
             <column name="code" value="ETHUSDT"/>
             <column name="name_ko" value="ETHUSDT"/>
@@ -32,7 +32,7 @@
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE code = 'BY_BIT')"/>
             <column name="type" value="PERPETUAL_FUTURE"/>
             <column name="code" value="SOLUSDT"/>
             <column name="name_ko" value="SOLUSDT"/>
@@ -40,7 +40,7 @@
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE code = 'BY_BIT')"/>
             <column name="type" value="PERPETUAL_FUTURE"/>
             <column name="code" value="1000PEPEUSDT"/>
             <column name="name_ko" value="1000PEPEUSDT"/>
@@ -48,7 +48,7 @@
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE code = 'BY_BIT')"/>
             <column name="type" value="PERPETUAL_FUTURE"/>
             <column name="code" value="DOGEUSDT"/>
             <column name="name_ko" value="DOGEUSDT"/>
@@ -57,43 +57,60 @@
         </insert>
 
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE code = 'BY_BIT')"/>
             <column name="type" value="SPOT"/>
-            <column name="code" value="BTC"/>
-            <column name="name_ko" value="BTC"/>
-            <column name="name_en" value="BTC"/>
+            <column name="code" value="BTCUSDT"/>
+            <column name="name_ko" value="BTCUSDT"/>
+            <column name="name_en" value="BTCUSDT"/>
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE code = 'BY_BIT')"/>
             <column name="type" value="SPOT"/>
-            <column name="code" value="ETH"/>
-            <column name="name_ko" value="ETH"/>
-            <column name="name_en" value="ETH"/>
+            <column name="code" value="ETHUSDT"/>
+            <column name="name_ko" value="ETHUSDT"/>
+            <column name="name_en" value="ETHUSDT"/>
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE code = 'BY_BIT')"/>
             <column name="type" value="SPOT"/>
-            <column name="code" value="SOL"/>
-            <column name="name_ko" value="SOL"/>
-            <column name="name_en" value="SOL"/>
+            <column name="code" value="SOLUSDT"/>
+            <column name="name_ko" value="SOLUSDT"/>
+            <column name="name_en" value="SOLUSDT"/>
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE code = 'BY_BIT')"/>
             <column name="type" value="SPOT"/>
-            <column name="code" value="XRP"/>
-            <column name="name_ko" value="XRP"/>
-            <column name="name_en" value="XRP"/>
+            <column name="code" value="XRPUSDT"/>
+            <column name="name_ko" value="XRPUSDT"/>
+            <column name="name_en" value="XRPUSDT"/>
             <column name="use_yn" value="Y"/>
         </insert>
         <insert tableName="${currentTable}">
-            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE name_ko = '가상화폐 거래소')"/>
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE code = 'BY_BIT')"/>
             <column name="type" value="SPOT"/>
-            <column name="code" value="ONDO"/>
-            <column name="name_ko" value="ONDO"/>
-            <column name="name_en" value="ONDO"/>
+            <column name="code" value="ONDOUSDT"/>
+            <column name="name_ko" value="ONDOUSDT"/>
+            <column name="name_en" value="ONDOUSDT"/>
+            <column name="use_yn" value="Y"/>
+        </insert>
+
+        <insert tableName="${currentTable}">
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE code = 'LS_SEC')"/>
+            <column name="type" value="SPOT"/>
+            <column name="code" value="005930"/>
+            <column name="name_ko" value="삼성전자"/>
+            <column name="name_en" value="삼성전자"/>
+            <column name="use_yn" value="Y"/>
+        </insert>
+        <insert tableName="${currentTable}">
+            <column name="${referenceTable}_id" valueComputed="(SELECT id FROM market WHERE code = 'LS_SEC')"/>
+            <column name="type" value="SPOT"/>
+            <column name="code" value="035420"/>
+            <column name="name_ko" value="네이버"/>
+            <column name="name_en" value="NAVER"/>
             <column name="use_yn" value="Y"/>
         </insert>
     </changeSet>

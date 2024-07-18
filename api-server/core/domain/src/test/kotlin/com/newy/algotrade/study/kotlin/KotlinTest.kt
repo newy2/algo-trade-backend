@@ -256,13 +256,13 @@ class ReflectionTest {
             ProductPriceKey(
                 market = Market.BY_BIT,
                 productType = ProductType.SPOT,
-                productCode = "BTC",
+                productCode = "BTCUSDT",
                 interval = Duration.ofMinutes(1),
             ),
             constructor.newInstance(
                 Market.BY_BIT,
                 ProductType.SPOT,
-                "BTC",
+                "BTCUSDT",
                 Duration.ofMinutes(1),
             )
         )

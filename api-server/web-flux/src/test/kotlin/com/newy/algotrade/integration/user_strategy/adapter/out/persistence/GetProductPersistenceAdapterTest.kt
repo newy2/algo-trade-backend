@@ -22,25 +22,25 @@ class GetProductPersistenceAdapterTest(
 
     @BeforeEach
     fun setUp(): Unit = runBlocking {
-        marketId = marketRepository.findByCode("BY_BIT")!!.parentMarketId
+        marketId = marketRepository.findByCode("BY_BIT")!!.id
     }
 
     @Test
     fun `DB 에 입력된 데이터 확인`() = runBlocking {
         val products = productRepository.findAll().toList()
-        assertTrue(products.any { it.marketId == marketId && it.type == "SPOT" && it.code == "BTC" })
-        assertTrue(products.any { it.marketId == marketId && it.type == "SPOT" && it.code == "ETH" })
-        assertFalse(products.any { it.marketId == marketId && it.type == "SPOT" && it.code == "XXX" })
+        assertTrue(products.any { it.marketId == marketId && it.type == "SPOT" && it.code == "BTCUSDT" })
+        assertTrue(products.any { it.marketId == marketId && it.type == "SPOT" && it.code == "ETHUSDT" })
+        assertFalse(products.any { it.marketId == marketId && it.type == "SPOT" && it.code == "XXXUSDT" })
     }
 
     @Test
     fun `저장된 상품코드 조회하기`() = runBlocking {
         assertEquals(
-            listOf("BTC", "ETH"),
+            listOf("BTCUSDT", "ETHUSDT"),
             adapter.getProducts(
                 marketIds = listOf(marketId),
                 productType = ProductType.SPOT,
-                productCodes = listOf("BTC", "ETH")
+                productCodes = listOf("BTCUSDT", "ETHUSDT")
             ).map { it.code }
         )
     }
@@ -52,7 +52,7 @@ class GetProductPersistenceAdapterTest(
             adapter.getProducts(
                 marketIds = listOf(marketId),
                 productType = ProductType.SPOT,
-                productCodes = listOf("XXX")
+                productCodes = listOf("XXXUSDT")
             ).map { it.code }
         )
     }
@@ -60,11 +60,11 @@ class GetProductPersistenceAdapterTest(
     @Test
     fun `저장된 상품코드와 저장되지 않은 상품코드 함께 조회하기`() = runBlocking {
         assertEquals(
-            listOf("BTC"),
+            listOf("BTCUSDT"),
             adapter.getProducts(
                 marketIds = listOf(marketId),
                 productType = ProductType.SPOT,
-                productCodes = listOf("BTC", "XXX")
+                productCodes = listOf("BTCUSDT", "XXXUSDT")
             ).map { it.code }
         )
     }
