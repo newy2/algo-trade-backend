@@ -5,9 +5,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.StrategyS
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
@@ -29,12 +27,9 @@ class InMemoryStrategySignalHistoryStoreTest {
     private lateinit var store: StrategySignalHistoryPort
 
     @BeforeEach
-    fun setUp() {
-        CoroutineScope(Dispatchers.Default).launch {
-            // TODO Remove CoroutineScope
-            store = InMemoryStrategySignalHistoryStore().also {
-                it.addHistory("id1", signal)
-            }
+    fun setUp() = runBlocking {
+        store = InMemoryStrategySignalHistoryStore().also {
+            it.addHistory("id1", signal)
         }
     }
 
