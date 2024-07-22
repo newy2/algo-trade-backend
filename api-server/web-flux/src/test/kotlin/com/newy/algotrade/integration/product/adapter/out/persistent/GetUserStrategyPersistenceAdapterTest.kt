@@ -16,27 +16,12 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 
-class GetUserStrategyPersistenceAdapterTest(
-    @Autowired private val marketRepository: MarketRepositoryForStrategy,
-    @Autowired private val productRepository: ProductRepository,
-    @Autowired private val marketAccountRepository: MarketAccountRepository,
-    @Autowired private val strategyRepository: StrategyRepository,
-    @Autowired private val userStrategyRepository: UserStrategyRepository,
-    @Autowired private val userStrategyProductRepository: UserStrategyProductRepository,
-    
-    @Autowired private val adapter: GetUserStrategyPersistenceAdapter,
-) : BaseDbTest() {
-    private var index = 0
-
-    @Test
-    fun empty() = runBlocking {
-        val list = adapter.getAllUserStrategies()
-        assertEquals(0, list.size)
-    }
-
+class GetAllUserStrategiesTest : BaseUserStrategyPersistenceAdapterTest() {
     @Test
     fun `user strategy 가 1개인 경우`() = runTransactional {
         val userStrategyId = setInitData(strategyClassName = "A", listOf("BTCUSDT"))
@@ -100,8 +85,67 @@ class GetUserStrategyPersistenceAdapterTest(
 
         assertEquals(expectedList, actualList)
     }
+}
 
-    private suspend fun setInitData(strategyClassName: String, productCodes: List<String>): Long {
+class GetUserStrategyTest : BaseUserStrategyPersistenceAdapterTest() {
+    @Test
+    fun `ID 가 없는 경우`() = runTransactional {
+        val unRegisteredId: Long = 100
+
+        assertNull(adapter.getUserStrategy(unRegisteredId))
+    }
+
+    @Test
+    fun `ID 가 있는 경우`() = runTransactional {
+        val userStrategyId = setInitData(strategyClassName = "A", listOf("BTCUSDT"))
+
+        val actual = adapter.getUserStrategy(userStrategyId)
+        val expected = UserStrategyKey(
+            userStrategyId = userStrategyId.toString(),
+            strategyClassName = "A",
+            productPriceKey = ProductPriceKey(
+                market = Market.BY_BIT,
+                productType = ProductType.SPOT,
+                productCode = "BTCUSDT",
+                interval = Candle.TimeFrame.M1.timePeriod,
+            ),
+        )
+
+        assertEquals(expected, actual)
+    }
+}
+
+open class BaseUserStrategyPersistenceAdapterTest : BaseDbTest() {
+    @Autowired
+    protected lateinit var marketRepository: MarketRepositoryForStrategy
+
+    @Autowired
+    protected lateinit var productRepository: ProductRepository
+
+    @Autowired
+    protected lateinit var marketAccountRepository: MarketAccountRepository
+
+    @Autowired
+    protected lateinit var strategyRepository: StrategyRepository
+
+    @Autowired
+    protected lateinit var userStrategyRepository: UserStrategyRepository
+
+    @Autowired
+    protected lateinit var userStrategyProductRepository: UserStrategyProductRepository
+
+    @Autowired
+    protected lateinit var adapter: GetUserStrategyPersistenceAdapter
+
+    private var index = 0
+
+    @BeforeEach
+    fun empty() = runBlocking {
+        val list = adapter.getAllUserStrategies()
+        assertEquals(0, list.size)
+    }
+
+    protected suspend fun setInitData(strategyClassName: String, productCodes: List<String>): Long {
         val nextIndex = index++
         val marketAccountId = marketAccountRepository.setMarketAccount(
             isProductionServer = false,

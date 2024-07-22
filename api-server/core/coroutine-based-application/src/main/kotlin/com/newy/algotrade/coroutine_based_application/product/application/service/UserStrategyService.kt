@@ -1,13 +1,17 @@
 package com.newy.algotrade.coroutine_based_application.product.application.service
 
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.GetAllUserStrategyQuery
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.UserStrategyQuery
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.GetUserStrategyPort
 
-open class GetAllUserStrategyService(
+open class UserStrategyService(
     private val userStrategyPort: GetUserStrategyPort
-) : GetAllUserStrategyQuery {
+) : UserStrategyQuery {
     override suspend fun getAllUserStrategies(): List<UserStrategyKey> {
         return userStrategyPort.getAllUserStrategies()
+    }
+
+    override suspend fun getUserStrategy(userStrategyId: Long): UserStrategyKey? {
+        return userStrategyPort.getUserStrategy(userStrategyId)
     }
 }

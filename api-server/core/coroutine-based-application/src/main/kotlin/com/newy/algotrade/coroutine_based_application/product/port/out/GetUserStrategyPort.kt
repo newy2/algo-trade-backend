@@ -4,4 +4,5 @@ import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.Us
 
 interface GetUserStrategyPort {
     suspend fun getAllUserStrategies(): List<UserStrategyKey>
+    suspend fun getUserStrategy(userStrategyId: Long): UserStrategyKey?
 }

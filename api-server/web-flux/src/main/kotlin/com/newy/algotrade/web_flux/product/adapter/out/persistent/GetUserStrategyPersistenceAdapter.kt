@@ -7,6 +7,7 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import com.newy.algotrade.web_flux.common.annotation.PersistenceAdapter
+import com.newy.algotrade.web_flux.product.adapter.out.persistent.repository.UserStrategyWithProduct
 import com.newy.algotrade.web_flux.product.adapter.out.persistent.repository.UserStrategyWithProductRepository
 import kotlinx.coroutines.flow.toList
 
@@ -18,19 +19,29 @@ class GetUserStrategyPersistenceAdapter(
         repository
             .findAllWithProducts()
             .toList()
-            .groupBy { it.id }
-            .flatMap { (id, values) ->
-                values.map {
-                    UserStrategyKey(
-                        userStrategyId = id.toString(),
-                        strategyClassName = it.strategyClassName,
-                        productPriceKey = ProductPriceKey(
-                            market = Market.valueOf(it.marketCode),
-                            productType = ProductType.valueOf(it.productType),
-                            productCode = it.productCode,
-                            interval = Candle.TimeFrame.valueOf(it.timeFrame).timePeriod,
-                        ),
-                    )
-                }
-            }
+            .toDomainModels()
+
+    override suspend fun getUserStrategy(userStrategyId: Long): UserStrategyKey? =
+        repository
+            .findWithProducts(userStrategyId)
+            .toList()
+            .toDomainModels()
+            .firstOrNull()
 }
+
+fun List<UserStrategyWithProduct>.toDomainModels() =
+    this.groupBy { it.id }
+        .flatMap { (id, values) ->
+            values.map {
+                UserStrategyKey(
+                    userStrategyId = id.toString(),
+                    strategyClassName = it.strategyClassName,
+                    productPriceKey = ProductPriceKey(
+                        market = Market.valueOf(it.marketCode),
+                        productType = ProductType.valueOf(it.productType),
+                        productCode = it.productCode,
+                        interval = Candle.TimeFrame.valueOf(it.timeFrame).timePeriod,
+                    ),
+                )
+            }
+        }

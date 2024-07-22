@@ -1,12 +1,16 @@
 package com.newy.algotrade.web_flux
 
+import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
+import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStrategyEvent
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.system.InitController
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.SetRunnableStrategyController
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.GetAllUserStrategyQuery
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.UserStrategyQuery
 import com.newy.algotrade.coroutine_based_application.product.port.out.PollingProductPricePort
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Component
@@ -24,6 +28,23 @@ class Bootstrap(
         }
         CoroutineScope(Dispatchers.IO).launch {
             InitController(setRunnableStrategyController, getAllUserStrategyQuery).init()
+        }
+    }
+}
+
+@Component
+class RegisterEventHandler(
+    private val setRunnableStrategyController: SetRunnableStrategyController,
+    private val userStrategyQuery: UserStrategyQuery,
+    @Qualifier("createUserStrategyEventBus") val createUserStrategyEventBus: EventBus<CreateUserStrategyEvent>,
+) : CommandLineRunner {
+    override fun run(vararg args: String?) {
+        CoroutineScope(Dispatchers.IO).launch {
+            createUserStrategyEventBus.addListener(coroutineContext) {
+                userStrategyQuery.getUserStrategy(it.id)?.let { userStrategyKey ->
+                    setRunnableStrategyController.setUserStrategy(userStrategyKey)
+                }
+            }
         }
     }
 }
