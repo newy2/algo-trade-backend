@@ -1,5 +1,7 @@
 package com.newy.algotrade.coroutine_based_application.user_strategy.application.service
 
+import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
+import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStrategyEvent
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.SetUserStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model.SetUserStrategyCommand
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.*
@@ -15,6 +17,7 @@ open class SetUserStrategyService(
     private val productPort: GetProductPort,
     private val userStrategyPort: UserStrategyPort,
     private val userStrategyProductPort: SetUserStrategyProductPort,
+    private val eventBus: EventBus<CreateUserStrategyEvent>,
 ) : SetUserStrategyUseCase {
     override suspend fun setUserStrategy(userStrategy: SetUserStrategyCommand): Boolean = withContext(Dispatchers.IO) {
         val marketIds = listOf(
@@ -68,6 +71,9 @@ open class SetUserStrategyService(
             userStrategyId = userStrategyId,
             productIds = savedProducts.map { it.id }
         )
+
+        eventBus.publishEvent(CreateUserStrategyEvent(userStrategyId))
+
         return@withContext true
     }
 }
