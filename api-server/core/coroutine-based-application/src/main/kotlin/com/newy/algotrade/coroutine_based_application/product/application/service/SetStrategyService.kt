@@ -6,7 +6,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.AddStrate
 import com.newy.algotrade.coroutine_based_application.product.port.out.GetCandlePort
 import com.newy.algotrade.domain.chart.strategy.Strategy
 
-class SetStrategyService(
+open class SetStrategyService(
     private val candlePort: GetCandlePort,
     private val strategyPort: AddStrategyPort,
 ) : SetStrategyUseCase {

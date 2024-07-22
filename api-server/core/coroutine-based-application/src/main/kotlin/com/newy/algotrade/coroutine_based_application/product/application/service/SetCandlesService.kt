@@ -9,7 +9,7 @@ import com.newy.algotrade.domain.chart.DEFAULT_CANDLE_SIZE
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import java.time.OffsetDateTime
 
-class SetCandlesService(
+open class SetCandlesService(
     private val productPricePort: GetProductPricePort,
     private val pollingProductPricePort: SubscribePollingProductPricePort,
     private val candlePort: CandlePort,

@@ -3,7 +3,9 @@ package com.newy.algotrade.coroutine_based_application.common.web.default_implem
 import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketClient
 import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketClientListener
 import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketPing
+import com.newy.algotrade.domain.common.annotation.ForTesting
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
@@ -12,18 +14,10 @@ import kotlinx.coroutines.launch
 import okhttp3.*
 import kotlin.coroutines.CoroutineContext
 
-class DefaultWebSocketClientFactory(
-    private val okHttpClient: OkHttpClient,
-    private val coroutineContext: CoroutineContext,
-) {
-    fun create(url: String): DefaultWebSocketClient =
-        DefaultWebSocketClient(okHttpClient, url, coroutineContext)
-}
-
 open class DefaultWebSocketClient(
     val client: OkHttpClient,
     private val url: String,
-    private val coroutineContext: CoroutineContext,
+    @ForTesting private val coroutineContext: CoroutineContext = Dispatchers.IO,
     pingInfo: WebSocketPing = WebSocketPing(20 * 1000, ""),
     listener: WebSocketClientListener = WebSocketClientListener(),
 ) : WebSocketClient(pingInfo, listener) {

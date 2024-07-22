@@ -9,7 +9,7 @@ import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
 @Suppress("INAPPLICABLE_JVM_NAME")
-class PollingProductPriceProxy(
+open class PollingProductPriceProxy(
     private val components: Map<Key, PollingProductPricePort>,
     onReceivePollingPricePort: OnReceivePollingPricePort,
     override var callback: PollingCallback<ProductPriceKey, List<ProductPrice>>? = {

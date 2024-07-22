@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.model.Get
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.extension.ProductPrice
 
-class FetchProductPriceProxy(
+open class FetchProductPriceProxy(
     private val components: Map<Market, GetProductPricePort>
 ) : GetProductPricePort {
     override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> {

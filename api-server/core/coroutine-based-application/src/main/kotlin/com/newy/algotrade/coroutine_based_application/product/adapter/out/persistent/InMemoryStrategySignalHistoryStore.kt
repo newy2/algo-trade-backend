@@ -4,7 +4,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.StrategyS
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 
-class InMemoryStrategySignalHistoryStore : StrategySignalHistoryPort {
+open class InMemoryStrategySignalHistoryStore : StrategySignalHistoryPort {
     private val historyMap = mutableMapOf<String, StrategySignalHistory>()
 
     override suspend fun getHistory(userStrategyId: String): StrategySignalHistory {

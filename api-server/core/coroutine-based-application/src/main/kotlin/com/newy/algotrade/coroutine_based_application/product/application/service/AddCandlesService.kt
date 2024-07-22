@@ -6,7 +6,7 @@ import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
-class AddCandlesService(
+open class AddCandlesService(
     private val candlePort: AddCandlePort
 ) : AddCandlesUseCase {
     override fun addCandles(productPriceKey: ProductPriceKey, candleList: List<ProductPrice>): Candles {

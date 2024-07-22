@@ -4,7 +4,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandl
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 
-class SetRunnableStrategyController(
+open class SetRunnableStrategyController(
     private val candlesUseCase: SetCandlesUseCase,
     private val strategyUseCase: SetStrategyUseCase,
 ) {

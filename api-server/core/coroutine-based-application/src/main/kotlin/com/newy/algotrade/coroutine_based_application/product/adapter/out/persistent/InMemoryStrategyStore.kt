@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.StrategyP
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
-class InMemoryStrategyStore : StrategyPort {
+open class InMemoryStrategyStore : StrategyPort {
     private val map = mutableMapOf<UserStrategyKey, Strategy>()
     override fun hasProductPriceKey(productPriceKey: ProductPriceKey): Boolean {
         return map.keys.find { it.productPriceKey == productPriceKey } != null

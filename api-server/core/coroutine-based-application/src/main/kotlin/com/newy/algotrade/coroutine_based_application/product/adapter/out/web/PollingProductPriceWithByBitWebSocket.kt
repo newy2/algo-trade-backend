@@ -3,19 +3,21 @@ package com.newy.algotrade.coroutine_based_application.product.adapter.out.web
 import com.newy.algotrade.coroutine_based_application.common.web.by_bit.ByBitWebSocket
 import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketClient
 import com.newy.algotrade.coroutine_based_application.product.port.out.PollingProductPricePort
+import com.newy.algotrade.domain.common.annotation.ForTesting
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverter
 import com.newy.algotrade.domain.common.mapper.toObject
 import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.ByBitProductPriceWebSocketResponse
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
 
 class PollingProductPriceWithByBitWebSocket(
     client: WebSocketClient,
     private val productType: ProductType,
     jsonConverter: JsonConverter,
-    coroutineContext: CoroutineContext,
+    @ForTesting coroutineContext: CoroutineContext = Dispatchers.IO,
 ) : PollingProductPricePort,
     ByBitWebSocket<ProductPriceKey, List<ProductPrice>>(client, jsonConverter, coroutineContext) {
     override fun topic(key: ProductPriceKey): String {

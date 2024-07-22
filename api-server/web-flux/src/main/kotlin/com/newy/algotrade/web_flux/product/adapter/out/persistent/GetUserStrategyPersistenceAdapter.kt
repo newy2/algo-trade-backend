@@ -6,11 +6,11 @@ import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import com.newy.algotrade.web_flux.common.annotation.PersistenceAdapter
 import com.newy.algotrade.web_flux.product.adapter.out.persistent.repository.UserStrategyWithProductRepository
 import kotlinx.coroutines.flow.toList
-import org.springframework.stereotype.Component
 
-@Component
+@PersistenceAdapter
 class GetUserStrategyPersistenceAdapter(
     private val repository: UserStrategyWithProductRepository
 ) : GetUserStrategyPort {

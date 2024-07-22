@@ -6,7 +6,7 @@ import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
-class InMemoryCandleStore : CandlePort {
+open class InMemoryCandleStore : CandlePort {
     private val candleMap = mutableMapOf<ProductPriceKey, Candles>()
 
     override fun getCandles(key: ProductPriceKey): Candles =
