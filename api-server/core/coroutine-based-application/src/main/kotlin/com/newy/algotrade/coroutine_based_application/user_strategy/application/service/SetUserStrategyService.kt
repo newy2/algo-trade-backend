@@ -17,7 +17,7 @@ open class SetUserStrategyService(
     private val userStrategyProductPort: SetUserStrategyProductPort,
 ) : SetUserStrategyUseCase {
     override suspend fun setUserStrategy(userStrategy: SetUserStrategyCommand): Boolean = withContext(Dispatchers.IO) {
-        val (marketIds, hasStrategy, hasUserStrategy) = listOf(
+        val marketIds = listOf(
             async { marketPort.getMarketIdsBy(userStrategy.marketAccountId) },
             async { strategyPort.hasStrategyByClassName(userStrategy.strategyClassName) },
             async {
@@ -28,31 +28,31 @@ open class SetUserStrategyService(
                 )
             }
         ).awaitAll().let {
-            Triple(
-                it[0] as List<Long>,
-                it[1] as Boolean,
-                it[2] as Boolean,
-            )
-        }
+            val (marketIds, hasStrategy, hasUserStrategy) = it
+            if ((marketIds as List<Long>).isEmpty()) {
+                throw NotFoundRowException("marketAccountId 를 찾을 수 없습니다.")
+            }
+            if (!(hasStrategy as Boolean)) {
+                throw NotFoundRowException("strategyId 를 찾을 수 없습니다.")
+            }
+            if (hasUserStrategy as Boolean) {
+                throw IllegalArgumentException("이미 등록한 전략입니다.")
+            }
 
-        if (marketIds.isEmpty()) {
-            throw NotFoundRowException("marketAccountId 를 찾을 수 없습니다.")
-        }
-        if (!hasStrategy) {
-            throw NotFoundRowException("strategyId 를 찾을 수 없습니다.")
-        }
-        if (hasUserStrategy) {
-            throw IllegalArgumentException("이미 등록한 전략입니다.")
+            marketIds
         }
 
         val savedProducts = productPort.getProducts(
             marketIds = marketIds,
             productType = userStrategy.productType,
             productCodes = userStrategy.productCodes
-        )
-        userStrategy.productCodes.subtract(savedProducts.map { it.code }.toSet()).let {
-            if (it.isNotEmpty()) {
-                throw NotFoundRowException("productCode 를 찾을 수 없습니다. (${it})")
+        ).also { savedProducts ->
+            val savedProductCodes = savedProducts.map { it.code }
+            val requestProductCodes = userStrategy.productCodes
+            val diff = requestProductCodes.subtract(savedProductCodes.toSet())
+
+            if (diff.isNotEmpty()) {
+                throw NotFoundRowException("productCode 를 찾을 수 없습니다. (${diff})")
             }
         }
 
