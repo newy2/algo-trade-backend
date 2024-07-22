@@ -1,0 +1,24 @@
+package com.newy.algotrade.coroutine_based_application.common.coroutine
+
+import com.newy.algotrade.domain.common.annotation.ForTesting
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
+
+class EventBus<T> {
+    private val events = MutableSharedFlow<T>()
+
+    suspend fun publishEvent(event: T) {
+        events.emit(event)
+    }
+
+    fun addListener(
+        @ForTesting coroutineContext: CoroutineContext = Dispatchers.IO,
+        callback: suspend (T) -> Unit
+    ) = CoroutineScope(coroutineContext).launch {
+        events.asSharedFlow().collect(callback)
+    }
+}
