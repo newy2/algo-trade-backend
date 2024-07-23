@@ -38,7 +38,7 @@ interface MarketAccountRepository : CoroutineCrudRepository<MarketAccountEntity,
                                           , app_secret
                                           )
         VALUES                            (
-                                            (SELECT id FROM users WHERE email = 'admin')
+                                            (SELECT id FROM users WHERE email = 'admin') -- TODO GlobalEnv.ADMIN_USER_ID
                                           , (
                                              SELECT ms.id
                                              FROM   market_server ms
