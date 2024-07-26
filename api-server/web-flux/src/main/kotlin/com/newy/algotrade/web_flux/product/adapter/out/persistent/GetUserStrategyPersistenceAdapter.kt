@@ -1,7 +1,7 @@
 package com.newy.algotrade.web_flux.product.adapter.out.persistent
 
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
-import com.newy.algotrade.coroutine_based_application.product.port.out.GetUserStrategyPort
+import com.newy.algotrade.coroutine_based_application.product.port.out.UserStrategyQueryPort
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.toList
 @PersistenceAdapter
 class GetUserStrategyPersistenceAdapter(
     private val repository: UserStrategyWithProductRepository
-) : GetUserStrategyPort {
+) : UserStrategyQueryPort {
     override suspend fun getAllUserStrategies(): List<UserStrategyKey> =
         repository
             .findAllWithProducts()

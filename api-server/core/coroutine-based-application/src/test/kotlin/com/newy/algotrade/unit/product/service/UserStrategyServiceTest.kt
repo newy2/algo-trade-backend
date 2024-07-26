@@ -1,13 +1,22 @@
 package com.newy.algotrade.unit.product.service
 
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
-import com.newy.algotrade.coroutine_based_application.product.port.out.GetUserStrategyPort
+import com.newy.algotrade.coroutine_based_application.product.port.out.UserStrategyQueryPort
 import com.newy.algotrade.coroutine_based_application.product.service.UserStrategyService
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-class UserStrategyServiceTest : GetUserStrategyPort {
+open class NoErrorUserStrategyQueryAdapter : UserStrategyQueryPort {
+    override suspend fun getAllUserStrategies(): List<UserStrategyKey> = emptyList()
+
+    override suspend fun getUserStrategy(userStrategyId: Long): UserStrategyKey? = null
+}
+
+@DisplayName("port 호출순서 확인")
+class UserStrategyServiceTest : NoErrorUserStrategyQueryAdapter() {
+    private val service = UserStrategyService(this)
     private lateinit var log: String
 
     @BeforeEach
@@ -17,25 +26,25 @@ class UserStrategyServiceTest : GetUserStrategyPort {
 
     @Test
     suspend fun `getAllUserStrategies 호출 확인`() {
-        val service = UserStrategyService(this)
         service.getAllUserStrategies()
-        assertEquals("getAllUserStrategies", log)
+
+        assertEquals("getAllUserStrategies ", log)
     }
 
     @Test
     suspend fun `getUserStrategy 호출 확인`() {
-        val service = UserStrategyService(this)
         service.getUserStrategy(1)
-        assertEquals("getUserStrategy 1", log)
+
+        assertEquals("getUserStrategy ", log)
     }
 
     override suspend fun getAllUserStrategies(): List<UserStrategyKey> {
-        log = "getAllUserStrategies"
-        return emptyList()
+        log += "getAllUserStrategies "
+        return super.getAllUserStrategies()
     }
 
     override suspend fun getUserStrategy(userStrategyId: Long): UserStrategyKey? {
-        log = "getUserStrategy $userStrategyId"
-        return null
+        log += "getUserStrategy "
+        return super.getUserStrategy(userStrategyId)
     }
 }
