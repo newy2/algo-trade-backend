@@ -1,7 +1,7 @@
 package com.newy.algotrade.web_flux.market_account.adapter.out.persistent
 
-import com.newy.algotrade.coroutine_based_application.market_account.application.port.`in`.model.SetMarketAccountCommand
-import com.newy.algotrade.coroutine_based_application.market_account.application.port.out.MarketAccountPort
+import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
+import com.newy.algotrade.coroutine_based_application.market_account.port.out.MarketAccountPort
 import org.springframework.stereotype.Component
 
 @Component

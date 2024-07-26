@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.market_account.application.port.`in`.model
+package com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model
 
 import com.newy.algotrade.domain.common.consts.Market
 

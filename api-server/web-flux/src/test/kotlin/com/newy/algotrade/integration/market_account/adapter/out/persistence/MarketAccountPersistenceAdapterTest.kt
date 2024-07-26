@@ -1,6 +1,6 @@
 package com.newy.algotrade.integration.market_account.adapter.out.persistence
 
-import com.newy.algotrade.coroutine_based_application.market_account.application.port.`in`.model.SetMarketAccountCommand
+import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.MarketAccountPersistenceAdapter
 import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.MarketAccountRepository

@@ -1,8 +1,8 @@
-package com.newy.algotrade.unit.market_account.application.sevice
+package com.newy.algotrade.unit.market_account.sevice
 
-import com.newy.algotrade.coroutine_based_application.market_account.application.port.`in`.model.SetMarketAccountCommand
-import com.newy.algotrade.coroutine_based_application.market_account.application.port.out.MarketAccountPort
-import com.newy.algotrade.coroutine_based_application.market_account.application.service.SetMarketAccountService
+import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
+import com.newy.algotrade.coroutine_based_application.market_account.port.out.MarketAccountPort
+import com.newy.algotrade.coroutine_based_application.market_account.service.SetMarketAccountService
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
 import kotlinx.coroutines.test.runTest

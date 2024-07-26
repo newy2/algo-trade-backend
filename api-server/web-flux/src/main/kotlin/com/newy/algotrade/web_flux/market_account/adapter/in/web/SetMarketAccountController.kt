@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.market_account.adapter.`in`.web
 
-import com.newy.algotrade.coroutine_based_application.market_account.application.port.`in`.SetMarketAccountUseCase
+import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.SetMarketAccountUseCase
 import com.newy.algotrade.web_flux.market_account.adapter.`in`.web.model.SetMarketAccountRequest
 import com.newy.algotrade.web_flux.market_account.adapter.`in`.web.model.SetMarketAccountResponse
 import org.springframework.http.HttpStatus

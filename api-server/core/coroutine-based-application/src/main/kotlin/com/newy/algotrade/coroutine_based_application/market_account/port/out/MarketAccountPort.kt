@@ -1,6 +1,6 @@
-package com.newy.algotrade.coroutine_based_application.market_account.application.port.out
+package com.newy.algotrade.coroutine_based_application.market_account.port.out
 
-import com.newy.algotrade.coroutine_based_application.market_account.application.port.`in`.model.SetMarketAccountCommand
+import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 
 interface MarketAccountPort : MarketAccountQueryPort, MarketAccountCommandPort
 
