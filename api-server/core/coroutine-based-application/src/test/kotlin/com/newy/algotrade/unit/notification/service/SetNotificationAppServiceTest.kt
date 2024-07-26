@@ -32,7 +32,7 @@ class FailedSetNotificationAppServiceTest {
         val command = SetNotificationAppCommand(
             userId = 1,
             type = NotificationApp.SLACK,
-            url = NotificationApp.SLACK.baseUrl
+            url = NotificationApp.SLACK.host
         )
 
         try {
@@ -57,7 +57,7 @@ class SuccessSetNotificationAppServiceTest : NoErrorNotificationAppAdapter() {
         val command = SetNotificationAppCommand(
             userId = 1,
             type = NotificationApp.SLACK,
-            url = NotificationApp.SLACK.baseUrl
+            url = NotificationApp.SLACK.host
         )
 
         val isRegistered = service.setNotificationApp(command)

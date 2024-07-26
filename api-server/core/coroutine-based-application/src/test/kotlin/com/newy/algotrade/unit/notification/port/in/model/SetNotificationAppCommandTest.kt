@@ -7,14 +7,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
-
-val dto = SetNotificationAppCommand(
-    userId = 1,
-    type = NotificationApp.SLACK,
-    url = "https://hooks.slack.com/services/XXX/YYY",
-)
-
 class SetNotificationAppCommandTest {
+    private val dto = SetNotificationAppCommand(
+        userId = 1,
+        type = NotificationApp.SLACK,
+        url = "https://hooks.slack.com/services/XXX/YYY",
+    )
+    
     @Test
     fun `userId 는 0 이상이어야 함`() {
         assertThrows<ConstraintViolationException> { dto.copy(userId = -1) }
@@ -46,13 +45,11 @@ class SetNotificationAppCommandTest {
                 url = "https://naver.com"
             )
         }
-        assertThrows<IllegalArgumentException>("올바르지 못한 URL2") {
+        assertDoesNotThrow {
             dto.copy(
                 type = NotificationApp.SLACK,
                 url = "https://hooks.slack.com"
             )
-        }
-        assertDoesNotThrow {
             dto.copy(
                 type = NotificationApp.SLACK,
                 url = "https://hooks.slack.com/services/XXX/YYY"

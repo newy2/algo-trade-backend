@@ -23,7 +23,7 @@ class SetNotificationAppControllerTest : SetNotificationAppUseCase {
         controller.setNotificationApp(
             SetNotificationAppRequest(
                 type = "SLACK",
-                url = NotificationApp.SLACK.baseUrl + "XXX/YYY"
+                url = NotificationApp.SLACK.host + "/XXX/YYY"
             )
         )
 
@@ -31,7 +31,7 @@ class SetNotificationAppControllerTest : SetNotificationAppUseCase {
             SetNotificationAppCommand(
                 userId = TestEnv.TEST_ADMIN_USER_ID,
                 type = NotificationApp.SLACK,
-                url = NotificationApp.SLACK.baseUrl + "XXX/YYY"
+                url = NotificationApp.SLACK.host + "/XXX/YYY"
             ),
             incomingPortModel
         )

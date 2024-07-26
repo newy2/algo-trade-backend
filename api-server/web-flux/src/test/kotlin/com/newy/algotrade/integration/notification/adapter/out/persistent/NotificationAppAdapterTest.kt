@@ -35,7 +35,7 @@ class NotificationAppAdapterTest(
             SetNotificationAppCommand(
                 userId = userId,
                 type = NotificationApp.SLACK,
-                url = "${NotificationApp.SLACK.baseUrl}XXXX/YYY"
+                url = "${NotificationApp.SLACK.host}/XXXX/YYY"
             )
         )
 

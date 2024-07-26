@@ -48,6 +48,7 @@ class DefaultHttpApiClient(
             )
             .build()
 
+        // TODO log
         val result = client.newCall(request).awaitCall().body!!.string()
 
         return jsonConverter._toObject(result, jsonExtraValues, clazz)
