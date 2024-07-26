@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.user_strategy.application.service
+package com.newy.algotrade.coroutine_based_application.user_strategy.service
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
 import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStrategyEvent

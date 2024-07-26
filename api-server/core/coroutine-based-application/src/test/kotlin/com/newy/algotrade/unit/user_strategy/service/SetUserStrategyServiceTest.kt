@@ -1,11 +1,11 @@
-package com.newy.algotrade.unit.user_strategy.application.service
+package com.newy.algotrade.unit.user_strategy.service
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
 import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStrategyEvent
-import com.newy.algotrade.coroutine_based_application.user_strategy.application.service.SetUserStrategyService
 import com.newy.algotrade.coroutine_based_application.user_strategy.domain.Product
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model.SetUserStrategyCommand
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.*
+import com.newy.algotrade.coroutine_based_application.user_strategy.service.SetUserStrategyService
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
