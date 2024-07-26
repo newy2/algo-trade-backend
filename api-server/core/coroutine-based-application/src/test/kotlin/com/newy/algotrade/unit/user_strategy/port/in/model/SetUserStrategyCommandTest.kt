@@ -21,7 +21,7 @@ val dto = SetUserStrategyCommand(
 
 class SetUserStrategyCommandTest {
     @Test
-    fun marketAccountId() {
+    fun `marketAccountId 은 0 이상 이어야 한다`() {
         assertThrows<ConstraintViolationException> { dto.copy(marketAccountId = -1) }
         assertThrows<ConstraintViolationException> { dto.copy(marketAccountId = 0) }
         assertDoesNotThrow {
@@ -31,7 +31,7 @@ class SetUserStrategyCommandTest {
     }
 
     @Test
-    fun strategyClassName() {
+    fun `strategyClassName 는 NotBlank 이어야 한다`() {
         assertThrows<ConstraintViolationException> { dto.copy(strategyClassName = "") }
         assertThrows<ConstraintViolationException> { dto.copy(strategyClassName = " ") }
         assertDoesNotThrow {
@@ -40,21 +40,7 @@ class SetUserStrategyCommandTest {
     }
 
     @Test
-    fun productCategory() {
-        assertThrows<IllegalArgumentException> {
-            dto.copy(productCategory = ProductCategory.valueOf("NOT_REGISTERED_NAME"))
-        }
-    }
-
-    @Test
-    fun productType() {
-        assertThrows<IllegalArgumentException> {
-            dto.copy(productType = ProductType.valueOf("NOT_REGISTERED_NAME"))
-        }
-    }
-
-    @Test
-    fun productCodes() {
+    fun `productCodes 의 item 들은 NotBlank 이어야 한다`() {
         assertThrows<ConstraintViolationException> {
             dto.copy(productCodes = listOf(""))
             dto.copy(productCodes = listOf(" ", ""))

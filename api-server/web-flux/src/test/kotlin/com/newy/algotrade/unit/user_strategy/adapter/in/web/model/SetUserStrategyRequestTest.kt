@@ -20,7 +20,7 @@ val dto = SetUserStrategyRequest(
 
 class SetUserStrategyRequestTest {
     @Test
-    fun productCategory() {
+    fun `productCategory 는 ProductCategory enum 값만 입력받을 수 있다`() {
         assertThrows<ConstraintViolationException> {
             dto.copy(productCategory = "")
         }
@@ -35,7 +35,7 @@ class SetUserStrategyRequestTest {
     }
 
     @Test
-    fun timeFrame() {
+    fun `productType 은 ProductType enum 값만 입력받을 수 있다`() {
         assertThrows<ConstraintViolationException> {
             dto.copy(productType = "")
         }
@@ -50,7 +50,7 @@ class SetUserStrategyRequestTest {
     }
 
     @Test
-    fun productType() {
+    fun `timeFrame 은 TimeFrame enum 값만 입력받을 수 있다`() {
         assertThrows<ConstraintViolationException> {
             dto.copy(timeFrame = "")
         }
