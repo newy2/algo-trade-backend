@@ -1,8 +1,8 @@
-package com.newy.algotrade.web_flux.product.application.service
+package com.newy.algotrade.web_flux.product.service
 
-import com.newy.algotrade.coroutine_based_application.product.application.service.SetStrategyService
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.StrategyPort
+import com.newy.algotrade.coroutine_based_application.product.service.SetStrategyService
 import org.springframework.stereotype.Service
 
 @Service

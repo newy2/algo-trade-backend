@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.product.application.service
+package com.newy.algotrade.coroutine_based_application.product.service
 
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.GetCandlePort

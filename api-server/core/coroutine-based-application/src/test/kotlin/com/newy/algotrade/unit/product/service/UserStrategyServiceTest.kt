@@ -1,8 +1,8 @@
-package com.newy.algotrade.unit.product.application.service
+package com.newy.algotrade.unit.product.service
 
-import com.newy.algotrade.coroutine_based_application.product.application.service.UserStrategyService
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.GetUserStrategyPort
+import com.newy.algotrade.coroutine_based_application.product.service.UserStrategyService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

@@ -1,11 +1,11 @@
-package com.newy.algotrade.unit.product.application.service
+package com.newy.algotrade.unit.product.service
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryStrategyStore
-import com.newy.algotrade.coroutine_based_application.product.application.service.RunStrategyService
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.*
+import com.newy.algotrade.coroutine_based_application.product.service.RunStrategyService
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
