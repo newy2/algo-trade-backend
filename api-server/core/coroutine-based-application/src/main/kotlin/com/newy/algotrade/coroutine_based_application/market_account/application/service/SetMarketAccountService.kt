@@ -2,19 +2,17 @@ package com.newy.algotrade.coroutine_based_application.market_account.applicatio
 
 import com.newy.algotrade.coroutine_based_application.market_account.application.port.`in`.SetMarketAccountUseCase
 import com.newy.algotrade.coroutine_based_application.market_account.application.port.`in`.model.SetMarketAccountCommand
-import com.newy.algotrade.coroutine_based_application.market_account.application.port.out.HasMarketAccountPort
-import com.newy.algotrade.coroutine_based_application.market_account.application.port.out.SetMarketAccountPort
+import com.newy.algotrade.coroutine_based_application.market_account.application.port.out.MarketAccountPort
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
 
 open class SetMarketAccountService(
-    private val hasMarketAccountPort: HasMarketAccountPort,
-    private val setMarketAccountPort: SetMarketAccountPort
+    private val marketAccountPort: MarketAccountPort,
 ) : SetMarketAccountUseCase {
     override suspend fun setMarketAccount(marketAccount: SetMarketAccountCommand): Boolean {
-        if (hasMarketAccountPort.hasMarketAccount(marketAccount)) {
+        if (marketAccountPort.hasMarketAccount(marketAccount)) {
             throw DuplicateDataException("이미 등록된 appKey, appSecret 입니다.")
         }
 
-        return setMarketAccountPort.setMarketAccount(marketAccount)
+        return marketAccountPort.setMarketAccount(marketAccount)
     }
 }

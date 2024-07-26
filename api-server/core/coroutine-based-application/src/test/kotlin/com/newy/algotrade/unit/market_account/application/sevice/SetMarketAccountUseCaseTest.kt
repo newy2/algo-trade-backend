@@ -1,68 +1,69 @@
 package com.newy.algotrade.unit.market_account.application.sevice
 
 import com.newy.algotrade.coroutine_based_application.market_account.application.port.`in`.model.SetMarketAccountCommand
-import com.newy.algotrade.coroutine_based_application.market_account.application.port.out.HasMarketAccountPort
-import com.newy.algotrade.coroutine_based_application.market_account.application.port.out.SetMarketAccountPort
+import com.newy.algotrade.coroutine_based_application.market_account.application.port.out.MarketAccountPort
 import com.newy.algotrade.coroutine_based_application.market_account.application.service.SetMarketAccountService
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.Test
-import kotlin.test.assertTrue
+import org.junit.jupiter.api.*
+import kotlin.test.assertEquals
+import kotlin.test.fail
 
-class SetMarketAccountUseCaseTest : HasMarketAccountPort, SetMarketAccountPort {
-    private val repository = mutableListOf<SetMarketAccountCommand>()
+open class NoErrorAdapter : MarketAccountPort {
+    override suspend fun hasMarketAccount(marketAccount: SetMarketAccountCommand): Boolean = false
 
-    @BeforeEach
-    fun setUp() {
-        repository.clear()
-    }
+    override suspend fun setMarketAccount(marketAccount: SetMarketAccountCommand): Boolean = true
 
-    @Test
-    fun `사용자 계정 등록하기`() = runTest {
-        val service = SetMarketAccountService(
-            this@SetMarketAccountUseCaseTest,
-            this@SetMarketAccountUseCaseTest
-        )
-        val account = SetMarketAccountCommand(
-            market = Market.BY_BIT,
-            isProduction = false,
-            displayName = "name",
-            appKey = "key",
-            appSecret = "secret"
-        )
+}
 
-        assertTrue(service.setMarketAccount(account), "신규 사용자 계정을 등록한 경우")
-    }
+private val command = SetMarketAccountCommand(
+    market = Market.BY_BIT,
+    isProduction = false,
+    displayName = "name",
+    appKey = "key",
+    appSecret = "secret"
+)
+
+@DisplayName("port 호출 순서 확인")
+class SetMarketAccountServiceTest : NoErrorAdapter() {
+    private var log: String = ""
 
     @Test
-    fun `이미 등록된 사용자 계정인 경우`() = runTest {
-        val service = SetMarketAccountService(
-            this@SetMarketAccountUseCaseTest,
-            this@SetMarketAccountUseCaseTest
-        )
-        val account = SetMarketAccountCommand(
-            market = Market.BY_BIT,
-            isProduction = false,
-            displayName = "name",
-            appKey = "key",
-            appSecret = "secret"
-        )
+    fun `port 호출 순서 확인`() = runTest {
+        val service = SetMarketAccountService(this@SetMarketAccountServiceTest)
 
-        service.setMarketAccount(account)
+        service.setMarketAccount(command)
 
-        try {
-            service.setMarketAccount(account)
-        } catch (exception: DuplicateDataException) {
-        }
-    }
-
-    override suspend fun setMarketAccount(marketAccount: SetMarketAccountCommand): Boolean {
-        return repository.add(marketAccount)
+        assertEquals("hasMarketAccount setMarketAccount ", log)
     }
 
     override suspend fun hasMarketAccount(marketAccount: SetMarketAccountCommand): Boolean {
-        return repository.contains(marketAccount)
+        log += "hasMarketAccount "
+        return super.hasMarketAccount(marketAccount)
+    }
+
+    override suspend fun setMarketAccount(marketAccount: SetMarketAccountCommand): Boolean {
+        log += "setMarketAccount "
+        return super.setMarketAccount(marketAccount)
+    }
+}
+
+@DisplayName("예외 사항 테스트")
+class SetMarketAccountServiceExceptionTest {
+    @Test
+    fun `이미 등록한 market account 경우`() = runTest {
+        val alreadySavedAdapter = object : NoErrorAdapter() {
+            override suspend fun hasMarketAccount(marketAccount: SetMarketAccountCommand): Boolean = true
+        }
+
+        val service = SetMarketAccountService(alreadySavedAdapter)
+
+        try {
+            service.setMarketAccount(command)
+            fail()
+        } catch (e: DuplicateDataException) {
+            assertEquals("이미 등록된 appKey, appSecret 입니다.", e.message)
+        }
     }
 }

@@ -9,7 +9,6 @@ import com.newy.algotrade.domain.common.exception.DuplicateDataException
 open class SetNotificationAppService(
     private val hasNotificationAppPort: HasNotificationAppPort,
     private val setNotificationAppPort: SetNotificationAppPort,
-    // TODO send notification message
 ) : SetNotificationAppUseCase {
     override suspend fun setNotificationApp(command: SetNotificationAppCommand): Boolean {
         if (hasNotificationAppPort.hasNotificationApp(command.userId)) {
