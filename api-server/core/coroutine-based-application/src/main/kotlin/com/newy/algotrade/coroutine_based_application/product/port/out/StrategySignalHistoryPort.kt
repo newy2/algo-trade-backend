@@ -3,14 +3,13 @@ package com.newy.algotrade.coroutine_based_application.product.port.out
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 
-interface StrategySignalHistoryPort : GetStrategySignalHistoryPort, AddStrategySignalHistoryPort {
-    suspend fun removeHistory(userStrategyId: String)
-}
+interface StrategySignalHistoryPort : StrategySignalHistoryQueryPort, StrategySignalHistoryCommandPort
 
-interface AddStrategySignalHistoryPort {
+interface StrategySignalHistoryCommandPort {
+    suspend fun removeHistory(userStrategyId: String)
     suspend fun addHistory(userStrategyId: String, signal: StrategySignal)
 }
 
-interface GetStrategySignalHistoryPort {
+interface StrategySignalHistoryQueryPort {
     suspend fun getHistory(userStrategyId: String): StrategySignalHistory
 }
