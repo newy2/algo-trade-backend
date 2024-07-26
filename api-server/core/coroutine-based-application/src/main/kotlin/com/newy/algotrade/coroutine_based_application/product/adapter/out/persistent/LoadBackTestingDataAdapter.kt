@@ -2,8 +2,8 @@ package com.newy.algotrade.coroutine_based_application.product.adapter.out.persi
 
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.GetBackTestingDataPort
-import com.newy.algotrade.coroutine_based_application.product.port.out.GetProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
+import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.common.extension.ProductPrice
@@ -13,7 +13,7 @@ class LoadBackTestingDataAdapter(
     private val backTestingDataKey: BackTestingDataKey,
     private val backTestingDataPort: GetBackTestingDataPort,
     private val onReceivePollingPricePort: OnReceivePollingPricePort
-) : GetProductPricePort, SubscribePollingProductPricePort {
+) : ProductPriceQueryPort, SubscribePollingProductPricePort {
     private lateinit var iterator: Iterator<ProductPrice>
 
     override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> {

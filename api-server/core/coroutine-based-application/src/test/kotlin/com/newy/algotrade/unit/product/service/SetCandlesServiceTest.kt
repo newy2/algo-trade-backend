@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.product.service
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.out.GetProductPricePort
+import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.coroutine_based_application.product.service.SetCandlesService
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import kotlin.test.assertEquals
 
-class SetCandlesServiceTest : GetProductPricePort, SubscribePollingProductPricePort {
+class SetCandlesServiceTest : ProductPriceQueryPort, SubscribePollingProductPricePort {
     private var apiCallCount = 0
     private var pollingSubscribeCount = 0
     private lateinit var service: SetCandlesUseCase

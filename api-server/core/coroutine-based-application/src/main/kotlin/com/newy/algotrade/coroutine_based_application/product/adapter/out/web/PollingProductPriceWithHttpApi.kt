@@ -1,8 +1,8 @@
 package com.newy.algotrade.coroutine_based_application.product.adapter.out.web
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingJob
-import com.newy.algotrade.coroutine_based_application.product.port.out.GetProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.PollingProductPricePort
+import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.common.annotation.ForTesting
 import com.newy.algotrade.domain.common.extension.ProductPrice
@@ -12,7 +12,7 @@ import java.time.OffsetDateTime
 import kotlin.coroutines.CoroutineContext
 
 open class PollingProductPriceWithHttpApi(
-    private val loader: GetProductPricePort,
+    private val loader: ProductPriceQueryPort,
     delayMillis: Long,
     @ForTesting coroutineContext: CoroutineContext = Dispatchers.IO,
 ) : PollingProductPricePort,

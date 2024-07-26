@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.s
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.PollingProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.PollingProductPriceWithByBitWebSocket
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.PollingProductPriceWithHttpApi
-import com.newy.algotrade.coroutine_based_application.product.port.out.GetProductPricePort
+import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.domain.common.consts.GlobalEnv
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -15,7 +15,7 @@ import okhttp3.OkHttpClient
 
 @ExternalSystemAdapter
 class PollingProductPriceSpringAdapterProxy(
-    getProductPricePort: GetProductPricePort,
+    getProductPricePort: ProductPriceQueryPort,
     okHttpClient: OkHttpClient,
     jsonConverter: JsonConverter,
     onReceivePollingPricePort: OnReceivePollingPriceController,
