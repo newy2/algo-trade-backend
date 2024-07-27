@@ -1,8 +1,10 @@
 package com.newy.algotrade.integration.notification.adapter.out.persistent
 
+import com.newy.algotrade.coroutine_based_application.notification.domain.SendNotification
+import com.newy.algotrade.domain.common.consts.NotificationApp
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
 import com.newy.algotrade.domain.common.exception.PreconditionError
-import com.newy.algotrade.web_flux.notification.adapter.out.persistent.SendNotificationCommandAdapter
+import com.newy.algotrade.web_flux.notification.adapter.out.persistent.SendNotificationAdapter
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.NotificationAppEntity
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.NotificationAppRepository
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.SendNotificationLogEntity
@@ -21,10 +23,10 @@ import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.awaitSingle
 import kotlin.properties.Delegates
 
-@DisplayName("'요청중', '처리중' 상태로 변경하는 테스트")
-class SetStatusRequestedAndPutStatusProcessingTest(
+@DisplayName("setStatusRequested, getSendNotification 테스트")
+class SetStatusRequestedTest(
     @Autowired private val repository: SendNotificationLogRepository,
-    @Autowired private val adapter: SendNotificationCommandAdapter,
+    @Autowired private val adapter: SendNotificationAdapter,
 ) : BaseSendNotificationAdapterTest() {
     private var notificationAppId by Delegates.notNull<Long>()
     private var sendNotificationLogId by Delegates.notNull<Long>()
@@ -42,7 +44,7 @@ class SetStatusRequestedAndPutStatusProcessingTest(
     }
 
     @Test
-    fun `setStatusRequested - '요청중' 상태로 생성하기`() = runBlocking {
+    fun `setStatusRequested - DB 상태 확인`() = runBlocking {
         val savedList = repository.findAll().toList()
         assertEquals(1, savedList.size)
         savedList.first().let {
@@ -54,25 +56,22 @@ class SetStatusRequestedAndPutStatusProcessingTest(
     }
 
     @Test
-    fun `putStatusProcessing - '처리중' 상태로 업데이트 하기`() = runBlocking {
-        val isUpdated = adapter.putStatusProcessing(sendNotificationLogId)
-        assertTrue(isUpdated)
-
-        val savedList = repository.findAll().toList()
-        assertEquals(1, savedList.size)
-        savedList.first().let {
-            assertEquals(sendNotificationLogId, it.id)
-            assertEquals("message", it.requestMessage)
-            assertEquals(null, it.responseMessage)
-            assertEquals(Status.PROCESSING.name, it.status)
-        }
+    fun `getSendNotification - 데이터 조회하기`() = runBlocking {
+        assertEquals(
+            SendNotification(
+                notificationApp = NotificationApp.SLACK,
+                url = "url",
+                requestMessage = "message"
+            ),
+            adapter.getSendNotification(sendNotificationLogId)
+        )
     }
 }
 
 @DisplayName("알림 전송 응답 메세지 저장 테스트")
-class PutResponseMessageTest(
+class AfterPutStatusProcessingTest(
     @Autowired private val repository: SendNotificationLogRepository,
-    @Autowired private val adapter: SendNotificationCommandAdapter,
+    @Autowired private val adapter: SendNotificationAdapter,
 ) : BaseSendNotificationAdapterTest() {
     private var notificationAppId by Delegates.notNull<Long>()
     private var sendNotificationLogId by Delegates.notNull<Long>()
@@ -81,7 +80,7 @@ class PutResponseMessageTest(
     fun setUp(): Unit = runBlocking {
         notificationAppId = setNotificationAppId()
         sendNotificationLogId = adapter.setStatusRequested(notificationAppId, requestMessage = "message")
-        adapter.putStatusProcessing(sendNotificationLogId)
+        assertTrue(adapter.putStatusProcessing(sendNotificationLogId), "isUpdated")
     }
 
     @AfterEach
@@ -91,7 +90,19 @@ class PutResponseMessageTest(
     }
 
     @Test
-    fun `성공 응답 메세지 업데이트 하기`() = runBlocking {
+    fun `putStatusProcessing - DB 상태 확인`() = runBlocking {
+        val savedList = repository.findAll().toList()
+        assertEquals(1, savedList.size)
+        savedList.first().let {
+            assertEquals(sendNotificationLogId, it.id)
+            assertEquals("message", it.requestMessage)
+            assertEquals(null, it.responseMessage)
+            assertEquals(Status.PROCESSING.name, it.status)
+        }
+    }
+
+    @Test
+    fun `putResponseMessage - 성공 응답 메세지 업데이트 하기`() = runBlocking {
         val successMessage = "ok"
         adapter.putResponseMessage(sendNotificationLogId, responseMessage = successMessage)
 
@@ -106,7 +117,7 @@ class PutResponseMessageTest(
     }
 
     @Test
-    fun `에러 응답 메세지 업데이트 하기`() = runBlocking {
+    fun `putResponseMessage - 에러 응답 메세지 업데이트 하기`() = runBlocking {
         val notSuccessMessage = "INVALID TOKEN"
         adapter.putResponseMessage(sendNotificationLogId, responseMessage = notSuccessMessage)
 
@@ -124,7 +135,7 @@ class PutResponseMessageTest(
 @DisplayName("저장되지 않은 ID 로 adapter 를 사용하는 경우에 대한 테스트")
 class NotFoundRowExceptionTest(
     @Autowired private val repository: SendNotificationLogRepository,
-    @Autowired private val adapter: SendNotificationCommandAdapter,
+    @Autowired private val adapter: SendNotificationAdapter,
 ) : BaseDbTest() {
     private val unSavedSendNotificationLogId: Long = 100
 
@@ -134,12 +145,22 @@ class NotFoundRowExceptionTest(
     }
 
     @Test
+    fun `저장되지 않은 ID 로 조회하는 경우`() = runTransactional {
+        try {
+            adapter.getSendNotification(unSavedSendNotificationLogId)
+            fail()
+        } catch (e: NotFoundRowException) {
+            assertEquals("notificationLogId 를 찾을 수 없습니다. (id: ${unSavedSendNotificationLogId})", e.message)
+        }
+    }
+
+    @Test
     fun `putStatusProcessing - 저장되지 않은 ID 로 호출한 경우`() = runBlocking {
         try {
             adapter.putStatusProcessing(unSavedSendNotificationLogId)
             fail()
         } catch (e: NotFoundRowException) {
-            assertTrue(true)
+            assertEquals("데이터를 찾을 수 없습니다. (id: $unSavedSendNotificationLogId)", e.message)
         }
     }
 
@@ -150,7 +171,7 @@ class NotFoundRowExceptionTest(
             adapter.putResponseMessage(unSavedSendNotificationLogId, responseMessage = "ok")
             fail()
         } catch (e: NotFoundRowException) {
-            assertTrue(true)
+            assertEquals("데이터를 찾을 수 없습니다. (id: $unSavedSendNotificationLogId)", e.message)
         }
     }
 }
@@ -158,7 +179,7 @@ class NotFoundRowExceptionTest(
 @DisplayName("status 변경하기 전 상태 확인하기")
 class StatusErrorTest(
     @Autowired private val repository: SendNotificationLogRepository,
-    @Autowired private val adapter: SendNotificationCommandAdapter,
+    @Autowired private val adapter: SendNotificationAdapter,
 ) : BaseSendNotificationAdapterTest() {
     private var notificationAppId by Delegates.notNull<Long>()
     private var statusMap by Delegates.notNull<MutableMap<Status, SendNotificationLogEntity>>()
@@ -197,7 +218,7 @@ class StatusErrorTest(
                 adapter.putStatusProcessing(sendNotificationLogEntity.id)
                 fail()
             } catch (e: PreconditionError) {
-                assertTrue(true)
+                assertEquals("REQUESTED, FAILED 상태만 변경 가능합니다. (status: ${status.name})", e.message)
             }
         }
     }
@@ -215,7 +236,7 @@ class StatusErrorTest(
                 adapter.putResponseMessage(sendNotificationLogEntity.id, responseMessage = "ok")
                 fail()
             } catch (e: PreconditionError) {
-                assertTrue(true)
+                assertEquals("PROCESSING 상태만 변경 가능합니다. (status: ${status.name})", e.message)
             }
         }
     }

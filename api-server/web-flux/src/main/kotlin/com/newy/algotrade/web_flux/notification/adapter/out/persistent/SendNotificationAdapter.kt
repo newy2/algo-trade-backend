@@ -1,23 +1,26 @@
 package com.newy.algotrade.web_flux.notification.adapter.out.persistent
 
-import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationCommandPort
+import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationPort
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
 import com.newy.algotrade.domain.common.exception.PreconditionError
 import com.newy.algotrade.web_flux.common.annotation.PersistenceAdapter
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.SendNotificationLogEntity
-import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.SendNotificationLogEntity.Status
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.SendNotificationLogRepository
 
 @PersistenceAdapter
-class SendNotificationCommandAdapter(
+class SendNotificationAdapter(
     private val sendNotificationLogRepository: SendNotificationLogRepository,
-) : SendNotificationCommandPort {
+) : SendNotificationPort {
+    override suspend fun getSendNotification(sendNootificationLogId: Long) =
+        sendNotificationLogRepository.findByIdAsSendNotification(sendNotificationId = sendNootificationLogId)
+            ?: throw NotFoundRowException("notificationLogId 를 찾을 수 없습니다. (id: ${sendNootificationLogId})")
+
     override suspend fun setStatusRequested(notificationAppId: Long, requestMessage: String): Long =
         sendNotificationLogRepository.save(
             SendNotificationLogEntity(
                 notificationAppId = notificationAppId,
                 requestMessage = requestMessage,
-                status = Status.REQUESTED.name
+                status = SendNotificationLogEntity.Status.REQUESTED.name
             )
         ).id
 
@@ -25,7 +28,10 @@ class SendNotificationCommandAdapter(
         val oldData =
             (sendNotificationLogRepository.findById(sendNotificationLogId)
                 ?: throw NotFoundRowException("데이터를 찾을 수 없습니다. (id: $sendNotificationLogId)")).also {
-                val preconditionStatuses = listOf(Status.REQUESTED.name, Status.FAILED.name)
+                val preconditionStatuses = listOf(
+                    SendNotificationLogEntity.Status.REQUESTED.name,
+                    SendNotificationLogEntity.Status.FAILED.name
+                )
                 if (!preconditionStatuses.contains(it.status)) {
                     throw PreconditionError("REQUESTED, FAILED 상태만 변경 가능합니다. (status: ${it.status})")
                 }
@@ -33,7 +39,7 @@ class SendNotificationCommandAdapter(
 
         val newData = sendNotificationLogRepository.save(
             oldData.copy(
-                status = Status.PROCESSING.name
+                status = SendNotificationLogEntity.Status.PROCESSING.name
             )
         )
 
@@ -44,7 +50,7 @@ class SendNotificationCommandAdapter(
         val oldData =
             (sendNotificationLogRepository.findById(sendNotificationLogId)
                 ?: throw NotFoundRowException("데이터를 찾을 수 없습니다. (id: $sendNotificationLogId)")).also {
-                val preconditionStatus = Status.PROCESSING.name
+                val preconditionStatus = SendNotificationLogEntity.Status.PROCESSING.name
                 if (it.status != preconditionStatus) {
                     throw PreconditionError("PROCESSING 상태만 변경 가능합니다. (status: ${it.status})")
                 }
@@ -53,7 +59,7 @@ class SendNotificationCommandAdapter(
         val newData = sendNotificationLogRepository.save(
             oldData.copy(
                 responseMessage = responseMessage,
-                status = if (responseMessage.lowercase() == "ok") Status.SUCCEED.name else Status.FAILED.name
+                status = if (responseMessage.lowercase() == "ok") SendNotificationLogEntity.Status.SUCCEED.name else SendNotificationLogEntity.Status.FAILED.name
             )
         )
 

@@ -6,29 +6,27 @@ import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiCli
 import com.newy.algotrade.coroutine_based_application.common.web.http.post
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.SendNotificationUseCase
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SendNotificationCommand
-import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationCommandPort
-import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationQueryPort
+import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationPort
 
 open class SendNotificationService(
-    private val commandAdapter: SendNotificationCommandPort,
-    private val queryAdapter: SendNotificationQueryPort,
+    private val adapter: SendNotificationPort,
     private val eventBus: EventBus<SendNotificationEvent>,
     private val httpApiClient: HttpApiClient,
 ) : SendNotificationUseCase {
     override suspend fun requestSendNotification(command: SendNotificationCommand) {
-        commandAdapter.setStatusRequested(command.notificationAppId, command.requestMessage).let {
+        adapter.setStatusRequested(command.notificationAppId, command.requestMessage).let {
             eventBus.publishEvent(SendNotificationEvent(sendNotificationLogId = it))
         }
     }
 
     override suspend fun sendNotification(event: SendNotificationEvent) {
-        commandAdapter.putStatusProcessing(event.sendNotificationLogId)
-        val responseMessage = queryAdapter.getSendNotification(event.sendNotificationLogId).let { domainModel ->
+        adapter.putStatusProcessing(event.sendNotificationLogId)
+        val responseMessage = adapter.getSendNotification(event.sendNotificationLogId).let { domainModel ->
             httpApiClient.post<String>(
                 path = domainModel.path(),
                 body = domainModel.body()
             )
         }
-        commandAdapter.putResponseMessage(event.sendNotificationLogId, responseMessage = responseMessage)
+        adapter.putResponseMessage(event.sendNotificationLogId, responseMessage = responseMessage)
     }
 }

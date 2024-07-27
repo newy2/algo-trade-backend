@@ -5,8 +5,7 @@ import com.newy.algotrade.coroutine_based_application.common.event.SendNotificat
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.notification.domain.SendNotification
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SendNotificationCommand
-import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationCommandPort
-import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationQueryPort
+import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationPort
 import com.newy.algotrade.coroutine_based_application.notification.service.SendNotificationService
 import com.newy.algotrade.domain.common.consts.NotificationApp
 import com.newy.algotrade.domain.common.consts.NotificationRequestMessageFormat
@@ -20,7 +19,7 @@ import org.junit.jupiter.api.Test
 import kotlin.reflect.KClass
 import kotlin.test.assertEquals
 
-open class NoErrorSendNotificationAdapter : SendNotificationCommandPort, SendNotificationQueryPort {
+open class NoErrorSendNotificationAdapter : SendNotificationPort {
     override suspend fun setStatusRequested(notificationAppId: Long, requestMessage: String): Long = 1
     override suspend fun putStatusProcessing(sendNotificationLogId: Long) = true
     override suspend fun putResponseMessage(sendNotificationLogId: Long, responseMessage: String) = true
@@ -64,8 +63,7 @@ class SendNotificationServiceTest : NoErrorSendNotificationAdapter() {
     fun setUp() {
         eventBus = EventBus()
         service = SendNotificationService(
-            commandAdapter = this,
-            queryAdapter = this,
+            adapter = this,
             eventBus = eventBus,
             httpApiClient = NoErrorHttpClient()
         )
@@ -125,34 +123,35 @@ class SendNotificationServiceHttpClientTest() {
         var calledPath = ""
         var calledBody: NotificationRequestMessageFormat? = null
 
-        val service = SendNotificationService(
-            commandAdapter = NoErrorSendNotificationAdapter(),
-            queryAdapter = object : NoErrorSendNotificationAdapter() {
-                override suspend fun getSendNotification(notificationLogId: Long): SendNotification {
-                    return SendNotification(
-                        notificationApp = NotificationApp.SLACK,
-                        url = "${NotificationApp.SLACK.host}/services/TXXXX/BXXXX/abc123",
-                        requestMessage = "request message"
-                    )
-                }
-            },
-            eventBus = EventBus(),
-            httpApiClient = object : NoErrorHttpClient() {
-                override suspend fun <T : Any> _post(
-                    path: String,
-                    params: Map<String, String>,
-                    body: Any,
-                    headers: Map<String, String>,
-                    jsonExtraValues: Map<String, Any>,
-                    clazz: KClass<T>
-                ): T {
-                    calledPath = path
-                    calledBody = body as NotificationRequestMessageFormat
-                    return super._post(path, params, body, headers, jsonExtraValues, clazz)
-                }
-            },
-        )
+        val slackSendNotificationAdapter = object : NoErrorSendNotificationAdapter() {
+            override suspend fun getSendNotification(notificationLogId: Long): SendNotification {
+                return SendNotification(
+                    notificationApp = NotificationApp.SLACK,
+                    url = "${NotificationApp.SLACK.host}/services/TXXXX/BXXXX/abc123",
+                    requestMessage = "request message"
+                )
+            }
+        }
+        val spyHttpApiClient = object : NoErrorHttpClient() {
+            override suspend fun <T : Any> _post(
+                path: String,
+                params: Map<String, String>,
+                body: Any,
+                headers: Map<String, String>,
+                jsonExtraValues: Map<String, Any>,
+                clazz: KClass<T>
+            ): T {
+                calledPath = path
+                calledBody = body as NotificationRequestMessageFormat
+                return super._post(path, params, body, headers, jsonExtraValues, clazz)
+            }
+        }
 
+        val service = SendNotificationService(
+            adapter = slackSendNotificationAdapter,
+            eventBus = EventBus(),
+            httpApiClient = spyHttpApiClient,
+        )
         service.sendNotification(SendNotificationEvent(sendNotificationLogId = 1))
 
         assertEquals("/services/TXXXX/BXXXX/abc123", calledPath)
