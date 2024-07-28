@@ -4,5 +4,5 @@ import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.m
 import com.newy.algotrade.domain.market_account.MarketAccount
 
 interface SetMarketAccountUseCase {
-    suspend fun setMarketAccount(marketAccount: SetMarketAccountCommand): MarketAccount
+    suspend fun setMarketAccount(command: SetMarketAccountCommand): MarketAccount
 }

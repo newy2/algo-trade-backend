@@ -19,16 +19,20 @@ open class SendNotificationService(
         }
     }
 
-    override suspend fun sendNotification(event: SendNotificationEvent) {
-        adapter.getSendNotificationLog(event.sendNotificationLogId).let {
-            it.statusProcessing()
-        }.let {
-            adapter.saveSendNotificationLog(it)
-            val responseMessage = httpApiClient.post<String>(
-                path = it.getUrlPath(),
-                body = it.getHttpRequestBody()
-            )
-            adapter.saveSendNotificationLog(it.responseMessage(responseMessage))
-        }
-    }
+    override suspend fun sendNotification(event: SendNotificationEvent): Unit =
+        adapter.getSendNotificationLog(event.sendNotificationLogId)
+            .let {
+                it.statusProcessing()
+            }.also {
+                adapter.saveSendNotificationLog(it)
+            }.let {
+                it.responseMessage(
+                    responseMessage = httpApiClient.post<String>(
+                        path = it.getUrlPath(),
+                        body = it.getHttpRequestBody()
+                    )
+                )
+            }.let {
+                adapter.saveSendNotificationLog(it)
+            }
 }
