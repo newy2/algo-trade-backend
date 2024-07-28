@@ -4,6 +4,8 @@ import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.S
 import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.domain.common.consts.GlobalEnv
 import com.newy.algotrade.domain.common.consts.Market
+import com.newy.algotrade.domain.market_account.MarketAccount
+import com.newy.algotrade.domain.market_account.MarketServer
 import com.newy.algotrade.web_flux.market_account.adapter.`in`.web.SetMarketAccountController
 import com.newy.algotrade.web_flux.market_account.adapter.`in`.web.model.SetMarketAccountRequest
 import helpers.TestEnv
@@ -42,8 +44,21 @@ class SetMarketAccountControllerTest : SetMarketAccountUseCase {
         )
     }
 
-    override suspend fun setMarketAccount(marketAccount: SetMarketAccountCommand): Boolean {
+    override suspend fun setMarketAccount(marketAccount: SetMarketAccountCommand): MarketAccount {
         incomingPortModel = marketAccount
-        return true
+
+        return mockMarketAccount
     }
 }
+
+private val mockMarketAccount = MarketAccount(
+    id = 10,
+    userId = 1,
+    marketServer = MarketServer(
+        id = 100,
+        marketId = 1000
+    ),
+    displayName = "displayName",
+    appKey = "appKey",
+    appSecret = "appSecret",
+)

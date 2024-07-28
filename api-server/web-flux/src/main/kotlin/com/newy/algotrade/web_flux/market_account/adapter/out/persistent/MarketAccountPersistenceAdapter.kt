@@ -28,5 +28,7 @@ class MarketAccountPersistenceAdapter(
         )
 
     override suspend fun saveMarketAccount(domainEntity: MarketAccount) =
-        marketAccountRepository.save(MarketAccountR2dbcEntity(domainEntity)).id > 0
+        marketAccountRepository
+            .save(MarketAccountR2dbcEntity(domainEntity))
+            .toDomainEntity(domainEntity.marketServer)
 }

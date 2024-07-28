@@ -1,12 +1,13 @@
 package com.newy.algotrade.integration.product.adapter.out.persistent
 
+import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.SetMarketAccountUseCase
+import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
-import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository.MarketAccountRepository
 import com.newy.algotrade.web_flux.product.adapter.out.persistent.GetUserStrategyPersistenceAdapter
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.*
 import helpers.BaseDbTest
@@ -20,6 +21,8 @@ import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.r2dbc.core.DatabaseClient
+import org.springframework.r2dbc.core.awaitSingle
 
 class GetAllUserStrategiesTest : BaseUserStrategyPersistenceAdapterTest() {
     @Test
@@ -42,7 +45,6 @@ class GetAllUserStrategiesTest : BaseUserStrategyPersistenceAdapterTest() {
 
         assertEquals(expectedList, actualList)
     }
-
 
     @Test
     fun `user strategy 가 2개 이상인 경우`() = runTransactional {
@@ -117,25 +119,28 @@ class GetUserStrategyTest : BaseUserStrategyPersistenceAdapterTest() {
 
 open class BaseUserStrategyPersistenceAdapterTest : BaseDbTest() {
     @Autowired
-    protected lateinit var marketRepository: MarketRepositoryForStrategy
-
-    @Autowired
-    protected lateinit var productRepository: ProductRepository
-
-    @Autowired
-    protected lateinit var marketAccountRepository: MarketAccountRepository
-
-    @Autowired
-    protected lateinit var strategyRepository: StrategyRepository
-
-    @Autowired
-    protected lateinit var userStrategyRepository: UserStrategyRepository
-
-    @Autowired
-    protected lateinit var userStrategyProductRepository: UserStrategyProductRepository
-
-    @Autowired
     protected lateinit var adapter: GetUserStrategyPersistenceAdapter
+    
+    @Autowired
+    private lateinit var marketRepository: MarketRepositoryForStrategy
+
+    @Autowired
+    private lateinit var productRepository: ProductRepository
+
+    @Autowired
+    private lateinit var strategyRepository: StrategyRepository
+
+    @Autowired
+    private lateinit var userStrategyRepository: UserStrategyRepository
+
+    @Autowired
+    private lateinit var userStrategyProductRepository: UserStrategyProductRepository
+
+    @Autowired
+    private lateinit var databaseClient: DatabaseClient
+
+    @Autowired
+    private lateinit var marketAccountUseCase: SetMarketAccountUseCase
 
     private var index = 0
 
@@ -147,20 +152,16 @@ open class BaseUserStrategyPersistenceAdapterTest : BaseDbTest() {
 
     protected suspend fun setInitData(strategyClassName: String, productCodes: List<String>): Long {
         val nextIndex = index++
-        val marketAccountId = marketAccountRepository.setMarketAccount(
-            isProductionServer = false,
-            code = Market.BY_BIT.name,
-            appKey = "key$nextIndex",
-            appSecret = "secret$nextIndex",
-            displayName = "test",
-        ).let {
-            marketAccountRepository.getMarketAccountId(
-                isProductionServer = false,
-                code = Market.BY_BIT.name,
+        val marketAccountId = marketAccountUseCase.setMarketAccount(
+            SetMarketAccountCommand(
+                userId = getAdminUserId(),
+                market = Market.BY_BIT,
+                isProduction = false,
+                displayName = "test",
                 appKey = "key$nextIndex",
                 appSecret = "secret$nextIndex",
-            )!!
-        }
+            )
+        ).id
 
         val strategyId = strategyRepository.save(
             StrategyEntity(
@@ -197,5 +198,21 @@ open class BaseUserStrategyPersistenceAdapterTest : BaseDbTest() {
         ).collect()
 
         return userStrategyId
+    }
+
+    private suspend fun getAdminUserId(): Long {
+        // TODO UserRepository 구현 시, 리팩토링 하기
+        val adminUser = databaseClient
+            .sql(
+                """
+                SELECT id
+                FROM   users
+                WHERE  email = 'admin'
+            """.trimIndent()
+            )
+            .fetch()
+            .awaitSingle()
+
+        return adminUser["id"] as Long
     }
 }

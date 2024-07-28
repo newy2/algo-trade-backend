@@ -1,36 +1,26 @@
 package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
+import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.SetMarketAccountUseCase
+import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository.MarketAccountRepository
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.GetMarketPersistenceAdapter
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.MarketRepositoryForStrategy
 import helpers.BaseDbTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.r2dbc.core.DatabaseClient
+import org.springframework.r2dbc.core.awaitSingle
 
 class GetMarketPersistenceAdapterTest(
-    @Autowired private val marketAccountRepository: MarketAccountRepository,
     @Autowired private val marketRepository: MarketRepositoryForStrategy,
     @Autowired private val adapter: GetMarketPersistenceAdapter,
-) : BaseDbTest() {
+) : BaseGetMarketPersistenceAdapterTest() {
     @Test
     fun `등록한 marketAccountId 로 조회하기`() = runTransactional {
         val market = marketRepository.findByCode(Market.BY_BIT.name)!!
-        val registeredMarketAccountId = marketAccountRepository.setMarketAccount(
-            isProductionServer = false,
-            code = Market.BY_BIT.name,
-            appKey = "key",
-            appSecret = "secret",
-            displayName = "test",
-        ).let {
-            marketAccountRepository.getMarketAccountId(
-                isProductionServer = false,
-                code = Market.BY_BIT.name,
-                appKey = "key",
-                appSecret = "secret",
-            )!!
-        }
+        val registeredMarketAccountId = saveMarketAccount(Market.BY_BIT).id
+
         val marketIds = adapter.getMarketIdsBy(registeredMarketAccountId)
 
         assertEquals(listOf(market.parentMarketId, market.id), marketIds)
@@ -42,5 +32,41 @@ class GetMarketPersistenceAdapterTest(
         val marketIds = adapter.getMarketIdsBy(unRegisteredMarketAccountId)
 
         assertEquals(emptyList<Long>(), marketIds)
+    }
+}
+
+open class BaseGetMarketPersistenceAdapterTest : BaseDbTest() {
+    @Autowired
+    private lateinit var databaseClient: DatabaseClient
+
+    @Autowired
+    private lateinit var marketAccountUseCase: SetMarketAccountUseCase
+
+    protected suspend fun saveMarketAccount(market: Market) =
+        marketAccountUseCase.setMarketAccount(
+            SetMarketAccountCommand(
+                userId = getAdminUserId(),
+                market = market,
+                isProduction = false,
+                displayName = "displayName",
+                appKey = "appKey",
+                appSecret = "appSecret",
+            )
+        )
+
+    private suspend fun getAdminUserId(): Long {
+        // TODO UserRepository 구현 시, 리팩토링 하기
+        val adminUser = databaseClient
+            .sql(
+                """
+                SELECT id
+                FROM   users
+                WHERE  email = 'admin'
+            """.trimIndent()
+            )
+            .fetch()
+            .awaitSingle()
+
+        return adminUser["id"] as Long
     }
 }

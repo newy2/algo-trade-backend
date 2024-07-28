@@ -97,7 +97,18 @@ class ExceptionTest {
 
 open class NoErrorMarketAccountAdapter : MarketAccountPort {
     override suspend fun hasMarketAccount(domainEntity: MarketAccount) = false
-    override suspend fun saveMarketAccount(domainEntity: MarketAccount) = true
+    override suspend fun saveMarketAccount(domainEntity: MarketAccount) = MarketAccount(
+        id = 10,
+        userId = 1,
+        marketServer = MarketServer(
+            id = 1,
+            marketId = 2,
+        ),
+        displayName = "displayName",
+        appKey = "appKey",
+        appSecret = "appSecret",
+    )
+
     override suspend fun getMarketServer(market: Market, isProductionServer: Boolean): MarketServer? =
         MarketServer(
             id = 1,

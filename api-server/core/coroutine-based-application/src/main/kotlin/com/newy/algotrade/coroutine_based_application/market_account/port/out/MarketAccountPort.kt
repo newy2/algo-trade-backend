@@ -12,5 +12,5 @@ interface MarketAccountQueryPort {
 }
 
 interface MarketAccountCommandPort {
-    suspend fun saveMarketAccount(domainEntity: MarketAccount): Boolean
+    suspend fun saveMarketAccount(domainEntity: MarketAccount): MarketAccount
 }

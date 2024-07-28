@@ -18,9 +18,9 @@ class SetMarketAccountController(
 
     @PostMapping
     suspend fun setMarketAccount(@RequestBody request: SetMarketAccountRequest): ResponseEntity<SetMarketAccountResponse> {
-        val isSaved = setMarketAccountUseCase.setMarketAccount(request.toIncomingPortModel())
+        val domainEntity = setMarketAccountUseCase.setMarketAccount(request.toIncomingPortModel())
         return ResponseEntity
             .status(HttpStatus.CREATED)
-            .body(SetMarketAccountResponse(isSaved))
+            .body(SetMarketAccountResponse(domainEntity.id > 0))
     }
 }

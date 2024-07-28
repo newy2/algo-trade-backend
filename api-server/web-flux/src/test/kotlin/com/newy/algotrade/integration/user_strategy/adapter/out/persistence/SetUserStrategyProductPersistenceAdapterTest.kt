@@ -1,10 +1,11 @@
 package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
+import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.SetMarketAccountUseCase
+import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository.MarketAccountRepository
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.SetUserStrategyProductPersistenceAdapter
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.*
 import helpers.BaseDbTest
@@ -15,16 +16,15 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.r2dbc.core.DatabaseClient
+import org.springframework.r2dbc.core.awaitSingle
 
 class SetUserStrategyProductPersistenceAdapterTest(
     @Autowired private val marketRepository: MarketRepositoryForStrategy,
     @Autowired private val productRepository: ProductRepository,
-    @Autowired private val marketAccountRepository: MarketAccountRepository,
-    @Autowired private val strategyRepository: StrategyRepository,
-    @Autowired private val userStrategyRepository: UserStrategyRepository,
     @Autowired private val userStrategyProductRepository: UserStrategyProductRepository,
     @Autowired private val adapter: SetUserStrategyProductPersistenceAdapter,
-) : BaseDbTest() {
+) : BaseSetUserStrategyProductPersistenceAdapterTest() {
     @Test
     fun `DB 에 입력된 데이터 확인`() = runBlocking {
         val marketId = marketRepository.findByCode("BY_BIT")!!.id
@@ -79,22 +79,38 @@ class SetUserStrategyProductPersistenceAdapterTest(
         assertFalse(isSaved)
         assertEquals(0, products.size)
     }
+}
 
-    private suspend fun setInitData(productCodes: List<String>): Pair<Long, List<Long>> {
-        val marketAccountId = marketAccountRepository.setMarketAccount(
-            isProductionServer = false,
-            code = Market.BY_BIT.name,
-            appKey = "key",
-            appSecret = "secret",
-            displayName = "test",
-        ).let {
-            marketAccountRepository.getMarketAccountId(
-                isProductionServer = false,
-                code = Market.BY_BIT.name,
+open class BaseSetUserStrategyProductPersistenceAdapterTest : BaseDbTest() {
+    @Autowired
+    private lateinit var marketRepository: MarketRepositoryForStrategy
+
+    @Autowired
+    private lateinit var productRepository: ProductRepository
+
+    @Autowired
+    private lateinit var strategyRepository: StrategyRepository
+
+    @Autowired
+    private lateinit var userStrategyRepository: UserStrategyRepository
+
+    @Autowired
+    private lateinit var databaseClient: DatabaseClient
+
+    @Autowired
+    private lateinit var marketAccountUseCase: SetMarketAccountUseCase
+
+    protected suspend fun setInitData(productCodes: List<String>): Pair<Long, List<Long>> {
+        val marketAccountId = marketAccountUseCase.setMarketAccount(
+            SetMarketAccountCommand(
+                userId = getAdminUserId(),
+                market = Market.BY_BIT,
+                isProduction = false,
+                displayName = "test",
                 appKey = "key",
                 appSecret = "secret",
-            )!!
-        }
+            )
+        ).id
 
         val strategyId = strategyRepository.save(
             StrategyEntity(
@@ -122,5 +138,21 @@ class SetUserStrategyProductPersistenceAdapterTest(
             .toList()
 
         return Pair(userStrategyId, productIds)
+    }
+
+    private suspend fun getAdminUserId(): Long {
+        // TODO UserRepository 구현 시, 리팩토링 하기
+        val adminUser = databaseClient
+            .sql(
+                """
+                SELECT id
+                FROM   users
+                WHERE  email = 'admin'
+            """.trimIndent()
+            )
+            .fetch()
+            .awaitSingle()
+
+        return adminUser["id"] as Long
     }
 }

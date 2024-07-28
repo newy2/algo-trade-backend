@@ -7,6 +7,15 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class MarketAccountR2dbcEntityTest {
+    private val persistenceEntity = MarketAccountR2dbcEntity(
+        id = 0,
+        userId = 1,
+        marketServerId = 2,
+        displayName = "displayName",
+        appKey = "appKey",
+        appSecret = "appSecret",
+    )
+
     @Test
     fun fromDomainModel() {
         val domainEntity = MarketAccount(
@@ -20,16 +29,25 @@ class MarketAccountR2dbcEntityTest {
             appSecret = "appSecret",
         )
 
+        assertEquals(persistenceEntity, MarketAccountR2dbcEntity(domainEntity))
+    }
+
+    @Test
+    fun toDomainModel() {
+        val marketServer = MarketServer(
+            id = 2,
+            marketId = 3
+        )
+
         assertEquals(
-            MarketAccountR2dbcEntity(
-                id = 0,
+            MarketAccount(
                 userId = 1,
-                marketServerId = 2,
+                marketServer = marketServer,
                 displayName = "displayName",
                 appKey = "appKey",
                 appSecret = "appSecret",
             ),
-            MarketAccountR2dbcEntity(domainEntity)
+            persistenceEntity.toDomainEntity(marketServer)
         )
     }
 }

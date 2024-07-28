@@ -72,7 +72,7 @@ class SaveMarketAccountTest(
 
     @Test
     fun `MarketAccount 등록하기`() = runTransactional {
-        val isSaved = adapter.saveMarketAccount(domainEntity)
+        val isSaved = adapter.saveMarketAccount(domainEntity).id > 0
 
         assertTrue(isSaved)
         assertTrue(adapter.hasMarketAccount(domainEntity))
@@ -129,9 +129,9 @@ class DuplicateExceptionTest(
         val notDuplicateEntity2 = domainEntity.copy(appKey = "different ${domainEntity.appKey}")
         val notDuplicateEntity3 = domainEntity.copy(appSecret = "different ${domainEntity.appSecret}")
 
-        assertTrue(adapter.saveMarketAccount(notDuplicateEntity1))
-        assertTrue(adapter.saveMarketAccount(notDuplicateEntity2))
-        assertTrue(adapter.saveMarketAccount(notDuplicateEntity3))
+        assertTrue(adapter.saveMarketAccount(notDuplicateEntity1).id > 0)
+        assertTrue(adapter.saveMarketAccount(notDuplicateEntity2).id > 0)
+        assertTrue(adapter.saveMarketAccount(notDuplicateEntity3).id > 0)
     }
 }
 
