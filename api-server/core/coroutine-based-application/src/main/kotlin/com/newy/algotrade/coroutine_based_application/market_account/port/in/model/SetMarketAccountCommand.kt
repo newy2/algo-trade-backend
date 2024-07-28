@@ -2,9 +2,13 @@ package com.newy.algotrade.coroutine_based_application.market_account.port.`in`.
 
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.helper.SelfValidating
+import com.newy.algotrade.domain.market_account.MarketServer
+import com.newy.algotrade.domain.market_account.SetMarketAccount
+import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 
 data class SetMarketAccountCommand(
+    @field:Min(1) val userId: Long,
     val market: Market,
     val isProduction: Boolean,
     @field:NotBlank val displayName: String,
@@ -14,4 +18,12 @@ data class SetMarketAccountCommand(
     init {
         validate()
     }
+
+    fun toDomainEntity(marketServer: MarketServer) = SetMarketAccount(
+        userId = userId,
+        marketServer = marketServer,
+        displayName = displayName,
+        appKey = appKey,
+        appSecret = appSecret
+    )
 }

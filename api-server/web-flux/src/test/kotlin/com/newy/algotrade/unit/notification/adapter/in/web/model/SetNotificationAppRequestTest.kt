@@ -34,7 +34,7 @@ class SetNotificationAppRequestTest {
     }
 
     @Test
-    fun `인커밍 포트 모델로 변환하기`() {
+    fun mapToIncomingPortModel() {
         GlobalEnv.initializeAdminUserId(TestEnv.TEST_ADMIN_USER_ID)
 
         assertEquals(

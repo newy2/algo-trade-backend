@@ -63,7 +63,13 @@
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        
+
+        <!-- 복합 index -->
+        <addUniqueConstraint
+                tableName="${currentTable}"
+                columnNames="${referenceTable2}_id, app_key, app_secret"
+                constraintName="${currentTable}__market_server_id_app_key_app_secret_uk"/>
+
         <!-- pro 모드 대체 로직  -->
         <sql>
             ALTER TABLE ${currentTable}

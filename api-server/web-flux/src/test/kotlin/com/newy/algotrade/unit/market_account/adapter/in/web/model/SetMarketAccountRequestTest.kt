@@ -1,8 +1,10 @@
 package com.newy.algotrade.unit.market_account.adapter.`in`.web.model
 
 import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
+import com.newy.algotrade.domain.common.consts.GlobalEnv
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.web_flux.market_account.adapter.`in`.web.model.SetMarketAccountRequest
+import helpers.TestEnv
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -34,9 +36,12 @@ class SetMarketAccountRequestTest {
     }
 
     @Test
-    fun `인커밍 포트 모델로 변환하기`() {
+    fun mapToIncomingPortModel() {
+        GlobalEnv.initializeAdminUserId(TestEnv.TEST_ADMIN_USER_ID)
+
         assertEquals(
             SetMarketAccountCommand(
+                userId = TestEnv.TEST_ADMIN_USER_ID,
                 market = Market.LS_SEC,
                 isProduction = true,
                 displayName = "displayName",

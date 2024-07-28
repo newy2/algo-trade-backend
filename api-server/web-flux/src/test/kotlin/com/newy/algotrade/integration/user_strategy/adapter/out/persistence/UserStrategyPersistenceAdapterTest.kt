@@ -4,7 +4,7 @@ import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.MarketAccountRepository
+import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository.MarketAccountRepository
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.UserStrategyPersistenceAdapter
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyEntity
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyRepository

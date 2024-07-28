@@ -2,56 +2,92 @@ package com.newy.algotrade.unit.market_account.port.`in`.model
 
 import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.domain.common.consts.Market
+import com.newy.algotrade.domain.market_account.MarketServer
+import com.newy.algotrade.domain.market_account.SetMarketAccount
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
-
-val dto = SetMarketAccountCommand(
-    market = Market.LS_SEC,
-    isProduction = true,
-    displayName = "displayName",
-    appKey = "key",
-    appSecret = "secret",
-)
+import kotlin.test.assertEquals
 
 class SetMarketAccountCommandTest {
+    private val incomingPortModel = SetMarketAccountCommand(
+        userId = 1,
+        market = Market.LS_SEC,
+        isProduction = true,
+        displayName = "displayName",
+        appKey = "appKey",
+        appSecret = "appSecret",
+    )
+
+    @Test
+    fun `userId 는 0 이상이어야 함`() {
+        assertThrows<ConstraintViolationException> { incomingPortModel.copy(userId = -1) }
+        assertThrows<ConstraintViolationException> { incomingPortModel.copy(userId = 0) }
+        assertDoesNotThrow {
+            incomingPortModel.copy(userId = 1)
+            incomingPortModel.copy(userId = 2)
+        }
+    }
+
     @Test
     fun `displayName 는 NotBlank 이어야 한다`() {
         assertThrows<ConstraintViolationException> {
-            dto.copy(displayName = "")
+            incomingPortModel.copy(displayName = "")
         }
         assertThrows<ConstraintViolationException> {
-            dto.copy(displayName = " ")
+            incomingPortModel.copy(displayName = " ")
         }
         assertDoesNotThrow {
-            dto.copy(displayName = "a")
+            incomingPortModel.copy(displayName = "a")
         }
     }
 
     @Test
     fun `appKey 는 NotBlank 이어야 한다`() {
         assertThrows<ConstraintViolationException> {
-            dto.copy(appKey = "")
+            incomingPortModel.copy(appKey = "")
         }
         assertThrows<ConstraintViolationException> {
-            dto.copy(appKey = " ")
+            incomingPortModel.copy(appKey = " ")
         }
         assertDoesNotThrow {
-            dto.copy(appKey = "a")
+            incomingPortModel.copy(appKey = "a")
         }
     }
 
     @Test
     fun `appSecret 는 NotBlank 이어야 한다`() {
         assertThrows<ConstraintViolationException> {
-            dto.copy(appSecret = "")
+            incomingPortModel.copy(appSecret = "")
         }
         assertThrows<ConstraintViolationException> {
-            dto.copy(appSecret = " ")
+            incomingPortModel.copy(appSecret = " ")
         }
         assertDoesNotThrow {
-            dto.copy(appSecret = "a")
+            incomingPortModel.copy(appSecret = "a")
         }
+    }
+
+    @Test
+    fun mapToDomainEntity() {
+        assertEquals(
+            SetMarketAccount(
+                userId = 1,
+                marketServer = MarketServer(
+                    id = 2,
+                    marketId = 3
+                ),
+                displayName = "displayName",
+                appKey = "appKey",
+                appSecret = "appSecret",
+            ),
+            incomingPortModel.toDomainEntity(
+                MarketServer(
+                    id = 2,
+                    marketId = 3,
+                )
+            )
+        )
     }
 }

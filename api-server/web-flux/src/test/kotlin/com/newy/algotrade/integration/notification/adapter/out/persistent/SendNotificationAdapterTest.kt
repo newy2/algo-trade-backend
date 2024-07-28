@@ -5,7 +5,7 @@ import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
 import com.newy.algotrade.domain.notification.SendNotificationLog
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.SendNotificationLogAdapter
-import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.NotificationAppEntity
+import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.NotificationAppR2dbcEntity
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.NotificationAppRepository
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.SendNotificationLogRepository
 import helpers.BaseDbTest
@@ -152,7 +152,7 @@ open class BaseSendNotificationLogAdapterTest : BaseDbTest() {
 
     protected suspend fun setNotificationAppId(): Long =
         notificationAppRepository.save(
-            NotificationAppEntity(
+            NotificationAppR2dbcEntity(
                 userId = getAdminUserId(),
                 type = "SLACK",
                 url = "url"

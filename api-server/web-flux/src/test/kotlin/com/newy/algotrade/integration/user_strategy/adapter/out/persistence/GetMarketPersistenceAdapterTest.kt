@@ -1,7 +1,7 @@
 package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
 import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.MarketAccountRepository
+import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository.MarketAccountRepository
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.GetMarketPersistenceAdapter
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.MarketRepositoryForStrategy
 import helpers.BaseDbTest
