@@ -3,77 +3,71 @@ package com.newy.algotrade.unit.notification.service
 import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
 import com.newy.algotrade.coroutine_based_application.common.event.SendNotificationEvent
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
-import com.newy.algotrade.coroutine_based_application.notification.domain.SendNotification
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SendNotificationCommand
-import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationPort
+import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationLogPort
 import com.newy.algotrade.coroutine_based_application.notification.service.SendNotificationService
 import com.newy.algotrade.domain.common.consts.NotificationApp
 import com.newy.algotrade.domain.common.consts.NotificationRequestMessageFormat
+import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
 import com.newy.algotrade.domain.common.consts.SlackNotificationRequestMessageFormat
+import com.newy.algotrade.domain.common.exception.PreconditionError
+import com.newy.algotrade.domain.notification.SendNotificationLog
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.BeforeEach
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 import kotlin.reflect.KClass
 import kotlin.test.assertEquals
-
-open class NoErrorSendNotificationAdapter : SendNotificationPort {
-    override suspend fun setStatusRequested(notificationAppId: Long, requestMessage: String): Long = 1
-    override suspend fun putStatusProcessing(sendNotificationLogId: Long) = true
-    override suspend fun putResponseMessage(sendNotificationLogId: Long, responseMessage: String) = true
-    override suspend fun getSendNotification(notificationLogId: Long) = SendNotification(
-        notificationApp = NotificationApp.SLACK,
-        url = "",
-        requestMessage = "",
-    )
-}
-
-private open class NoErrorHttpClient : HttpApiClient {
-    override suspend fun <T : Any> _post(
-        path: String,
-        params: Map<String, String>,
-        body: Any,
-        headers: Map<String, String>,
-        jsonExtraValues: Map<String, Any>,
-        clazz: KClass<T>
-    ): T {
-        return "ok" as T
-    }
-
-    override suspend fun <T : Any> _get(
-        path: String,
-        params: Map<String, String>,
-        headers: Map<String, String>,
-        jsonExtraValues: Map<String, Any>,
-        clazz: KClass<T>
-    ): T {
-        TODO("Not yet implemented")
-    }
-}
+import kotlin.test.fail
 
 @DisplayName("메소드 호출 순서 확인")
 class SendNotificationServiceTest : NoErrorSendNotificationAdapter() {
+    private val methodCallLogs: MutableList<String> = mutableListOf()
     private lateinit var eventBus: EventBus<SendNotificationEvent>
     private lateinit var service: SendNotificationService
-    private var log: String = ""
+
+    override suspend fun createByStatusRequested(notificationAppId: Long, requestMessage: String): Long {
+        methodCallLogs.add("createByStatusRequested")
+        return super.createByStatusRequested(notificationAppId, requestMessage)
+    }
+
+    override suspend fun getSendNotificationLog(notificationLogId: Long): SendNotificationLog {
+        methodCallLogs.add("getSendNotificationLog")
+        return super.getSendNotificationLog(notificationLogId)
+    }
+
+    override suspend fun saveSendNotificationLog(domainEntity: SendNotificationLog): Boolean {
+        methodCallLogs.add("saveSendNotificationLog(${domainEntity.status})")
+        return super.saveSendNotificationLog(domainEntity)
+    }
 
     @BeforeEach
     fun setUp() {
+        methodCallLogs.clear()
         eventBus = EventBus()
         service = SendNotificationService(
             adapter = this,
             eventBus = eventBus,
-            httpApiClient = NoErrorHttpClient()
+            httpApiClient = object : NoErrorHttpClient() {
+                override suspend fun <T : Any> _post(
+                    path: String,
+                    params: Map<String, String>,
+                    body: Any,
+                    headers: Map<String, String>,
+                    jsonExtraValues: Map<String, Any>,
+                    clazz: KClass<T>
+                ): T {
+                    methodCallLogs.add("HttpClient._post")
+                    return super._post(path, params, body, headers, jsonExtraValues, clazz)
+                }
+            }
         )
-        log = ""
     }
 
     @Test
     fun `메세지 전송 요청하기`() = runTest {
         eventBus.addListener(coroutineContext) {
-            log += "onReceiveEvent "
+            methodCallLogs.add("onReceiveEvent")
         }
         delay(1000)
 
@@ -83,36 +77,53 @@ class SendNotificationServiceTest : NoErrorSendNotificationAdapter() {
                 requestMessage = "message"
             )
         )
-
         coroutineContext.cancelChildren()
-        assertEquals("setStatusRequested onReceiveEvent ", log)
+
+        assertEquals(listOf("createByStatusRequested", "onReceiveEvent"), methodCallLogs)
     }
 
     @Test
     fun `메세지 전송 하기`() = runTest {
         service.sendNotification(SendNotificationEvent(sendNotificationLogId = 1))
 
-        assertEquals("putStatusProcessing getSendNotification putResponseMessage ", log)
+        assertEquals(
+            listOf(
+                "getSendNotificationLog",
+                "saveSendNotificationLog(PROCESSING)",
+                "HttpClient._post",
+                "saveSendNotificationLog(SUCCEED)"
+            ),
+            methodCallLogs
+        )
     }
+}
 
-    override suspend fun putStatusProcessing(sendNotificationLogId: Long): Boolean {
-        log += "putStatusProcessing "
-        return super.putStatusProcessing(sendNotificationLogId)
-    }
+@DisplayName("예외사항 테스트")
+class ErrorSendNotificationServiceTest {
+    @Test
+    fun `REQUESTED 가 아닌 SendNotificationLog 로 알림 전송을 시도하는 경우`() = runTest {
+        SendNotificationLogStatus
+            .values()
+            .filter { it != SendNotificationLogStatus.REQUESTED }
+            .forEach { notSupportedPreStatus ->
+                val service = SendNotificationService(
+                    adapter = object : NoErrorSendNotificationAdapter() {
+                        override suspend fun getSendNotificationLog(notificationLogId: Long) =
+                            super.getSendNotificationLog(notificationLogId).copy(
+                                status = notSupportedPreStatus
+                            )
+                    },
+                    eventBus = EventBus(),
+                    httpApiClient = NoErrorHttpClient()
+                )
 
-    override suspend fun putResponseMessage(sendNotificationLogId: Long, responseMessage: String): Boolean {
-        log += "putResponseMessage "
-        return super.putResponseMessage(sendNotificationLogId, responseMessage)
-    }
-
-    override suspend fun setStatusRequested(notificationAppId: Long, requestMessage: String): Long {
-        log += "setStatusRequested "
-        return super.setStatusRequested(notificationAppId, requestMessage)
-    }
-
-    override suspend fun getSendNotification(notificationLogId: Long): SendNotification {
-        log += "getSendNotification "
-        return super.getSendNotification(notificationLogId)
+                try {
+                    service.sendNotification(SendNotificationEvent(sendNotificationLogId = 1))
+                    fail()
+                } catch (e: PreconditionError) {
+                    assertEquals("REQUESTED 상태만 변경 가능합니다. (status: ${notSupportedPreStatus.name})", e.message)
+                }
+            }
     }
 }
 
@@ -124,8 +135,8 @@ class SendNotificationServiceHttpClientTest() {
         var calledBody: NotificationRequestMessageFormat? = null
 
         val slackSendNotificationAdapter = object : NoErrorSendNotificationAdapter() {
-            override suspend fun getSendNotification(notificationLogId: Long): SendNotification {
-                return SendNotification(
+            override suspend fun getSendNotificationLog(notificationLogId: Long): SendNotificationLog {
+                return super.getSendNotificationLog(notificationLogId).copy(
                     notificationApp = NotificationApp.SLACK,
                     url = "${NotificationApp.SLACK.host}/services/TXXXX/BXXXX/abc123",
                     requestMessage = "request message"
@@ -156,5 +167,42 @@ class SendNotificationServiceHttpClientTest() {
 
         assertEquals("/services/TXXXX/BXXXX/abc123", calledPath)
         assertEquals(SlackNotificationRequestMessageFormat.from("request message"), calledBody)
+    }
+}
+
+open class NoErrorSendNotificationAdapter : SendNotificationLogPort {
+    override suspend fun createByStatusRequested(notificationAppId: Long, requestMessage: String): Long = 1
+    override suspend fun getSendNotificationLog(notificationLogId: Long): SendNotificationLog = SendNotificationLog(
+        sendNotificationLogId = 1,
+        notificationAppId = 2,
+        notificationApp = NotificationApp.SLACK,
+        status = SendNotificationLogStatus.REQUESTED,
+        url = "",
+        requestMessage = "",
+    )
+
+    override suspend fun saveSendNotificationLog(domainEntity: SendNotificationLog): Boolean = true
+}
+
+private open class NoErrorHttpClient : HttpApiClient {
+    override suspend fun <T : Any> _post(
+        path: String,
+        params: Map<String, String>,
+        body: Any,
+        headers: Map<String, String>,
+        jsonExtraValues: Map<String, Any>,
+        clazz: KClass<T>
+    ): T {
+        return "ok" as T
+    }
+
+    override suspend fun <T : Any> _get(
+        path: String,
+        params: Map<String, String>,
+        headers: Map<String, String>,
+        jsonExtraValues: Map<String, Any>,
+        clazz: KClass<T>
+    ): T {
+        TODO("Not yet implemented")
     }
 }

@@ -1,17 +1,14 @@
 package com.newy.algotrade.integration.notification.adapter.out.persistent
 
-import com.newy.algotrade.coroutine_based_application.notification.domain.SendNotification
 import com.newy.algotrade.domain.common.consts.NotificationApp
+import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
-import com.newy.algotrade.domain.common.exception.PreconditionError
-import com.newy.algotrade.web_flux.notification.adapter.out.persistent.SendNotificationAdapter
+import com.newy.algotrade.domain.notification.SendNotificationLog
+import com.newy.algotrade.web_flux.notification.adapter.out.persistent.SendNotificationLogAdapter
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.NotificationAppEntity
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.NotificationAppRepository
-import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.SendNotificationLogEntity
-import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.SendNotificationLogEntity.Status
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.SendNotificationLogRepository
 import helpers.BaseDbTest
-import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*
@@ -23,180 +20,63 @@ import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.awaitSingle
 import kotlin.properties.Delegates
 
-@DisplayName("setStatusRequested, getSendNotification 테스트")
-class SetStatusRequestedTest(
-    @Autowired private val repository: SendNotificationLogRepository,
-    @Autowired private val adapter: SendNotificationAdapter,
-) : BaseSendNotificationAdapterTest() {
-    private var notificationAppId by Delegates.notNull<Long>()
-    private var sendNotificationLogId by Delegates.notNull<Long>()
-
-    @BeforeEach
-    fun setUp(): Unit = runBlocking {
-        notificationAppId = setNotificationAppId()
-        sendNotificationLogId = adapter.setStatusRequested(notificationAppId, requestMessage = "message")
-    }
-
-    @AfterEach
-    fun tearDown(): Unit = runBlocking {
-        deleteNotificationAppId(notificationAppId)
-        repository.deleteById(sendNotificationLogId)
-    }
-
+@DisplayName("send_notification_log 생성 테스트")
+class CreateByStatusRequestedTest(
+    @Autowired private val adapter: SendNotificationLogAdapter,
+) : BaseSendNotificationLogAdapterTest() {
     @Test
-    fun `setStatusRequested - DB 상태 확인`() = runBlocking {
-        val savedList = repository.findAll().toList()
-        assertEquals(1, savedList.size)
-        savedList.first().let {
-            assertEquals(sendNotificationLogId, it.id)
-            assertEquals("message", it.requestMessage)
-            assertEquals(null, it.responseMessage)
-            assertEquals(Status.REQUESTED.name, it.status)
+    fun `REQUESTED 상태로 생성하기`() = runTransactional {
+        val notificationAppId = setNotificationAppId()
+        val sendNotificationLogId = let {
+            adapter.createByStatusRequested(notificationAppId, requestMessage = "not used(for ID test)")
+            adapter.createByStatusRequested(notificationAppId, requestMessage = "not used(for ID test)")
+            adapter.createByStatusRequested(notificationAppId, requestMessage = "message")
         }
-    }
 
-    @Test
-    fun `getSendNotification - 데이터 조회하기`() = runBlocking {
+        assertNotEquals(notificationAppId, sendNotificationLogId)
         assertEquals(
-            SendNotification(
+            SendNotificationLog(
+                sendNotificationLogId = sendNotificationLogId,
+                notificationAppId = notificationAppId,
                 notificationApp = NotificationApp.SLACK,
+                status = SendNotificationLogStatus.REQUESTED,
                 url = "url",
-                requestMessage = "message"
+                requestMessage = "message",
             ),
-            adapter.getSendNotification(sendNotificationLogId)
+            adapter.getSendNotificationLog(sendNotificationLogId)
         )
     }
 }
 
-@DisplayName("알림 전송 응답 메세지 저장 테스트")
-class AfterPutStatusProcessingTest(
+@DisplayName("send_notification_log 테이블 업데이트 테스트")
+class SaveSendNotificationLogTest(
     @Autowired private val repository: SendNotificationLogRepository,
-    @Autowired private val adapter: SendNotificationAdapter,
-) : BaseSendNotificationAdapterTest() {
+    @Autowired private val adapter: SendNotificationLogAdapter,
+) : BaseSendNotificationLogAdapterTest() {
     private var notificationAppId by Delegates.notNull<Long>()
     private var sendNotificationLogId by Delegates.notNull<Long>()
+    private var domainEntity by Delegates.notNull<SendNotificationLog>()
+    private var expected by Delegates.notNull<SendNotificationLog>()
 
     @BeforeEach
     fun setUp(): Unit = runBlocking {
         notificationAppId = setNotificationAppId()
-        sendNotificationLogId = adapter.setStatusRequested(notificationAppId, requestMessage = "message")
-        assertTrue(adapter.putStatusProcessing(sendNotificationLogId), "isUpdated")
-    }
-
-    @AfterEach
-    fun tearDown(): Unit = runBlocking {
-        deleteNotificationAppId(notificationAppId)
-        repository.deleteById(sendNotificationLogId)
-    }
-
-    @Test
-    fun `putStatusProcessing - DB 상태 확인`() = runBlocking {
-        val savedList = repository.findAll().toList()
-        assertEquals(1, savedList.size)
-        savedList.first().let {
-            assertEquals(sendNotificationLogId, it.id)
-            assertEquals("message", it.requestMessage)
-            assertEquals(null, it.responseMessage)
-            assertEquals(Status.PROCESSING.name, it.status)
+        sendNotificationLogId = let {
+            adapter.createByStatusRequested(notificationAppId, requestMessage = "not used(for ID test)")
+            adapter.createByStatusRequested(notificationAppId, requestMessage = "not used(for ID test)")
+            adapter.createByStatusRequested(notificationAppId, requestMessage = "message")
         }
-    }
+        assertNotEquals(notificationAppId, sendNotificationLogId)
 
-    @Test
-    fun `putResponseMessage - 성공 응답 메세지 업데이트 하기`() = runBlocking {
-        val successMessage = "ok"
-        adapter.putResponseMessage(sendNotificationLogId, responseMessage = successMessage)
-
-        val savedList = repository.findAll().toList()
-        assertEquals(1, savedList.size)
-        savedList.first().let {
-            assertEquals(sendNotificationLogId, it.id)
-            assertEquals("message", it.requestMessage)
-            assertEquals("ok", it.responseMessage)
-            assertEquals(Status.SUCCEED.name, it.status)
-        }
-    }
-
-    @Test
-    fun `putResponseMessage - 에러 응답 메세지 업데이트 하기`() = runBlocking {
-        val notSuccessMessage = "INVALID TOKEN"
-        adapter.putResponseMessage(sendNotificationLogId, responseMessage = notSuccessMessage)
-
-        val savedList = repository.findAll().toList()
-        assertEquals(1, savedList.size)
-        savedList.first().let {
-            assertEquals(sendNotificationLogId, it.id)
-            assertEquals("message", it.requestMessage)
-            assertEquals("INVALID TOKEN", it.responseMessage)
-            assertEquals(Status.FAILED.name, it.status)
-        }
-    }
-}
-
-@DisplayName("저장되지 않은 ID 로 adapter 를 사용하는 경우에 대한 테스트")
-class NotFoundRowExceptionTest(
-    @Autowired private val repository: SendNotificationLogRepository,
-    @Autowired private val adapter: SendNotificationAdapter,
-) : BaseDbTest() {
-    private val unSavedSendNotificationLogId: Long = 100
-
-    @BeforeEach
-    fun setUp(): Unit = runBlocking {
-        assertNull(repository.findById(unSavedSendNotificationLogId))
-    }
-
-    @Test
-    fun `저장되지 않은 ID 로 조회하는 경우`() = runTransactional {
-        try {
-            adapter.getSendNotification(unSavedSendNotificationLogId)
-            fail()
-        } catch (e: NotFoundRowException) {
-            assertEquals("notificationLogId 를 찾을 수 없습니다. (id: ${unSavedSendNotificationLogId})", e.message)
-        }
-    }
-
-    @Test
-    fun `putStatusProcessing - 저장되지 않은 ID 로 호출한 경우`() = runBlocking {
-        try {
-            adapter.putStatusProcessing(unSavedSendNotificationLogId)
-            fail()
-        } catch (e: NotFoundRowException) {
-            assertEquals("데이터를 찾을 수 없습니다. (id: $unSavedSendNotificationLogId)", e.message)
-        }
-    }
-
-
-    @Test
-    fun `putResponseMessage - 저장되지 않은 ID 로 호출한 경우`() = runBlocking {
-        try {
-            adapter.putResponseMessage(unSavedSendNotificationLogId, responseMessage = "ok")
-            fail()
-        } catch (e: NotFoundRowException) {
-            assertEquals("데이터를 찾을 수 없습니다. (id: $unSavedSendNotificationLogId)", e.message)
-        }
-    }
-}
-
-@DisplayName("status 변경하기 전 상태 확인하기")
-class StatusErrorTest(
-    @Autowired private val repository: SendNotificationLogRepository,
-    @Autowired private val adapter: SendNotificationAdapter,
-) : BaseSendNotificationAdapterTest() {
-    private var notificationAppId by Delegates.notNull<Long>()
-    private var statusMap by Delegates.notNull<MutableMap<Status, SendNotificationLogEntity>>()
-
-    @BeforeEach
-    fun setUp(): Unit = runBlocking {
-        notificationAppId = setNotificationAppId()
-        statusMap = mutableMapOf<Status, SendNotificationLogEntity>().also {
-            Status.values().forEach { status ->
-                it[status] = repository.save(
-                    SendNotificationLogEntity(
-                        notificationAppId = notificationAppId,
-                        status = status.name
-                    )
-                )
-            }
-        }
+        domainEntity = adapter.getSendNotificationLog(sendNotificationLogId)
+        expected = SendNotificationLog(
+            sendNotificationLogId = sendNotificationLogId,
+            notificationAppId = notificationAppId,
+            notificationApp = NotificationApp.SLACK,
+            status = SendNotificationLogStatus.REQUESTED,
+            url = "url",
+            requestMessage = "message",
+        )
     }
 
     @AfterEach
@@ -205,45 +85,65 @@ class StatusErrorTest(
         repository.deleteAll()
     }
 
-
     @Test
-    fun `putStatusProcessing - 이전 상태가 REQUESTED, FAILED 가 아닌 경우`() = runBlocking {
-        for ((status, sendNotificationLogEntity) in statusMap) {
-            val preconditionStatuses = listOf(Status.REQUESTED, Status.FAILED)
-            if (preconditionStatuses.contains(status)) {
-                continue
-            }
+    fun `PROSSESING 상태로 변경하기`() = runBlocking {
+        adapter.saveSendNotificationLog(domainEntity.statusProcessing())
 
-            try {
-                adapter.putStatusProcessing(sendNotificationLogEntity.id)
-                fail()
-            } catch (e: PreconditionError) {
-                assertEquals("REQUESTED, FAILED 상태만 변경 가능합니다. (status: ${status.name})", e.message)
-            }
-        }
+        assertEquals(
+            expected.copy(status = SendNotificationLogStatus.PROCESSING),
+            adapter.getSendNotificationLog(sendNotificationLogId)
+        )
     }
 
+    @Test
+    fun `성공 응답 메세지 업데이트 하기`() = runBlocking {
+        val successMessage = "ok"
+        adapter.saveSendNotificationLog(domainEntity.statusProcessing().responseMessage(successMessage))
+
+        assertEquals(
+            expected.copy(
+                status = SendNotificationLogStatus.SUCCEED,
+                responseMessage = successMessage,
+            ),
+            adapter.getSendNotificationLog(sendNotificationLogId)
+        )
+    }
 
     @Test
-    fun `putResponseMessage - 이전 상태가 PROCESSING 가 아닌 경우`() = runBlocking {
-        for ((status, sendNotificationLogEntity) in statusMap) {
-            val preconditionStatuses = listOf(Status.PROCESSING)
-            if (preconditionStatuses.contains(status)) {
-                continue
-            }
+    fun `실패 응답 메세지 업데이트 하기`() = runBlocking {
+        val notSuccessMessage = "invalid token"
+        adapter.saveSendNotificationLog(domainEntity.statusProcessing().responseMessage(notSuccessMessage))
 
-            try {
-                adapter.putResponseMessage(sendNotificationLogEntity.id, responseMessage = "ok")
-                fail()
-            } catch (e: PreconditionError) {
-                assertEquals("PROCESSING 상태만 변경 가능합니다. (status: ${status.name})", e.message)
-            }
+        assertEquals(
+            expected.copy(
+                status = SendNotificationLogStatus.FAILED,
+                responseMessage = notSuccessMessage,
+            ),
+            adapter.getSendNotificationLog(sendNotificationLogId)
+        )
+    }
+}
+
+@DisplayName("저장되지 않은 ID 로 adapter 를 사용하는 경우에 대한 테스트")
+class NotFoundRowExceptionTest(
+    @Autowired private val repository: SendNotificationLogRepository,
+    @Autowired private val adapter: SendNotificationLogAdapter,
+) : BaseDbTest() {
+    @Test
+    fun `저장되지 않은 ID 로 조회하는 경우`() = runTransactional {
+        val unSavedSendNotificationLogId: Long = 100
+        assertNull(repository.findById(unSavedSendNotificationLogId))
+
+        try {
+            adapter.getSendNotificationLog(unSavedSendNotificationLogId)
+            fail()
+        } catch (e: NotFoundRowException) {
+            assertEquals("sendNotificationLogId 를 찾을 수 없습니다. (id: ${unSavedSendNotificationLogId})", e.message)
         }
     }
 }
 
-
-open class BaseSendNotificationAdapterTest : BaseDbTest() {
+open class BaseSendNotificationLogAdapterTest : BaseDbTest() {
     @Autowired
     private lateinit var databaseClient: DatabaseClient
 
