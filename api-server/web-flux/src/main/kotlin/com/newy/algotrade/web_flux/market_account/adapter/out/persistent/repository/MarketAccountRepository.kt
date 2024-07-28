@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository
 
-import com.newy.algotrade.domain.market_account.SetMarketAccount
+import com.newy.algotrade.domain.market_account.MarketAccount
 import org.springframework.data.annotation.Id
 import org.springframework.data.r2dbc.repository.Modifying
 import org.springframework.data.r2dbc.repository.Query
@@ -80,7 +80,7 @@ data class MarketAccountR2dbcEntity(
     val appKey: String,
     val appSecret: String,
 ) {
-    constructor(domainEntity: SetMarketAccount) : this(
+    constructor(domainEntity: MarketAccount) : this(
         userId = domainEntity.userId,
         marketServerId = domainEntity.marketServer.id,
         displayName = domainEntity.displayName,

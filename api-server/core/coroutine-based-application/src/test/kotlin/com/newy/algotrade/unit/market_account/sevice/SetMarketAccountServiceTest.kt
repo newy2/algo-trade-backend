@@ -6,8 +6,8 @@ import com.newy.algotrade.coroutine_based_application.market_account.service.Set
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
+import com.newy.algotrade.domain.market_account.MarketAccount
 import com.newy.algotrade.domain.market_account.MarketServer
-import com.newy.algotrade.domain.market_account.SetMarketAccount
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.*
 import kotlin.test.assertEquals
@@ -26,12 +26,12 @@ private val incomingPortModel = SetMarketAccountCommand(
 class MethodCallHistoryTest : NoErrorMarketAccountAdapter() {
     private val methodCallLogs: MutableList<String> = mutableListOf()
 
-    override suspend fun saveMarketAccount(domainEntity: SetMarketAccount) =
+    override suspend fun saveMarketAccount(domainEntity: MarketAccount) =
         super.saveMarketAccount(domainEntity).also {
             methodCallLogs.add("saveMarketAccount")
         }
 
-    override suspend fun hasMarketAccount(domainEntity: SetMarketAccount) =
+    override suspend fun hasMarketAccount(domainEntity: MarketAccount) =
         super.hasMarketAccount(domainEntity).also {
             methodCallLogs.add("hasMarketAccount")
         }
@@ -82,7 +82,7 @@ class ExceptionTest {
     @Test
     fun `중복된 MarketAccount 를 등록하려는 경우`() = runTest {
         val alreadySavedMarketAccountAdapter = object : NoErrorMarketAccountAdapter() {
-            override suspend fun hasMarketAccount(domainEntity: SetMarketAccount): Boolean = true
+            override suspend fun hasMarketAccount(domainEntity: MarketAccount): Boolean = true
         }
         val service = SetMarketAccountService(alreadySavedMarketAccountAdapter)
 
@@ -96,8 +96,8 @@ class ExceptionTest {
 }
 
 open class NoErrorMarketAccountAdapter : MarketAccountPort {
-    override suspend fun hasMarketAccount(domainEntity: SetMarketAccount) = false
-    override suspend fun saveMarketAccount(domainEntity: SetMarketAccount) = true
+    override suspend fun hasMarketAccount(domainEntity: MarketAccount) = false
+    override suspend fun saveMarketAccount(domainEntity: MarketAccount) = true
     override suspend fun getMarketServer(market: Market, isProductionServer: Boolean): MarketServer? =
         MarketServer(
             id = 1,

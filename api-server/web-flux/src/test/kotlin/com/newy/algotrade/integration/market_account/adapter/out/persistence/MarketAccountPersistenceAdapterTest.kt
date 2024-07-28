@@ -1,8 +1,8 @@
 package com.newy.algotrade.integration.market_account.adapter.out.persistence
 
 import com.newy.algotrade.domain.common.consts.Market
+import com.newy.algotrade.domain.market_account.MarketAccount
 import com.newy.algotrade.domain.market_account.MarketServer
-import com.newy.algotrade.domain.market_account.SetMarketAccount
 import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.MarketAccountPersistenceAdapter
 import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository.MarketAccountRepository
 import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository.MarketServerRepository
@@ -49,11 +49,11 @@ class MarketServerTest(
 class SaveMarketAccountTest(
     @Autowired private val adapter: MarketAccountPersistenceAdapter
 ) : BaseMarketAccountPersistenceAdapterTest() {
-    private lateinit var domainEntity: SetMarketAccount
+    private lateinit var domainEntity: MarketAccount
 
     @BeforeEach
     fun setUp(): Unit = runBlocking {
-        domainEntity = SetMarketAccount(
+        domainEntity = MarketAccount(
             userId = getAdminUserId(),
             marketServer = adapter.getMarketServer(
                 market = Market.BY_BIT,
@@ -86,7 +86,7 @@ class DuplicateExceptionTest(
 ) : BaseMarketAccountPersistenceAdapterTest() {
     private lateinit var byBitServer: MarketServer
     private lateinit var lsSecServer: MarketServer
-    private lateinit var domainEntity: SetMarketAccount
+    private lateinit var domainEntity: MarketAccount
 
     @BeforeEach
     fun setUp(): Unit = runBlocking {
@@ -98,7 +98,7 @@ class DuplicateExceptionTest(
             market = Market.LS_SEC,
             isProductionServer = true
         )!!
-        domainEntity = SetMarketAccount(
+        domainEntity = MarketAccount(
             userId = getAdminUserId(),
             marketServer = byBitServer,
             displayName = "displayName",

@@ -2,7 +2,7 @@ package com.newy.algotrade.web_flux.market_account.adapter.out.persistent
 
 import com.newy.algotrade.coroutine_based_application.market_account.port.out.MarketAccountPort
 import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.market_account.SetMarketAccount
+import com.newy.algotrade.domain.market_account.MarketAccount
 import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository.MarketAccountR2dbcEntity
 import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository.MarketAccountRepository
 import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository.MarketServerRepository
@@ -20,13 +20,13 @@ class MarketAccountPersistenceAdapter(
             isProductionServer = isProductionServer
         )?.toDomainEntity()
 
-    override suspend fun hasMarketAccount(domainEntity: SetMarketAccount) =
+    override suspend fun hasMarketAccount(domainEntity: MarketAccount) =
         marketAccountRepository.existsByMarketServerIdAndAppKeyAndAppSecret(
             marketServerId = domainEntity.marketServer.id,
             appKey = domainEntity.appKey,
             appSecret = domainEntity.appSecret,
         )
 
-    override suspend fun saveMarketAccount(domainEntity: SetMarketAccount) =
+    override suspend fun saveMarketAccount(domainEntity: MarketAccount) =
         marketAccountRepository.save(MarketAccountR2dbcEntity(domainEntity)).id > 0
 }

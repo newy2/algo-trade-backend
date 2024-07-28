@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.market_account.adapter.out.persistent.repository
 
+import com.newy.algotrade.domain.market_account.MarketAccount
 import com.newy.algotrade.domain.market_account.MarketServer
-import com.newy.algotrade.domain.market_account.SetMarketAccount
 import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository.MarketAccountR2dbcEntity
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 class MarketAccountR2dbcEntityTest {
     @Test
     fun fromDomainModel() {
-        val domainEntity = SetMarketAccount(
+        val domainEntity = MarketAccount(
             userId = 1,
             marketServer = MarketServer(
                 id = 2,
