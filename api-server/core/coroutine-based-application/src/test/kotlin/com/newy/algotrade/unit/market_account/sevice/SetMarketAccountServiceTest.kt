@@ -55,7 +55,7 @@ class MethodCallHistoryTest : NoErrorMarketAccountAdapter() {
             listOf(
                 "getMarketServer",
                 "hasMarketAccount",
-                "setMarketAccount",
+                "saveMarketAccount",
             ),
             methodCallLogs
         )
