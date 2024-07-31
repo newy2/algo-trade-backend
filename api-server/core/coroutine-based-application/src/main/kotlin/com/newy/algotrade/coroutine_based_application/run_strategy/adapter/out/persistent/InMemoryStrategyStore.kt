@@ -1,7 +1,7 @@
-package com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent
+package com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent
 
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
-import com.newy.algotrade.coroutine_based_application.product.port.out.StrategyPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyPort
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 

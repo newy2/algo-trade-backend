@@ -1,11 +1,13 @@
-package com.newy.algotrade.unit.product.service
+package com.newy.algotrade.unit.run_strategy.service
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryStrategySignalHistoryStore
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryStrategyStore
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.*
-import com.newy.algotrade.coroutine_based_application.product.service.RunStrategyService
+import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategySignalHistoryStore
+import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategyStore
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.OnCreatedStrategySignalPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategySignalHistoryPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyService
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategySignal

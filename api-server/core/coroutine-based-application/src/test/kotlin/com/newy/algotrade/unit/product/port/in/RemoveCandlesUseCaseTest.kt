@@ -1,9 +1,9 @@
 package com.newy.algotrade.unit.product.port.`in`
 
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.RemoveCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.out.HasStrategyPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.RemoveCandlePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.UnSubscribePollingProductPricePort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.HasStrategyPort
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking

@@ -1,10 +1,10 @@
 package com.newy.algotrade.web_flux.run_strategy.service
 
 import com.newy.algotrade.coroutine_based_application.product.port.out.GetCandlePort
-import com.newy.algotrade.coroutine_based_application.product.port.out.GetStrategyPort
-import com.newy.algotrade.coroutine_based_application.product.port.out.OnCreatedStrategySignalPort
-import com.newy.algotrade.coroutine_based_application.product.port.out.StrategySignalHistoryPort
-import com.newy.algotrade.coroutine_based_application.product.service.RunStrategyService
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.GetStrategyPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.OnCreatedStrategySignalPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategySignalHistoryPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyService
 import org.springframework.stereotype.Service
 
 @Service

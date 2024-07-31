@@ -4,8 +4,8 @@ import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.syste
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.SetRunnableStrategyController
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.GetAllUserStrategyQuery
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.SetStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.productPriceKey
 import helpers.userStrategyKey

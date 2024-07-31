@@ -1,8 +1,8 @@
-package com.newy.algotrade.unit.product.port.`in`
+package com.newy.algotrade.unit.run_strategy.port.`in`
 
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.RemoveStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
-import com.newy.algotrade.coroutine_based_application.product.port.out.RemoveStrategyPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RemoveStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.RemoveStrategyPort
 import helpers.productPriceKey
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

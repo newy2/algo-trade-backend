@@ -1,9 +1,9 @@
-package com.newy.algotrade.unit.product.adapter.`in`.web
+package com.newy.algotrade.unit.run_strategy.adapter.`in`.web
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.SetRunnableStrategyController
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.SetStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.productPriceKey
 import helpers.userStrategyKey

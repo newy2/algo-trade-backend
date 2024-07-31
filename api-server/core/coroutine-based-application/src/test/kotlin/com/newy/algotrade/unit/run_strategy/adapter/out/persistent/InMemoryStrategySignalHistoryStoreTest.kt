@@ -1,7 +1,7 @@
-package com.newy.algotrade.unit.product.adapter.out.persistent
+package com.newy.algotrade.unit.run_strategy.adapter.out.persistent
 
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryStrategySignalHistoryStore
-import com.newy.algotrade.coroutine_based_application.product.port.out.StrategySignalHistoryPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategySignalHistoryStore
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategySignalHistoryPort
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
