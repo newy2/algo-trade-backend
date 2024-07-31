@@ -63,4 +63,8 @@ interface NoErrorCandleAdapter : CandleQueryPort {
     override fun getCandles(key: ProductPriceKey): Candles {
         return DEFAULT_CHART_FACTORY.candles()
     }
+
+    override fun hasCandles(key: ProductPriceKey): Boolean {
+        TODO("Not yet implemented")
+    }
 }

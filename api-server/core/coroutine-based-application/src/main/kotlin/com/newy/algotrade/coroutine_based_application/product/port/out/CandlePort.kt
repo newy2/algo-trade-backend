@@ -8,6 +8,7 @@ interface CandlePort : CandleQueryPort, CandleCommandPort
 
 interface CandleQueryPort {
     fun getCandles(key: ProductPriceKey): Candles
+    fun hasCandles(key: ProductPriceKey): Boolean
 }
 
 interface CandleCommandPort {

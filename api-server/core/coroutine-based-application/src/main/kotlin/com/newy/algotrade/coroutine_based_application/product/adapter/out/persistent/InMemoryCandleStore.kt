@@ -12,6 +12,9 @@ open class InMemoryCandleStore : CandlePort {
     override fun getCandles(key: ProductPriceKey): Candles =
         candleMap[key] ?: DEFAULT_CHART_FACTORY.candles()
 
+    override fun hasCandles(key: ProductPriceKey): Boolean =
+        getCandles(key).size > 0
+
     override fun setCandles(key: ProductPriceKey, list: List<Candle>): Candles =
         DEFAULT_CHART_FACTORY.candles().also {
             it.upsert(list)

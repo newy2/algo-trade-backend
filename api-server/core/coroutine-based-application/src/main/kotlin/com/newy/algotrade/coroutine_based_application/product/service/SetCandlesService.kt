@@ -21,7 +21,7 @@ open class SetCandlesService(
     }
 
     private suspend fun fetchInitCandles(productPriceKey: ProductPriceKey) {
-        if (candlePort.getCandles(productPriceKey).size != 0) {
+        if (candlePort.hasCandles(productPriceKey)) {
             return
         }
 
@@ -31,8 +31,8 @@ open class SetCandlesService(
                 OffsetDateTime.now(),
                 initDataSize,
             )
-        ).let {
-            candlePort.setCandles(productPriceKey, it)
+        ).let { initCandles ->
+            candlePort.setCandles(productPriceKey, initCandles)
         }
     }
 
