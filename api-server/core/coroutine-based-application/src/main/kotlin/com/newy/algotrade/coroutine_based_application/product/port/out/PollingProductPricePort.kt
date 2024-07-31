@@ -6,13 +6,9 @@ import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
 interface PollingProductPricePort :
     Polling<ProductPriceKey, List<ProductPrice>>,
-    UnSubscribePollingProductPricePort,
-    SubscribePollingProductPricePort
+    SubscribablePollingProductPricePort
 
-interface UnSubscribePollingProductPricePort {
+interface SubscribablePollingProductPricePort {
     fun unSubscribe(key: ProductPriceKey)
-}
-
-interface SubscribePollingProductPricePort {
     suspend fun subscribe(key: ProductPriceKey)
 }

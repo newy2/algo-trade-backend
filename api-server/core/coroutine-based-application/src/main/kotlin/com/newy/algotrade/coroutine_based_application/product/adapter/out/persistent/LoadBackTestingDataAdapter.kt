@@ -4,7 +4,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.Ba
 import com.newy.algotrade.coroutine_based_application.product.port.out.GetBackTestingDataPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
-import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribePollingProductPricePort
+import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribablePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
@@ -13,7 +13,7 @@ class LoadBackTestingDataAdapter(
     private val backTestingDataKey: BackTestingDataKey,
     private val backTestingDataPort: GetBackTestingDataPort,
     private val onReceivePollingPricePort: OnReceivePollingPricePort
-) : ProductPriceQueryPort, SubscribePollingProductPricePort {
+) : ProductPriceQueryPort, SubscribablePollingProductPricePort {
     private lateinit var iterator: Iterator<ProductPrice>
 
     override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> {
@@ -31,6 +31,10 @@ class LoadBackTestingDataAdapter(
     }
 
     override suspend fun subscribe(key: ProductPriceKey) {
+        // Do nothing
+    }
+
+    override fun unSubscribe(key: ProductPriceKey) {
         // Do nothing
     }
 }

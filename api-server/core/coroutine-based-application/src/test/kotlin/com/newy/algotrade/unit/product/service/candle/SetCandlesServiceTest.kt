@@ -3,7 +3,7 @@ package com.newy.algotrade.unit.product.service.candle
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
-import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribePollingProductPricePort
+import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribablePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceService
 import com.newy.algotrade.coroutine_based_application.product.service.SetCandlesService
@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import kotlin.test.assertEquals
 
-class SetCandlesServiceTest : ProductPriceQueryPort, SubscribePollingProductPricePort {
+class SetCandlesServiceTest : ProductPriceQueryPort, NoErrorSubscribablePollingProductPriceAdapter {
     private var apiCallCount = 0
     private var pollingSubscribeCount = 0
     private lateinit var service: SetCandlesUseCase
@@ -77,5 +77,11 @@ class SetCandlesServiceTest : ProductPriceQueryPort, SubscribePollingProductPric
 
         assertEquals(2, apiCallCount)
         assertEquals(2, pollingSubscribeCount)
+    }
+}
+
+interface NoErrorSubscribablePollingProductPriceAdapter : SubscribablePollingProductPricePort {
+    override fun unSubscribe(key: ProductPriceKey) {
+        TODO("Not yet implemented")
     }
 }

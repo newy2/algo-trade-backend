@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.product.service.candle
 
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
-import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribePollingProductPricePort
+import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribablePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceService
 import com.newy.algotrade.domain.common.extension.ProductPrice
@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 
 @DisplayName("port 호출 순서 확인")
-class FetchProductPriceServiceTest : NoErrorProductPriceQueryAdapter, SubscribePollingProductPricePort {
+class FetchProductPriceServiceTest : NoErrorProductPriceQueryAdapter, SubscribablePollingProductPricePort {
     private val methodCallLogs = mutableListOf<String>()
     private val productPriceKey = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
     private val service = FetchProductPriceService(
@@ -25,6 +25,10 @@ class FetchProductPriceServiceTest : NoErrorProductPriceQueryAdapter, SubscribeP
 
     override suspend fun subscribe(key: ProductPriceKey) {
         methodCallLogs.add("subscribe")
+    }
+
+    override fun unSubscribe(key: ProductPriceKey) {
+        methodCallLogs.add("unSubscribe")
     }
 
     override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> =
@@ -50,8 +54,15 @@ class FetchProductPriceServiceTest : NoErrorProductPriceQueryAdapter, SubscribeP
 
         assertEquals(listOf("subscribe"), methodCallLogs)
     }
+
+    @Test
+    fun `requestUnPollingProductPrice - port 호출 순서 확인`() = runTest {
+        service.requestUnPollingProductPrice(productPriceKey)
+
+        assertEquals(listOf("unSubscribe"), methodCallLogs)
+    }
 }
 
-interface NoErrorProductPriceQueryAdapter : ProductPriceQueryPort {
+private interface NoErrorProductPriceQueryAdapter : ProductPriceQueryPort {
     override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> = emptyList()
 }

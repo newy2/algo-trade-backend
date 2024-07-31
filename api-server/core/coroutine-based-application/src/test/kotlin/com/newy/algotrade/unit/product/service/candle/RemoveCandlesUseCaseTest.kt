@@ -2,7 +2,10 @@ package com.newy.algotrade.unit.product.service.candle
 
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.RemoveCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandleCommandPort
-import com.newy.algotrade.coroutine_based_application.product.port.out.UnSubscribePollingProductPricePort
+import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
+import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribablePollingProductPricePort
+import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
+import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceService
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyQueryPort
 import com.newy.algotrade.domain.chart.Candles
@@ -16,8 +19,18 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
-class RemoveCandlesUseCaseTest : NoErrorStrategyAdapter, NoErrorCandleAdapter, UnSubscribePollingProductPricePort {
-    private lateinit var service: RemoveCandlesUseCase
+class RemoveCandlesUseCaseTest :
+    NoErrorStrategyAdapter,
+    NoErrorCandleAdapter,
+    NoErrorSubscribablePollingProductPricePort {
+    private val service = RemoveCandlesUseCase(
+        strategyPort = this,
+        candlePort = this,
+        fetchProductPriceQuery = FetchProductPriceService(
+            productPricePort = NoErrorProductPriceQueryAdapter2(),
+            pollingProductPricePort = this,
+        ),
+    )
     private var deleteCandleCount = 0
     private var unSubscribeCount = 0
 
@@ -39,11 +52,6 @@ class RemoveCandlesUseCaseTest : NoErrorStrategyAdapter, NoErrorCandleAdapter, U
 
     @BeforeEach
     fun setUp() {
-        service = RemoveCandlesUseCase(
-            strategyPort = this,
-            candlePort = this,
-            pollingProductPricePort = this
-        )
         deleteCandleCount = 0
         unSubscribeCount = 0
     }
@@ -83,4 +91,14 @@ interface NoErrorCandleAdapter : CandleCommandPort {
     override fun setCandles(key: ProductPriceKey, list: List<ProductPrice>): Candles {
         TODO("Not yet implemented")
     }
+}
+
+interface NoErrorSubscribablePollingProductPricePort : SubscribablePollingProductPricePort {
+    override suspend fun subscribe(key: ProductPriceKey) {
+        TODO("Not yet implemented")
+    }
+}
+
+private class NoErrorProductPriceQueryAdapter2 : ProductPriceQueryPort {
+    override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> = emptyList()
 }

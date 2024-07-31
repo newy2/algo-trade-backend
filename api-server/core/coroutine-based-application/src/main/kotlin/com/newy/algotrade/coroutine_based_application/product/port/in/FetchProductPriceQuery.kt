@@ -6,4 +6,5 @@ import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 interface FetchProductPriceQuery {
     suspend fun fetchInitProductPrices(productPriceKey: ProductPriceKey): List<ProductPrice>
     suspend fun requestPollingProductPrice(productPriceKey: ProductPriceKey)
+    fun requestUnPollingProductPrice(productPriceKey: ProductPriceKey)
 }
