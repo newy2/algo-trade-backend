@@ -1,4 +1,4 @@
-package com.newy.algotrade.unit.product.service
+package com.newy.algotrade.unit.product.service.candle
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.AddCandlesUseCase
