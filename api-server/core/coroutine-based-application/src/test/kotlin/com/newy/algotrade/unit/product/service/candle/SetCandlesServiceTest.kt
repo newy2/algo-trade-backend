@@ -29,7 +29,7 @@ class SetCandlesServiceTest : ProductPriceQueryPort, NoErrorSubscribablePollingP
         )
     }
 
-    override suspend fun subscribe(key: ProductPriceKey) {
+    override fun subscribe(key: ProductPriceKey) {
         pollingSubscribeCount++
     }
 

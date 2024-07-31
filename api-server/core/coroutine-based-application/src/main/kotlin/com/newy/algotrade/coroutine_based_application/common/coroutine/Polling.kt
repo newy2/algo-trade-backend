@@ -7,7 +7,7 @@ interface Polling<K, V> {
     var callback: PollingCallback<K, V>?
     suspend fun start()
     fun cancel()
-    suspend fun subscribe(key: K)
+    fun subscribe(key: K)
     fun unSubscribe(key: K)
     suspend fun onNextTick(key: K, value: V) {
         callback?.invoke(Pair(key, value))

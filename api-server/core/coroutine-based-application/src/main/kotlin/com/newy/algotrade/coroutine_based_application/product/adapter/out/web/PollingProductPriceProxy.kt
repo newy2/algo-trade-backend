@@ -32,7 +32,7 @@ open class PollingProductPriceProxy(
         components[Key.from(key)]?.unSubscribe(key)
     }
 
-    override suspend fun subscribe(key: ProductPriceKey) {
+    override fun subscribe(key: ProductPriceKey) {
         components[Key.from(key)]?.subscribe(key)
     }
 

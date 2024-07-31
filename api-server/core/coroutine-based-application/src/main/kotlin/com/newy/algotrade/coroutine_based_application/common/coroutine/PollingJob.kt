@@ -34,7 +34,7 @@ abstract class PollingJob<K, V>(
         coroutineContext.cancelChildren()
     }
 
-    override suspend fun subscribe(key: K) {
+    override fun subscribe(key: K) {
         jobRequesters.put(key, CoroutineScope(coroutineContext).launch {
             while (isActive) {
                 nextJob.send(key)

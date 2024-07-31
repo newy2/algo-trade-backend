@@ -10,5 +10,5 @@ interface PollingProductPricePort :
 
 interface SubscribablePollingProductPricePort {
     fun unSubscribe(key: ProductPriceKey)
-    suspend fun subscribe(key: ProductPriceKey)
+    fun subscribe(key: ProductPriceKey)
 }

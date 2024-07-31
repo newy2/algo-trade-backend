@@ -45,7 +45,7 @@ abstract class ByBitWebSocket<K, V>(
         client.start()
     }
 
-    override suspend fun subscribe(key: K) {
+    override fun subscribe(key: K) {
         subscribes.add(key)
         client.send(
             jsonConverter.toJson(

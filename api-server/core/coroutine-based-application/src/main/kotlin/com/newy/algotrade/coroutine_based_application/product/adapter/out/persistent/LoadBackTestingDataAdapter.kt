@@ -30,7 +30,7 @@ class LoadBackTestingDataAdapter(
         }
     }
 
-    override suspend fun subscribe(key: ProductPriceKey) {
+    override fun subscribe(key: ProductPriceKey) {
         // Do nothing
     }
 

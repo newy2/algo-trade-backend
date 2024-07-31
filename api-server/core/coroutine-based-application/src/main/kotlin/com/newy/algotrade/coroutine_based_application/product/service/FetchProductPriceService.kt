@@ -22,7 +22,7 @@ open class FetchProductPriceService(
             )
         )
 
-    override suspend fun requestPollingProductPrice(productPriceKey: ProductPriceKey) {
+    override fun requestPollingProductPrice(productPriceKey: ProductPriceKey) {
         pollingProductPricePort.subscribe(productPriceKey)
     }
 

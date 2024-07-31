@@ -94,7 +94,7 @@ interface NoErrorCandleAdapter : CandleCommandPort {
 }
 
 interface NoErrorSubscribablePollingProductPricePort : SubscribablePollingProductPricePort {
-    override suspend fun subscribe(key: ProductPriceKey) {
+    override fun subscribe(key: ProductPriceKey) {
         TODO("Not yet implemented")
     }
 }

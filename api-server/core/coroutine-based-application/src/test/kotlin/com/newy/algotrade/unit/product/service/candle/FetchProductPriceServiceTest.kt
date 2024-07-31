@@ -23,7 +23,7 @@ class FetchProductPriceServiceTest : NoErrorProductPriceQueryAdapter, Subscribab
         pollingProductPricePort = this,
     )
 
-    override suspend fun subscribe(key: ProductPriceKey) {
+    override fun subscribe(key: ProductPriceKey) {
         methodCallLogs.add("subscribe")
     }
 
