@@ -1,11 +1,13 @@
 package com.newy.algotrade.unit.product.port.`in`
 
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.RemoveCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.out.RemoveCandlePort
+import com.newy.algotrade.coroutine_based_application.product.port.out.CandleCommandPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.UnSubscribePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyQueryPort
+import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.strategy.Strategy
+import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking
@@ -14,7 +16,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
-class RemoveCandlesUseCaseTest : NoErrorStrategyAdapter, RemoveCandlePort, UnSubscribePollingProductPricePort {
+class RemoveCandlesUseCaseTest : NoErrorStrategyAdapter, NoErrorCandleAdapter, UnSubscribePollingProductPricePort {
     private lateinit var service: RemoveCandlesUseCase
     private var deleteCandleCount = 0
     private var unSubscribeCount = 0
@@ -69,6 +71,16 @@ class RemoveCandlesUseCaseTest : NoErrorStrategyAdapter, RemoveCandlePort, UnSub
 
 interface NoErrorStrategyAdapter : StrategyQueryPort {
     override fun filterBy(productPriceKey: ProductPriceKey): Map<UserStrategyKey, Strategy> {
+        TODO("Not yet implemented")
+    }
+}
+
+interface NoErrorCandleAdapter : CandleCommandPort {
+    override fun addCandles(key: ProductPriceKey, list: List<ProductPrice>): Candles {
+        TODO("Not yet implemented")
+    }
+
+    override fun setCandles(key: ProductPriceKey, list: List<ProductPrice>): Candles {
         TODO("Not yet implemented")
     }
 }

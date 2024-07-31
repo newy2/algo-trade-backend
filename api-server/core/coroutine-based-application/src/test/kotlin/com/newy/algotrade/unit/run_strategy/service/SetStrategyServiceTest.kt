@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.run_strategy.service
 
-import com.newy.algotrade.coroutine_based_application.product.port.out.GetCandlePort
+import com.newy.algotrade.coroutine_based_application.product.port.out.CandleQueryPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyCommandPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.SetStrategyService
@@ -49,7 +49,7 @@ interface NoErrorStrategyAdapter : StrategyCommandPort {
     }
 }
 
-interface NoErrorCandleAdapter : GetCandlePort {
+interface NoErrorCandleAdapter : CandleQueryPort {
     override fun getCandles(key: ProductPriceKey): Candles {
         return DEFAULT_CHART_FACTORY.candles()
     }

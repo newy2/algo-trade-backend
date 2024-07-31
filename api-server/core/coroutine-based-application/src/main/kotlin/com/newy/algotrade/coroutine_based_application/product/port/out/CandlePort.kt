@@ -4,18 +4,14 @@ import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
-interface CandlePort : RemoveCandlePort, GetCandlePort, AddCandlePort {
-    fun setCandles(key: ProductPriceKey, list: List<ProductPrice>): Candles
-}
+interface CandlePort : CandleQueryPort, CandleCommandPort
 
-interface AddCandlePort {
-    fun addCandles(key: ProductPriceKey, list: List<ProductPrice>): Candles
-}
-
-interface GetCandlePort {
+interface CandleQueryPort {
     fun getCandles(key: ProductPriceKey): Candles
 }
 
-interface RemoveCandlePort {
+interface CandleCommandPort {
+    fun addCandles(key: ProductPriceKey, list: List<ProductPrice>): Candles
     fun removeCandles(key: ProductPriceKey)
+    fun setCandles(key: ProductPriceKey, list: List<ProductPrice>): Candles
 }
