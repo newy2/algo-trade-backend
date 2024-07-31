@@ -1,9 +1,6 @@
 package com.newy.algotrade.web_flux.product.adapter.out.persistent.repository
 
-import io.r2dbc.spi.Row
 import kotlinx.coroutines.flow.Flow
-import org.springframework.core.convert.converter.Converter
-import org.springframework.data.convert.ReadingConverter
 import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
@@ -59,16 +56,3 @@ data class UserStrategyWithProduct(
     val productCode: String,
     val timeFrame: String,
 )
-
-@ReadingConverter
-class UserStrategyWithProductReadConverter : Converter<Row, UserStrategyWithProduct> {
-    override fun convert(source: Row): UserStrategyWithProduct =
-        UserStrategyWithProduct(
-            id = source.get("id") as Long,
-            strategyClassName = source.get("strategy_class_name") as String,
-            marketCode = source.get("market_code") as String,
-            productType = source.get("product_type") as String,
-            productCode = source.get("product_code") as String,
-            timeFrame = source.get("time_frame") as String,
-        )
-}
