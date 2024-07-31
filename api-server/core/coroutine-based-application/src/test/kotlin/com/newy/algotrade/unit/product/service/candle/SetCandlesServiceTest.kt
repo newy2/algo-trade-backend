@@ -5,6 +5,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandl
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
+import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceService
 import com.newy.algotrade.coroutine_based_application.product.service.SetCandlesService
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
@@ -37,8 +38,10 @@ class SetCandlesServiceTest : ProductPriceQueryPort, SubscribePollingProductPric
         apiCallCount = 0
         pollingSubscribeCount = 0
         service = SetCandlesService(
-            productPricePort = this,
-            pollingProductPricePort = this,
+            fetchProductPriceQuery = FetchProductPriceService(
+                productPricePort = this,
+                pollingProductPricePort = this,
+            ),
             candlePort = InMemoryCandleStore(),
         )
     }
