@@ -3,7 +3,9 @@ package com.newy.algotrade.unit.product.port.`in`
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.RemoveCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.RemoveCandlePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.UnSubscribePollingProductPricePort
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.HasStrategyPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyQueryPort
+import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking
@@ -12,7 +14,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
-class RemoveCandlesUseCaseTest : HasStrategyPort, RemoveCandlePort, UnSubscribePollingProductPricePort {
+class RemoveCandlesUseCaseTest : NoErrorStrategyAdapter, RemoveCandlePort, UnSubscribePollingProductPricePort {
     private lateinit var service: RemoveCandlesUseCase
     private var deleteCandleCount = 0
     private var unSubscribeCount = 0
@@ -62,5 +64,11 @@ class RemoveCandlesUseCaseTest : HasStrategyPort, RemoveCandlePort, UnSubscribeP
 
         Assertions.assertEquals(1, deleteCandleCount)
         Assertions.assertEquals(1, unSubscribeCount)
+    }
+}
+
+interface NoErrorStrategyAdapter : StrategyQueryPort {
+    override fun filterBy(productPriceKey: ProductPriceKey): Map<UserStrategyKey, Strategy> {
+        TODO("Not yet implemented")
     }
 }
