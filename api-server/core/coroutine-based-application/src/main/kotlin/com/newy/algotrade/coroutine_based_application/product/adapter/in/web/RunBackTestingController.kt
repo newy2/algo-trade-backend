@@ -14,7 +14,7 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.p
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.OnCreatedStrategySignalPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyService
-import com.newy.algotrade.coroutine_based_application.run_strategy.service.SetStrategyService
+import com.newy.algotrade.coroutine_based_application.run_strategy.service.StrategyService
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import com.newy.algotrade.domain.chart.strategy.TrafficLight
@@ -111,7 +111,7 @@ class RunBackTestingController {
             backTestingDataLoader,
             candleStore
         )
-        val strategyService = SetStrategyService(candleStore, strategyStore)
+        val strategyService = StrategyService(candleStore, strategyStore)
 
         return SetRunnableStrategyController(candleService, strategyService)
     }

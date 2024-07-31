@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.run_strategy.adapter.`in`.web
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.SetRunnableStrategyController
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.SetStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.StrategyUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.productPriceKey
@@ -11,7 +11,7 @@ import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class SetRunnableStrategyControllerTest : SetCandlesUseCase, SetStrategyUseCase {
+class SetRunnableStrategyControllerTest : SetCandlesUseCase, NoErrorStrategyUseCase {
     private var log: String = ""
 
     override suspend fun setCandles(productPriceKey: ProductPriceKey) {
@@ -33,5 +33,11 @@ class SetRunnableStrategyControllerTest : SetCandlesUseCase, SetStrategyUseCase 
         controller.setUserStrategy(key)
 
         Assertions.assertEquals("setCandles setStrategy ", log)
+    }
+}
+
+interface NoErrorStrategyUseCase : StrategyUseCase {
+    override fun removeStrategy(key: UserStrategyKey) {
+        TODO("Not yet implemented")
     }
 }
