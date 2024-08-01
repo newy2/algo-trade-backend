@@ -5,11 +5,11 @@ import com.newy.algotrade.coroutine_based_application.product.adapter.out.persis
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.LoadBackTestingDataAdapter
 import com.newy.algotrade.coroutine_based_application.product.domain.BackTestingFileManager
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.FetchProductPriceQuery
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
-import com.newy.algotrade.coroutine_based_application.product.service.AddCandlesService
+import com.newy.algotrade.coroutine_based_application.product.service.CandlesCommandService
 import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceService
-import com.newy.algotrade.coroutine_based_application.product.service.SetCandlesService
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategyStore
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
@@ -19,6 +19,8 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.service.Strat
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import com.newy.algotrade.domain.chart.strategy.TrafficLight
+import com.newy.algotrade.domain.common.extension.ProductPrice
+import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
 class RunBackTestingController {
     suspend fun runBackTesting(
@@ -91,7 +93,10 @@ class RunBackTestingController {
         strategySignalHistoryStore: InMemoryStrategySignalHistoryStore,
         onCreatedStrategySignalPort: OnCreatedStrategySignalPort
     ): OnReceivePollingPricePort {
-        val candlesService = AddCandlesService(candleStore)
+        val candlesService = CandlesCommandService(
+            fetchProductPriceQuery = NullFetchProductPriceQuery(),
+            candlePort = candleStore
+        )
         val runStrategyService = RunStrategyService(
             candleStore,
             strategyStore,
@@ -107,7 +112,7 @@ class RunBackTestingController {
         strategyStore: InMemoryStrategyStore,
         backTestingDataLoader: LoadBackTestingDataAdapter
     ): SetRunnableStrategyController {
-        val candleService = SetCandlesService(
+        val candleService = CandlesCommandService(
             fetchProductPriceQuery = FetchProductPriceService(
                 productPricePort = backTestingDataLoader,
                 pollingProductPricePort = backTestingDataLoader,
@@ -117,5 +122,19 @@ class RunBackTestingController {
         val strategyService = StrategyService(candleStore, strategyStore)
 
         return SetRunnableStrategyController(candleService, strategyService)
+    }
+}
+
+private class NullFetchProductPriceQuery : FetchProductPriceQuery {
+    override suspend fun fetchInitProductPrices(productPriceKey: ProductPriceKey): List<ProductPrice> {
+        TODO("Not yet implemented")
+    }
+
+    override fun requestPollingProductPrice(productPriceKey: ProductPriceKey) {
+        TODO("Not yet implemented")
+    }
+
+    override fun requestUnPollingProductPrice(productPriceKey: ProductPriceKey) {
+        TODO("Not yet implemented")
     }
 }

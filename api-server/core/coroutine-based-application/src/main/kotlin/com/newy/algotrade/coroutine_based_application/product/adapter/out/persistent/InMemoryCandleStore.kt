@@ -23,6 +23,7 @@ open class InMemoryCandleStore : CandlePort {
 
     override fun addCandles(key: ProductPriceKey, list: List<Candle>): Candles =
         getCandles(key).also {
+            // TODO service 로 로직 옮겨야 함
             if (it.size == 0) {
                 return it
             }

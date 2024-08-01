@@ -1,17 +1,23 @@
 package com.newy.algotrade.coroutine_based_application.product.service
 
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.CandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.FetchProductPriceQuery
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePort
+import com.newy.algotrade.domain.chart.Candles
+import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
-open class SetCandlesService(
+open class CandlesCommandService(
     private val fetchProductPriceQuery: FetchProductPriceQuery,
     private val candlePort: CandlePort,
-) : SetCandlesUseCase {
+) : CandlesUseCase {
     override suspend fun setCandles(productPriceKey: ProductPriceKey) {
         fetchInitCandles(productPriceKey)
         requestPollingCandles(productPriceKey)
+    }
+
+    override fun addCandles(productPriceKey: ProductPriceKey, candleList: List<ProductPrice>): Candles {
+        return candlePort.addCandles(productPriceKey, candleList)
     }
 
     private suspend fun fetchInitCandles(productPriceKey: ProductPriceKey) {
@@ -24,7 +30,7 @@ open class SetCandlesService(
         }
     }
 
-    private suspend fun requestPollingCandles(productPriceKey: ProductPriceKey) {
+    private fun requestPollingCandles(productPriceKey: ProductPriceKey) {
         fetchProductPriceQuery.requestPollingProductPrice(productPriceKey)
     }
 }

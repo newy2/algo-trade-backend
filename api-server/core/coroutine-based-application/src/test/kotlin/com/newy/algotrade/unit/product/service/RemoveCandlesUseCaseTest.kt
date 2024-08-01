@@ -1,4 +1,4 @@
-package com.newy.algotrade.unit.product.service.candle
+package com.newy.algotrade.unit.product.service
 
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.RemoveCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandleCommandPort
