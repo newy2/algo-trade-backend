@@ -1,6 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.run_strategy.service
 
-import com.newy.algotrade.coroutine_based_application.product.port.out.CandleQueryPort
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.CandlesQuery
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.OnCreatedStrategySignalPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyQueryPort
@@ -10,13 +10,13 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
 open class RunStrategyService(
-    private val candlePort: CandleQueryPort,
+    private val candlesQuery: CandlesQuery,
     private val strategyPort: StrategyQueryPort,
     private val strategySignalHistoryPort: StrategySignalHistoryPort,
     private val onCreatedStrategySignalPort: OnCreatedStrategySignalPort,
 ) : RunStrategyUseCase {
     override suspend fun runStrategy(productPriceKey: ProductPriceKey) {
-        val candles = candlePort.getCandles(productPriceKey).takeIf { it.size > 0 } ?: return
+        val candles = candlesQuery.getCandles(productPriceKey).takeIf { it.size > 0 } ?: return
 
         strategyPort.filterBy(productPriceKey).forEach { (userStrategyKey, strategy) ->
             val userStrategyId = userStrategyKey.userStrategyId

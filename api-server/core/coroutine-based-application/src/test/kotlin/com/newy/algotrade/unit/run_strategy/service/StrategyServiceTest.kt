@@ -1,6 +1,7 @@
 package com.newy.algotrade.unit.run_strategy.service
 
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandleQueryPort
+import com.newy.algotrade.coroutine_based_application.product.service.CandlesQueryService
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyCommandPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.StrategyService
@@ -24,7 +25,10 @@ private val userStrategyKey = UserStrategyKey(
 @DisplayName("port 호출 순서 확인")
 class StrategyServiceTest : NoErrorCandleAdapter, StrategyCommandPort {
     private val methodCallLogs: MutableList<String> = mutableListOf()
-    private val service = StrategyService(candlePort = this, strategyPort = this)
+    private val service = StrategyService(
+        candlesQuery = CandlesQueryService(this),
+        strategyPort = this
+    )
 
     override fun getCandles(key: ProductPriceKey): Candles {
         methodCallLogs.add("getCandles")

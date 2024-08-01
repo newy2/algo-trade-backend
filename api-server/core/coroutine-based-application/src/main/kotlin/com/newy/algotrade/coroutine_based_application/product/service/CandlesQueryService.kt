@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.CandleQue
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
-class CandlesQueryService(
+open class CandlesQueryService(
     private val candleQueryPort: CandleQueryPort
 ) : CandlesQuery {
     override fun getCandles(key: ProductPriceKey): Candles =

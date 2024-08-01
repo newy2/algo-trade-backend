@@ -2,6 +2,7 @@ package com.newy.algotrade.unit.run_strategy.service
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.product.port.out.*
+import com.newy.algotrade.coroutine_based_application.product.service.CandlesQueryService
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategyStore
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunStrategyUseCase
@@ -48,19 +49,21 @@ class RunStrategyServiceTest : OnCreatedStrategySignalPort {
     fun setUp() {
         strategySignalHistoryPort = InMemoryStrategySignalHistoryStore()
         service = RunStrategyService(
-            candlePort = InMemoryCandleStore().also {
-                it.setCandles(
-                    BTC_1MINUTE, listOf(
-                        productPrice(1000, Duration.ofMinutes(1), now.plusMinutes(0)),
-                        productPrice(2000, Duration.ofMinutes(1), now.plusMinutes(1)),
+            candlesQuery = CandlesQueryService(
+                InMemoryCandleStore().also {
+                    it.setCandles(
+                        BTC_1MINUTE, listOf(
+                            productPrice(1000, Duration.ofMinutes(1), now.plusMinutes(0)),
+                            productPrice(2000, Duration.ofMinutes(1), now.plusMinutes(1)),
+                        )
                     )
-                )
-                it.setCandles(
-                    ETH_1MINUTE, listOf(
-                        productPrice(1000, Duration.ofMinutes(1), now.plusMinutes(0)),
+                    it.setCandles(
+                        ETH_1MINUTE, listOf(
+                            productPrice(1000, Duration.ofMinutes(1), now.plusMinutes(0)),
+                        )
                     )
-                )
-            },
+                }
+            ),
             strategyPort = InMemoryStrategyStore().also {
                 it.addStrategy(userStrategyKey("id1", BTC_1MINUTE), BooleanStrategy(entry = true, exit = true))
                 it.addStrategy(userStrategyKey("id2", BTC_1MINUTE), BooleanStrategy(entry = false, exit = false))
