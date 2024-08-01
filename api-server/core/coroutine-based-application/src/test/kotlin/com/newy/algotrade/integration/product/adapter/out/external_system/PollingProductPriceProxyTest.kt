@@ -1,11 +1,11 @@
-package com.newy.algotrade.integration.product.adapter.out.web
+package com.newy.algotrade.integration.product.adapter.out.external_system
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.*
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.*
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.common.consts.Market

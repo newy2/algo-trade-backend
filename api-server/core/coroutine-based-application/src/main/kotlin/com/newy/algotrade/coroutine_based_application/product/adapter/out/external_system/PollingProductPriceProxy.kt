@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.product.adapter.out.web
+package com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort

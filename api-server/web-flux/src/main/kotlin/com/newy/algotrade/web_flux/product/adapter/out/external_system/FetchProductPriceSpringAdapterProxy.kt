@@ -1,10 +1,10 @@
-package com.newy.algotrade.web_flux.product.adapter.out.web
+package com.newy.algotrade.web_flux.product.adapter.out.external_system
 
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchByBitProductPrice
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchLsSecProductPrice
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchByBitProductPrice
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchLsSecProductPrice
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchProductPriceProxy
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.common.consts.GlobalEnv
 import com.newy.algotrade.domain.common.consts.Market

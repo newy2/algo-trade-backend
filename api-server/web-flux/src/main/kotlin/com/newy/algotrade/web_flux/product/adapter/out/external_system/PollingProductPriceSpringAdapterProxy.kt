@@ -1,10 +1,10 @@
-package com.newy.algotrade.web_flux.product.adapter.out.web
+package com.newy.algotrade.web_flux.product.adapter.out.external_system
 
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
-import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.socket.OnReceivePollingPriceController
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.PollingProductPriceProxy
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.PollingProductPriceWithByBitWebSocket
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.PollingProductPriceWithHttpApi
+import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web_socket.OnReceivePollingPriceController
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.PollingProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.PollingProductPriceWithByBitWebSocket
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.PollingProductPriceWithHttpApi
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.domain.common.consts.GlobalEnv
 import com.newy.algotrade.domain.common.consts.Market

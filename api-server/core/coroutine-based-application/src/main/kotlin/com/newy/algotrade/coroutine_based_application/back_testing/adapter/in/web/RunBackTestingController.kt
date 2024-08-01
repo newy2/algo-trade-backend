@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.p
 import com.newy.algotrade.coroutine_based_application.back_testing.domain.BackTestingFileManager
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.SetRunnableStrategyController
-import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.socket.OnReceivePollingPriceController
+import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web_socket.OnReceivePollingPriceController
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.FetchProductPriceQuery
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort

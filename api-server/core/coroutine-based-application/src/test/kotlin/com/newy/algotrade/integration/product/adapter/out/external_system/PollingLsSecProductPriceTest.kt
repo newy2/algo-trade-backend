@@ -1,12 +1,11 @@
-package com.newy.algotrade.integration.product.adapter.out.web
+package com.newy.algotrade.integration.product.adapter.out.external_system
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
+import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchByBitProductPrice
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.FetchProductPriceProxy
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.web.PollingProductPriceWithHttpApi
-import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchLsSecProductPrice
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchProductPriceProxy
+import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -23,42 +22,30 @@ import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.OffsetDateTime
-import kotlin.coroutines.CoroutineContext
 import kotlin.test.assertEquals
 
-class PollingProductPriceTestHelper(
-    loader: ProductPriceQueryPort,
-    delayMillis: Long,
-    coroutineContext: CoroutineContext,
-    callback: PollingCallback<ProductPriceKey, List<ProductPrice>>
-) : PollingProductPriceWithHttpApi(loader, delayMillis, coroutineContext) {
-    init {
-        setCallback(callback)
-    }
-
-    override fun endTime(): OffsetDateTime {
-        return OffsetDateTime.parse("2024-05-09T00:00+09:00")
-    }
-
-    override fun limit(): Int {
-        return 2
-    }
-}
-
-class PollingByBitProductPriceTest {
+class PollingLsSecProductPriceTest {
     private val client = DefaultHttpApiClient(
         OkHttpClient(),
-        TestEnv.ByBit.url,
+        TestEnv.LsSec.url,
         JsonConverterByJackson(jacksonObjectMapper())
     )
+    private val accessTokenLoader = LsSecAccessTokenHttpApi(client)
     private val api = FetchProductPriceProxy(
         mapOf(
-            Market.BY_BIT to FetchByBitProductPrice(client)
+            Market.LS_SEC to FetchLsSecProductPrice(
+                client,
+                accessTokenLoader,
+                PrivateApiInfo(
+                    key = TestEnv.LsSec.apiKey,
+                    secret = TestEnv.LsSec.apiSecret,
+                )
+            )
         )
     )
 
     @Test
-    fun `바이빗 가격정보 폴링`() = runBlocking {
+    fun `LS증권 가격정보 폴링`() = runBlocking {
         val channel = Channel<Pair<ProductPriceKey, ProductPrice>>()
         var index = 0
 
@@ -69,9 +56,9 @@ class PollingByBitProductPriceTest {
         pollingJob.start()
         pollingJob.subscribe(
             ProductPriceKey(
-                Market.BY_BIT,
+                Market.LS_SEC,
                 ProductType.SPOT,
-                "BTCUSDT",
+                "078020",
                 Duration.ofMinutes(1),
             )
         )
@@ -93,9 +80,9 @@ class PollingByBitProductPriceTest {
 
         assertEquals(
             ProductPriceKey(
-                Market.BY_BIT,
+                Market.LS_SEC,
                 ProductType.SPOT,
-                "BTCUSDT",
+                "078020",
                 Duration.ofMinutes(1),
             ),
             productPriceKey
@@ -103,20 +90,20 @@ class PollingByBitProductPriceTest {
         assertEquals(
             listOf(
                 Candle.TimeFrame.M1(
-                    OffsetDateTime.parse("2024-05-08T14:59Z"),
-                    openPrice = 60379.25.toBigDecimal(),
-                    highPrice = 60379.31.toBigDecimal(),
-                    lowPrice = 60379.23.toBigDecimal(),
-                    closePrice = 60379.26.toBigDecimal(),
-                    volume = 0.156321.toBigDecimal()
+                    OffsetDateTime.parse("2024-05-09T15:19+09"),
+                    openPrice = 4925.0.toBigDecimal(),
+                    highPrice = 4925.0.toBigDecimal(),
+                    lowPrice = 4925.0.toBigDecimal(),
+                    closePrice = 4925.0.toBigDecimal(),
+                    volume = 3.0.toBigDecimal()
                 ),
                 Candle.TimeFrame.M1(
-                    OffsetDateTime.parse("2024-05-08T15:00Z"),
-                    openPrice = 60379.26.toBigDecimal(),
-                    highPrice = 60379.29.toBigDecimal(),
-                    lowPrice = 60252.4.toBigDecimal(),
-                    closePrice = 60379.28.toBigDecimal(),
-                    volume = 0.133579.toBigDecimal()
+                    OffsetDateTime.parse("2024-05-09T15:29+09"),
+                    openPrice = 4870.0.toBigDecimal(),
+                    highPrice = 4870.0.toBigDecimal(),
+                    lowPrice = 4870.0.toBigDecimal(),
+                    closePrice = 4870.0.toBigDecimal(),
+                    volume = 1152.0.toBigDecimal()
                 )
             ), productPrices
         )

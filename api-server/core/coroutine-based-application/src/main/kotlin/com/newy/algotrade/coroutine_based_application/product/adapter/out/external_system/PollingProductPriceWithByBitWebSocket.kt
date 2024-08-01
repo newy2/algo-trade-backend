@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.product.adapter.out.web
+package com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system
 
 import com.newy.algotrade.coroutine_based_application.common.web.by_bit.ByBitWebSocket
 import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketClient

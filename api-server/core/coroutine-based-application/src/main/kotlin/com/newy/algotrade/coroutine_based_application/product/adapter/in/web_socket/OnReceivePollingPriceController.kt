@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.socket
+package com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web_socket
 
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.AddCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
