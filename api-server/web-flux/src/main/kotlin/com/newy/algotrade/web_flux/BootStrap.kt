@@ -5,10 +5,10 @@ import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStr
 import com.newy.algotrade.coroutine_based_application.common.event.SendNotificationEvent
 import com.newy.algotrade.coroutine_based_application.notification.service.SendNotificationService
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.system.InitController
-import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.SetRunnableStrategyController
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.GetAllUserStrategyQuery
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.UserStrategyQuery
 import com.newy.algotrade.coroutine_based_application.product.port.out.PollingProductPricePort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component
 @Profile("!test")
 @Component
 class Bootstrap(
-    private val setRunnableStrategyController: SetRunnableStrategyController,
+    private val runnableStrategyUseCase: RunnableStrategyUseCase,
     private val getAllUserStrategyQuery: GetAllUserStrategyQuery,
     private val pollingProductPricePort: PollingProductPricePort,
 ) : CommandLineRunner {
@@ -29,14 +29,14 @@ class Bootstrap(
             pollingProductPricePort.start()
         }
         CoroutineScope(Dispatchers.IO).launch {
-            InitController(setRunnableStrategyController, getAllUserStrategyQuery).init()
+            InitController(runnableStrategyUseCase, getAllUserStrategyQuery).init()
         }
     }
 }
 
 @Component
 class RegisterEventHandler(
-    private val setRunnableStrategyController: SetRunnableStrategyController,
+    private val runnableStrategyUseCase: RunnableStrategyUseCase,
     private val userStrategyQuery: UserStrategyQuery,
     private val sendNotificationService: SendNotificationService,
     @Qualifier("createUserStrategyEventBus") val createUserStrategyEventBus: EventBus<CreateUserStrategyEvent>,
@@ -46,7 +46,7 @@ class RegisterEventHandler(
         CoroutineScope(Dispatchers.IO).launch {
             createUserStrategyEventBus.addListener(coroutineContext) {
                 userStrategyQuery.getUserStrategy(it.id)?.let { userStrategyKey ->
-                    setRunnableStrategyController.setUserStrategy(userStrategyKey)
+                    runnableStrategyUseCase.setRunnableStrategy(userStrategyKey)
                 }
             }
         }

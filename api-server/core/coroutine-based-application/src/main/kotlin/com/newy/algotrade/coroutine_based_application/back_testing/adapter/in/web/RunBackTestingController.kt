@@ -4,7 +4,6 @@ import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.p
 import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistent.LoadBackTestingDataAdapter
 import com.newy.algotrade.coroutine_based_application.back_testing.domain.BackTestingFileManager
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
-import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web.SetRunnableStrategyController
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web_socket.OnReceivePollingPriceController
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.FetchProductPriceQuery
@@ -14,9 +13,11 @@ import com.newy.algotrade.coroutine_based_application.product.service.CandlesQue
 import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceService
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategyStore
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.OnCreatedStrategySignalPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyService
+import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.StrategyService
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
@@ -54,23 +55,19 @@ class RunBackTestingController {
         val backTestingDataLoader = createBackTestingDataLoader(
             backTestingDataKey,
             onReceivePollingPriceController,
-        )
-
-
-        val setUserStrategyController = createSetUserStrategyController(
-            candleStore,
-            strategyStore,
-            backTestingDataLoader
-        )
-
-
-        setUserStrategyController.setUserStrategy(
-            UserStrategyKey(
-                "backTesting",
-                strategyClassName,
-                backTestingDataKey.productPriceKey
+        ).also {
+            createRunnableStrategyUseCase(
+                candleStore = candleStore,
+                strategyStore = strategyStore,
+                backTestingDataLoader = it
+            ).setRunnableStrategy(
+                UserStrategyKey(
+                    "backTesting",
+                    strategyClassName,
+                    backTestingDataKey.productPriceKey
+                )
             )
-        )
+        }
 
         backTestingDataLoader.await()
 
@@ -109,11 +106,11 @@ class RunBackTestingController {
         return OnReceivePollingPriceController(candlesService, runStrategyService)
     }
 
-    private fun createSetUserStrategyController(
+    private fun createRunnableStrategyUseCase(
         candleStore: InMemoryCandleStore,
         strategyStore: InMemoryStrategyStore,
         backTestingDataLoader: LoadBackTestingDataAdapter
-    ): SetRunnableStrategyController {
+    ): RunnableStrategyUseCase {
         val candleService = CandlesCommandService(
             fetchProductPriceQuery = FetchProductPriceService(
                 productPricePort = backTestingDataLoader,
@@ -126,7 +123,10 @@ class RunBackTestingController {
             strategyPort = strategyStore
         )
 
-        return SetRunnableStrategyController(candleService, strategyService)
+        return RunnableStrategyCommandService(
+            candlesUseCase = candleService,
+            strategyUseCase = strategyService,
+        )
     }
 }
 

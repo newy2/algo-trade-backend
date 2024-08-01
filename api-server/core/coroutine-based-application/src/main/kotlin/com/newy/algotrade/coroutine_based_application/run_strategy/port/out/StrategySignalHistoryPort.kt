@@ -5,11 +5,11 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 
 interface StrategySignalHistoryPort : StrategySignalHistoryQueryPort, StrategySignalHistoryCommandPort
 
+interface StrategySignalHistoryQueryPort {
+    suspend fun getHistory(userStrategyId: String): StrategySignalHistory
+}
+
 interface StrategySignalHistoryCommandPort {
     suspend fun removeHistory(userStrategyId: String)
     suspend fun addHistory(userStrategyId: String, signal: StrategySignal)
-}
-
-interface StrategySignalHistoryQueryPort {
-    suspend fun getHistory(userStrategyId: String): StrategySignalHistory
 }
