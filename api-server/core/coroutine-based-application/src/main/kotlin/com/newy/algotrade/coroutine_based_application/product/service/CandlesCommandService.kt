@@ -11,24 +11,25 @@ open class CandlesCommandService(
     private val fetchProductPriceQuery: FetchProductPriceQuery,
     private val candlePort: CandlePort,
 ) : CandlesUseCase {
-    override suspend fun setCandles(productPriceKey: ProductPriceKey) {
-        fetchInitCandles(productPriceKey)
-        requestPollingCandles(productPriceKey)
-    }
+    override suspend fun setCandles(productPriceKey: ProductPriceKey): Candles =
+        fetchInitCandles(productPriceKey).also {
+            requestPollingCandles(productPriceKey)
+        }
 
     override fun addCandles(productPriceKey: ProductPriceKey, candleList: List<ProductPrice>): Candles {
         return candlePort.addCandles(productPriceKey, candleList)
     }
 
-    private suspend fun fetchInitCandles(productPriceKey: ProductPriceKey) {
-        if (candlePort.hasCandles(productPriceKey)) {
-            return
-        }
-
-        fetchProductPriceQuery.fetchInitProductPrices(productPriceKey).let { initCandles ->
-            candlePort.setCandles(productPriceKey, initCandles)
-        }
+    override fun removeCandles(productPriceKey: ProductPriceKey) {
+        candlePort.removeCandles(productPriceKey)
+        fetchProductPriceQuery.requestUnPollingProductPrice(productPriceKey)
     }
+
+    private suspend fun fetchInitCandles(productPriceKey: ProductPriceKey): Candles =
+        candlePort.getCandles(productPriceKey).takeIf { it.size > 0 }
+            ?: fetchProductPriceQuery.fetchInitProductPrices(productPriceKey).let { initCandles ->
+                candlePort.setCandles(productPriceKey, initCandles)
+            }
 
     private fun requestPollingCandles(productPriceKey: ProductPriceKey) {
         fetchProductPriceQuery.requestPollingProductPrice(productPriceKey)

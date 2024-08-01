@@ -18,7 +18,6 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.mod
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.OnCreatedStrategySignalPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyService
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
-import com.newy.algotrade.coroutine_based_application.run_strategy.service.StrategyService
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import com.newy.algotrade.domain.chart.strategy.TrafficLight
@@ -118,14 +117,10 @@ class RunBackTestingController {
             ),
             candlePort = candleStore
         )
-        val strategyService = StrategyService(
-            candlesQuery = CandlesQueryService(candleStore),
-            strategyPort = strategyStore
-        )
 
         return RunnableStrategyCommandService(
             candlesUseCase = candleService,
-            strategyUseCase = strategyService,
+            strategyPort = strategyStore
         )
     }
 }

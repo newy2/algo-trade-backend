@@ -6,12 +6,16 @@ import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
 // TODO Add, Set Interface 를 없애야 할까?
 
-interface CandlesUseCase : SetCandlesUseCase, AddCandlesUseCase
+interface CandlesUseCase : SetCandlesUseCase, AddCandlesUseCase, RemoveCandlesUseCase
 
 interface AddCandlesUseCase {
     fun addCandles(productPriceKey: ProductPriceKey, candleList: List<ProductPrice>): Candles
 }
 
 interface SetCandlesUseCase {
-    suspend fun setCandles(productPriceKey: ProductPriceKey)
+    suspend fun setCandles(productPriceKey: ProductPriceKey): Candles
+}
+
+interface RemoveCandlesUseCase {
+    fun removeCandles(productPriceKey: ProductPriceKey)
 }

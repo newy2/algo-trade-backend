@@ -7,11 +7,11 @@ import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
 open class InMemoryStrategyStore : StrategyPort {
     private val map = mutableMapOf<UserStrategyKey, Strategy>()
-    override fun hasProductPriceKey(productPriceKey: ProductPriceKey): Boolean {
+    override fun isUsingProductPriceKey(productPriceKey: ProductPriceKey): Boolean {
         return map.keys.find { it.productPriceKey == productPriceKey } != null
     }
 
-    override fun addStrategy(key: UserStrategyKey, strategy: Strategy) {
+    override fun setStrategy(key: UserStrategyKey, strategy: Strategy) {
         map[key] = strategy
     }
 

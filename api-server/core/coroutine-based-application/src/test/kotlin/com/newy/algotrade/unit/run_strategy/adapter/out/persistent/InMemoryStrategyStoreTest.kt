@@ -43,19 +43,19 @@ class InMemoryStrategyStoreTest : BaseTest() {
     @BeforeEach
     fun setUp() {
         store = InMemoryStrategyStore()
-        store.addStrategy(userStrategyKey, strategy)
+        store.setStrategy(userStrategyKey, strategy)
     }
 
     @Test
     fun `productPriceKey 로 등록된 strategy 가 있는지 확인하는 방법`() {
-        assertTrue(store.hasProductPriceKey(productPriceKey))
+        assertTrue(store.isUsingProductPriceKey(productPriceKey))
     }
 
     @Test
     fun `strategy 삭제하기`() {
         store.removeStrategy(userStrategyKey)
 
-        assertFalse(store.hasProductPriceKey(productPriceKey))
+        assertFalse(store.isUsingProductPriceKey(productPriceKey))
     }
 
     @Test
@@ -71,7 +71,7 @@ class InMemoryStrategyStoreTest : BaseTest() {
         val userStrategyKey2 = createUserStrategyKey("id2", sameProduct)
         val strategy2 = createStrategy(userStrategyKey2)
 
-        store.addStrategy(userStrategyKey2, strategy2)
+        store.setStrategy(userStrategyKey2, strategy2)
         val filteredMap = store.filterBy(createProductPriceKey("BTCUSDT"))
 
         assertEquals(
@@ -89,7 +89,7 @@ class InMemoryStrategyStoreTest : BaseTest() {
         val userStrategyKey2 = createUserStrategyKey("id2", differentProduct)
         val strategy2 = createStrategy(userStrategyKey2)
 
-        store.addStrategy(userStrategyKey2, strategy2)
+        store.setStrategy(userStrategyKey2, strategy2)
         val filteredMap = store.filterBy(createProductPriceKey("BTCUSDT"))
 
         assertEquals(mapOf(userStrategyKey to strategy), filteredMap)

@@ -14,11 +14,12 @@ open class FetchProductPriceService(
     private val initDataSize: Int = DEFAULT_CANDLE_SIZE
 ) : FetchProductPriceQuery {
     override suspend fun fetchInitProductPrices(productPriceKey: ProductPriceKey) =
+        // TODO? endTime, limit 도 파라미터로 받을까?
         productPricePort.getProductPrices(
             GetProductPriceParam(
-                productPriceKey,
-                OffsetDateTime.now(),
-                initDataSize,
+                productPriceKey = productPriceKey,
+                endTime = OffsetDateTime.now(),
+                limit = initDataSize,
             )
         )
 

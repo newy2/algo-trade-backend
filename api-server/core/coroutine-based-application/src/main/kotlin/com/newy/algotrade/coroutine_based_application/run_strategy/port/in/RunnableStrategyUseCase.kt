@@ -4,4 +4,5 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.mod
 
 interface RunnableStrategyUseCase {
     suspend fun setRunnableStrategy(userStrategyKey: UserStrategyKey)
+    suspend fun removeRunnableStrategy(userStrategyKey: UserStrategyKey)
 }

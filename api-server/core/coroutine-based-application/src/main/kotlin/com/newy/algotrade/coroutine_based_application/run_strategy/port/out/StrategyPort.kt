@@ -8,10 +8,10 @@ interface StrategyPort : StrategyQueryPort, StrategyCommandPort
 
 interface StrategyQueryPort {
     fun filterBy(productPriceKey: ProductPriceKey): Map<UserStrategyKey, Strategy>
-    fun hasProductPriceKey(productPriceKey: ProductPriceKey): Boolean
+    fun isUsingProductPriceKey(productPriceKey: ProductPriceKey): Boolean
 }
 
 interface StrategyCommandPort {
-    fun addStrategy(key: UserStrategyKey, strategy: Strategy)
+    fun setStrategy(key: UserStrategyKey, strategy: Strategy)
     fun removeStrategy(key: UserStrategyKey)
 }
