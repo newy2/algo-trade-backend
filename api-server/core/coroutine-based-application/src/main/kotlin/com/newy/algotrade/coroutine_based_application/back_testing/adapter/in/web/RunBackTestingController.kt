@@ -5,14 +5,14 @@ import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.p
 import com.newy.algotrade.coroutine_based_application.back_testing.domain.BackTestingFileManager
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web_socket.OnReceivePollingPriceController
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.FetchProductPriceQuery
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.coroutine_based_application.product.service.CandlesCommandService
 import com.newy.algotrade.coroutine_based_application.product.service.CandlesQueryService
 import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceQueryService
-import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategySignalHistoryStore
-import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategyStore
+import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategySignalHistoryStoreAdapter
+import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.OnCreatedStrategySignalPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyCommandService
@@ -29,9 +29,9 @@ class RunBackTestingController {
         backTestingDataKey: BackTestingDataKey,
         strategyClassName: String
     ): StrategySignalHistory {
-        val candleStore = InMemoryCandleStore()
-        val strategyStore = InMemoryStrategyStore()
-        val strategySignalHistoryStore = InMemoryStrategySignalHistoryStore()
+        val candleStore = InMemoryCandleStoreAdapter()
+        val strategyStore = InMemoryStrategyStoreAdapter()
+        val strategySignalHistoryStore = InMemoryStrategySignalHistoryStoreAdapter()
 
         val resultHistory = StrategySignalHistory()
         val onCreatedStrategySignalPort = object : OnCreatedStrategySignalPort {
@@ -86,9 +86,9 @@ class RunBackTestingController {
     }
 
     private fun createOnReceivePollingPriceController(
-        candleStore: InMemoryCandleStore,
-        strategyStore: InMemoryStrategyStore,
-        strategySignalHistoryStore: InMemoryStrategySignalHistoryStore,
+        candleStore: InMemoryCandleStoreAdapter,
+        strategyStore: InMemoryStrategyStoreAdapter,
+        strategySignalHistoryStore: InMemoryStrategySignalHistoryStoreAdapter,
         onCreatedStrategySignalPort: OnCreatedStrategySignalPort
     ): OnReceivePollingPricePort {
         val candlesService = CandlesCommandService(
@@ -106,8 +106,8 @@ class RunBackTestingController {
     }
 
     private fun createRunnableStrategyUseCase(
-        candleStore: InMemoryCandleStore,
-        strategyStore: InMemoryStrategyStore,
+        candleStore: InMemoryCandleStoreAdapter,
+        strategyStore: InMemoryStrategyStoreAdapter,
         backTestingDataLoader: LoadBackTestingDataAdapter
     ): RunnableStrategyUseCase {
         val candleService = CandlesCommandService(

@@ -1,6 +1,6 @@
-package com.newy.algotrade.unit.run_strategy.adapter.out.persistent
+package com.newy.algotrade.unit.run_strategy.adapter.out.volatile_storage
 
-import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategyStore
+import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyPort
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.Strategy
@@ -34,7 +34,7 @@ open class BaseTest {
 }
 
 @DisplayName("InMemoryStrategyStoreTest 기본 기능 테스트")
-class InMemoryStrategyStoreTest : BaseTest() {
+class InMemoryStrategyStoreAdapterTest : BaseTest() {
     private val productPriceKey = createProductPriceKey("BTCUSDT")
     private val userStrategyKey = createUserStrategyKey("id1", productPriceKey)
     private val strategy = createStrategy(userStrategyKey)
@@ -42,7 +42,7 @@ class InMemoryStrategyStoreTest : BaseTest() {
 
     @BeforeEach
     fun setUp() {
-        store = InMemoryStrategyStore()
+        store = InMemoryStrategyStoreAdapter()
         store.setStrategy(userStrategyKey, strategy)
     }
 

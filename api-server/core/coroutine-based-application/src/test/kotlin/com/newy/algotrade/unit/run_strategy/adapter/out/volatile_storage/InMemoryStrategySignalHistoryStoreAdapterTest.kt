@@ -1,6 +1,6 @@
-package com.newy.algotrade.unit.run_strategy.adapter.out.persistent
+package com.newy.algotrade.unit.run_strategy.adapter.out.volatile_storage
 
-import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategySignalHistoryStore
+import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategySignalHistoryStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategySignalHistoryPort
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
@@ -14,7 +14,7 @@ import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
-class InMemoryStrategySignalHistoryStoreTest {
+class InMemoryStrategySignalHistoryStoreAdapterTest {
     private val signal = StrategySignal(
         OrderType.BUY,
         Candle.TimeRange(
@@ -28,7 +28,7 @@ class InMemoryStrategySignalHistoryStoreTest {
 
     @BeforeEach
     fun setUp() = runBlocking {
-        store = InMemoryStrategySignalHistoryStore().also {
+        store = InMemoryStrategySignalHistoryStoreAdapter().also {
             it.addHistory("id1", signal)
         }
     }

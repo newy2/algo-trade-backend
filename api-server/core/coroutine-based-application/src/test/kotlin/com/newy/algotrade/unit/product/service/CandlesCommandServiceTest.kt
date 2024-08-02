@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.product.service
 
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.CandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.FetchProductPriceQuery
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePort
@@ -41,7 +41,7 @@ class SetCandlesServiceApiCallTest : DefaultFetchProductPriceQuery() {
         pollingSubscribeCallCount = 0
         service = CandlesCommandService(
             fetchProductPriceQuery = this,
-            candlePort = InMemoryCandleStore(),
+            candlePort = InMemoryCandleStoreAdapter(),
         )
     }
 
@@ -89,7 +89,7 @@ class SetCandleCandlePortTest : DefaultFetchProductPriceQuery() {
 
     @BeforeEach
     fun setUp() {
-        candlePort = InMemoryCandleStore()
+        candlePort = InMemoryCandleStoreAdapter()
         service = CandlesCommandService(
             fetchProductPriceQuery = this,
             candlePort = candlePort,
@@ -153,7 +153,7 @@ class AddCandleServiceTest {
 
     @BeforeEach
     fun setUp() {
-        candlePort = InMemoryCandleStore()
+        candlePort = InMemoryCandleStoreAdapter()
         service = CandlesCommandService(
             fetchProductPriceQuery = DefaultFetchProductPriceQuery(),
             candlePort = candlePort,
@@ -202,7 +202,7 @@ class RemoveCandleServiceTest : DefaultFetchProductPriceQuery() {
     @BeforeEach
     fun setUp() {
         unPollingSubscribeCallCount = 0
-        candlePort = InMemoryCandleStore()
+        candlePort = InMemoryCandleStoreAdapter()
         service = CandlesCommandService(
             fetchProductPriceQuery = this,
             candlePort = candlePort,

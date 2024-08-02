@@ -1,9 +1,9 @@
 package com.newy.algotrade.unit.run_strategy.service
 
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.CandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePort
-import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategyStore
+import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
 import com.newy.algotrade.domain.chart.Candles
@@ -100,10 +100,10 @@ open class BaseRunnableStrategyTest {
 
     @BeforeEach
     fun setUp() {
-        candlePort = InMemoryCandleStore()
+        candlePort = InMemoryCandleStoreAdapter()
         service = RunnableStrategyCommandService(
             candlesUseCase = DefaultCandlesUseCase(candlePort),
-            strategyPort = InMemoryStrategyStore()
+            strategyPort = InMemoryStrategyStoreAdapter()
         )
     }
 }

@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent
+package com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage
 
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePort
 import com.newy.algotrade.domain.chart.Candle
@@ -6,7 +6,7 @@ import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.product.ProductPriceKey
 
-open class InMemoryCandleStore : CandlePort {
+open class InMemoryCandleStoreAdapter : CandlePort {
     private val candleMap = mutableMapOf<ProductPriceKey, Candles>()
 
     override fun getCandles(key: ProductPriceKey): Candles =

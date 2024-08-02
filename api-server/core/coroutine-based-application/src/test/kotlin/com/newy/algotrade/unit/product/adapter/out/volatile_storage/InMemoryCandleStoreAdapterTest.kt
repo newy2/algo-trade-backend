@@ -1,6 +1,6 @@
-package com.newy.algotrade.unit.product.adapter.out.persistent
+package com.newy.algotrade.unit.product.adapter.out.volatile_storage
 
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.persistent.InMemoryCandleStore
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePort
 import helpers.productPrice
 import helpers.productPriceKey
@@ -19,13 +19,13 @@ fun productPriceWith(price: Int, beginTime: OffsetDateTime) =
     productPrice(price, Duration.ofMinutes(1), beginTime)
 
 
-class InMemoryCandleStoreTest {
+class InMemoryCandleStoreAdapterTest {
     private val productPriceKey = productPriceKey("BTCUSDT")
     private lateinit var store: CandlePort
 
     @BeforeEach
     fun setUp() {
-        store = InMemoryCandleStore()
+        store = InMemoryCandleStoreAdapter()
     }
 
     @Test
