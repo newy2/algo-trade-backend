@@ -1,7 +1,7 @@
 package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.HasStrategyPersistenceAdapter
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyEntity
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyR2dbcEntity
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyRepository
 import helpers.BaseDbTest
 import kotlinx.coroutines.flow.toList
@@ -25,7 +25,7 @@ class HasStrategyPersistenceAdapterTest(
     @Test
     fun `등록된 strategy class name 으로 조회하는 경우`() = runTransactional {
         val savedStrategy = strategyRepository.save(
-            StrategyEntity(
+            StrategyR2dbcEntity(
                 className = "SomethingStrategyClass",
                 nameKo = "테스트",
                 nameEn = "test",

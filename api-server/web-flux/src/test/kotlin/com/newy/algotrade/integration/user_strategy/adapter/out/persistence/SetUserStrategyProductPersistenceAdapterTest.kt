@@ -47,7 +47,7 @@ class SetUserStrategyProductPersistenceAdapterTest(
         assertTrue(isSaved)
         assertEquals(2, userStrategyProducts.size)
         assertEquals(
-            UserStrategyProductEntity(
+            UserStrategyProductR2dbcEntity(
                 id = userStrategyProducts[0].id,
                 userStrategyId = userStrategyId,
                 productId = productIds[0],
@@ -56,7 +56,7 @@ class SetUserStrategyProductPersistenceAdapterTest(
             userStrategyProducts[0]
         )
         assertEquals(
-            UserStrategyProductEntity(
+            UserStrategyProductR2dbcEntity(
                 id = userStrategyProducts[1].id,
                 userStrategyId = userStrategyId,
                 productId = productIds[1],
@@ -113,7 +113,7 @@ open class BaseSetUserStrategyProductPersistenceAdapterTest : BaseDbTest() {
         ).id
 
         val strategyId = strategyRepository.save(
-            StrategyEntity(
+            StrategyR2dbcEntity(
                 id = 0,
                 className = "SomethingStrategyClass",
                 nameKo = "테스트",
@@ -122,7 +122,7 @@ open class BaseSetUserStrategyProductPersistenceAdapterTest : BaseDbTest() {
         ).let { it.id }
 
         val userStrategyId = userStrategyRepository.save(
-            UserStrategyEntity(
+            UserStrategyR2dbcEntity(
                 marketAccountId = marketAccountId,
                 strategyId = strategyId,
                 productType = ProductType.SPOT.name,

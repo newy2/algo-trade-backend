@@ -5,7 +5,7 @@ import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
 
-interface UserStrategyWithProductRepository : CoroutineCrudRepository<UserStrategyWithProduct, Long> {
+interface UserStrategyWithProductRepository : CoroutineCrudRepository<UserStrategyWithProductR2dbcModel, Long> {
     @Query(
         """
         SELECT uts.id           AS id
@@ -24,7 +24,7 @@ interface UserStrategyWithProductRepository : CoroutineCrudRepository<UserStrate
         ORDER BY utsp.sort;
     """
     )
-    suspend fun findAllWithProducts(): Flow<UserStrategyWithProduct>
+    suspend fun findAllWithProducts(): Flow<UserStrategyWithProductR2dbcModel>
 
     @Query(
         """
@@ -45,10 +45,10 @@ interface UserStrategyWithProductRepository : CoroutineCrudRepository<UserStrate
         ORDER BY utsp.sort;
     """
     )
-    suspend fun findWithProducts(userStrategyId: Long): Flow<UserStrategyWithProduct>
+    suspend fun findWithProducts(userStrategyId: Long): Flow<UserStrategyWithProductR2dbcModel>
 }
 
-data class UserStrategyWithProduct(
+data class UserStrategyWithProductR2dbcModel(
     val id: Long,
     val strategyClassName: String,
     val marketCode: String,

@@ -6,7 +6,7 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
-interface MarketRepositoryForStrategy : CoroutineCrudRepository<MarketEntity, Long> {
+interface MarketRepositoryForStrategy : CoroutineCrudRepository<MarketR2dbcEntity, Long> {
     @Query(
         """
         SELECT m.id AS id
@@ -17,13 +17,13 @@ interface MarketRepositoryForStrategy : CoroutineCrudRepository<MarketEntity, Lo
         WHERE  msa.id = :marketServerAccountId
     """
     )
-    suspend fun findByMarketServerAccountId(marketServerAccountId: Long): MarketEntity?
+    suspend fun findByMarketServerAccountId(marketServerAccountId: Long): MarketR2dbcEntity?
 
-    suspend fun findByCode(code: String): MarketEntity?
+    suspend fun findByCode(code: String): MarketR2dbcEntity?
 }
 
 @Table("market")
-data class MarketEntity(
+data class MarketR2dbcEntity(
     @Id val id: Long,
     @Column("parent_id") val parentMarketId: Long,
     val code: String = "",

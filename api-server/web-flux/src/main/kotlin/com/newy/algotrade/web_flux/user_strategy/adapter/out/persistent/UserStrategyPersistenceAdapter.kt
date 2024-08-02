@@ -5,7 +5,7 @@ import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyRepository
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.UserStrategyEntity
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.UserStrategyR2dbcEntity
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.UserStrategyRepository
 import org.springframework.stereotype.Component
 
@@ -22,7 +22,7 @@ class UserStrategyPersistenceAdapter(
         timeFrame: Candle.TimeFrame,
     ): Long =
         userStrategyRepository.save(
-            UserStrategyEntity(
+            UserStrategyR2dbcEntity(
                 marketAccountId = marketServerAccountId,
                 strategyId = strategyRepository.findByClassName(strategyClassName)!!,
                 productType = productType.name,

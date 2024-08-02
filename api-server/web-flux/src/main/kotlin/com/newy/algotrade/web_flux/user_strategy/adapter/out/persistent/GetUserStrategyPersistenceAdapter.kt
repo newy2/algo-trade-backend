@@ -7,7 +7,7 @@ import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import com.newy.algotrade.web_flux.common.annotation.PersistenceAdapter
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.UserStrategyWithProduct
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.UserStrategyWithProductR2dbcModel
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.UserStrategyWithProductRepository
 import kotlinx.coroutines.flow.toList
 
@@ -29,7 +29,7 @@ class GetUserStrategyPersistenceAdapter(
             .firstOrNull()
 }
 
-fun List<UserStrategyWithProduct>.toDomainModels() =
+fun List<UserStrategyWithProductR2dbcModel>.toDomainModels() =
     this.groupBy { it.id }
         .flatMap { (id, values) ->
             values.map {

@@ -5,16 +5,16 @@ import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
-interface ProductRepository : CoroutineCrudRepository<ProductEntity, Long> {
+interface ProductRepository : CoroutineCrudRepository<ProductR2dbcEntity, Long> {
     suspend fun findByMarketIdInAndTypeAndCodeIn(
         marketIds: Collection<Long>,
         type: String,
         codes: Collection<String>
-    ): Flow<ProductEntity>
+    ): Flow<ProductR2dbcEntity>
 }
 
 @Table("product")
-data class ProductEntity(
+data class ProductR2dbcEntity(
     @Id val id: Long = 0,
     val marketId: Long,
     val type: String,

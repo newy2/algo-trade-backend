@@ -164,7 +164,7 @@ open class BaseGetUserStrategyPersistenceAdapterTest : BaseDbTest() {
         ).id
 
         val strategyId = strategyRepository.save(
-            StrategyEntity(
+            StrategyR2dbcEntity(
                 className = strategyClassName,
                 nameKo = "테스트",
                 nameEn = "test",
@@ -172,7 +172,7 @@ open class BaseGetUserStrategyPersistenceAdapterTest : BaseDbTest() {
         ).let { it.id }
 
         val userStrategyId = userStrategyRepository.save(
-            UserStrategyEntity(
+            UserStrategyR2dbcEntity(
                 marketAccountId = marketAccountId,
                 strategyId = strategyId,
                 productType = ProductType.SPOT.name,
@@ -189,7 +189,7 @@ open class BaseGetUserStrategyPersistenceAdapterTest : BaseDbTest() {
 
         userStrategyProductRepository.saveAll(
             productIds.mapIndexed { index, productId ->
-                UserStrategyProductEntity(
+                UserStrategyProductR2dbcEntity(
                     userStrategyId = userStrategyId,
                     productId = productId,
                     sort = index + 1

@@ -5,7 +5,7 @@ import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
-interface UserStrategyRepository : CoroutineCrudRepository<UserStrategyEntity, Long> {
+interface UserStrategyRepository : CoroutineCrudRepository<UserStrategyR2dbcEntity, Long> {
     suspend fun existsByMarketAccountIdAndStrategyIdAndProductType(
         marketAccountId: Long,
         strategyId: Long,
@@ -14,7 +14,7 @@ interface UserStrategyRepository : CoroutineCrudRepository<UserStrategyEntity, L
 }
 
 @Table("user_trade_strategy")
-data class UserStrategyEntity(
+data class UserStrategyR2dbcEntity(
     @Id val id: Long = 0,
     @Column("market_server_account_id") val marketAccountId: Long,
     @Column("trade_strategy_id") val strategyId: Long,

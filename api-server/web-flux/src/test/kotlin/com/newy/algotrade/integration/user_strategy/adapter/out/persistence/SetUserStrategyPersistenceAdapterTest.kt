@@ -7,9 +7,9 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.UserStrategyPersistenceAdapter
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyEntity
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyR2dbcEntity
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyRepository
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.UserStrategyEntity
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.UserStrategyR2dbcEntity
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.UserStrategyRepository
 import helpers.BaseDbTest
 import org.junit.jupiter.api.Assertions.*
@@ -37,7 +37,7 @@ class SetUserStrategyPersistenceAdapterTest(
         )
 
         assertEquals(
-            UserStrategyEntity(
+            UserStrategyR2dbcEntity(
                 id = userStrategyId,
                 marketAccountId = marketAccountId,
                 strategyId = strategyId,
@@ -129,7 +129,7 @@ open class BaseSetUserStrategyPersistenceAdapterTest : BaseDbTest() {
         ).id
 
         val savedStrategy = strategyRepository.save(
-            StrategyEntity(
+            StrategyR2dbcEntity(
                 id = 0,
                 className = "SomethingStrategyClass",
                 nameKo = "테스트",
