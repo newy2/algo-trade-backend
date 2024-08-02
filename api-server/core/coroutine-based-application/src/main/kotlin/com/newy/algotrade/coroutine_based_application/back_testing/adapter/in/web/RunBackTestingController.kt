@@ -1,6 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.back_testing.adapter.`in`.web
 
-import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistent.FileBackTestingDataStore
+import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistent.BackTestingDataFileStorageAdapter
 import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistent.LoadBackTestingDataAdapter
 import com.newy.algotrade.coroutine_based_application.back_testing.domain.BackTestingFileManager
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
@@ -77,7 +77,7 @@ class RunBackTestingController {
         backTestingDataKey: BackTestingDataKey,
         onReceivePollingPricePort: OnReceivePollingPricePort,
     ): LoadBackTestingDataAdapter {
-        val backTestingDataPort = FileBackTestingDataStore(BackTestingFileManager())
+        val backTestingDataPort = BackTestingDataFileStorageAdapter(BackTestingFileManager())
         return LoadBackTestingDataAdapter(
             backTestingDataKey,
             backTestingDataPort,

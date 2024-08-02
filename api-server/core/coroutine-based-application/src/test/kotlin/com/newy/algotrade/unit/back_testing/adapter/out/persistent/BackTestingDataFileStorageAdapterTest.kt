@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.back_testing.adapter.out.persistent
 
-import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistent.FileBackTestingDataStore
+import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistent.BackTestingDataFileStorageAdapter
 import com.newy.algotrade.coroutine_based_application.back_testing.domain.BackTestingFileManager
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.domain.chart.Candle
@@ -14,9 +14,9 @@ import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
-class FileBackTestingDataStoreTest {
+class BackTestingDataFileStorageAdapterTest {
     private val fileManager = BackTestingFileManager()
-    private val adapter = FileBackTestingDataStore(fileManager)
+    private val adapter = BackTestingDataFileStorageAdapter(fileManager)
 
     @Test
     fun `없는 파일 - 백테스팅 데이터 가져오기`() = runTest {

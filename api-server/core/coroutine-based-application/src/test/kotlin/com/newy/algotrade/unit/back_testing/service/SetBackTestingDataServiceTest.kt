@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.back_testing.service
 
-import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistent.FileBackTestingDataStore
+import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistent.BackTestingDataFileStorageAdapter
 import com.newy.algotrade.coroutine_based_application.back_testing.domain.BackTestingFileManager
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.back_testing.service.SetBackTestingDataService
@@ -29,7 +29,7 @@ class SetBackTestingDataServiceTest {
         searchEndTime = OffsetDateTime.parse("8888-01-01T00:01+09:00"),
     )
     private val fileManager = BackTestingFileManager()
-    private val service = SetBackTestingDataService(FileBackTestingDataStore(fileManager))
+    private val service = SetBackTestingDataService(BackTestingDataFileStorageAdapter(fileManager))
 
     @AfterClass
     fun tearDown() {
