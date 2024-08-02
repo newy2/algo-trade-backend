@@ -8,7 +8,7 @@ import com.newy.algotrade.coroutine_based_application.notification.port.`in`.Sen
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SendNotificationCommand
 import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationLogPort
 
-open class SendNotificationService(
+open class SendNotificationCommandService(
     private val adapter: SendNotificationLogPort,
     private val eventBus: EventBus<SendNotificationEvent>,
     private val httpApiClient: HttpApiClient,

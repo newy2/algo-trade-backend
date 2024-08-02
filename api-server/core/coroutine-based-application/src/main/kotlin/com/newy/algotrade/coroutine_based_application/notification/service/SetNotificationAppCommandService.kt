@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.notification.port.`in`.mod
 import com.newy.algotrade.coroutine_based_application.notification.port.out.NotificationAppPort
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
 
-open class SetNotificationAppService(
+open class SetNotificationAppCommandService(
     private val notificationAppPort: NotificationAppPort,
 ) : SetNotificationAppUseCase {
     override suspend fun setNotificationApp(command: SetNotificationAppCommand): Boolean {

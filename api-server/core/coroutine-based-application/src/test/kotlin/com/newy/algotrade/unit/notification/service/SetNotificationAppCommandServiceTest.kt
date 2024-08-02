@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.notification.service
 
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SetNotificationAppCommand
 import com.newy.algotrade.coroutine_based_application.notification.port.out.NotificationAppPort
-import com.newy.algotrade.coroutine_based_application.notification.service.SetNotificationAppService
+import com.newy.algotrade.coroutine_based_application.notification.service.SetNotificationAppCommandService
 import com.newy.algotrade.domain.common.consts.NotificationApp
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
 import kotlinx.coroutines.test.runTest
@@ -23,13 +23,13 @@ private val command = SetNotificationAppCommand(
     url = NotificationApp.SLACK.host
 )
 
-class FailedSetNotificationAppServiceTest {
+class FailedSetNotificationAppCommandServiceTest {
     @Test
     fun `이미 알림 앱을 등록한 경우`() = runTest {
         val alreadyExistsAdapter = object : NoErrorNotificationAppAdapter() {
             override suspend fun hasNotificationApp(userId: Long) = true
         }
-        val service = SetNotificationAppService(alreadyExistsAdapter)
+        val service = SetNotificationAppCommandService(alreadyExistsAdapter)
 
         try {
             service.setNotificationApp(command)
@@ -41,12 +41,12 @@ class FailedSetNotificationAppServiceTest {
 }
 
 @DisplayName("port 호출 순서 확인")
-class SuccessSetNotificationAppServiceTest : NoErrorNotificationAppAdapter() {
+class SuccessSetNotificationAppCommandServiceTest : NoErrorNotificationAppAdapter() {
     private var log = ""
 
     @Test
     fun test() = runTest {
-        val service = SetNotificationAppService(this@SuccessSetNotificationAppServiceTest)
+        val service = SetNotificationAppCommandService(this@SuccessSetNotificationAppCommandServiceTest)
         val isRegistered = service.setNotificationApp(command)
 
         assertTrue(isRegistered)

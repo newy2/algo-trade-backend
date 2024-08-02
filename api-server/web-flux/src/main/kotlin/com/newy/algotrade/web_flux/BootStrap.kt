@@ -3,7 +3,7 @@ package com.newy.algotrade.web_flux
 import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
 import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStrategyEvent
 import com.newy.algotrade.coroutine_based_application.common.event.SendNotificationEvent
-import com.newy.algotrade.coroutine_based_application.notification.service.SendNotificationService
+import com.newy.algotrade.coroutine_based_application.notification.service.SendNotificationCommandService
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.system.InitController
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.GetAllUserStrategyQuery
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.UserStrategyQuery
@@ -38,7 +38,7 @@ class Bootstrap(
 class RegisterEventHandler(
     private val runnableStrategyUseCase: RunnableStrategyUseCase,
     private val userStrategyQuery: UserStrategyQuery,
-    private val sendNotificationService: SendNotificationService,
+    private val sendNotificationService: SendNotificationCommandService,
     @Qualifier("createUserStrategyEventBus") val createUserStrategyEventBus: EventBus<CreateUserStrategyEvent>,
     @Qualifier("createSendNotificationEventBus") val createSendNotificationEventBus: EventBus<SendNotificationEvent>,
 ) : CommandLineRunner {

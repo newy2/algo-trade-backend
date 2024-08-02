@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.common.event.SendNotificat
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SendNotificationCommand
 import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationLogPort
-import com.newy.algotrade.coroutine_based_application.notification.service.SendNotificationService
+import com.newy.algotrade.coroutine_based_application.notification.service.SendNotificationCommandService
 import com.newy.algotrade.domain.common.consts.NotificationApp
 import com.newy.algotrade.domain.common.consts.NotificationRequestMessageFormat
 import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
@@ -21,10 +21,10 @@ import kotlin.test.assertEquals
 import kotlin.test.fail
 
 @DisplayName("메소드 호출 순서 확인")
-class SendNotificationServiceTest : NoErrorSendNotificationAdapter() {
+class SendNotificationCommandServiceTest : NoErrorSendNotificationAdapter() {
     private val methodCallLogs: MutableList<String> = mutableListOf()
     private lateinit var eventBus: EventBus<SendNotificationEvent>
-    private lateinit var service: SendNotificationService
+    private lateinit var service: SendNotificationCommandService
 
     override suspend fun createByStatusRequested(notificationAppId: Long, requestMessage: String): Long {
         methodCallLogs.add("createByStatusRequested")
@@ -45,7 +45,7 @@ class SendNotificationServiceTest : NoErrorSendNotificationAdapter() {
     fun setUp() {
         methodCallLogs.clear()
         eventBus = EventBus()
-        service = SendNotificationService(
+        service = SendNotificationCommandService(
             adapter = this,
             eventBus = eventBus,
             httpApiClient = object : NoErrorHttpClient() {
@@ -99,14 +99,14 @@ class SendNotificationServiceTest : NoErrorSendNotificationAdapter() {
 }
 
 @DisplayName("예외사항 테스트")
-class ErrorSendNotificationServiceTest {
+class ErrorSendNotificationCommandServiceTest {
     @Test
     fun `REQUESTED 가 아닌 SendNotificationLog 로 알림 전송을 시도하는 경우`() = runTest {
         SendNotificationLogStatus
             .values()
             .filter { it != SendNotificationLogStatus.REQUESTED }
             .forEach { notSupportedPreStatus ->
-                val service = SendNotificationService(
+                val service = SendNotificationCommandService(
                     adapter = object : NoErrorSendNotificationAdapter() {
                         override suspend fun getSendNotificationLog(notificationLogId: Long) =
                             super.getSendNotificationLog(notificationLogId).copy(
@@ -128,7 +128,7 @@ class ErrorSendNotificationServiceTest {
 }
 
 @DisplayName("HTTP 호출 파라미터 확인")
-class SendNotificationServiceHttpClientTest() {
+class SendNotificationCommandServiceHttpClientTest() {
     @Test
     fun `http client 호출 파라미터 확인`() = runTest {
         var calledPath = ""
@@ -158,7 +158,7 @@ class SendNotificationServiceHttpClientTest() {
             }
         }
 
-        val service = SendNotificationService(
+        val service = SendNotificationCommandService(
             adapter = slackSendNotificationAdapter,
             eventBus = EventBus(),
             httpApiClient = spyHttpApiClient,
