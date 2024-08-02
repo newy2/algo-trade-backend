@@ -17,7 +17,7 @@ class SetUserStrategyController(
 ) {
     @PostMapping
     suspend fun setMarketAccount(@RequestBody request: SetUserStrategyRequest): ResponseEntity<SetUserStrategyResponse> {
-        val isSaved = setUserStrategyUseCase.setUserStrategy(request.toDomainModel())
+        val isSaved = setUserStrategyUseCase.setUserStrategy(request.toIncomingPortModel())
         return ResponseEntity
             .status(HttpStatus.CREATED)
             .body(SetUserStrategyResponse(isSaved))

@@ -11,22 +11,21 @@ open class RunnableStrategyCommandService(
     private val strategyPort: StrategyPort,
 ) : RunnableStrategyUseCase {
     override suspend fun setRunnableStrategy(userStrategyKey: UserStrategyKey) {
-        val candles = candlesUseCase.setCandles(userStrategyKey.productPriceKey)
-        val strategy = Strategy.fromClassName(
-            strategyClassName = userStrategyKey.strategyClassName,
-            candles = candles
+        strategyPort.setStrategy(
+            key = userStrategyKey,
+            strategy = Strategy.fromClassName(
+                strategyClassName = userStrategyKey.strategyClassName,
+                candles = candlesUseCase.setCandles(userStrategyKey.productPriceKey)
+            )
         )
-
-        strategyPort.setStrategy(userStrategyKey, strategy)
     }
 
     override suspend fun removeRunnableStrategy(userStrategyKey: UserStrategyKey) {
         strategyPort.removeStrategy(userStrategyKey)
 
-        userStrategyKey.productPriceKey.let {
-            if (!strategyPort.isUsingProductPriceKey(it)) {
-                candlesUseCase.removeCandles(it)
-            }
+        val productPriceKey = userStrategyKey.productPriceKey
+        if (!strategyPort.isUsingProductPriceKey(productPriceKey)) {
+            candlesUseCase.removeCandles(productPriceKey)
         }
     }
 }

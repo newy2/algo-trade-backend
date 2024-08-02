@@ -16,9 +16,8 @@ open class CandlesCommandService(
             requestPollingCandles(productPriceKey)
         }
 
-    override fun addCandles(productPriceKey: ProductPriceKey, candleList: List<ProductPrice>): Candles {
-        return candlePort.addCandles(productPriceKey, candleList)
-    }
+    override fun addCandles(productPriceKey: ProductPriceKey, candleList: List<ProductPrice>): Candles =
+        candlePort.addCandles(productPriceKey, candleList)
 
     override fun removeCandles(productPriceKey: ProductPriceKey) {
         candlePort.removeCandles(productPriceKey)

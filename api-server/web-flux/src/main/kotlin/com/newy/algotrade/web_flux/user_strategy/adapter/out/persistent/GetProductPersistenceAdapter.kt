@@ -16,14 +16,15 @@ class GetProductPersistenceAdapter(
         marketIds: List<Long>,
         productType: ProductType,
         productCodes: List<String>
-    ): List<Product> = productRepository.findByMarketIdInAndTypeAndCodeIn(
-        marketIds = marketIds,
-        type = productType.name,
-        codes = productCodes,
-    ).map {
-        Product(
-            id = it.id,
-            code = it.code
-        )
-    }.toList()
+    ): List<Product> =
+        productRepository.findByMarketIdInAndTypeAndCodeIn(
+            marketIds = marketIds,
+            type = productType.name,
+            codes = productCodes,
+        ).map {
+            Product(
+                id = it.id,
+                code = it.code
+            )
+        }.toList()
 }

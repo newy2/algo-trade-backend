@@ -8,9 +8,8 @@ class CreateBackTestingDataController(
     private val createBackTestingDataUseCase: CreateBackTestingDataUseCase,
     private val setBackTestingDataUseCase: SetBackTestingDataUseCase
 ) {
-    suspend fun createBackTestingData(key: BackTestingDataKey): Boolean {
-        val list = createBackTestingDataUseCase.createData(key)
-        return setBackTestingDataUseCase.setBackTestingData(key, list)
-    }
-
+    suspend fun createBackTestingData(key: BackTestingDataKey): Boolean =
+        createBackTestingDataUseCase.createData(key).let {
+            setBackTestingDataUseCase.setBackTestingData(key, it)
+        }
 }

@@ -19,7 +19,7 @@ data class SetUserStrategyRequest(
         validate()
     }
 
-    fun toDomainModel() =
+    fun toIncomingPortModel() =
         SetUserStrategyCommand(
             marketAccountId,
             strategyClassName,
