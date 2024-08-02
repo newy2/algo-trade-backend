@@ -2,7 +2,7 @@ package com.newy.algotrade.coroutine_based_application.user_strategy.service
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
 import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStrategyEvent
-import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.SetUserStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.UserStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model.SetUserStrategyCommand
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.*
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
@@ -11,14 +11,14 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
-open class SetUserStrategyService(
+open class UserStrategyCommandService(
     private val marketPort: GetMarketPort,
     private val strategyPort: HasStrategyPort,
     private val productPort: GetProductPort,
     private val userStrategyPort: UserStrategyPort,
     private val userStrategyProductPort: SetUserStrategyProductPort,
     private val eventBus: EventBus<CreateUserStrategyEvent>,
-) : SetUserStrategyUseCase {
+) : UserStrategyUseCase {
     override suspend fun setUserStrategy(userStrategy: SetUserStrategyCommand): Boolean = withContext(Dispatchers.IO) {
         val marketIds = listOf(
             async { marketPort.getMarketIdsBy(userStrategy.marketAccountId) },

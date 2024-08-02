@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStr
 import com.newy.algotrade.coroutine_based_application.user_strategy.domain.Product
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model.SetUserStrategyCommand
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.*
-import com.newy.algotrade.coroutine_based_application.user_strategy.service.SetUserStrategyService
+import com.newy.algotrade.coroutine_based_application.user_strategy.service.UserStrategyCommandService
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -63,14 +63,14 @@ class NoErrorSetUserStrategyProductAdapter : SetUserStrategyProductPort {
     override suspend fun setUserStrategyProducts(userStrategyId: Long, productIds: List<Long>): Boolean = true
 }
 
-class SetUserStrategyServiceWrapper(
+class UserStrategyCommandServiceWrapper(
     marketPort: GetMarketPort = NoErrorGetMarketAdapter(),
     strategyPort: HasStrategyPort = NoErrorHasStrategyAdapter(),
     productPort: GetProductPort = NoErrorGetProductAdapter(),
     userStrategyPort: UserStrategyPort = NoErrorUserStrategyAdapter(),
     userStrategyProductPort: SetUserStrategyProductPort = NoErrorSetUserStrategyProductAdapter(),
     eventBus: EventBus<CreateUserStrategyEvent> = EventBus(),
-) : SetUserStrategyService(
+) : UserStrategyCommandService(
     marketPort = marketPort,
     strategyPort = strategyPort,
     productPort = productPort,
@@ -96,7 +96,7 @@ class DefaultSetUserStrategyQueryServiceTest {
             override suspend fun getMarketIdsBy(marketAccountId: Long): List<Long> = emptyList()
         }
 
-        val service = SetUserStrategyServiceWrapper(
+        val service = UserStrategyCommandServiceWrapper(
             marketPort = NotFoundGetMarketAdapter(),
         )
 
@@ -114,7 +114,7 @@ class DefaultSetUserStrategyQueryServiceTest {
             override suspend fun hasStrategyByClassName(strategyClassName: String): Boolean = false
         }
 
-        val service = SetUserStrategyServiceWrapper(
+        val service = UserStrategyCommandServiceWrapper(
             strategyPort = HasNotStrategyAdapter(),
         )
 
@@ -136,7 +136,7 @@ class DefaultSetUserStrategyQueryServiceTest {
             }
         }
 
-        val service = SetUserStrategyServiceWrapper(
+        val service = UserStrategyCommandServiceWrapper(
             userStrategyPort = AlreadyRegisteredUserStrategyAdapter(),
         )
 
@@ -163,7 +163,7 @@ class UserPickSetUserStrategyQueryServiceTest {
             }
         }
 
-        val service = SetUserStrategyServiceWrapper(
+        val service = UserStrategyCommandServiceWrapper(
             productPort = GetProductSubListAdapter(),
         )
 
@@ -181,13 +181,13 @@ class UserPickProductSetUserStrategyQueryServiceTest : NoErrorUserStrategyAdapte
     private val createdUserStrategyId: Long = 10
     private lateinit var log: String
     private lateinit var eventBus: EventBus<CreateUserStrategyEvent>
-    private lateinit var service: SetUserStrategyService
+    private lateinit var service: UserStrategyCommandService
 
     @BeforeEach
     fun setUp() {
         log = ""
         eventBus = EventBus()
-        service = SetUserStrategyServiceWrapper(
+        service = UserStrategyCommandServiceWrapper(
             userStrategyPort = this@UserPickProductSetUserStrategyQueryServiceTest,
             userStrategyProductPort = this@UserPickProductSetUserStrategyQueryServiceTest,
             eventBus = eventBus
