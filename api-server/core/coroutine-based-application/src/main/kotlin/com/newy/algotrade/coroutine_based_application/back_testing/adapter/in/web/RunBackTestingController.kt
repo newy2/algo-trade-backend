@@ -16,7 +16,7 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.p
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.OnCreatedStrategySignalPort
-import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyService
+import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyCommandService
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
@@ -95,7 +95,7 @@ class RunBackTestingController {
             fetchProductPriceQuery = NullFetchProductPriceQuery(),
             candlePort = candleStore
         )
-        val runStrategyService = RunStrategyService(
+        val runStrategyService = RunStrategyCommandService(
             candlesQuery = CandlesQueryService(candleStore),
             strategyPort = strategyStore,
             strategySignalHistoryPort = strategySignalHistoryStore,

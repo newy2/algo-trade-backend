@@ -8,7 +8,7 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.p
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.OnCreatedStrategySignalPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategySignalHistoryPort
-import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyService
+import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyCommandService
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
@@ -36,7 +36,7 @@ private val BTC_1MINUTE = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
 private val ETH_1MINUTE = productPriceKey("ETHUSDT", Duration.ofMinutes(1))
 
 @DisplayName("전략 실행하기 테스트")
-class RunStrategyServiceTest : OnCreatedStrategySignalPort {
+class RunStrategyCommandServiceTest : OnCreatedStrategySignalPort {
     private lateinit var service: RunStrategyUseCase
     private lateinit var strategySignalHistoryPort: StrategySignalHistoryPort
     private lateinit var results: MutableMap<String, StrategySignal>
@@ -48,7 +48,7 @@ class RunStrategyServiceTest : OnCreatedStrategySignalPort {
     @BeforeEach
     fun setUp() {
         strategySignalHistoryPort = InMemoryStrategySignalHistoryStore()
-        service = RunStrategyService(
+        service = RunStrategyCommandService(
             candlesQuery = CandlesQueryService(
                 InMemoryCandleStore().also {
                     it.setCandles(

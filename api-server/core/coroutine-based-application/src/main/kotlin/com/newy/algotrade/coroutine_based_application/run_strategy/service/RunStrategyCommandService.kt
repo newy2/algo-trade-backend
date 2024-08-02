@@ -9,7 +9,7 @@ import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 
-open class RunStrategyService(
+open class RunStrategyCommandService(
     private val candlesQuery: CandlesQuery,
     private val strategyPort: StrategyQueryPort,
     private val strategySignalHistoryPort: StrategySignalHistoryPort,
