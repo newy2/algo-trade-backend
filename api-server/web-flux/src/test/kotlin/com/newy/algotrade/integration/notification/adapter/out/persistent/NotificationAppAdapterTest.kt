@@ -1,7 +1,7 @@
 package com.newy.algotrade.integration.notification.adapter.out.persistent
 
-import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SetNotificationAppCommand
 import com.newy.algotrade.domain.common.consts.NotificationAppType
+import com.newy.algotrade.domain.notification.NotificationApp
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.NotificationAppAdapter
 import helpers.BaseDbTest
 import org.junit.jupiter.api.Assertions.assertFalse
@@ -32,7 +32,7 @@ class NotificationAppAdapterTest(
         val userId = getAdminUserId()
 
         val isSaved = adapter.setNotificationApp(
-            SetNotificationAppCommand(
+            NotificationApp(
                 userId = userId,
                 type = NotificationAppType.SLACK,
                 url = "${NotificationAppType.SLACK.host}/XXXX/YYY"

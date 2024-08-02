@@ -2,6 +2,7 @@ package com.newy.algotrade.coroutine_based_application.notification.port.`in`.mo
 
 import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.helper.SelfValidating
+import com.newy.algotrade.domain.notification.NotificationApp
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 
@@ -14,4 +15,11 @@ data class SetNotificationAppCommand(
         validate()
         type.validateUrl(url)
     }
+
+    fun toDomainEntity() =
+        NotificationApp(
+            userId = userId,
+            type = type,
+            url = url,
+        )
 }

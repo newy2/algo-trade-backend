@@ -1,6 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.notification.port.out
 
-import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SetNotificationAppCommand
+import com.newy.algotrade.domain.notification.NotificationApp
 
 interface NotificationAppPort : NotificationAppQueryPort, NotificationAppCommandPort
 
@@ -9,5 +9,5 @@ interface NotificationAppQueryPort {
 }
 
 interface NotificationAppCommandPort {
-    suspend fun setNotificationApp(command: SetNotificationAppCommand): Boolean
+    suspend fun setNotificationApp(domainEntity: NotificationApp): Boolean
 }

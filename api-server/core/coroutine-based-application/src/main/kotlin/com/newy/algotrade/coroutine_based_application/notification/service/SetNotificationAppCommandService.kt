@@ -13,6 +13,6 @@ open class SetNotificationAppCommandService(
             throw DuplicateDataException("이미 알림 앱을 등록했습니다.")
         }
 
-        return notificationAppPort.setNotificationApp(command)
+        return notificationAppPort.setNotificationApp(command.toDomainEntity())
     }
 }

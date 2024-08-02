@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository
 
-import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SetNotificationAppCommand
+import com.newy.algotrade.domain.notification.NotificationApp
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
@@ -17,9 +17,9 @@ data class NotificationAppR2dbcEntity(
     val type: String = "",
     val url: String = "",
 ) {
-    constructor(command: SetNotificationAppCommand) : this(
-        userId = command.userId,
-        type = command.type.name,
-        url = command.url
+    constructor(domainEntity: NotificationApp) : this(
+        userId = domainEntity.userId,
+        type = domainEntity.type.name,
+        url = domainEntity.url
     )
 }

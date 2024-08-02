@@ -5,6 +5,7 @@ import com.newy.algotrade.coroutine_based_application.notification.port.out.Noti
 import com.newy.algotrade.coroutine_based_application.notification.service.SetNotificationAppCommandService
 import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
+import com.newy.algotrade.domain.notification.NotificationApp
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
@@ -14,7 +15,7 @@ import kotlin.test.fail
 
 open class NoErrorNotificationAppAdapter : NotificationAppPort {
     override suspend fun hasNotificationApp(userId: Long) = false
-    override suspend fun setNotificationApp(command: SetNotificationAppCommand) = true
+    override suspend fun setNotificationApp(domainEntity: NotificationApp) = true
 }
 
 private val command = SetNotificationAppCommand(
@@ -53,13 +54,13 @@ class SuccessSetNotificationAppCommandServiceTest : NoErrorNotificationAppAdapte
         assertEquals("hasNotificationAppPort setNotificationAppPort ", log)
     }
 
-    override suspend fun hasNotificationApp(userId: Long): Boolean {
-        log += "hasNotificationAppPort "
-        return super.hasNotificationApp(userId)
-    }
+    override suspend fun hasNotificationApp(userId: Long): Boolean =
+        super.hasNotificationApp(userId).also {
+            log += "hasNotificationAppPort "
+        }
 
-    override suspend fun setNotificationApp(command: SetNotificationAppCommand): Boolean {
-        log += "setNotificationAppPort "
-        return super.setNotificationApp(command)
-    }
+    override suspend fun setNotificationApp(domainEntity: NotificationApp): Boolean =
+        super.setNotificationApp(domainEntity).also {
+            log += "setNotificationAppPort "
+        }
 }
