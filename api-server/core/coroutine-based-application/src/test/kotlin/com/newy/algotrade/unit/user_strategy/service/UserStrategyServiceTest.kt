@@ -59,7 +59,7 @@ open class NoErrorUserStrategyAdapter : UserStrategyPort {
     ): Boolean = false
 }
 
-class NoErrorSetUserStrategyProductAdapter : SetUserStrategyProductPort {
+class NoErrorUserStrategyProductCommandAdapter : UserStrategyProductCommandPort {
     override suspend fun setUserStrategyProducts(userStrategyId: Long, productIds: List<Long>): Boolean = true
 }
 
@@ -68,7 +68,7 @@ class UserStrategyCommandServiceWrapper(
     strategyPort: HasStrategyPort = NoErrorHasStrategyAdapter(),
     productPort: GetProductPort = NoErrorGetProductAdapter(),
     userStrategyPort: UserStrategyPort = NoErrorUserStrategyAdapter(),
-    userStrategyProductPort: SetUserStrategyProductPort = NoErrorSetUserStrategyProductAdapter(),
+    userStrategyProductPort: UserStrategyProductCommandPort = NoErrorUserStrategyProductCommandAdapter(),
     eventBus: EventBus<CreateUserStrategyEvent> = EventBus(),
 ) : UserStrategyCommandService(
     marketPort = marketPort,
@@ -177,7 +177,8 @@ class UserPickSetUserStrategyProductQueryServiceTest {
 }
 
 @DisplayName("USER_PICK 등록하기")
-class UserPickProductSetUserStrategyProductQueryServiceTest : NoErrorUserStrategyAdapter(), SetUserStrategyProductPort {
+class UserPickProductUserStrategyProductCommandQueryServiceTest : NoErrorUserStrategyAdapter(),
+    UserStrategyProductCommandPort {
     private val createdUserStrategyId: Long = 10
     private lateinit var log: String
     private lateinit var eventBus: EventBus<CreateUserStrategyEvent>
@@ -188,8 +189,8 @@ class UserPickProductSetUserStrategyProductQueryServiceTest : NoErrorUserStrateg
         log = ""
         eventBus = EventBus()
         service = UserStrategyCommandServiceWrapper(
-            userStrategyPort = this@UserPickProductSetUserStrategyProductQueryServiceTest,
-            userStrategyProductPort = this@UserPickProductSetUserStrategyProductQueryServiceTest,
+            userStrategyPort = this@UserPickProductUserStrategyProductCommandQueryServiceTest,
+            userStrategyProductPort = this@UserPickProductUserStrategyProductCommandQueryServiceTest,
             eventBus = eventBus
         )
     }

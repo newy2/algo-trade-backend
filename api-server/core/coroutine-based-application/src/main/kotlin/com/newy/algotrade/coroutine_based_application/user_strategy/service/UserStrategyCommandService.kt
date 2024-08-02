@@ -16,7 +16,7 @@ open class UserStrategyCommandService(
     private val strategyPort: HasStrategyPort,
     private val productPort: GetProductPort,
     private val userStrategyPort: UserStrategyPort,
-    private val userStrategyProductPort: SetUserStrategyProductPort,
+    private val userStrategyProductPort: UserStrategyProductCommandPort,
     private val eventBus: EventBus<CreateUserStrategyEvent>,
 ) : UserStrategyUseCase {
     override suspend fun setUserStrategy(userStrategy: SetUserStrategyCommand): Boolean = withContext(Dispatchers.IO) {

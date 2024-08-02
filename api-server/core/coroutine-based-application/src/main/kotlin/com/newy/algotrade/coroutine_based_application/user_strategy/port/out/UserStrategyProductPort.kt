@@ -2,7 +2,9 @@ package com.newy.algotrade.coroutine_based_application.user_strategy.port.out
 
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 
-interface SetUserStrategyProductPort {
+interface UserStrategyProductPort : UserStrategyProductCommandPort, UserStrategyProductQueryPort
+
+interface UserStrategyProductCommandPort {
     suspend fun setUserStrategyProducts(userStrategyId: Long, productIds: List<Long>): Boolean
 }
 

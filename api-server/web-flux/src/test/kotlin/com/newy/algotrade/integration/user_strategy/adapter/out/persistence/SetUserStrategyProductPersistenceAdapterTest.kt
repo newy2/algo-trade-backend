@@ -6,7 +6,7 @@ import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.SetUserStrategyProductPersistenceAdapter
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.UserStrategyProductPersistenceAdapter
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.*
 import helpers.BaseDbTest
 import kotlinx.coroutines.flow.filter
@@ -14,17 +14,19 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.awaitSingle
 
-class SetUserStrategyProductPersistenceAdapterTest(
+@DisplayName("setUserStrategyProducts 테스트")
+class SetUserStrategyProductsTest(
     @Autowired private val marketRepository: MarketRepositoryForStrategy,
     @Autowired private val productRepository: ProductRepository,
     @Autowired private val userStrategyProductRepository: UserStrategyProductRepository,
-    @Autowired private val adapter: SetUserStrategyProductPersistenceAdapter,
-) : BaseSetUserStrategyProductPersistenceAdapterTest() {
+    @Autowired private val adapter: UserStrategyProductPersistenceAdapter,
+) : BaseUserStrategyCommandProductPersistenceAdapterTest() {
     @Test
     fun `DB 에 입력된 데이터 확인`() = runBlocking {
         val marketId = marketRepository.findByCode("BY_BIT")!!.id
@@ -81,7 +83,7 @@ class SetUserStrategyProductPersistenceAdapterTest(
     }
 }
 
-open class BaseSetUserStrategyProductPersistenceAdapterTest : BaseDbTest() {
+open class BaseUserStrategyCommandProductPersistenceAdapterTest : BaseDbTest() {
     @Autowired
     private lateinit var marketRepository: MarketRepositoryForStrategy
 

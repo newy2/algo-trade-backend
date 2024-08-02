@@ -15,7 +15,7 @@ open class SpringUserStrategyCommandService(
     strategyPort: HasStrategyPort,
     productPort: GetProductPort,
     userStrategyPort: UserStrategyPort,
-    userStrategyProductPort: SetUserStrategyProductPort,
+    userStrategyProductPort: UserStrategyProductCommandPort,
     @Qualifier("createUserStrategyEventBus") eventBus: EventBus<CreateUserStrategyEvent>,
 ) : UserStrategyCommandService(
     marketPort,
