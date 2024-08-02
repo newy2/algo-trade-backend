@@ -3,9 +3,9 @@ package com.newy.algotrade.coroutine_based_application.back_testing.service
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.CreateBackTestingDataUseCase
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
-import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.extension.ProductPrice
+import com.newy.algotrade.domain.price.GetProductPriceHttpParam
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import java.time.OffsetDateTime
 import java.util.*
@@ -58,7 +58,7 @@ class CreateBackTestingDataService(
         val maxSize = if (productPriceKey.market == Market.BY_BIT) 1000 else 500
 
         val ascendingList = productPricePort
-            .getProductPrices(GetProductPriceParam(productPriceKey, endTime, maxSize))
+            .getProductPrices(GetProductPriceHttpParam(productPriceKey, endTime, maxSize))
             .filter { it.time.begin.isBefore(endTime) }
 
         results.addAll(0, ascendingList)

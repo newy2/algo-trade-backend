@@ -5,9 +5,9 @@ import com.newy.algotrade.coroutine_based_application.common.consts.LsSecHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.http.post
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
-import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.common.extension.ProductPrice
+import com.newy.algotrade.domain.price.GetProductPriceHttpParam
 import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.LsSecProductPriceHttpResponse
 
 class FetchLsSecProductPrice(
@@ -15,7 +15,7 @@ class FetchLsSecProductPrice(
     private val accessTokenLoader: GetAccessTokenPort<PrivateApiInfo>,
     private val masterUserInfo: PrivateApiInfo,
 ) : ProductPriceQueryPort {
-    override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> {
+    override suspend fun getProductPrices(param: GetProductPriceHttpParam): List<ProductPrice> {
         val accessToken = accessTokenLoader.accessToken(masterUserInfo)
 
         val (path, apiRateLimit, trCode) = LsSecHttpApiInfo.loadProductPrice(param.isIntervalByDays())

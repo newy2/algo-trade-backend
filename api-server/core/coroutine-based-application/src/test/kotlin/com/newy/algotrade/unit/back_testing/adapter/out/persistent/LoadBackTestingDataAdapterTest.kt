@@ -4,8 +4,8 @@ import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.p
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.back_testing.port.out.GetBackTestingDataPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
-import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.common.extension.ProductPrice
+import com.newy.algotrade.domain.price.GetProductPriceHttpParam
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.productPrice
 import helpers.productPriceKey
@@ -28,7 +28,7 @@ class LoadBackTestingDataAdapterTest : GetBackTestingDataPort, OnReceivePollingP
         this,
         this
     )
-    private val fakeParam = GetProductPriceParam(
+    private val fakeParam = GetProductPriceHttpParam(
         fakeKey.productPriceKey,
         OffsetDateTime.parse("2024-05-01T00:03Z"),
         limit = 2

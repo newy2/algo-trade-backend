@@ -1,13 +1,12 @@
-package com.newy.algotrade.coroutine_based_application.product.port.out.model
+package com.newy.algotrade.domain.price
 
-import com.newy.algotrade.domain.common.consts.LsSecTrCode
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import java.time.OffsetDateTime
 import java.time.format.DateTimeFormatter
 
-class GetProductPriceParam(
+class GetProductPriceHttpParam(
     val productPriceKey: ProductPriceKey,
     private val endTime: OffsetDateTime,
     val limit: Int,
@@ -44,17 +43,6 @@ class GetProductPriceParam(
 
     fun isIntervalByDays(): Boolean {
         return productPriceKey.interval.toDays() >= 1
-    }
-
-    fun trCode(): String {
-        // TODO Remove this
-        useOnly(Market.LS_SEC)
-
-        return if (isIntervalByDays()) {
-            LsSecTrCode.GET_PRODUCT_PRICE_BY_DAY.code
-        } else {
-            LsSecTrCode.GET_PRODUCT_PRICE_BY_MINUTE.code
-        }
     }
 
     fun extraBody(): Map<String, Any> {

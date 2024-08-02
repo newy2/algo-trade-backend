@@ -2,9 +2,9 @@ package com.newy.algotrade.unit.product.service
 
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribablePollingProductPricePort
-import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceQueryService
 import com.newy.algotrade.domain.common.extension.ProductPrice
+import com.newy.algotrade.domain.price.GetProductPriceHttpParam
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.productPriceKey
 import kotlinx.coroutines.test.runTest
@@ -31,7 +31,7 @@ class FetchProductPriceQueryServiceTest : NoErrorProductPriceQueryAdapter, Subsc
         methodCallLogs.add("unSubscribe")
     }
 
-    override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> =
+    override suspend fun getProductPrices(param: GetProductPriceHttpParam): List<ProductPrice> =
         super.getProductPrices(param).also {
             methodCallLogs.add("getProductPrices")
         }
@@ -64,5 +64,5 @@ class FetchProductPriceQueryServiceTest : NoErrorProductPriceQueryAdapter, Subsc
 }
 
 private interface NoErrorProductPriceQueryAdapter : ProductPriceQueryPort {
-    override suspend fun getProductPrices(param: GetProductPriceParam): List<ProductPrice> = emptyList()
+    override suspend fun getProductPrices(param: GetProductPriceHttpParam): List<ProductPrice> = emptyList()
 }

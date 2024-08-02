@@ -3,9 +3,9 @@ package com.newy.algotrade.coroutine_based_application.product.adapter.out.exter
 import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingJob
 import com.newy.algotrade.coroutine_based_application.product.port.out.PollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
-import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.common.annotation.ForTesting
 import com.newy.algotrade.domain.common.extension.ProductPrice
+import com.newy.algotrade.domain.price.GetProductPriceHttpParam
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import kotlinx.coroutines.Dispatchers
 import java.time.OffsetDateTime
@@ -19,7 +19,7 @@ open class PollingProductPriceWithHttpApi(
     PollingJob<ProductPriceKey, List<ProductPrice>>(delayMillis, coroutineContext) {
     override suspend fun eachProcess(key: ProductPriceKey): List<ProductPrice> {
         return loader.getProductPrices(
-            GetProductPriceParam(
+            GetProductPriceHttpParam(
                 key,
                 endTime(),
                 limit()

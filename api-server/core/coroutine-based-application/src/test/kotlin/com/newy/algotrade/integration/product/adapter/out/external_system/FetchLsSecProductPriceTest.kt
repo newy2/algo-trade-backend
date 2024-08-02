@@ -5,7 +5,6 @@ import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecA
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchLsSecProductPrice
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchProductPriceProxy
-import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.LsSecTrCode
@@ -13,6 +12,7 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
+import com.newy.algotrade.domain.price.GetProductPriceHttpParam
 import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.LsSecProductPriceHttpResponse
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.TestEnv
@@ -149,7 +149,7 @@ class FetchLsSecProductPriceTest {
                 )
             ),
             api.getProductPrices(
-                GetProductPriceParam(
+                GetProductPriceHttpParam(
                     ProductPriceKey(
                         Market.LS_SEC,
                         ProductType.SPOT,
@@ -177,7 +177,7 @@ class FetchLsSecProductPriceTest {
                 )
             ),
             api.getProductPrices(
-                GetProductPriceParam(
+                GetProductPriceHttpParam(
                     ProductPriceKey(
                         Market.LS_SEC,
                         ProductType.SPOT,
