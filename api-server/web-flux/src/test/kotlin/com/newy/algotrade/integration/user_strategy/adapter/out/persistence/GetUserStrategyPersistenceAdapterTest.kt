@@ -29,7 +29,7 @@ class GetAllUserStrategiesTest : BaseGetUserStrategyPersistenceAdapterTest() {
     fun `user strategy 가 1개인 경우`() = runTransactional {
         val userStrategyId = setInitData(strategyClassName = "A", listOf("BTCUSDT"))
 
-        val actualList = adapter.getAllUserStrategies()
+        val actualList = adapter.getAllUserStrategyKeys()
         val expectedList = listOf(
             UserStrategyKey(
                 userStrategyId = userStrategyId.toString(),
@@ -51,7 +51,7 @@ class GetAllUserStrategiesTest : BaseGetUserStrategyPersistenceAdapterTest() {
         val userStrategyId1 = setInitData(strategyClassName = "A", listOf("BTCUSDT", "ETHUSDT"))
         val userStrategyId2 = setInitData(strategyClassName = "B", listOf("SOLUSDT"))
 
-        val actualList = adapter.getAllUserStrategies()
+        val actualList = adapter.getAllUserStrategyKeys()
         val expectedList = listOf(
             UserStrategyKey(
                 userStrategyId = userStrategyId1.toString(),
@@ -94,14 +94,14 @@ class GetUserStrategyTest : BaseGetUserStrategyPersistenceAdapterTest() {
     fun `ID 가 없는 경우`() = runTransactional {
         val unRegisteredId: Long = 100
 
-        assertTrue(adapter.getUserStrategies(unRegisteredId).isEmpty())
+        assertTrue(adapter.getUserStrategyKeys(unRegisteredId).isEmpty())
     }
 
     @Test
     fun `ID 가 있는 경우`() = runTransactional {
         val userStrategyId = setInitData(strategyClassName = "A", listOf("BTCUSDT", "ETHUSDT"))
 
-        val actual = adapter.getUserStrategies(userStrategyId)
+        val actual = adapter.getUserStrategyKeys(userStrategyId)
         val expected = listOf(
             UserStrategyKey(
                 userStrategyId = userStrategyId.toString(),
@@ -159,7 +159,7 @@ open class BaseGetUserStrategyPersistenceAdapterTest : BaseDbTest() {
 
     @BeforeEach
     fun empty() = runBlocking {
-        val list = adapter.getAllUserStrategies()
+        val list = adapter.getAllUserStrategyKeys()
         assertEquals(0, list.size)
     }
 

@@ -4,7 +4,7 @@ import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.syste
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.CandlesUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
-import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.GetAllUserStrategyQuery
+import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.GetAllUserStrategyProductQuery
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.Strategy
@@ -19,10 +19,10 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 
 // TODO Remove this
-class InitControllerTest : GetAllUserStrategyQuery, CandlesUseCase, NoErrorStrategyPort {
+class InitControllerTest : GetAllUserStrategyProductQuery, CandlesUseCase, NoErrorStrategyPort {
     private val methodCallLogs = mutableListOf<String>()
 
-    override suspend fun getAllUserStrategies(): List<UserStrategyKey> {
+    override suspend fun getAllUserStrategyKeys(): List<UserStrategyKey> {
         methodCallLogs.add("GetAllUserStrategyQuery.getAllUserStrategies")
         return listOf(
             userStrategyKey("id1", productPriceKey("BTCUSDT", Duration.ofMinutes(1))),

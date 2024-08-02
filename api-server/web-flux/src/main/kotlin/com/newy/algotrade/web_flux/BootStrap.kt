@@ -7,8 +7,8 @@ import com.newy.algotrade.coroutine_based_application.notification.service.SendN
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.system.InitController
 import com.newy.algotrade.coroutine_based_application.product.port.out.PollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.GetAllUserStrategyQuery
-import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.UserStrategyQuery
+import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.GetAllUserStrategyProductQuery
+import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.UserStrategyProductQuery
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component
 @Component
 class Bootstrap(
     private val runnableStrategyUseCase: RunnableStrategyUseCase,
-    private val getAllUserStrategyQuery: GetAllUserStrategyQuery,
+    private val getAllUserStrategyProductQuery: GetAllUserStrategyProductQuery,
     private val pollingProductPricePort: PollingProductPricePort,
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
@@ -29,7 +29,7 @@ class Bootstrap(
             pollingProductPricePort.start()
         }
         CoroutineScope(Dispatchers.IO).launch {
-            InitController(runnableStrategyUseCase, getAllUserStrategyQuery).init()
+            InitController(runnableStrategyUseCase, getAllUserStrategyProductQuery).init()
         }
     }
 }
@@ -37,7 +37,7 @@ class Bootstrap(
 @Component
 class RegisterEventHandler(
     private val runnableStrategyUseCase: RunnableStrategyUseCase,
-    private val userStrategyQuery: UserStrategyQuery,
+    private val userStrategyProductQuery: UserStrategyProductQuery,
     private val sendNotificationService: SendNotificationCommandService,
     @Qualifier("createUserStrategyEventBus") val createUserStrategyEventBus: EventBus<CreateUserStrategyEvent>,
     @Qualifier("createSendNotificationEventBus") val createSendNotificationEventBus: EventBus<SendNotificationEvent>,
@@ -45,7 +45,7 @@ class RegisterEventHandler(
     override fun run(vararg args: String?) {
         CoroutineScope(Dispatchers.IO).launch {
             createUserStrategyEventBus.addListener(coroutineContext) {
-                userStrategyQuery.getUserStrategies(it.id).forEach { eachUserStrategyKey ->
+                userStrategyProductQuery.getUserStrategyKeys(it.id).forEach { eachUserStrategyKey ->
                     runnableStrategyUseCase.setRunnableStrategy(eachUserStrategyKey)
                 }
             }

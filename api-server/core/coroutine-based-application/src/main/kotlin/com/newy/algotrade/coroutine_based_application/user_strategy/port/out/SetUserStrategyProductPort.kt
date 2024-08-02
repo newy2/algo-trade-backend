@@ -7,6 +7,6 @@ interface SetUserStrategyProductPort {
 }
 
 interface UserStrategyProductQueryPort {
-    suspend fun getAllUserStrategies(): List<UserStrategyKey>
-    suspend fun getUserStrategies(userStrategyId: Long): List<UserStrategyKey>
+    suspend fun getAllUserStrategyKeys(): List<UserStrategyKey>
+    suspend fun getUserStrategyKeys(userStrategyId: Long): List<UserStrategyKey>
 }

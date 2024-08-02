@@ -10,12 +10,12 @@ import kotlinx.coroutines.flow.toList
 class GetUserStrategyProductPersistenceAdapter(
     private val repository: UserStrategyProductRepository
 ) : UserStrategyProductQueryPort {
-    override suspend fun getAllUserStrategies(): List<UserStrategyKey> =
+    override suspend fun getAllUserStrategyKeys(): List<UserStrategyKey> =
         repository
             .findAllAsUserStrategyKey()
             .toList()
 
-    override suspend fun getUserStrategies(userStrategyId: Long): List<UserStrategyKey> =
+    override suspend fun getUserStrategyKeys(userStrategyId: Long): List<UserStrategyKey> =
         repository
             .findByUserStrategyIdAsUserStrategyKey(userStrategyId)
             .toList()

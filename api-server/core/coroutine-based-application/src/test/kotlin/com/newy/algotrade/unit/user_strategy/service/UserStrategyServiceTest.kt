@@ -89,7 +89,7 @@ private val STRATEGY_COMMAND = SetUserStrategyCommand(
 )
 
 @DisplayName("SetUserStrategyService 공통 제약사항 테스트")
-class DefaultSetUserStrategyQueryServiceTest {
+class DefaultSetUserStrategyProductQueryServiceTest {
     @Test
     fun `marketAccountId 가 없는 경우`() = runTest {
         class NotFoundGetMarketAdapter : GetMarketPort {
@@ -150,7 +150,7 @@ class DefaultSetUserStrategyQueryServiceTest {
 }
 
 @DisplayName("USER_PICK 제약사항 테스트")
-class UserPickSetUserStrategyQueryServiceTest {
+class UserPickSetUserStrategyProductQueryServiceTest {
     @Test
     fun `DB 에 저장되지 않은 productCode 를 입력한 경우`() = runTest {
         class GetProductSubListAdapter : GetProductPort {
@@ -177,7 +177,7 @@ class UserPickSetUserStrategyQueryServiceTest {
 }
 
 @DisplayName("USER_PICK 등록하기")
-class UserPickProductSetUserStrategyQueryServiceTest : NoErrorUserStrategyAdapter(), SetUserStrategyProductPort {
+class UserPickProductSetUserStrategyProductQueryServiceTest : NoErrorUserStrategyAdapter(), SetUserStrategyProductPort {
     private val createdUserStrategyId: Long = 10
     private lateinit var log: String
     private lateinit var eventBus: EventBus<CreateUserStrategyEvent>
@@ -188,8 +188,8 @@ class UserPickProductSetUserStrategyQueryServiceTest : NoErrorUserStrategyAdapte
         log = ""
         eventBus = EventBus()
         service = UserStrategyCommandServiceWrapper(
-            userStrategyPort = this@UserPickProductSetUserStrategyQueryServiceTest,
-            userStrategyProductPort = this@UserPickProductSetUserStrategyQueryServiceTest,
+            userStrategyPort = this@UserPickProductSetUserStrategyProductQueryServiceTest,
+            userStrategyProductPort = this@UserPickProductSetUserStrategyProductQueryServiceTest,
             eventBus = eventBus
         )
     }
