@@ -8,7 +8,7 @@ import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.GetUserStrategyPersistenceAdapter
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.GetUserStrategyProductPersistenceAdapter
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.*
 import helpers.BaseDbTest
 import kotlinx.coroutines.flow.collect
@@ -17,7 +17,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -48,8 +48,8 @@ class GetAllUserStrategiesTest : BaseGetUserStrategyPersistenceAdapterTest() {
 
     @Test
     fun `user strategy 가 2개 이상인 경우`() = runTransactional {
-        val userStrategyId1 = setInitData(strategyClassName = "A", listOf("BTCUSDT"))
-        val userStrategyId2 = setInitData(strategyClassName = "B", listOf("ETHUSDT", "SOLUSDT"))
+        val userStrategyId1 = setInitData(strategyClassName = "A", listOf("BTCUSDT", "ETHUSDT"))
+        val userStrategyId2 = setInitData(strategyClassName = "B", listOf("SOLUSDT"))
 
         val actualList = adapter.getAllUserStrategies()
         val expectedList = listOf(
@@ -64,8 +64,8 @@ class GetAllUserStrategiesTest : BaseGetUserStrategyPersistenceAdapterTest() {
                 ),
             ),
             UserStrategyKey(
-                userStrategyId = userStrategyId2.toString(),
-                strategyClassName = "B",
+                userStrategyId = userStrategyId1.toString(),
+                strategyClassName = "A",
                 productPriceKey = ProductPriceKey(
                     market = Market.BY_BIT,
                     productType = ProductType.SPOT,
@@ -94,24 +94,37 @@ class GetUserStrategyTest : BaseGetUserStrategyPersistenceAdapterTest() {
     fun `ID 가 없는 경우`() = runTransactional {
         val unRegisteredId: Long = 100
 
-        assertNull(adapter.getUserStrategy(unRegisteredId))
+        assertTrue(adapter.getUserStrategies(unRegisteredId).isEmpty())
     }
 
     @Test
     fun `ID 가 있는 경우`() = runTransactional {
-        val userStrategyId = setInitData(strategyClassName = "A", listOf("BTCUSDT"))
+        val userStrategyId = setInitData(strategyClassName = "A", listOf("BTCUSDT", "ETHUSDT"))
 
-        val actual = adapter.getUserStrategy(userStrategyId)
-        val expected = UserStrategyKey(
-            userStrategyId = userStrategyId.toString(),
-            strategyClassName = "A",
-            productPriceKey = ProductPriceKey(
-                market = Market.BY_BIT,
-                productType = ProductType.SPOT,
-                productCode = "BTCUSDT",
-                interval = Candle.TimeFrame.M1.timePeriod,
+        val actual = adapter.getUserStrategies(userStrategyId)
+        val expected = listOf(
+            UserStrategyKey(
+                userStrategyId = userStrategyId.toString(),
+                strategyClassName = "A",
+                productPriceKey = ProductPriceKey(
+                    market = Market.BY_BIT,
+                    productType = ProductType.SPOT,
+                    productCode = "BTCUSDT",
+                    interval = Candle.TimeFrame.M1.timePeriod,
+                ),
             ),
+            UserStrategyKey(
+                userStrategyId = userStrategyId.toString(),
+                strategyClassName = "A",
+                productPriceKey = ProductPriceKey(
+                    market = Market.BY_BIT,
+                    productType = ProductType.SPOT,
+                    productCode = "ETHUSDT",
+                    interval = Candle.TimeFrame.M1.timePeriod,
+                ),
+            )
         )
+
 
         assertEquals(expected, actual)
     }
@@ -119,7 +132,7 @@ class GetUserStrategyTest : BaseGetUserStrategyPersistenceAdapterTest() {
 
 open class BaseGetUserStrategyPersistenceAdapterTest : BaseDbTest() {
     @Autowired
-    protected lateinit var adapter: GetUserStrategyPersistenceAdapter
+    protected lateinit var adapter: GetUserStrategyProductPersistenceAdapter
 
     @Autowired
     private lateinit var marketRepository: MarketRepositoryForStrategy

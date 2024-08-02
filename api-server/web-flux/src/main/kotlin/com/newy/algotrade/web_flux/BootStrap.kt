@@ -45,8 +45,8 @@ class RegisterEventHandler(
     override fun run(vararg args: String?) {
         CoroutineScope(Dispatchers.IO).launch {
             createUserStrategyEventBus.addListener(coroutineContext) {
-                userStrategyQuery.getUserStrategy(it.id)?.let { userStrategyKey ->
-                    runnableStrategyUseCase.setRunnableStrategy(userStrategyKey)
+                userStrategyQuery.getUserStrategies(it.id).forEach { eachUserStrategyKey ->
+                    runnableStrategyUseCase.setRunnableStrategy(eachUserStrategyKey)
                 }
             }
         }

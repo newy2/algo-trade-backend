@@ -1,6 +1,7 @@
 package com.newy.algotrade.web_flux.config
 
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.SendNotificationLogReadingConverter
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.UserStrategyKeyReadingConverter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.data.convert.CustomConversions
@@ -24,6 +25,7 @@ open class R2dbcConfig {
     }
 
     private fun customConverters() = listOf(
-        SendNotificationLogReadingConverter()
+        SendNotificationLogReadingConverter(),
+        UserStrategyKeyReadingConverter(),
     )
 }

@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.user_strategy.service
 
-import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.UserStrategyQueryPort
+import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.UserStrategyProductQueryPort
 import com.newy.algotrade.coroutine_based_application.user_strategy.service.UserStrategyQueryService
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import org.junit.jupiter.api.BeforeEach
@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 @DisplayName("port 호출순서 확인")
-class UserStrategyQueryServiceTest : NoErrorUserStrategyQueryAdapter() {
+class UserStrategyProductQueryServiceTest : NoErrorUserStrategyProductQueryAdapter() {
     private val service = UserStrategyQueryService(this)
     private lateinit var log: String
 
@@ -27,24 +27,23 @@ class UserStrategyQueryServiceTest : NoErrorUserStrategyQueryAdapter() {
 
     @Test
     suspend fun `getUserStrategy 호출 확인`() {
-        service.getUserStrategy(1)
+        service.getUserStrategies(1)
 
         assertEquals("getUserStrategy ", log)
     }
 
-    override suspend fun getAllUserStrategies(): List<UserStrategyKey> {
-        log += "getAllUserStrategies "
-        return super.getAllUserStrategies()
-    }
+    override suspend fun getAllUserStrategies(): List<UserStrategyKey> =
+        super.getAllUserStrategies().also {
+            log += "getAllUserStrategies "
+        }
 
-    override suspend fun getUserStrategy(userStrategyId: Long): UserStrategyKey? {
-        log += "getUserStrategy "
-        return super.getUserStrategy(userStrategyId)
-    }
+    override suspend fun getUserStrategies(userStrategyId: Long): List<UserStrategyKey> =
+        super.getUserStrategies(userStrategyId).also {
+            log += "getUserStrategy "
+        }
 }
 
-open class NoErrorUserStrategyQueryAdapter : UserStrategyQueryPort {
+open class NoErrorUserStrategyProductQueryAdapter : UserStrategyProductQueryPort {
     override suspend fun getAllUserStrategies(): List<UserStrategyKey> = emptyList()
-
-    override suspend fun getUserStrategy(userStrategyId: Long): UserStrategyKey? = null
+    override suspend fun getUserStrategies(userStrategyId: Long): List<UserStrategyKey> = emptyList()
 }

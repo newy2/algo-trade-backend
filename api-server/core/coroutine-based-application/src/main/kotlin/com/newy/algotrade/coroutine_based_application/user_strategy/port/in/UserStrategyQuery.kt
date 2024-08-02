@@ -9,5 +9,5 @@ interface GetAllUserStrategyQuery {
 }
 
 interface GetUserStrategyQuery {
-    suspend fun getUserStrategy(userStrategyId: Long): UserStrategyKey?
+    suspend fun getUserStrategies(userStrategyId: Long): List<UserStrategyKey>
 }
