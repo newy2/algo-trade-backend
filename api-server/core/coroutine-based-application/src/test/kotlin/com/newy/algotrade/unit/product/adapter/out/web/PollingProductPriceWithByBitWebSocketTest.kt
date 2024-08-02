@@ -9,7 +9,7 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
-import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.product.ProductPriceKey
 import helpers.TestServerPort
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel

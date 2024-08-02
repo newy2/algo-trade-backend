@@ -3,7 +3,7 @@ package com.newy.algotrade.coroutine_based_application.product.adapter.out.exter
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.GetProductPriceHttpParam
+import com.newy.algotrade.domain.product.GetProductPriceHttpParam
 
 open class FetchProductPriceProxy(
     private val components: Map<Market, ProductPriceQueryPort>

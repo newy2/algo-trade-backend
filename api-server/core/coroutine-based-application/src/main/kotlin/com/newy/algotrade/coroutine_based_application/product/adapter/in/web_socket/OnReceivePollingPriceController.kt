@@ -4,7 +4,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.`in`.AddCandl
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.product.ProductPriceKey
 
 open class OnReceivePollingPriceController(
     private val candleUseCase: AddCandlesUseCase,

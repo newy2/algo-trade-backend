@@ -4,8 +4,8 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPr
 import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribablePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceQueryService
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.GetProductPriceHttpParam
-import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.product.GetProductPriceHttpParam
+import com.newy.algotrade.domain.product.ProductPriceKey
 import helpers.productPriceKey
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals

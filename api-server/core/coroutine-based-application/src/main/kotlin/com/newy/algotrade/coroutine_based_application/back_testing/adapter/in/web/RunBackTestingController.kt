@@ -21,7 +21,7 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import com.newy.algotrade.domain.chart.strategy.TrafficLight
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 
 class RunBackTestingController {

@@ -2,7 +2,7 @@ package com.newy.algotrade.study.kotlin
 
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.unit.common.helper.RESOURCE_CONTENT
 import com.newy.algotrade.unit.common.helper.RESOURCE_PATH
 import org.junit.jupiter.api.*
@@ -241,7 +241,7 @@ class ListTest {
 class ReflectionTest {
     @Test
     fun `클래스 이름으로 객체 생성하기`() {
-        val packageName = "com.newy.algotrade.domain.price.domain.model"
+        val packageName = "com.newy.algotrade.domain.product"
         val className = "ProductPriceKey"
 
         val clazz = Class.forName("$packageName.$className")

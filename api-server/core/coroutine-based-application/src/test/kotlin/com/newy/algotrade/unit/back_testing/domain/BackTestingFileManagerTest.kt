@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.mod
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.product.ProductPriceKey
 import org.junit.AfterClass
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.DisplayName

@@ -5,8 +5,8 @@ import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.mod
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.GetProductPriceHttpParam
-import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.product.GetProductPriceHttpParam
+import com.newy.algotrade.domain.product.ProductPriceKey
 import java.time.OffsetDateTime
 import java.util.*
 

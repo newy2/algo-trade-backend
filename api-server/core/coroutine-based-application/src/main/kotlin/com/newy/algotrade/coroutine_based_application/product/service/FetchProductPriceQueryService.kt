@@ -4,8 +4,8 @@ import com.newy.algotrade.coroutine_based_application.product.port.`in`.FetchPro
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribablePollingProductPricePort
 import com.newy.algotrade.domain.chart.DEFAULT_CANDLE_SIZE
-import com.newy.algotrade.domain.price.GetProductPriceHttpParam
-import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.product.GetProductPriceHttpParam
+import com.newy.algotrade.domain.product.ProductPriceKey
 import java.time.OffsetDateTime
 
 open class FetchProductPriceQueryService(

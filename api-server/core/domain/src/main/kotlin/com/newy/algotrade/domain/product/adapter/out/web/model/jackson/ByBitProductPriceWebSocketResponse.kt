@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.price.adapter.out.web.model.jackson
+package com.newy.algotrade.domain.product.adapter.out.web.model.jackson
 
 import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -9,7 +9,7 @@ import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.product.ProductPriceKey
 import java.time.Duration
 
 @JsonIgnoreProperties(ignoreUnknown = true)

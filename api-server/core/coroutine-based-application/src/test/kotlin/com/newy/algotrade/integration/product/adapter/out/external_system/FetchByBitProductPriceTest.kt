@@ -9,9 +9,9 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
-import com.newy.algotrade.domain.price.GetProductPriceHttpParam
-import com.newy.algotrade.domain.price.ProductPriceKey
-import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.ByBitProductPriceHttpResponse
+import com.newy.algotrade.domain.product.GetProductPriceHttpParam
+import com.newy.algotrade.domain.product.ProductPriceKey
+import com.newy.algotrade.domain.product.adapter.out.web.model.jackson.ByBitProductPriceHttpResponse
 import helpers.TestEnv
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient

@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.price
+package com.newy.algotrade.domain.product
 
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType

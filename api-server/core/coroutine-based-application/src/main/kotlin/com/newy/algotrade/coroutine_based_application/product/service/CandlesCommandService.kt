@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.`in`.FetchPro
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePort
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.product.ProductPriceKey
 
 open class CandlesCommandService(
     private val fetchProductPriceQuery: FetchProductPriceQuery,

@@ -5,8 +5,8 @@ import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiCli
 import com.newy.algotrade.coroutine_based_application.common.web.http.get
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.GetProductPriceHttpParam
-import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.ByBitProductPriceHttpResponse
+import com.newy.algotrade.domain.product.GetProductPriceHttpParam
+import com.newy.algotrade.domain.product.adapter.out.web.model.jackson.ByBitProductPriceHttpResponse
 
 class FetchByBitProductPrice(private val client: HttpApiClient) : ProductPriceQueryPort {
     override suspend fun getProductPrices(param: GetProductPriceHttpParam): List<ProductPrice> {

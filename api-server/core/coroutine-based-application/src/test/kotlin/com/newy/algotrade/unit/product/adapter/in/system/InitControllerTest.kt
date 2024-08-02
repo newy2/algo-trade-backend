@@ -9,7 +9,7 @@ import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import helpers.productPriceKey
 import helpers.userStrategyKey

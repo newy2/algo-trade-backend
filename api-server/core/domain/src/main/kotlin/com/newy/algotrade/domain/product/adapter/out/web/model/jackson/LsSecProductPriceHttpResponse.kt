@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.price.adapter.out.web.model.jackson
+package com.newy.algotrade.domain.product.adapter.out.web.model.jackson
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.core.JsonParser
