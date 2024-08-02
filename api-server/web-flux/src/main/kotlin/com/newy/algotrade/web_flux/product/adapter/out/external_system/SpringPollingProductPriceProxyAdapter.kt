@@ -14,7 +14,7 @@ import com.newy.algotrade.web_flux.common.annotation.ExternalSystemAdapter
 import okhttp3.OkHttpClient
 
 @ExternalSystemAdapter
-class PollingProductPriceSpringAdapterProxy(
+class SpringPollingProductPriceProxyAdapter(
     getProductPricePort: ProductPriceQueryPort,
     okHttpClient: OkHttpClient,
     jsonConverter: JsonConverter,

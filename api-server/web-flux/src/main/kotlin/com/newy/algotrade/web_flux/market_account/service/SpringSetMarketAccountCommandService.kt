@@ -7,6 +7,6 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 @Transactional
-open class SetMarketAccountSpringService(
+open class SpringSetMarketAccountCommandService(
     marketAccountPort: MarketAccountPort,
 ) : SetMarketAccountCommandService(marketAccountPort)

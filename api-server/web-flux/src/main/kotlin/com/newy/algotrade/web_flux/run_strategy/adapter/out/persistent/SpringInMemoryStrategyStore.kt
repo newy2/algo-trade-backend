@@ -4,4 +4,4 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.p
 import com.newy.algotrade.web_flux.common.annotation.PersistenceAdapter
 
 @PersistenceAdapter
-class InMemoryStrategySpringStore : InMemoryStrategyStore()
+class SpringInMemoryStrategyStore : InMemoryStrategyStore()

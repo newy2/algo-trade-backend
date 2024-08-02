@@ -12,7 +12,7 @@ import com.newy.algotrade.web_flux.common.annotation.ExternalSystemAdapter
 import org.springframework.beans.factory.annotation.Qualifier
 
 @ExternalSystemAdapter
-class FetchProductPriceSpringAdapterProxy(
+class SpringFetchProductPriceProxyAdapter(
     @Qualifier("lsSecHttpApiClient") lsSecHttpApiClient: HttpApiClient,
     @Qualifier("byBitHttpApiClient") byBitHttpApiClient: HttpApiClient,
     globalEnv: GlobalEnv,
