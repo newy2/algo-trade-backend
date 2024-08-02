@@ -20,10 +20,10 @@ import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.awaitSingle
 
-class UserStrategyPersistenceAdapterTest(
+class SetUserStrategyPersistenceAdapterTest(
     @Autowired private val userStrategyRepository: UserStrategyRepository,
     @Autowired private val adapter: UserStrategyPersistenceAdapter,
-) : BaseUserStrategyPersistenceAdapterTest() {
+) : BaseSetUserStrategyPersistenceAdapterTest() {
     @Test
     fun `userStrategy 등록하기`() = runTransactional {
         val (marketAccountId, strategyClassName, strategyId) = setInitData()
@@ -106,7 +106,7 @@ class UserStrategyPersistenceAdapterTest(
     }
 }
 
-open class BaseUserStrategyPersistenceAdapterTest : BaseDbTest() {
+open class BaseSetUserStrategyPersistenceAdapterTest : BaseDbTest() {
     @Autowired
     private lateinit var strategyRepository: StrategyRepository
 

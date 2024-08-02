@@ -5,10 +5,10 @@ import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStr
 import com.newy.algotrade.coroutine_based_application.common.event.SendNotificationEvent
 import com.newy.algotrade.coroutine_based_application.notification.service.SendNotificationCommandService
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.system.InitController
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.GetAllUserStrategyQuery
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.UserStrategyQuery
 import com.newy.algotrade.coroutine_based_application.product.port.out.PollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.GetAllUserStrategyQuery
+import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.UserStrategyQuery
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

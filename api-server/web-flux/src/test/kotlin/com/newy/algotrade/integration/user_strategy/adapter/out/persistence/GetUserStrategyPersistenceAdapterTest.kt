@@ -1,4 +1,4 @@
-package com.newy.algotrade.integration.run_strategy.adapter.out.persistent
+package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
 import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.SetMarketAccountUseCase
 import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
@@ -8,7 +8,7 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
-import com.newy.algotrade.web_flux.run_strategy.adapter.out.persistent.GetUserStrategyPersistenceAdapter
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.GetUserStrategyPersistenceAdapter
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.*
 import helpers.BaseDbTest
 import kotlinx.coroutines.flow.collect
@@ -24,7 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.awaitSingle
 
-class GetAllUserStrategiesTest : BaseUserStrategyPersistenceAdapterTest() {
+class GetAllUserStrategiesTest : BaseGetUserStrategyPersistenceAdapterTest() {
     @Test
     fun `user strategy 가 1개인 경우`() = runTransactional {
         val userStrategyId = setInitData(strategyClassName = "A", listOf("BTCUSDT"))
@@ -89,7 +89,7 @@ class GetAllUserStrategiesTest : BaseUserStrategyPersistenceAdapterTest() {
     }
 }
 
-class GetUserStrategyTest : BaseUserStrategyPersistenceAdapterTest() {
+class GetUserStrategyTest : BaseGetUserStrategyPersistenceAdapterTest() {
     @Test
     fun `ID 가 없는 경우`() = runTransactional {
         val unRegisteredId: Long = 100
@@ -117,7 +117,7 @@ class GetUserStrategyTest : BaseUserStrategyPersistenceAdapterTest() {
     }
 }
 
-open class BaseUserStrategyPersistenceAdapterTest : BaseDbTest() {
+open class BaseGetUserStrategyPersistenceAdapterTest : BaseDbTest() {
     @Autowired
     protected lateinit var adapter: GetUserStrategyPersistenceAdapter
 

@@ -1,4 +1,4 @@
-package com.newy.algotrade.web_flux.run_strategy.adapter.out.persistent.repository
+package com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository
 
 import kotlinx.coroutines.flow.Flow
 import org.springframework.data.r2dbc.repository.Query
