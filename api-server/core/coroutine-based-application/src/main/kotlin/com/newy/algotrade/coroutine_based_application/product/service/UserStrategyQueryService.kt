@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.UserStrat
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 
 // TODO user_strategy 로 이동
-open class UserStrategyService(
+open class UserStrategyQueryService(
     private val userStrategyPort: UserStrategyQueryPort
 ) : UserStrategyQuery {
     override suspend fun getAllUserStrategies(): List<UserStrategyKey> {

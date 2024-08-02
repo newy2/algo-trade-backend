@@ -8,7 +8,7 @@ import com.newy.algotrade.domain.chart.DEFAULT_CANDLE_SIZE
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import java.time.OffsetDateTime
 
-open class FetchProductPriceService(
+open class FetchProductPriceQueryService(
     private val productPricePort: ProductPriceQueryPort,
     private val pollingProductPricePort: SubscribablePollingProductPricePort,
     private val initDataSize: Int = DEFAULT_CANDLE_SIZE

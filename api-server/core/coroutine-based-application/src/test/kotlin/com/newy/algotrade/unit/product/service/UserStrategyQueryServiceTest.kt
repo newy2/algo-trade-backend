@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.product.service
 
 import com.newy.algotrade.coroutine_based_application.product.port.out.UserStrategyQueryPort
-import com.newy.algotrade.coroutine_based_application.product.service.UserStrategyService
+import com.newy.algotrade.coroutine_based_application.product.service.UserStrategyQueryService
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -10,8 +10,8 @@ import kotlin.test.assertEquals
 
 // TODO move to user_strategy
 @DisplayName("port 호출순서 확인")
-class UserStrategyServiceTest : NoErrorUserStrategyQueryAdapter() {
-    private val service = UserStrategyService(this)
+class UserStrategyQueryServiceTest : NoErrorUserStrategyQueryAdapter() {
+    private val service = UserStrategyQueryService(this)
     private lateinit var log: String
 
     @BeforeEach

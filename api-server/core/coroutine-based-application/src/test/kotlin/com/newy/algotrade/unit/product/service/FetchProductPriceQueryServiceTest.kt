@@ -3,7 +3,7 @@ package com.newy.algotrade.unit.product.service
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribablePollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.model.GetProductPriceParam
-import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceService
+import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceQueryService
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import helpers.productPriceKey
@@ -15,10 +15,10 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 
 @DisplayName("port 호출 순서 확인")
-class FetchProductPriceServiceTest : NoErrorProductPriceQueryAdapter, SubscribablePollingProductPricePort {
+class FetchProductPriceQueryServiceTest : NoErrorProductPriceQueryAdapter, SubscribablePollingProductPricePort {
     private val methodCallLogs = mutableListOf<String>()
     private val productPriceKey = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
-    private val service = FetchProductPriceService(
+    private val service = FetchProductPriceQueryService(
         productPricePort = this,
         pollingProductPricePort = this,
     )

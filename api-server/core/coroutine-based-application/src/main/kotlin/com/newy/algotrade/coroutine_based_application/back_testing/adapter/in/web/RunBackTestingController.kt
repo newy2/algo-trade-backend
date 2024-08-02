@@ -10,7 +10,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.`in`.FetchPro
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.coroutine_based_application.product.service.CandlesCommandService
 import com.newy.algotrade.coroutine_based_application.product.service.CandlesQueryService
-import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceService
+import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceQueryService
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategyStore
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
@@ -111,7 +111,7 @@ class RunBackTestingController {
         backTestingDataLoader: LoadBackTestingDataAdapter
     ): RunnableStrategyUseCase {
         val candleService = CandlesCommandService(
-            fetchProductPriceQuery = FetchProductPriceService(
+            fetchProductPriceQuery = FetchProductPriceQueryService(
                 productPricePort = backTestingDataLoader,
                 pollingProductPricePort = backTestingDataLoader,
             ),
