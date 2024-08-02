@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.market_account.sevice
 
 import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.coroutine_based_application.market_account.port.out.MarketAccountPort
-import com.newy.algotrade.coroutine_based_application.market_account.service.SetMarketAccountService
+import com.newy.algotrade.coroutine_based_application.market_account.service.SetMarketAccountCommandService
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
@@ -48,7 +48,7 @@ class MethodCallHistoryTest : NoErrorMarketAccountAdapter() {
 
     @Test
     fun `port 호출 순서 확인`() = runTest {
-        val service = SetMarketAccountService(this@MethodCallHistoryTest)
+        val service = SetMarketAccountCommandService(this@MethodCallHistoryTest)
         service.setMarketAccount(incomingPortModel)
 
         assertEquals(
@@ -69,7 +69,7 @@ class ExceptionTest {
         val notFoundMarketServerAdapter = object : NoErrorMarketAccountAdapter() {
             override suspend fun getMarketServer(market: Market, isProductionServer: Boolean): MarketServer? = null
         }
-        val service = SetMarketAccountService(notFoundMarketServerAdapter)
+        val service = SetMarketAccountCommandService(notFoundMarketServerAdapter)
 
         try {
             service.setMarketAccount(incomingPortModel)
@@ -84,7 +84,7 @@ class ExceptionTest {
         val alreadySavedMarketAccountAdapter = object : NoErrorMarketAccountAdapter() {
             override suspend fun hasMarketAccount(domainEntity: MarketAccount): Boolean = true
         }
-        val service = SetMarketAccountService(alreadySavedMarketAccountAdapter)
+        val service = SetMarketAccountCommandService(alreadySavedMarketAccountAdapter)
 
         try {
             service.setMarketAccount(incomingPortModel)

@@ -6,7 +6,7 @@ import com.newy.algotrade.coroutine_based_application.market_account.port.out.Ma
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
 
-open class SetMarketAccountService(
+open class SetMarketAccountCommandService(
     private val marketAccountPort: MarketAccountPort,
 ) : SetMarketAccountUseCase {
     override suspend fun setMarketAccount(command: SetMarketAccountCommand) =
