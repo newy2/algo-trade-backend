@@ -1,6 +1,6 @@
 package com.newy.algotrade.domain.notification
 
-import com.newy.algotrade.domain.common.consts.NotificationApp
+import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.consts.NotificationRequestMessageFormat
 import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
 import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus.*
@@ -9,18 +9,18 @@ import com.newy.algotrade.domain.common.exception.PreconditionError
 data class SendNotificationLog(
     val sendNotificationLogId: Long,
     val notificationAppId: Long,
-    val notificationApp: NotificationApp,
+    val notificationAppType: NotificationAppType,
     val status: SendNotificationLogStatus,
     val url: String,
     val requestMessage: String,
     val responseMessage: String? = null,
 ) {
     fun getUrlPath(): String {
-        return notificationApp.getPath(url)
+        return notificationAppType.getPath(url)
     }
 
     fun getHttpRequestBody(): NotificationRequestMessageFormat {
-        return notificationApp.getRequestMessageFormat(requestMessage)
+        return notificationAppType.getRequestMessageFormat(requestMessage)
     }
 
     fun statusProcessing(): SendNotificationLog {

@@ -1,6 +1,6 @@
 package com.newy.algotrade.integration.notification.adapter.out.persistent
 
-import com.newy.algotrade.domain.common.consts.NotificationApp
+import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
 import com.newy.algotrade.domain.notification.SendNotificationLog
@@ -38,7 +38,7 @@ class CreateByStatusRequestedTest(
             SendNotificationLog(
                 sendNotificationLogId = sendNotificationLogId,
                 notificationAppId = notificationAppId,
-                notificationApp = NotificationApp.SLACK,
+                notificationAppType = NotificationAppType.SLACK,
                 status = SendNotificationLogStatus.REQUESTED,
                 url = "url",
                 requestMessage = "message",
@@ -72,7 +72,7 @@ class SaveSendNotificationLogTest(
         expected = SendNotificationLog(
             sendNotificationLogId = sendNotificationLogId,
             notificationAppId = notificationAppId,
-            notificationApp = NotificationApp.SLACK,
+            notificationAppType = NotificationAppType.SLACK,
             status = SendNotificationLogStatus.REQUESTED,
             url = "url",
             requestMessage = "message",

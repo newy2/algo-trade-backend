@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.notification.adapter.`in`.web.model
 
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SetNotificationAppCommand
 import com.newy.algotrade.domain.common.consts.GlobalEnv
-import com.newy.algotrade.domain.common.consts.NotificationApp
+import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.web_flux.notification.adapter.`in`.web.model.SetNotificationAppRequest
 import helpers.TestEnv
 import jakarta.validation.ConstraintViolationException
@@ -27,7 +27,7 @@ class SetNotificationAppRequestTest {
             dto.copy(type = "NOT_REGISTERED_MARKET_NAME")
         }
         assertDoesNotThrow {
-            NotificationApp.values().forEach {
+            NotificationAppType.values().forEach {
                 dto.copy(type = it.name)
             }
         }
@@ -40,7 +40,7 @@ class SetNotificationAppRequestTest {
         assertEquals(
             SetNotificationAppCommand(
                 userId = TestEnv.TEST_ADMIN_USER_ID,
-                type = NotificationApp.SLACK,
+                type = NotificationAppType.SLACK,
                 url = "https://hooks.slack.com/services/XXX/YYY"
             ),
             dto.toIncomingPortModel()

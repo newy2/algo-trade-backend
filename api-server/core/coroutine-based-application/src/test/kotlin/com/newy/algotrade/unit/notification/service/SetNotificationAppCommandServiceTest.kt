@@ -3,7 +3,7 @@ package com.newy.algotrade.unit.notification.service
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SetNotificationAppCommand
 import com.newy.algotrade.coroutine_based_application.notification.port.out.NotificationAppPort
 import com.newy.algotrade.coroutine_based_application.notification.service.SetNotificationAppCommandService
-import com.newy.algotrade.domain.common.consts.NotificationApp
+import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -19,8 +19,8 @@ open class NoErrorNotificationAppAdapter : NotificationAppPort {
 
 private val command = SetNotificationAppCommand(
     userId = 1,
-    type = NotificationApp.SLACK,
-    url = NotificationApp.SLACK.host
+    type = NotificationAppType.SLACK,
+    url = NotificationAppType.SLACK.host
 )
 
 class FailedSetNotificationAppCommandServiceTest {

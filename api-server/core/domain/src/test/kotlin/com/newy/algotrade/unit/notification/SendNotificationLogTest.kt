@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.notification
 
-import com.newy.algotrade.domain.common.consts.NotificationApp
+import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
 import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus.*
 import com.newy.algotrade.domain.common.consts.SlackNotificationRequestMessageFormat
@@ -14,8 +14,8 @@ import org.junit.jupiter.api.assertThrows
 private val domainEntity = SendNotificationLog(
     sendNotificationLogId = 1,
     notificationAppId = 1,
-    notificationApp = NotificationApp.SLACK,
-    url = "${NotificationApp.SLACK.host}/111/222",
+    notificationAppType = NotificationAppType.SLACK,
+    url = "${NotificationAppType.SLACK.host}/111/222",
     requestMessage = "request message",
     status = REQUESTED,
 )

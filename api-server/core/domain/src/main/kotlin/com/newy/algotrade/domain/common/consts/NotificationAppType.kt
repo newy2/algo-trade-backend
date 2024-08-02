@@ -1,6 +1,6 @@
 package com.newy.algotrade.domain.common.consts
 
-enum class NotificationApp(
+enum class NotificationAppType(
     val host: String,
 ) {
     SLACK("https://hooks.slack.com") {

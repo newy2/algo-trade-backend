@@ -6,7 +6,7 @@ import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiCli
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SendNotificationCommand
 import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationLogPort
 import com.newy.algotrade.coroutine_based_application.notification.service.SendNotificationCommandService
-import com.newy.algotrade.domain.common.consts.NotificationApp
+import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.consts.NotificationRequestMessageFormat
 import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
 import com.newy.algotrade.domain.common.consts.SlackNotificationRequestMessageFormat
@@ -137,8 +137,8 @@ class SendNotificationCommandServiceHttpClientTest() {
         val slackSendNotificationAdapter = object : NoErrorSendNotificationAdapter() {
             override suspend fun getSendNotificationLog(notificationLogId: Long): SendNotificationLog {
                 return super.getSendNotificationLog(notificationLogId).copy(
-                    notificationApp = NotificationApp.SLACK,
-                    url = "${NotificationApp.SLACK.host}/services/TXXXX/BXXXX/abc123",
+                    notificationAppType = NotificationAppType.SLACK,
+                    url = "${NotificationAppType.SLACK.host}/services/TXXXX/BXXXX/abc123",
                     requestMessage = "request message"
                 )
             }
@@ -175,7 +175,7 @@ open class NoErrorSendNotificationAdapter : SendNotificationLogPort {
     override suspend fun getSendNotificationLog(notificationLogId: Long): SendNotificationLog = SendNotificationLog(
         sendNotificationLogId = 1,
         notificationAppId = 2,
-        notificationApp = NotificationApp.SLACK,
+        notificationAppType = NotificationAppType.SLACK,
         status = SendNotificationLogStatus.REQUESTED,
         url = "",
         requestMessage = "",

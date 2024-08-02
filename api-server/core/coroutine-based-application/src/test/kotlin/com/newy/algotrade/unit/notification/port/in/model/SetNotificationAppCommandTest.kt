@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.notification.port.`in`.model
 
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SetNotificationAppCommand
-import com.newy.algotrade.domain.common.consts.NotificationApp
+import com.newy.algotrade.domain.common.consts.NotificationAppType
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
@@ -10,7 +10,7 @@ import org.junit.jupiter.api.assertThrows
 class SetNotificationAppCommandTest {
     private val dto = SetNotificationAppCommand(
         userId = 1,
-        type = NotificationApp.SLACK,
+        type = NotificationAppType.SLACK,
         url = "https://hooks.slack.com/services/XXX/YYY",
     )
     
@@ -27,7 +27,7 @@ class SetNotificationAppCommandTest {
     @Test
     fun productCategory() {
         assertThrows<IllegalArgumentException> {
-            dto.copy(type = NotificationApp.valueOf("NOT_REGISTERED_NAME"))
+            dto.copy(type = NotificationAppType.valueOf("NOT_REGISTERED_NAME"))
         }
     }
 
@@ -35,23 +35,23 @@ class SetNotificationAppCommandTest {
     fun `productCategory 값이 'SLACK' 인 경우, webhook URL 패턴이어야 한다`() {
         assertThrows<ConstraintViolationException> {
             dto.copy(
-                type = NotificationApp.SLACK,
+                type = NotificationAppType.SLACK,
                 url = ""
             )
         }
         assertThrows<IllegalArgumentException>("올바르지 못한 URL") {
             dto.copy(
-                type = NotificationApp.SLACK,
+                type = NotificationAppType.SLACK,
                 url = "https://naver.com"
             )
         }
         assertDoesNotThrow {
             dto.copy(
-                type = NotificationApp.SLACK,
+                type = NotificationAppType.SLACK,
                 url = "https://hooks.slack.com"
             )
             dto.copy(
-                type = NotificationApp.SLACK,
+                type = NotificationAppType.SLACK,
                 url = "https://hooks.slack.com/services/XXX/YYY"
             )
         }

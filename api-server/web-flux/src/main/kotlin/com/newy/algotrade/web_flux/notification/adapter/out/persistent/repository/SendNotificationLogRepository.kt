@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository
 
-import com.newy.algotrade.domain.common.consts.NotificationApp
+import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
 import com.newy.algotrade.domain.notification.SendNotificationLog
 import io.r2dbc.spi.Row
@@ -55,7 +55,7 @@ class SendNotificationLogReadingConverter : Converter<Row, SendNotificationLog> 
     override fun convert(source: Row) = SendNotificationLog(
         sendNotificationLogId = source["send_notification_log_id"] as Long,
         notificationAppId = source["notification_app_id"] as Long,
-        notificationApp = NotificationApp.valueOf(source["notification_app"] as String),
+        notificationAppType = NotificationAppType.valueOf(source["notification_app"] as String),
         status = SendNotificationLogStatus.valueOf(source["status"] as String),
         url = source["url"] as String,
         requestMessage = source["request_message"] as String,

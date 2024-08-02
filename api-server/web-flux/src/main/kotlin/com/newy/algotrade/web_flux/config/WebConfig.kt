@@ -3,7 +3,7 @@ package com.newy.algotrade.web_flux.config
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
 import com.newy.algotrade.domain.common.consts.GlobalEnv
-import com.newy.algotrade.domain.common.consts.NotificationApp
+import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.mapper.JsonConverter
 import okhttp3.OkHttpClient
 import org.springframework.context.annotation.Bean
@@ -42,7 +42,7 @@ open class WebConfig {
         jsonConverter: JsonConverter,
     ): HttpApiClient = DefaultHttpApiClient(
         client = okHttpClient,
-        host = NotificationApp.SLACK.host,
+        host = NotificationAppType.SLACK.host,
         jsonConverter = jsonConverter,
     )
 }
