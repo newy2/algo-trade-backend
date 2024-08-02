@@ -6,7 +6,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPr
 import com.newy.algotrade.domain.common.annotation.ForTesting
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.GetProductPriceHttpParam
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import com.newy.algotrade.domain.price.ProductPriceKey
 import kotlinx.coroutines.Dispatchers
 import java.time.OffsetDateTime
 import kotlin.coroutines.CoroutineContext

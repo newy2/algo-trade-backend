@@ -6,8 +6,8 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
+import com.newy.algotrade.domain.price.ProductPriceKey
 import com.newy.algotrade.domain.price.adapter.out.web.model.jackson.ByBitProductPriceWebSocketResponse
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import kotlin.test.assertEquals

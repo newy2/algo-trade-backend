@@ -7,7 +7,7 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.Stra
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategySignalHistoryPort
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import com.newy.algotrade.domain.price.ProductPriceKey
 
 open class RunStrategyCommandService(
     private val candlesQuery: CandlesQuery,

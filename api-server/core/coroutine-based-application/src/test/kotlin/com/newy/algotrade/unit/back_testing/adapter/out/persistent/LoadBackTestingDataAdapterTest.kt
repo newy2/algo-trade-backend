@@ -6,7 +6,7 @@ import com.newy.algotrade.coroutine_based_application.back_testing.port.out.GetB
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.GetProductPriceHttpParam
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import com.newy.algotrade.domain.price.ProductPriceKey
 import helpers.productPrice
 import helpers.productPriceKey
 import kotlinx.coroutines.test.runTest

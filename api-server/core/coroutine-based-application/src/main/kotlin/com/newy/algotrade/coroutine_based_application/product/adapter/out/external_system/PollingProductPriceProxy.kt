@@ -6,7 +6,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.PollingPr
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import com.newy.algotrade.domain.price.ProductPriceKey
 
 @Suppress("INAPPLICABLE_JVM_NAME")
 open class PollingProductPriceProxy(

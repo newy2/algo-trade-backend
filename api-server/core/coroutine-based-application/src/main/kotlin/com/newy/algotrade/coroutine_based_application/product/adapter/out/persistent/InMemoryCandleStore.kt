@@ -4,7 +4,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePor
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import com.newy.algotrade.domain.price.ProductPriceKey
 
 open class InMemoryCandleStore : CandlePort {
     private val candleMap = mutableMapOf<ProductPriceKey, Candles>()

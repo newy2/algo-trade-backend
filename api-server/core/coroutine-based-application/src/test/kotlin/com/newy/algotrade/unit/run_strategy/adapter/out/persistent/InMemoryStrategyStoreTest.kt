@@ -5,7 +5,7 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.mod
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyPort
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.Strategy
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import com.newy.algotrade.domain.price.ProductPriceKey
 import helpers.productPriceKey
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.BeforeEach

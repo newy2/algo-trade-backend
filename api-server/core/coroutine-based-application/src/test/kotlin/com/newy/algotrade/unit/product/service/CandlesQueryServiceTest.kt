@@ -4,7 +4,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.CandleQue
 import com.newy.algotrade.coroutine_based_application.product.service.CandlesQueryService
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import com.newy.algotrade.domain.price.ProductPriceKey
 import helpers.productPriceKey
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

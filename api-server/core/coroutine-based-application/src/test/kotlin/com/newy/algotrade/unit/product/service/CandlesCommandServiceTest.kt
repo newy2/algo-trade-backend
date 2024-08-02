@@ -7,7 +7,7 @@ import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePor
 import com.newy.algotrade.coroutine_based_application.product.service.CandlesCommandService
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import com.newy.algotrade.domain.price.ProductPriceKey
 import helpers.productPrice
 import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking

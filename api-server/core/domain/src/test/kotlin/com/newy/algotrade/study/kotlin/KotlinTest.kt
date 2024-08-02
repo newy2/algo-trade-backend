@@ -2,7 +2,7 @@ package com.newy.algotrade.study.kotlin
 
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.price.domain.model.ProductPriceKey
+import com.newy.algotrade.domain.price.ProductPriceKey
 import com.newy.algotrade.unit.common.helper.RESOURCE_CONTENT
 import com.newy.algotrade.unit.common.helper.RESOURCE_PATH
 import org.junit.jupiter.api.*
