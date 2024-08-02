@@ -10,6 +10,7 @@ import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.consts.NotificationRequestMessageFormat
 import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
 import com.newy.algotrade.domain.common.consts.SlackNotificationRequestMessageFormat
+import com.newy.algotrade.domain.common.exception.NotFoundRowException
 import com.newy.algotrade.domain.common.exception.PreconditionError
 import com.newy.algotrade.domain.notification.SendNotificationLog
 import kotlinx.coroutines.cancelChildren
@@ -31,7 +32,7 @@ class SendNotificationCommandServiceTest : NoErrorSendNotificationAdapter() {
         return super.createByStatusRequested(notificationAppId, requestMessage)
     }
 
-    override suspend fun getSendNotificationLog(notificationLogId: Long): SendNotificationLog {
+    override suspend fun getSendNotificationLog(notificationLogId: Long): SendNotificationLog? {
         methodCallLogs.add("getSendNotificationLog")
         return super.getSendNotificationLog(notificationLogId)
     }
@@ -109,7 +110,7 @@ class ErrorSendNotificationCommandServiceTest {
                 val service = SendNotificationCommandService(
                     adapter = object : NoErrorSendNotificationAdapter() {
                         override suspend fun getSendNotificationLog(notificationLogId: Long) =
-                            super.getSendNotificationLog(notificationLogId).copy(
+                            super.getSendNotificationLog(notificationLogId)!!.copy(
                                 status = notSupportedPreStatus
                             )
                     },
@@ -136,7 +137,7 @@ class SendNotificationCommandServiceHttpClientTest() {
 
         val slackSendNotificationAdapter = object : NoErrorSendNotificationAdapter() {
             override suspend fun getSendNotificationLog(notificationLogId: Long): SendNotificationLog {
-                return super.getSendNotificationLog(notificationLogId).copy(
+                return super.getSendNotificationLog(notificationLogId)!!.copy(
                     notificationAppType = NotificationAppType.SLACK,
                     url = "${NotificationAppType.SLACK.host}/services/TXXXX/BXXXX/abc123",
                     requestMessage = "request message"
@@ -170,9 +171,35 @@ class SendNotificationCommandServiceHttpClientTest() {
     }
 }
 
+@DisplayName("저장되지 않은 send_notification_log ID 로 adapter.sendNotification 를 호출하는 경우")
+class NotFoundRowExceptionTest {
+    @Test
+    fun `저장되지 않은 ID 로 sendNotification 를 호출하는 경우`() = runTest {
+        val notFoundRowAdapter = object : NoErrorSendNotificationAdapter() {
+            override suspend fun getSendNotificationLog(notificationLogId: Long): SendNotificationLog? =
+                null
+        }
+        val service = SendNotificationCommandService(
+            adapter = notFoundRowAdapter,
+            eventBus = EventBus(),
+            httpApiClient = NoErrorHttpClient(),
+        )
+
+        try {
+            service.sendNotification(SendNotificationEvent(sendNotificationLogId = 1))
+            Assertions.fail()
+        } catch (e: NotFoundRowException) {
+            Assertions.assertEquals(
+                "sendNotificationLogId 를 찾을 수 없습니다. (id: 1)",
+                e.message
+            )
+        }
+    }
+}
+
 open class NoErrorSendNotificationAdapter : SendNotificationLogPort {
     override suspend fun createByStatusRequested(notificationAppId: Long, requestMessage: String): Long = 1
-    override suspend fun getSendNotificationLog(notificationLogId: Long): SendNotificationLog = SendNotificationLog(
+    override suspend fun getSendNotificationLog(notificationLogId: Long): SendNotificationLog? = SendNotificationLog(
         sendNotificationLogId = 1,
         notificationAppId = 2,
         notificationAppType = NotificationAppType.SLACK,

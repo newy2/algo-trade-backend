@@ -2,7 +2,6 @@ package com.newy.algotrade.integration.notification.adapter.out.persistent
 
 import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
-import com.newy.algotrade.domain.common.exception.NotFoundRowException
 import com.newy.algotrade.domain.notification.SendNotificationLog
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.SendNotificationLogAdapter
 import com.newy.algotrade.web_flux.notification.adapter.out.persistent.repository.NotificationAppR2dbcEntity
@@ -68,7 +67,7 @@ class SaveSendNotificationLogTest(
         }
         assertNotEquals(notificationAppId, sendNotificationLogId)
 
-        domainEntity = adapter.getSendNotificationLog(sendNotificationLogId)
+        domainEntity = adapter.getSendNotificationLog(sendNotificationLogId)!!
         expected = SendNotificationLog(
             sendNotificationLogId = sendNotificationLogId,
             notificationAppId = notificationAppId,
@@ -121,25 +120,6 @@ class SaveSendNotificationLogTest(
             ),
             adapter.getSendNotificationLog(sendNotificationLogId)
         )
-    }
-}
-
-@DisplayName("저장되지 않은 ID 로 adapter 를 사용하는 경우에 대한 테스트")
-class NotFoundRowExceptionTest(
-    @Autowired private val repository: SendNotificationLogRepository,
-    @Autowired private val adapter: SendNotificationLogAdapter,
-) : BaseDbTest() {
-    @Test
-    fun `저장되지 않은 ID 로 조회하는 경우`() = runTransactional {
-        val unSavedSendNotificationLogId: Long = 100
-        assertNull(repository.findById(unSavedSendNotificationLogId))
-
-        try {
-            adapter.getSendNotificationLog(unSavedSendNotificationLogId)
-            fail()
-        } catch (e: NotFoundRowException) {
-            assertEquals("sendNotificationLogId 를 찾을 수 없습니다. (id: ${unSavedSendNotificationLogId})", e.message)
-        }
     }
 }
 

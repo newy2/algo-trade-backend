@@ -5,7 +5,7 @@ import com.newy.algotrade.domain.notification.SendNotificationLog
 interface SendNotificationLogPort : SendNotificationLogQueryPort, SendNotificationLogCommandPort
 
 interface SendNotificationLogQueryPort {
-    suspend fun getSendNotificationLog(sendNotificationLogId: Long): SendNotificationLog
+    suspend fun getSendNotificationLog(sendNotificationLogId: Long): SendNotificationLog?
 }
 
 interface SendNotificationLogCommandPort {

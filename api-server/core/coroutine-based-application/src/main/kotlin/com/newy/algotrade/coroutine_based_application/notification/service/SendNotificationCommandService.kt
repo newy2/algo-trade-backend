@@ -7,6 +7,7 @@ import com.newy.algotrade.coroutine_based_application.common.web.http.post
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.SendNotificationUseCase
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SendNotificationCommand
 import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationLogPort
+import com.newy.algotrade.domain.common.exception.NotFoundRowException
 
 open class SendNotificationCommandService(
     private val adapter: SendNotificationLogPort,
@@ -20,10 +21,8 @@ open class SendNotificationCommandService(
     }
 
     override suspend fun sendNotification(event: SendNotificationEvent): Unit =
-        adapter.getSendNotificationLog(event.sendNotificationLogId)
-            .let {
-                it.statusProcessing()
-            }.also {
+        getSendNotificationLog(event.sendNotificationLogId).statusProcessing()
+            .also {
                 adapter.saveSendNotificationLog(it)
             }.let {
                 it.responseMessage(
@@ -35,4 +34,8 @@ open class SendNotificationCommandService(
             }.let {
                 adapter.saveSendNotificationLog(it)
             }
+
+    private suspend fun getSendNotificationLog(sendNotificationLogId: Long) =
+        adapter.getSendNotificationLog(sendNotificationLogId)
+            ?: throw NotFoundRowException("sendNotificationLogId 를 찾을 수 없습니다. (id: ${sendNotificationLogId})")
 }
