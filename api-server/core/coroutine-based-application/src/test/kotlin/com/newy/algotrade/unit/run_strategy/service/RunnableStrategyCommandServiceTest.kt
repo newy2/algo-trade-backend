@@ -5,11 +5,11 @@ import com.newy.algotrade.coroutine_based_application.product.port.`in`.CandlesU
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePort
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategyStore
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import helpers.productPrice
 import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking

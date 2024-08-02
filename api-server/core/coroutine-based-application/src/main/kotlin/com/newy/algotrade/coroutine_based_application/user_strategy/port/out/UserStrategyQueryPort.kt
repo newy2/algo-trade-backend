@@ -1,6 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.user_strategy.port.out
 
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
+import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 
 interface UserStrategyQueryPort {
     suspend fun getAllUserStrategies(): List<UserStrategyKey>

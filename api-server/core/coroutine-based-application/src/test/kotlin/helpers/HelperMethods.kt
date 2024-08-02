@@ -1,10 +1,10 @@
 package helpers
 
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import java.time.Duration
 import java.time.OffsetDateTime
 

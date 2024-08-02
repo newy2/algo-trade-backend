@@ -14,7 +14,6 @@ import com.newy.algotrade.coroutine_based_application.product.service.FetchProdu
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategySignalHistoryStore
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.persistent.InMemoryStrategyStore
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.OnCreatedStrategySignalPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyCommandService
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
@@ -23,6 +22,7 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import com.newy.algotrade.domain.chart.strategy.TrafficLight
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 
 class RunBackTestingController {
     suspend fun runBackTesting(

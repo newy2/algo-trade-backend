@@ -2,7 +2,6 @@ package com.newy.algotrade.unit.product.adapter.`in`.system
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.system.InitController
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.CandlesUseCase
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model.UserStrategyKey
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.GetAllUserStrategyQuery
@@ -11,6 +10,7 @@ import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.price.ProductPriceKey
+import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import helpers.productPriceKey
 import helpers.userStrategyKey
 import kotlinx.coroutines.test.runTest

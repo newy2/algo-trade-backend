@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.model
+package com.newy.algotrade.domain.user_strategy
 
 import com.newy.algotrade.domain.price.ProductPriceKey
 
