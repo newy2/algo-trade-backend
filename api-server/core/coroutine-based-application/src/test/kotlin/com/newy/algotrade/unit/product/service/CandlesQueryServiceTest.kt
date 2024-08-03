@@ -1,38 +1,42 @@
 package com.newy.algotrade.unit.product.service
 
-import com.newy.algotrade.coroutine_based_application.product.port.out.CandleQueryPort
+import com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
 import com.newy.algotrade.coroutine_based_application.product.service.CandlesQueryService
-import com.newy.algotrade.domain.chart.Candles
-import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
-import com.newy.algotrade.domain.product.ProductPriceKey
+import helpers.productPrice
 import helpers.productPriceKey
-import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import java.time.Duration
+import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
-@DisplayName("port 호출 확인 테스트")
-class CandlesQueryServiceTest : NoErrorCandleQueryPort {
-    private val methodCallLogs = mutableListOf<String>()
-
+class CandlesQueryServiceTest {
     @Test
-    fun `port 호출 확인`() {
-        val service = CandlesQueryService(this)
-
-        service.getCandles(productPriceKey("BTCUSDT"))
-
-        assertEquals(listOf("CandleQueryPort.getCandles"), methodCallLogs)
-    }
-
-    override fun getCandles(key: ProductPriceKey): Candles =
-        super.getCandles(key).also {
-            methodCallLogs.add("CandleQueryPort.getCandles")
+    fun `getCandles 메소드 테스트`() {
+        val beginTime = OffsetDateTime.parse("2024-05-01T00:00Z")
+        val candlesPort = InMemoryCandleStoreAdapter().also {
+            it.setCandles(
+                productPriceKey("BTCUSDT"),
+                listOf(productPrice(1000, Duration.ofMinutes(1), beginTime))
+            )
+            it.setCandles(
+                productPriceKey("005930"),
+                listOf(
+                    productPrice(2000, Duration.ofMinutes(1), beginTime),
+                    productPrice(3000, Duration.ofMinutes(1), beginTime.plusMinutes(1)),
+                )
+            )
         }
-}
 
-private interface NoErrorCandleQueryPort : CandleQueryPort {
-    override fun getCandles(key: ProductPriceKey): Candles =
-        DEFAULT_CHART_FACTORY.candles()
+        val service = CandlesQueryService(candlesPort)
 
-    override fun hasCandles(key: ProductPriceKey): Boolean =
-        true
+        service.getCandles(productPriceKey("BTCUSDT")).let {
+            assertEquals(1, it.size)
+            assertEquals(productPrice(1000, Duration.ofMinutes(1), beginTime), it[0])
+        }
+        service.getCandles(productPriceKey("005930")).let {
+            assertEquals(2, it.size)
+            assertEquals(productPrice(2000, Duration.ofMinutes(1), beginTime), it[0])
+            assertEquals(productPrice(3000, Duration.ofMinutes(1), beginTime.plusMinutes(1)), it[1])
+        }
+    }
 }
