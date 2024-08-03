@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.product.adapter.`in`.system
+package com.newy.algotrade.coroutine_based_application.product.adapter.`in`.internal_system
 
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.GetAllUserStrategyProductQuery

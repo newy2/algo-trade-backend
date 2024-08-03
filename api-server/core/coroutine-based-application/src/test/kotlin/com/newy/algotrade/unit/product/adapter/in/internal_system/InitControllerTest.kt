@@ -1,6 +1,6 @@
-package com.newy.algotrade.unit.product.adapter.`in`.system
+package com.newy.algotrade.unit.product.adapter.`in`.internal_system
 
-import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.system.InitController
+import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.internal_system.InitController
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.CandlesUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService

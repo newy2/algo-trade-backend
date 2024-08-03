@@ -1,6 +1,6 @@
-package com.newy.algotrade.unit.product.adapter.`in`.web.socket
+package com.newy.algotrade.unit.back_testing.adapter.`in`.internal_system
 
-import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.web_socket.OnReceivePollingPriceController
+import com.newy.algotrade.coroutine_based_application.back_testing.adapter.`in`.internal_system.OnReceivePollingPriceController
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.AddCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.domain.chart.Candle
