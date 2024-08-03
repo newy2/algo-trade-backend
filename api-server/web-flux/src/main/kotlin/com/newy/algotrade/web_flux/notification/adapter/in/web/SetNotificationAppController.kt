@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.notification.adapter.`in`.web
 
-import com.newy.algotrade.coroutine_based_application.notification.port.`in`.SetNotificationAppUseCase
+import com.newy.algotrade.coroutine_based_application.notification.port.`in`.NotificationAppUseCase
 import com.newy.algotrade.web_flux.common.annotation.WebAdapter
 import com.newy.algotrade.web_flux.common.web.BooleanResponse
 import com.newy.algotrade.web_flux.notification.adapter.`in`.web.model.SetNotificationAppRequest
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/notification")
 class SetNotificationAppController(
-    private val notificationAppService: SetNotificationAppUseCase,
+    private val notificationAppService: NotificationAppUseCase,
 ) {
     @PostMapping
     suspend fun setNotificationApp(@RequestBody request: SetNotificationAppRequest): ResponseEntity<BooleanResponse> {

@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.notification.adapter.`in`.web
 
-import com.newy.algotrade.coroutine_based_application.notification.port.`in`.SetNotificationAppUseCase
+import com.newy.algotrade.coroutine_based_application.notification.port.`in`.NotificationAppUseCase
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SetNotificationAppCommand
 import com.newy.algotrade.domain.common.consts.GlobalEnv
 import com.newy.algotrade.domain.common.consts.NotificationAppType
@@ -11,14 +11,14 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class SetNotificationAppControllerTest : SetNotificationAppUseCase {
+class NotificationAppControllerTest : NotificationAppUseCase {
     private lateinit var incomingPortModel: SetNotificationAppCommand
 
     @Test
     fun `request 모델을 command 모델로 변경하기`() = runBlocking {
         GlobalEnv.initializeAdminUserId(TestEnv.TEST_ADMIN_USER_ID)
 
-        val controller = SetNotificationAppController(this@SetNotificationAppControllerTest)
+        val controller = SetNotificationAppController(this@NotificationAppControllerTest)
 
         controller.setNotificationApp(
             SetNotificationAppRequest(
