@@ -6,16 +6,33 @@ import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiCli
 import com.newy.algotrade.coroutine_based_application.common.web.http.post
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.SendNotificationUseCase
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SendNotificationCommand
+import com.newy.algotrade.coroutine_based_application.notification.port.out.CreateSendNotificationLogPort
+import com.newy.algotrade.coroutine_based_application.notification.port.out.GetSendNotificationLogPort
+import com.newy.algotrade.coroutine_based_application.notification.port.out.SaveSendNotificationLogPort
 import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationLogPort
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
 
 open class SendNotificationCommandService(
-    private val adapter: SendNotificationLogPort,
+    private val createSendNotificationLogPort: CreateSendNotificationLogPort,
+    private val getSendNotificationLogPort: GetSendNotificationLogPort,
+    private val saveSendNotificationLogPort: SaveSendNotificationLogPort,
     private val eventBus: EventBus<SendNotificationEvent>,
     private val httpApiClient: HttpApiClient,
 ) : SendNotificationUseCase {
+    constructor(
+        sendNotificationLogPort: SendNotificationLogPort,
+        eventBus: EventBus<SendNotificationEvent>,
+        httpApiClient: HttpApiClient,
+    ) : this(
+        createSendNotificationLogPort = sendNotificationLogPort,
+        getSendNotificationLogPort = sendNotificationLogPort,
+        saveSendNotificationLogPort = sendNotificationLogPort,
+        eventBus = eventBus,
+        httpApiClient = httpApiClient,
+    )
+
     override suspend fun requestSendNotification(command: SendNotificationCommand) {
-        adapter.createByStatusRequested(command.notificationAppId, command.requestMessage).let {
+        createSendNotificationLogPort.createSendNotificationLog(command.notificationAppId, command.requestMessage).let {
             eventBus.publishEvent(SendNotificationEvent(sendNotificationLogId = it))
         }
     }
@@ -23,7 +40,7 @@ open class SendNotificationCommandService(
     override suspend fun sendNotification(event: SendNotificationEvent): Unit =
         getSendNotificationLog(event.sendNotificationLogId).statusProcessing()
             .also {
-                adapter.saveSendNotificationLog(it)
+                saveSendNotificationLogPort.saveSendNotificationLog(it)
             }.let {
                 it.responseMessage(
                     responseMessage = httpApiClient.post<String>(
@@ -32,10 +49,10 @@ open class SendNotificationCommandService(
                     )
                 )
             }.let {
-                adapter.saveSendNotificationLog(it)
+                saveSendNotificationLogPort.saveSendNotificationLog(it)
             }
 
     private suspend fun getSendNotificationLog(sendNotificationLogId: Long) =
-        adapter.getSendNotificationLog(sendNotificationLogId)
+        getSendNotificationLogPort.getSendNotificationLog(sendNotificationLogId)
             ?: throw NotFoundRowException("sendNotificationLogId 를 찾을 수 없습니다. (id: ${sendNotificationLogId})")
 }

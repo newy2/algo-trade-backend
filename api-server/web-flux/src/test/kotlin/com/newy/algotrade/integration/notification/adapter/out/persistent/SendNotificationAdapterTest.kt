@@ -27,9 +27,9 @@ class CreateByStatusRequestedTest(
     fun `REQUESTED 상태로 생성하기`() = runTransactional {
         val notificationAppId = setNotificationAppId()
         val sendNotificationLogId = let {
-            adapter.createByStatusRequested(notificationAppId, requestMessage = "not used(for ID test)")
-            adapter.createByStatusRequested(notificationAppId, requestMessage = "not used(for ID test)")
-            adapter.createByStatusRequested(notificationAppId, requestMessage = "message")
+            adapter.createSendNotificationLog(notificationAppId, requestMessage = "not used(for ID test)")
+            adapter.createSendNotificationLog(notificationAppId, requestMessage = "not used(for ID test)")
+            adapter.createSendNotificationLog(notificationAppId, requestMessage = "message")
         }
 
         assertNotEquals(notificationAppId, sendNotificationLogId)
@@ -61,9 +61,9 @@ class SaveSendNotificationLogTest(
     fun setUp(): Unit = runBlocking {
         notificationAppId = setNotificationAppId()
         sendNotificationLogId = let {
-            adapter.createByStatusRequested(notificationAppId, requestMessage = "not used(for ID test)")
-            adapter.createByStatusRequested(notificationAppId, requestMessage = "not used(for ID test)")
-            adapter.createByStatusRequested(notificationAppId, requestMessage = "message")
+            adapter.createSendNotificationLog(notificationAppId, requestMessage = "not used(for ID test)")
+            adapter.createSendNotificationLog(notificationAppId, requestMessage = "not used(for ID test)")
+            adapter.createSendNotificationLog(notificationAppId, requestMessage = "message")
         }
         assertNotEquals(notificationAppId, sendNotificationLogId)
 

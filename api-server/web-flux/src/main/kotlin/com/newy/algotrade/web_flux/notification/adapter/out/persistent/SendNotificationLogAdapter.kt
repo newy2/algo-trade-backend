@@ -14,7 +14,7 @@ class SendNotificationLogAdapter(
     override suspend fun getSendNotificationLog(sendNotificationLogId: Long) =
         repository.findByIdAsDomainEntity(sendNotificationLogId)
 
-    override suspend fun createByStatusRequested(notificationAppId: Long, requestMessage: String) =
+    override suspend fun createSendNotificationLog(notificationAppId: Long, requestMessage: String) =
         repository.save(
             SendNotificationLogR2dbcEntity(
                 notificationAppId = notificationAppId,
