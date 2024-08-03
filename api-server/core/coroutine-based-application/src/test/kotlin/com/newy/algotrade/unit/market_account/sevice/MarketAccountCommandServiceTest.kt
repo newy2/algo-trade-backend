@@ -1,6 +1,8 @@
 package com.newy.algotrade.unit.market_account.sevice
 
 import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
+import com.newy.algotrade.coroutine_based_application.market_account.port.out.GetMarketServerPort
+import com.newy.algotrade.coroutine_based_application.market_account.port.out.HasMarketAccountPort
 import com.newy.algotrade.coroutine_based_application.market_account.port.out.MarketAccountPort
 import com.newy.algotrade.coroutine_based_application.market_account.service.SetMarketAccountCommandService
 import com.newy.algotrade.domain.common.consts.Market
@@ -22,69 +24,36 @@ private val incomingPortModel = SetMarketAccountCommand(
     appSecret = "secret"
 )
 
-@DisplayName("port 호출 순서 확인")
-class MethodCallHistoryTest : NoErrorMarketAccountAdapter() {
-    private val methodCallLogs: MutableList<String> = mutableListOf()
-
-    override suspend fun saveMarketAccount(domainEntity: MarketAccount) =
-        super.saveMarketAccount(domainEntity).also {
-            methodCallLogs.add("saveMarketAccount")
-        }
-
-    override suspend fun hasMarketAccount(domainEntity: MarketAccount) =
-        super.hasMarketAccount(domainEntity).also {
-            methodCallLogs.add("hasMarketAccount")
-        }
-
-    override suspend fun getMarketServer(market: Market, isProductionServer: Boolean) =
-        super.getMarketServer(market, isProductionServer).also {
-            methodCallLogs.add("getMarketServer")
-        }
-
-    @BeforeEach
-    fun setUp() {
-        methodCallLogs.clear()
-    }
-
-    @Test
-    fun `port 호출 순서 확인`() = runTest {
-        val service = SetMarketAccountCommandService(this@MethodCallHistoryTest)
-        service.setMarketAccount(incomingPortModel)
-
-        assertEquals(
-            listOf(
-                "getMarketServer",
-                "hasMarketAccount",
-                "saveMarketAccount",
-            ),
-            methodCallLogs
-        )
-    }
-}
-
 @DisplayName("예외 사항 테스트")
-class ExceptionTest {
+class MarketAccountCommandServiceExceptionTest {
     @Test
     fun `MarketServer 를 찾을 수 없는 경우`() = runTest {
-        val notFoundMarketServerAdapter = object : NoErrorMarketAccountAdapter() {
-            override suspend fun getMarketServer(market: Market, isProductionServer: Boolean): MarketServer? = null
-        }
-        val service = SetMarketAccountCommandService(notFoundMarketServerAdapter)
+        val notFoundMarketServerAdapter = GetMarketServerPort { _, _ -> null }
+        val service = SetMarketAccountCommandService(
+            hasMarketAccountPort = NoErrorMarketAccountAdapter(),
+            saveMarketAccountPort = NoErrorMarketAccountAdapter(),
+            getMarketServerPort = notFoundMarketServerAdapter,
+        )
 
         try {
             service.setMarketAccount(incomingPortModel)
             fail()
         } catch (e: NotFoundRowException) {
-            assertEquals("market_server 를 찾을 수 없습니다 (market: BY_BIT, isProduction: false)", e.message)
+            assertEquals(
+                "market_server 를 찾을 수 없습니다 (market: ${incomingPortModel.market}, isProduction: ${incomingPortModel.isProduction})",
+                e.message
+            )
         }
     }
 
     @Test
     fun `중복된 MarketAccount 를 등록하려는 경우`() = runTest {
-        val alreadySavedMarketAccountAdapter = object : NoErrorMarketAccountAdapter() {
-            override suspend fun hasMarketAccount(domainEntity: MarketAccount): Boolean = true
-        }
-        val service = SetMarketAccountCommandService(alreadySavedMarketAccountAdapter)
+        val alreadySavedMarketAccountAdapter = HasMarketAccountPort { _ -> true }
+        val service = SetMarketAccountCommandService(
+            saveMarketAccountPort = NoErrorMarketAccountAdapter(),
+            getMarketServerPort = NoErrorMarketAccountAdapter(),
+            hasMarketAccountPort = alreadySavedMarketAccountAdapter,
+        )
 
         try {
             service.setMarketAccount(incomingPortModel)
@@ -92,6 +61,31 @@ class ExceptionTest {
         } catch (e: DuplicateDataException) {
             assertEquals("이미 등록된 appKey, appSecret 입니다.", e.message)
         }
+    }
+}
+
+@DisplayName("해피패스 테스트")
+class MarketAccountCommandServiceTest {
+    @Test
+    fun `문제 없이 실행되면, SaveMarketAccountPort#saveMarketAccount 의 결과값을 리던한다`() = runTest {
+        val expected = MarketAccount(
+            id = 10,
+            userId = 1,
+            marketServer = MarketServer(
+                id = 1,
+                marketId = 2,
+            ),
+            displayName = "displayName",
+            appKey = "appKey",
+            appSecret = "appSecret",
+        )
+        val service = SetMarketAccountCommandService(
+            getMarketServerPort = NoErrorMarketAccountAdapter(),
+            hasMarketAccountPort = NoErrorMarketAccountAdapter(),
+            saveMarketAccountPort = { (_) -> expected },
+        )
+
+        assertEquals(expected, service.setMarketAccount(incomingPortModel))
     }
 }
 
