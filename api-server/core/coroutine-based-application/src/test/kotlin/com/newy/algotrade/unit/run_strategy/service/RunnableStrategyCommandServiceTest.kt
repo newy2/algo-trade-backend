@@ -1,13 +1,17 @@
 package com.newy.algotrade.unit.run_strategy.service
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.CandlesUseCase
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.RemoveCandlesUseCase
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePort
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.IsStrategyUsingProductPriceKeyPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.RemoveStrategyPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.SetStrategyPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
 import com.newy.algotrade.domain.chart.Candles
-import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import helpers.productPrice
@@ -101,16 +105,32 @@ open class BaseRunnableStrategyTest {
     @BeforeEach
     fun setUp() {
         candlePort = InMemoryCandleStoreAdapter()
-        service = RunnableStrategyCommandService(
-            candlesUseCase = DefaultCandlesUseCase(candlePort),
-            strategyPort = InMemoryStrategyStoreAdapter()
+        service = newRunnableStrategyCommandService(
+            candlePort = candlePort
         )
     }
 }
 
+private fun newRunnableStrategyCommandService(
+    candlePort: CandlePort = InMemoryCandleStoreAdapter(),
+    strategyPort: StrategyPort = InMemoryStrategyStoreAdapter(),
+
+    setCandlesUseCase: SetCandlesUseCase = DefaultCandlesUseCase(candlePort),
+    removeCandlesUseCase: RemoveCandlesUseCase = DefaultCandlesUseCase(candlePort),
+    setStrategyPort: SetStrategyPort = strategyPort,
+    removeStrategyPort: RemoveStrategyPort = strategyPort,
+    isStrategyUsingProductPriceKeyPort: IsStrategyUsingProductPriceKeyPort = strategyPort,
+) = RunnableStrategyCommandService(
+    setCandlesUseCase = setCandlesUseCase,
+    removeCandlesUseCase = removeCandlesUseCase,
+    setStrategyPort = setStrategyPort,
+    removeStrategyPort = removeStrategyPort,
+    isStrategyUsingProductPriceKeyPort = isStrategyUsingProductPriceKeyPort,
+)
+
 private class DefaultCandlesUseCase(
     private val candlePort: CandlePort
-) : CandlesUseCase {
+) : SetCandlesUseCase, RemoveCandlesUseCase {
     override suspend fun setCandles(productPriceKey: ProductPriceKey): Candles =
         candlePort.setCandles(
             key = productPriceKey,
@@ -119,9 +139,5 @@ private class DefaultCandlesUseCase(
 
     override fun removeCandles(productPriceKey: ProductPriceKey) {
         candlePort.removeCandles(productPriceKey)
-    }
-
-    override fun addCandles(productPriceKey: ProductPriceKey, candleList: List<ProductPrice>): Candles {
-        TODO("Not yet implemented")
     }
 }

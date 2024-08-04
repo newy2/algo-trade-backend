@@ -9,8 +9,8 @@ import com.newy.algotrade.coroutine_based_application.product.adapter.out.volati
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.FetchProductPriceQuery
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.coroutine_based_application.product.service.CandlesCommandService
-import com.newy.algotrade.coroutine_based_application.product.service.CandlesQueryService
 import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceQueryService
+import com.newy.algotrade.coroutine_based_application.product.service.GetCandlesQueryService
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategySignalHistoryStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
@@ -96,7 +96,7 @@ class RunBackTestingController {
             candlePort = candleStore
         )
         val runStrategyService = RunStrategyCommandService(
-            candlesQuery = CandlesQueryService(candleStore),
+            getCandlesQuery = GetCandlesQueryService(candleStore),
             strategyPort = strategyStore,
             strategySignalHistoryPort = strategySignalHistoryStore,
             onCreatedStrategySignalPort = onCreatedStrategySignalPort,

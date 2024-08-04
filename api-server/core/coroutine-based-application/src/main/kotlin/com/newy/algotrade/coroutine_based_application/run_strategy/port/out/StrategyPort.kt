@@ -4,14 +4,24 @@ import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 
-interface StrategyPort : StrategyQueryPort, StrategyCommandPort
+interface StrategyPort :
+    GetStrategyFilterByProductPriceKeyPort,
+    IsStrategyUsingProductPriceKeyPort,
+    SetStrategyPort,
+    RemoveStrategyPort
 
-interface StrategyQueryPort {
+fun interface GetStrategyFilterByProductPriceKeyPort {
     fun filterBy(productPriceKey: ProductPriceKey): Map<UserStrategyKey, Strategy>
+}
+
+fun interface IsStrategyUsingProductPriceKeyPort {
     fun isUsingProductPriceKey(productPriceKey: ProductPriceKey): Boolean
 }
 
-interface StrategyCommandPort {
+fun interface SetStrategyPort {
     fun setStrategy(key: UserStrategyKey, strategy: Strategy)
+}
+
+fun interface RemoveStrategyPort {
     fun removeStrategy(key: UserStrategyKey)
 }

@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.run_strategy.service
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
 import com.newy.algotrade.coroutine_based_application.product.port.out.*
-import com.newy.algotrade.coroutine_based_application.product.service.CandlesQueryService
+import com.newy.algotrade.coroutine_based_application.product.service.GetCandlesQueryService
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategySignalHistoryStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunStrategyUseCase
@@ -49,7 +49,7 @@ class RunStrategyCommandServiceTest : OnCreatedStrategySignalPort {
     fun setUp() {
         strategySignalHistoryPort = InMemoryStrategySignalHistoryStoreAdapter()
         service = RunStrategyCommandService(
-            candlesQuery = CandlesQueryService(
+            getCandlesQuery = GetCandlesQueryService(
                 InMemoryCandleStoreAdapter().also {
                     it.setCandles(
                         BTC_1MINUTE, listOf(
