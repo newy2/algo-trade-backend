@@ -1,6 +1,5 @@
 package com.newy.algotrade.unit.user_strategy.adapter.`in`.web
 
-import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.UserStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model.SetUserStrategyCommand
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.ProductCategory
@@ -11,12 +10,18 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
-class UserStrategyControllerTest : UserStrategyUseCase {
-    private var domainModel: SetUserStrategyCommand? = null
-
+class UserStrategyControllerTest {
     @Test
-    fun `request 모델을 command 모델로 변경하기`() = runBlocking {
-        val controller = SetUserStrategyController(this@UserStrategyControllerTest)
+    fun `requestModel 을 incomingPortModel 로 변경하기`() = runBlocking {
+        var incomingPortModel: SetUserStrategyCommand? = null
+        val controller = SetUserStrategyController(
+            setUserStrategyUseCase = { strategy ->
+                true.also {
+                    incomingPortModel = strategy
+                }
+            }
+        )
+
         controller.setMarketAccount(
             SetUserStrategyRequest(
                 marketAccountId = 1,
@@ -37,12 +42,7 @@ class UserStrategyControllerTest : UserStrategyUseCase {
                 productCodes = listOf("BTCUSDT", "ETHUSDT"),
                 timeFrame = Candle.TimeFrame.M1,
             ),
-            domainModel
+            incomingPortModel
         )
-    }
-
-    override suspend fun setUserStrategy(strategy: SetUserStrategyCommand): Boolean {
-        domainModel = strategy
-        return true
     }
 }
