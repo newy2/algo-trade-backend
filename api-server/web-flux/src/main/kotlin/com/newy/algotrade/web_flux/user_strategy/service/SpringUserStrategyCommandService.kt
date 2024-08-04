@@ -11,17 +11,17 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 @Transactional
 open class SpringUserStrategyCommandService(
+    userStrategyPort: UserStrategyPort,
     marketPort: GetMarketPort,
     strategyPort: HasStrategyPort,
     productPort: GetProductPort,
-    userStrategyPort: UserStrategyPort,
-    userStrategyProductPort: UserStrategyProductCommandPort,
+    userStrategyProductPort: SetUserStrategyProductPort,
     @Qualifier("createUserStrategyEventBus") eventBus: EventBus<CreateUserStrategyEvent>,
 ) : UserStrategyCommandService(
+    userStrategyPort,
     marketPort,
     strategyPort,
     productPort,
-    userStrategyPort,
     userStrategyProductPort,
     eventBus
 )

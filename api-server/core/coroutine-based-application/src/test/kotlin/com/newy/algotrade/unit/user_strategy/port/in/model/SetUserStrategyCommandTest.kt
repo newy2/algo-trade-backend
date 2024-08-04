@@ -4,7 +4,10 @@ import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.mo
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
+import com.newy.algotrade.domain.user_strategy.SetUserStrategy
+import com.newy.algotrade.domain.user_strategy.SetUserStrategyKey
 import jakarta.validation.ConstraintViolationException
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
@@ -77,5 +80,28 @@ class SetUserStrategyCommandTest {
                 productCodes = emptyList()
             )
         }
+    }
+
+    @Test
+    fun toDomainEntity() {
+        assertEquals(
+            SetUserStrategy(
+                SetUserStrategyKey(
+                    marketServerAccountId = 1,
+                    strategyClassName = "BuyTripleRSIStrategy",
+                    productType = ProductType.SPOT,
+                ),
+                productCategory = ProductCategory.USER_PICK,
+                timeFrame = Candle.TimeFrame.M1,
+            ),
+            SetUserStrategyCommand(
+                marketAccountId = 1,
+                strategyClassName = "BuyTripleRSIStrategy",
+                productType = ProductType.SPOT,
+                productCategory = ProductCategory.USER_PICK,
+                productCodes = listOf("BTCUSDT"),
+                timeFrame = Candle.TimeFrame.M1,
+            ).toDomainEntity()
+        )
     }
 }

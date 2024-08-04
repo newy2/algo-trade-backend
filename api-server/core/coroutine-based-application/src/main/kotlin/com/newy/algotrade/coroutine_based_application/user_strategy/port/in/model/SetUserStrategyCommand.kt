@@ -5,6 +5,8 @@ import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.helper.SelfValidating
 import com.newy.algotrade.domain.common.libs.validation.NotBlankElements
+import com.newy.algotrade.domain.user_strategy.SetUserStrategy
+import com.newy.algotrade.domain.user_strategy.SetUserStrategyKey
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 
@@ -25,4 +27,14 @@ data class SetUserStrategyCommand(
             throw IllegalArgumentException("productCategory 가 'TOP_TRADING_VALUE'인 경우, productCodes 는 emptyList 여야 합니다.")
         }
     }
+
+    fun toDomainEntity() = SetUserStrategy(
+        setUserStrategyKey = SetUserStrategyKey(
+            marketServerAccountId = marketAccountId,
+            strategyClassName = strategyClassName,
+            productType = productType,
+        ),
+        productCategory = productCategory,
+        timeFrame = timeFrame,
+    )
 }

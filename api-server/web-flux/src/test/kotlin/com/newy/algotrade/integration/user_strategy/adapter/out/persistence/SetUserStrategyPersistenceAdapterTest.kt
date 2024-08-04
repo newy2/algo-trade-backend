@@ -6,6 +6,8 @@ import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
+import com.newy.algotrade.domain.user_strategy.SetUserStrategy
+import com.newy.algotrade.domain.user_strategy.SetUserStrategyKey
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.UserStrategyPersistenceAdapter
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyR2dbcEntity
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyRepository
@@ -28,13 +30,7 @@ class SetUserStrategyPersistenceAdapterTest(
     fun `userStrategy 등록하기`() = runTransactional {
         val (marketAccountId, strategyClassName, strategyId) = setInitData()
 
-        val userStrategyId = adapter.setUserStrategy(
-            marketServerAccountId = marketAccountId,
-            strategyClassName = strategyClassName,
-            productType = ProductType.SPOT,
-            productCategory = ProductCategory.USER_PICK,
-            timeFrame = Candle.TimeFrame.M1,
-        )
+        val userStrategyId = adapter.setUserStrategy(newSetUserStrategy(marketAccountId, strategyClassName))
 
         assertEquals(
             UserStrategyR2dbcEntity(
@@ -52,26 +48,21 @@ class SetUserStrategyPersistenceAdapterTest(
     @Test
     fun `등록한 userStrategy 확인하기`() = runTransactional {
         val (marketAccountId, strategyClassName) = setInitData()
-
-        val beforeSaved = adapter.hasUserStrategy(
+        val setUserStrategyKey = SetUserStrategyKey(
             marketServerAccountId = marketAccountId,
             strategyClassName = strategyClassName,
             productType = ProductType.SPOT,
         )
 
+        val beforeSaved = adapter.hasUserStrategy(setUserStrategyKey)
         adapter.setUserStrategy(
-            marketServerAccountId = marketAccountId,
-            strategyClassName = strategyClassName,
-            productType = ProductType.SPOT,
-            productCategory = ProductCategory.USER_PICK,
-            timeFrame = Candle.TimeFrame.M1,
+            SetUserStrategy(
+                setUserStrategyKey = setUserStrategyKey,
+                productCategory = ProductCategory.USER_PICK,
+                timeFrame = Candle.TimeFrame.M1,
+            )
         )
-
-        val afterSaved = adapter.hasUserStrategy(
-            marketServerAccountId = marketAccountId,
-            strategyClassName = strategyClassName,
-            productType = ProductType.SPOT,
-        )
+        val afterSaved = adapter.hasUserStrategy(setUserStrategyKey)
 
         assertFalse(beforeSaved)
         assertTrue(afterSaved)
@@ -81,30 +72,30 @@ class SetUserStrategyPersistenceAdapterTest(
     fun `중복된 userStrategy 를 등록하는 경우`() = runTransactional {
         // TODO Remove this? ("등록한 userStrategy 확인하기" 테스트 때문에 지워도 될듯)
         val (marketAccountId, strategyClassName) = setInitData()
+        val setUserStrategy = newSetUserStrategy(marketAccountId, strategyClassName)
 
-        adapter.setUserStrategy(
-            marketServerAccountId = marketAccountId,
-            strategyClassName = strategyClassName,
-            productType = ProductType.SPOT,
-            productCategory = ProductCategory.USER_PICK,
-            timeFrame = Candle.TimeFrame.M1,
-        )
+        adapter.setUserStrategy(setUserStrategy)
 
         assertThrows<DataIntegrityViolationException> {
-            val sameMarketAccountId = marketAccountId
-            val sameStrategyClassName = strategyClassName
-            val sameProductType = ProductType.SPOT
-
             adapter.setUserStrategy(
-                marketServerAccountId = sameMarketAccountId,
-                strategyClassName = sameStrategyClassName,
-                productType = sameProductType,
-                productCategory = ProductCategory.TOP_TRADING_VALUE,
-                timeFrame = Candle.TimeFrame.M1,
+                setUserStrategy.copy(
+                    productCategory = ProductCategory.TOP_TRADING_VALUE,
+                )
             )
         }
     }
 }
+
+private fun newSetUserStrategy(marketAccountId: Long, strategyClassName: String) =
+    SetUserStrategy(
+        setUserStrategyKey = SetUserStrategyKey(
+            marketServerAccountId = marketAccountId,
+            strategyClassName = strategyClassName,
+            productType = ProductType.SPOT
+        ),
+        productCategory = ProductCategory.USER_PICK,
+        timeFrame = Candle.TimeFrame.M1,
+    )
 
 open class BaseSetUserStrategyPersistenceAdapterTest : BaseDbTest() {
     @Autowired

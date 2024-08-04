@@ -1,5 +1,6 @@
 package com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository
 
+import com.newy.algotrade.domain.user_strategy.SetUserStrategy
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
@@ -21,4 +22,12 @@ data class UserStrategyR2dbcEntity(
     val productType: String,
     val productCategory: String,
     val timeFrame: String,
-)
+) {
+    constructor(domainEntity: SetUserStrategy, strategyId: Long) : this(
+        marketAccountId = domainEntity.setUserStrategyKey.marketServerAccountId,
+        strategyId = strategyId,
+        productType = domainEntity.setUserStrategyKey.productType.name,
+        productCategory = domainEntity.productCategory.name,
+        timeFrame = domainEntity.timeFrame.name,
+    )
+}

@@ -1,25 +1,16 @@
 package com.newy.algotrade.coroutine_based_application.user_strategy.port.out
 
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.ProductCategory
-import com.newy.algotrade.domain.common.consts.ProductType
+import com.newy.algotrade.domain.user_strategy.SetUserStrategy
+import com.newy.algotrade.domain.user_strategy.SetUserStrategyKey
 
-interface UserStrategyPort : SetUserStrategyPort, HasUserStrategyPort
+interface UserStrategyPort :
+    SetUserStrategyPort,
+    HasUserStrategyPort
 
-interface SetUserStrategyPort {
-    suspend fun setUserStrategy(
-        marketServerAccountId: Long,
-        strategyClassName: String,
-        productType: ProductType,
-        productCategory: ProductCategory,
-        timeFrame: Candle.TimeFrame,
-    ): Long
+fun interface SetUserStrategyPort {
+    suspend fun setUserStrategy(setUserStrategy: SetUserStrategy): Long
 }
 
-interface HasUserStrategyPort {
-    suspend fun hasUserStrategy(
-        marketServerAccountId: Long,
-        strategyClassName: String,
-        productType: ProductType,
-    ): Boolean
+fun interface HasUserStrategyPort {
+    suspend fun hasUserStrategy(setUserStrategyKey: SetUserStrategyKey): Boolean
 }

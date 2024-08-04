@@ -12,24 +12,36 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
 open class UserStrategyCommandService(
-    private val marketPort: GetMarketPort,
-    private val strategyPort: HasStrategyPort,
-    private val productPort: GetProductPort,
-    private val userStrategyPort: UserStrategyPort,
-    private val userStrategyProductPort: UserStrategyProductCommandPort,
+    private val hasUserStrategyPort: HasUserStrategyPort,
+    private val setUserStrategyPort: SetUserStrategyPort,
+    private val getMarketPort: GetMarketPort,
+    private val hasStrategyPort: HasStrategyPort,
+    private val getProductPort: GetProductPort,
+    private val setUserStrategyProductPort: SetUserStrategyProductPort,
     private val eventBus: EventBus<CreateUserStrategyEvent>,
 ) : UserStrategyUseCase {
+    constructor(
+        userStrategyPort: UserStrategyPort,
+        getMarketPort: GetMarketPort,
+        hasStrategyPort: HasStrategyPort,
+        getProductPort: GetProductPort,
+        setUserStrategyProductPort: SetUserStrategyProductPort,
+        eventBus: EventBus<CreateUserStrategyEvent>,
+    ) : this(
+        hasUserStrategyPort = userStrategyPort,
+        setUserStrategyPort = userStrategyPort,
+        getMarketPort = getMarketPort,
+        hasStrategyPort = hasStrategyPort,
+        getProductPort = getProductPort,
+        setUserStrategyProductPort = setUserStrategyProductPort,
+        eventBus = eventBus,
+    )
+
     override suspend fun setUserStrategy(userStrategy: SetUserStrategyCommand): Boolean = withContext(Dispatchers.IO) {
         val marketIds = listOf(
-            async { marketPort.getMarketIdsBy(userStrategy.marketAccountId) },
-            async { strategyPort.hasStrategyByClassName(userStrategy.strategyClassName) },
-            async {
-                userStrategyPort.hasUserStrategy(
-                    marketServerAccountId = userStrategy.marketAccountId,
-                    strategyClassName = userStrategy.strategyClassName,
-                    productType = userStrategy.productType,
-                )
-            }
+            async { getMarketPort.getMarketIdsBy(userStrategy.marketAccountId) },
+            async { hasStrategyPort.hasStrategyByClassName(userStrategy.strategyClassName) },
+            async { hasUserStrategyPort.hasUserStrategy(userStrategy.toDomainEntity().setUserStrategyKey) }
         ).awaitAll().let {
             val (marketIds, hasStrategy, hasUserStrategy) = it
             if ((marketIds as List<Long>).isEmpty()) {
@@ -45,7 +57,7 @@ open class UserStrategyCommandService(
             marketIds
         }
 
-        val savedProducts = productPort.getProducts(
+        val savedProducts = getProductPort.getProducts(
             marketIds = marketIds,
             productType = userStrategy.productType,
             productCodes = userStrategy.productCodes
@@ -59,15 +71,9 @@ open class UserStrategyCommandService(
             }
         }
 
-        val userStrategyId = userStrategyPort.setUserStrategy(
-            marketServerAccountId = userStrategy.marketAccountId,
-            strategyClassName = userStrategy.strategyClassName,
-            productType = userStrategy.productType,
-            productCategory = userStrategy.productCategory,
-            timeFrame = userStrategy.timeFrame
-        )
+        val userStrategyId = setUserStrategyPort.setUserStrategy(userStrategy.toDomainEntity())
 
-        userStrategyProductPort.setUserStrategyProducts(
+        setUserStrategyProductPort.setUserStrategyProducts(
             userStrategyId = userStrategyId,
             productIds = savedProducts.map { it.id }
         )

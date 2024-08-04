@@ -27,7 +27,7 @@ class SetNotificationAppCommandTest {
     }
 
     @Test
-    fun productCategory() {
+    fun type() {
         assertThrows<IllegalArgumentException> {
             incomingPortModel.copy(type = NotificationAppType.valueOf("NOT_REGISTERED_NAME"))
         }

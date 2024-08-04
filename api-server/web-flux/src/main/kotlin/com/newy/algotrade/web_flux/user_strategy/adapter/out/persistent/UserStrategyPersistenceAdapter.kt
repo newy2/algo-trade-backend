@@ -1,9 +1,8 @@
 package com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent
 
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.UserStrategyPort
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.ProductCategory
-import com.newy.algotrade.domain.common.consts.ProductType
+import com.newy.algotrade.domain.user_strategy.SetUserStrategy
+import com.newy.algotrade.domain.user_strategy.SetUserStrategyKey
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyRepository
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.UserStrategyR2dbcEntity
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.UserStrategyRepository
@@ -14,32 +13,19 @@ class UserStrategyPersistenceAdapter(
     private val strategyRepository: StrategyRepository,
     private val userStrategyRepository: UserStrategyRepository,
 ) : UserStrategyPort {
-    override suspend fun setUserStrategy(
-        marketServerAccountId: Long,
-        strategyClassName: String,
-        productType: ProductType,
-        productCategory: ProductCategory,
-        timeFrame: Candle.TimeFrame,
-    ): Long =
+    override suspend fun setUserStrategy(setUserStrategy: SetUserStrategy): Long =
         userStrategyRepository.save(
             UserStrategyR2dbcEntity(
-                marketAccountId = marketServerAccountId,
-                strategyId = strategyRepository.findByClassName(strategyClassName)!!,
-                productType = productType.name,
-                productCategory = productCategory.name,
-                timeFrame = timeFrame.name,
+                domainEntity = setUserStrategy,
+                strategyId = strategyRepository.findByClassName(setUserStrategy.setUserStrategyKey.strategyClassName)!!,
             )
         ).id
 
-    override suspend fun hasUserStrategy(
-        marketServerAccountId: Long,
-        strategyClassName: String,
-        productType: ProductType
-    ): Boolean {
+    override suspend fun hasUserStrategy(setUserStrategyKey: SetUserStrategyKey): Boolean {
         return userStrategyRepository.existsByMarketAccountIdAndStrategyIdAndProductType(
-            marketAccountId = marketServerAccountId,
-            strategyId = strategyRepository.findByClassName(strategyClassName)!!,
-            productType = productType.name,
+            marketAccountId = setUserStrategyKey.marketServerAccountId,
+            strategyId = strategyRepository.findByClassName(setUserStrategyKey.strategyClassName)!!,
+            productType = setUserStrategyKey.productType.name,
         )
     }
 }
