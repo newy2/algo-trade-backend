@@ -1,85 +1,72 @@
 package com.newy.algotrade.unit.product.adapter.`in`.internal_system
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.internal_system.InitController
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.CandlesUseCase
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyPort
-import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
-import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.GetAllUserStrategyProductQuery
-import com.newy.algotrade.domain.chart.Candles
-import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
-import com.newy.algotrade.domain.chart.strategy.Strategy
-import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import helpers.productPriceKey
 import helpers.userStrategyKey
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.Duration
 
-// TODO Remove this
-class InitControllerTest : GetAllUserStrategyProductQuery, CandlesUseCase, NoErrorStrategyPort {
+class InitControllerTest {
     private val methodCallLogs = mutableListOf<String>()
+    private val userStrategyKeys = mutableListOf<UserStrategyKey>()
+    private val controller = InitController(
+        setRunnableStrategyUseCase = {
+            methodCallLogs.add("setRunnableStrategyUseCase")
+        },
+        getAllUserStrategyProductQuery = {
+            userStrategyKeys.also {
+                methodCallLogs.add("getAllUserStrategyProductQuery")
+            }
+        }
+    )
 
-    override suspend fun getAllUserStrategyKeys(): List<UserStrategyKey> {
-        methodCallLogs.add("GetAllUserStrategyQuery.getAllUserStrategies")
-        return listOf(
-            userStrategyKey("id1", productPriceKey("BTCUSDT", Duration.ofMinutes(1))),
-        )
-    }
-
-    override suspend fun setCandles(productPriceKey: ProductPriceKey): Candles {
-        methodCallLogs.add("CandlesUseCase.setCandles")
-        return DEFAULT_CHART_FACTORY.candles()
-    }
-
-    override fun addCandles(productPriceKey: ProductPriceKey, candleList: List<ProductPrice>): Candles {
-        methodCallLogs.add("CandlesUseCase.addCandles")
-        return DEFAULT_CHART_FACTORY.candles()
-    }
-
-    override fun removeCandles(productPriceKey: ProductPriceKey) {
-        methodCallLogs.add("CandlesUseCase.removeCandles")
-    }
-
-    override fun setStrategy(key: UserStrategyKey, strategy: Strategy) {
-        methodCallLogs.add("StrategyPort.setStrategy")
+    @BeforeEach
+    fun setUp() {
+        methodCallLogs.clear()
+        userStrategyKeys.clear()
     }
 
     @Test
-    fun `UseCase 호출 순서 확인`() = runTest {
-        val controller = InitController(
-            RunnableStrategyCommandService(
-                candlesUseCase = this@InitControllerTest,
-                strategyPort = this@InitControllerTest
-            ),
-            userStrategyQuery = this@InitControllerTest,
-        )
+    fun `userStrategyProduct 가 없는 경우`() = runTest {
+        controller.init()
+
+        assertEquals(listOf("getAllUserStrategyProductQuery"), methodCallLogs)
+    }
+
+    @Test
+    fun `userStrategyProduct 가 1개 인 경우`() = runTest {
+        userStrategyKeys.add(userStrategyKey(userStrategyId = "1", productPriceKey = productPriceKey("BTCUSDT")))
 
         controller.init()
 
         assertEquals(
             listOf(
-                "GetAllUserStrategyQuery.getAllUserStrategies",
-                "CandlesUseCase.setCandles",
-                "StrategyPort.setStrategy"
+                "getAllUserStrategyProductQuery",
+                "setRunnableStrategyUseCase",
             ),
             methodCallLogs
         )
     }
-}
 
-interface NoErrorStrategyPort : StrategyPort {
-    override fun removeStrategy(key: UserStrategyKey) {
-        TODO("Not yet implemented")
-    }
+    @Test
+    fun `userStrategyProduct 가 여러개 인 경우`() = runTest {
+        userStrategyKeys.add(userStrategyKey(userStrategyId = "1", productPriceKey = productPriceKey("BTCUSDT")))
+        userStrategyKeys.add(userStrategyKey(userStrategyId = "1", productPriceKey = productPriceKey("ETHUSDT")))
+        userStrategyKeys.add(userStrategyKey(userStrategyId = "2", productPriceKey = productPriceKey("BTCUSDT")))
 
-    override fun filterBy(productPriceKey: ProductPriceKey): Map<UserStrategyKey, Strategy> {
-        TODO("Not yet implemented")
-    }
+        controller.init()
 
-    override fun isUsingProductPriceKey(productPriceKey: ProductPriceKey): Boolean {
-        TODO("Not yet implemented")
+        assertEquals(
+            listOf(
+                "getAllUserStrategyProductQuery",
+                "setRunnableStrategyUseCase",
+                "setRunnableStrategyUseCase",
+                "setRunnableStrategyUseCase",
+            ),
+            methodCallLogs
+        )
     }
 }
