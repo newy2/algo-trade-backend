@@ -1,6 +1,5 @@
 package com.newy.algotrade.unit.market_account.adapter.`in`.web
 
-import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.SetMarketAccountUseCase
 import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.domain.common.consts.GlobalEnv
 import com.newy.algotrade.domain.common.consts.Market
@@ -13,14 +12,20 @@ import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-class SetMarketAccountControllerTest : SetMarketAccountUseCase {
-    private var incomingPortModel: SetMarketAccountCommand? = null
-
+class SetMarketAccountControllerTest {
     @Test
-    fun `request 모델을 command 모델로 변경하기`() = runBlocking {
+    fun `requestModel 을 incomingPortModel 로 변경하기`() = runBlocking {
         GlobalEnv.initializeAdminUserId(TestEnv.TEST_ADMIN_USER_ID)
 
-        val controller = SetMarketAccountController(this@SetMarketAccountControllerTest)
+        var incomingPortModel: SetMarketAccountCommand? = null
+        val controller = SetMarketAccountController(
+            setMarketAccountUseCase = { marketAccount ->
+                fakeDomainEntity.also {
+                    incomingPortModel = marketAccount
+                }
+            }
+        )
+
         controller.setMarketAccount(
             SetMarketAccountRequest(
                 market = "LS_SEC",
@@ -43,15 +48,9 @@ class SetMarketAccountControllerTest : SetMarketAccountUseCase {
             incomingPortModel
         )
     }
-
-    override suspend fun setMarketAccount(marketAccount: SetMarketAccountCommand): MarketAccount {
-        incomingPortModel = marketAccount
-
-        return mockMarketAccount
-    }
 }
 
-private val mockMarketAccount = MarketAccount(
+private val fakeDomainEntity = MarketAccount(
     id = 10,
     userId = 1,
     marketServer = MarketServer(
