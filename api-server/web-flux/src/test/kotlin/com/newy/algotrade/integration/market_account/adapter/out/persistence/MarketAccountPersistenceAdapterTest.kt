@@ -14,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.r2dbc.core.DatabaseClient
 import org.springframework.r2dbc.core.awaitSingle
@@ -119,6 +120,10 @@ class DuplicateExceptionTest(
             adapter.saveMarketAccount(domainEntity)
             fail()
         } catch (e: DuplicateKeyException) {
+            // postgresql error
+            assertTrue(true)
+        } catch (e: DataIntegrityViolationException) {
+            // mysql error
             assertTrue(true)
         }
     }

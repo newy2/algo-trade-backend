@@ -14,12 +14,10 @@
         </preConditions>
 
         <insert tableName="${currentTable}">
-            <!--            <column name="parent_id" valueNumeric="1"/>-->
             <column name="name_en" value="Cryptocurrency Exchange"/>
             <column name="name_ko" value="가상화폐 거래소"/>
         </insert>
         <insert tableName="${currentTable}">
-            <!--            <column name="parent_id" valueNumeric="2"/>-->
             <column name="name_en" value="Korea Exchange"/>
             <column name="name_ko" value="한국거래소"/>
         </insert>

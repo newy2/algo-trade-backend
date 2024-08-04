@@ -21,22 +21,21 @@ liquibase {
             "defaultSchemaName" to "public",
         )
 
-        // TODO 프로덕션 서버는 CLI 프로퍼티로 사용하기
+        val env = System.getenv()
         val dbArguments = mapOf(
             "mysql" to mapOf(
-                "url" to "jdbc:mysql://localhost:3306",
-                "username" to "root",
-                "password" to "root",
+                "url" to env["X_MYSQL_JDBC_URL"],
+                "username" to env["X_MYSQL_USERNAME"],
+                "password" to env["X_MYSQL_PASSWORD"],
             ),
-            "postgres" to mapOf(
-                "url" to "jdbc:postgresql://localhost:5432/postgres",
-                "username" to "postgres",
-                "password" to "root",
+            "postgresql" to mapOf(
+                "url" to env["X_POSTGRESQL_JDBC_URL"],
+                "username" to env["X_POSTGRESQL_USERNAME"],
+                "password" to env["X_POSTGRESQL_PASSWORD"],
             ),
         )
 
-//        this.arguments = baseArguments + dbArguments["mysql"]!!
-        this.arguments = baseArguments + dbArguments["postgres"]!!
+        this.arguments = baseArguments + dbArguments[env["X_DBMS_NAME"]]!!
     }
 }
 

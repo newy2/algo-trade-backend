@@ -24,34 +24,27 @@ open class BaseDbTest {
     private lateinit var reactiveTransactionManager: ReactiveTransactionManager
 
     companion object {
-        private const val IS_POSTGRES = true // TODO 환경변수로 뺄까?
-        private val dbms: JdbcDatabaseContainer<*> =
-            if (IS_POSTGRES)
-                PostgreSQLContainer(DockerImageName.parse("postgres:13.3"))
-            else
-                MySQLContainer(DockerImageName.parse("mysql:8"))
-                    .withDatabaseName("public")
+        private val dbmsType = DbmsType.valueOf(System.getenv("X_DBMS_NAME").uppercase())
+        private val databaseContainer: JdbcDatabaseContainer<*> = dbmsType.getJdbcDatabaseContainer()
 
         @JvmStatic
         @DynamicPropertySource
         fun properties(registry: DynamicPropertyRegistry) {
             registry.add("spring.r2dbc.url") { "r2dbc:${dbmsUrl()}" }
-            registry.add("spring.r2dbc.username", dbms::getUsername)
-            registry.add("spring.r2dbc.password", dbms::getPassword)
+            registry.add("spring.r2dbc.username", databaseContainer::getUsername)
+            registry.add("spring.r2dbc.password", databaseContainer::getPassword)
             registry.add("spring.liquibase.url") { "jdbc:${dbmsUrl()}" }
-            registry.add("spring.liquibase.user", dbms::getUsername)
-            registry.add("spring.liquibase.password", dbms::getPassword)
+            registry.add("spring.liquibase.user", databaseContainer::getUsername)
+            registry.add("spring.liquibase.password", databaseContainer::getPassword)
         }
 
-        private fun dbmsUrl(): String {
-            val dbmsName = if (IS_POSTGRES) "postgresql" else "mysql"
-            return "$dbmsName://${dbms.host}:${dbms.firstMappedPort}/${dbms.databaseName}"
-        }
+        private fun dbmsUrl(): String =
+            dbmsType.getDbmsJdbcUrl(databaseContainer)
 
         @JvmStatic
         @BeforeAll
         internal fun setUp() {
-            dbms.start()
+            databaseContainer.start()
         }
     }
 
@@ -63,4 +56,20 @@ open class BaseDbTest {
             }
         }
     }
+}
+
+private enum class DbmsType {
+    POSTGRESQL {
+        override fun getJdbcDatabaseContainer(): JdbcDatabaseContainer<*> =
+            PostgreSQLContainer(DockerImageName.parse("postgres:13.3"))
+
+    },
+    MYSQL {
+        override fun getJdbcDatabaseContainer(): JdbcDatabaseContainer<*> =
+            MySQLContainer(DockerImageName.parse("mysql:8")).withDatabaseName("public")
+    };
+
+    abstract fun getJdbcDatabaseContainer(): JdbcDatabaseContainer<*>
+    fun getDbmsJdbcUrl(databaseContainer: JdbcDatabaseContainer<*>): String =
+        "${this.name.lowercase()}://${databaseContainer.host}:${databaseContainer.firstMappedPort}/${databaseContainer.databaseName}"
 }
