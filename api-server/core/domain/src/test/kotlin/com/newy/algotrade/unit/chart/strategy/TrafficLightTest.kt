@@ -22,7 +22,7 @@ private fun strategySignal(orderType: OrderType, amount: Number) =
     )
 
 class ZeroSizeTrafficLightTest {
-    private val trafficLight = TrafficLight(0)
+    private val trafficLight = TrafficLight(checkSignalPairSize = 0)
 
     @Test
     fun `과거 거래 내역이 없었던 경우`() {
@@ -51,7 +51,7 @@ class ZeroSizeTrafficLightTest {
 }
 
 class OneSizeTrafficLightTest {
-    private val trafficLight = TrafficLight(1)
+    private val trafficLight = TrafficLight(checkSignalPairSize = 1)
 
     @Test
     fun `거래 내역이 없는 경우`() {
@@ -61,215 +61,85 @@ class OneSizeTrafficLightTest {
 
     @Test
     fun `진입 신호만 있는 경우`() {
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
+        val openedHistory = StrategySignalHistory().also {
             it.add(strategySignal(OrderType.BUY, 1000))
-        }), "진입 신호만 있는 경우")
+        }
+
+        assertTrue(trafficLight.isGreen(openedHistory), "진입 신호만 있는 경우")
     }
 
     @Test
     fun `진입, 진출 신호가 1쌍이 있는 경우`() {
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
+        StrategySignalHistory().also {
             it.add(strategySignal(OrderType.BUY, 1000))
             it.add(strategySignal(OrderType.SELL, 1100))
-        }), "Win 주문인 경우")
+        }.let { winHistory ->
+            assertTrue(trafficLight.isGreen(winHistory))
+        }
 
-        assertFalse(trafficLight.isGreen(StrategySignalHistory().also {
+        StrategySignalHistory().also {
             it.add(strategySignal(OrderType.BUY, 1000))
             it.add(strategySignal(OrderType.SELL, 1000))
-        }), "Draw 주문인 경우")
+        }.let { drawHistory ->
+            assertFalse(trafficLight.isGreen(drawHistory))
+        }
 
-        assertFalse(trafficLight.isGreen(StrategySignalHistory().also {
+        StrategySignalHistory().also {
             it.add(strategySignal(OrderType.BUY, 1000))
             it.add(strategySignal(OrderType.SELL, 900))
-        }), "Loss 주문인 경우")
+        }.let { loseHistory ->
+            assertFalse(trafficLight.isGreen(loseHistory))
+        }
     }
 
     @Test
-    fun `진입, 진출 신호가 2쌍이 있는 경우`() {
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
-            // 과거 주문(Draw)
+    fun `history 의 진입,진출 쌍의 개수가 checkSignalPairSize 값 보다 큰 경우 - checkSignalPairSize 는 history 의 가장 마지막 데이터 기준으로 계산한다`() {
+        StrategySignalHistory().also {
+            // 과거 주문(Loss)
             it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1000))
+            it.add(strategySignal(OrderType.SELL, 900))
+
+            // 과거 주문(Loss)
+            it.add(strategySignal(OrderType.BUY, 1000))
+            it.add(strategySignal(OrderType.SELL, 900))
 
             // 최근 주문(Win)
             it.add(strategySignal(OrderType.BUY, 1000))
             it.add(strategySignal(OrderType.SELL, 1100))
-        }), "Win 주문인 경우")
+        }.let { winHistory ->
+            assertTrue(trafficLight.isGreen(winHistory))
+        }
 
-        assertFalse(trafficLight.isGreen(StrategySignalHistory().also {
-            // 과거 주문(Draw)
+        StrategySignalHistory().also {
+            // 과거 주문(Win)
             it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1000))
+            it.add(strategySignal(OrderType.SELL, 1100))
+
+            // 과거 주문(Loss)
+            it.add(strategySignal(OrderType.BUY, 1000))
+            it.add(strategySignal(OrderType.SELL, 900))
 
             // 최근 주문(Draw)
             it.add(strategySignal(OrderType.BUY, 1000))
             it.add(strategySignal(OrderType.SELL, 1000))
-        }), "Draw 주문인 경우")
+        }.let { drawHistory ->
+            assertFalse(trafficLight.isGreen(drawHistory))
+        }
 
-        assertFalse(trafficLight.isGreen(StrategySignalHistory().also {
+        StrategySignalHistory().also {
             // 과거 주문(Draw)
             it.add(strategySignal(OrderType.BUY, 1000))
             it.add(strategySignal(OrderType.SELL, 1000))
+
+            // 과거 주문(Win)
+            it.add(strategySignal(OrderType.BUY, 1000))
+            it.add(strategySignal(OrderType.SELL, 1100))
 
             // 최근 주문(Loss)
             it.add(strategySignal(OrderType.BUY, 1000))
             it.add(strategySignal(OrderType.SELL, 900))
-        }), "Loss 주문인 경우")
-    }
-}
-
-class TwoSizeTrafficLightTest {
-    private val trafficLight = TrafficLight(2)
-
-    @Test
-    fun `거래 내역이 없는 경우`() {
-        val noHistories = StrategySignalHistory()
-        assertTrue(trafficLight.isGreen(noHistories))
-    }
-
-    @Test
-    fun `진입 신호만 있는 경우`() {
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
-            it.add(strategySignal(OrderType.BUY, 1000))
-        }), "진입 신호만 있는 경우")
-    }
-
-    @Test
-    fun `진입, 진출 신호가 1쌍이 있는 경우`() {
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1100))
-        }), "Win 주문인 경우")
-
-        assertFalse(trafficLight.isGreen(StrategySignalHistory().also {
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1000))
-        }), "Draw 주문인 경우")
-
-        assertFalse(trafficLight.isGreen(StrategySignalHistory().also {
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 900))
-        }), "Loss 주문인 경우")
-    }
-
-    @Test
-    fun `진입, 진출 신호가 2쌍이 있는 경우`() {
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
-            // 과거 주문(Win)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1100))
-
-            // 최근 주문(Win)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1100))
-        }), "Win 주문이 2개인 경우")
-
-        assertFalse(trafficLight.isGreen(StrategySignalHistory().also {
-            // 과거 주문(Draw)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1000))
-
-            // 최근 주문(Win)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1100))
-        }), "Draw 주문 1개, Win 주문 1개인 경우")
-
-        assertFalse(trafficLight.isGreen(StrategySignalHistory().also {
-            // 과거 주문(Loss)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 900))
-
-            // 최근 주문(Win)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1100))
-        }), "Loss 주문 1개, Win 주문 1개인 경우")
-    }
-}
-
-class ThreeSizeTrafficLightTest {
-    private val trafficLight = TrafficLight(3)
-
-    @Test
-    fun `거래 내역이 없는 경우`() {
-        val noHistories = StrategySignalHistory()
-        assertTrue(trafficLight.isGreen(noHistories))
-    }
-
-    @Test
-    fun `진입 신호만 있는 경우`() {
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
-            it.add(strategySignal(OrderType.BUY, 1000))
-        }), "진입 신호만 있는 경우")
-    }
-
-    @Test
-    fun `진입, 진출 신호가 1쌍이 있는 경우`() {
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1100))
-        }), "Win 주문인 경우")
-
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1000))
-        }), "Draw 주문인 경우")
-
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 900))
-        }), "Loss 주문인 경우")
-    }
-
-    @Test
-    fun `진입, 진출 신호가 2쌍이 있는 경우`() {
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
-            // 과거 주문(Win)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1100))
-
-            // 최근 주문(Win)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1100))
-        }), "Win 주문이 2개인 경우")
-
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
-            // 과거 주문(Draw)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1000))
-
-            // 최근 주문(Win)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1100))
-        }), "Draw 주문 1개, Win 주문 1개인 경우")
-
-        assertTrue(trafficLight.isGreen(StrategySignalHistory().also {
-            // 과거 주문(Loss)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 900))
-
-            // 최근 주문(Win)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1100))
-        }), "Loss 주문 1개, Win 주문 1개인 경우")
-
-        assertFalse(trafficLight.isGreen(StrategySignalHistory().also {
-            // 과거 주문(Draw)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1000))
-
-            // 최근 주문(Draw)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 1000))
-        }), "Draw 주문 2개인 경우")
-
-        assertFalse(trafficLight.isGreen(StrategySignalHistory().also {
-            // 과거 주문(Loss)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 900))
-
-            // 최근 주문(Win)
-            it.add(strategySignal(OrderType.BUY, 1000))
-            it.add(strategySignal(OrderType.SELL, 900))
-        }), "Loss 주문 2개인 경우")
+        }.let { loseHistory ->
+            assertFalse(trafficLight.isGreen(loseHistory))
+        }
     }
 }

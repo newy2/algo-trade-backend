@@ -13,9 +13,7 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import java.math.BigDecimal
 import java.time.OffsetDateTime
-import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -45,15 +43,6 @@ class StopGainRuleTest {
         assertFalse(rule.isSatisfied(0, history))
         assertFalse(rule.isSatisfied(1, history))
         assertTrue(rule.isSatisfied(2, history))
-    }
-
-    @Test
-    fun `BigDecimal 의 plus operator 는 scale(소수점 자리수)을 변경한다`() {
-        val hundred = 100.toBigDecimal()
-        val decimal = 0.01.toBigDecimal()
-
-        assertEquals(BigDecimal("1.00"), ((hundred + decimal) / hundred))
-        assertEquals(BigDecimal("1.0001"), hundred.plus(decimal).divide(hundred))
     }
 }
 

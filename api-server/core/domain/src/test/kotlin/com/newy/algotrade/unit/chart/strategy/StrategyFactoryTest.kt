@@ -10,8 +10,7 @@ import kotlin.test.assertTrue
 @DisplayName("팩토리 메소드 테스트")
 class StrategyFactoryTest {
     @Test
-    fun test() {
-        // TODO Remove this
+    fun `클레스 이름으로 Strategy 객체 생성하기`() {
         val candles = DEFAULT_CHART_FACTORY.candles()
         val tripleRSIStrategy = Strategy.fromClassName("BuyTripleRSIStrategy", candles)
 

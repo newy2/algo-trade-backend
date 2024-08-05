@@ -5,7 +5,7 @@ import com.newy.algotrade.domain.chart.indicator.ClosePriceIndicator
 import com.newy.algotrade.domain.chart.indicator.ConstDecimalIndicator
 import com.newy.algotrade.domain.chart.indicator.OpenPriceIndicator
 import com.newy.algotrade.study.libs.ta4j.TEST_TARGET_BAR_EXPECTED_VALUES
-import com.newy.algotrade.study.libs.ta4j.bybitKlineList
+import com.newy.algotrade.study.libs.ta4j.byBitKlineList
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -15,7 +15,7 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneOffset
 
-private fun getCandles(length: Int, list: Array<Array<String>> = bybitKlineList) =
+private fun getCandles(length: Int, list: Array<Array<String>> = byBitKlineList) =
     DEFAULT_CHART_FACTORY.candles().also { results ->
         list.sliceArray(IntRange(0, length - 1))
             .also { it.reverse() }

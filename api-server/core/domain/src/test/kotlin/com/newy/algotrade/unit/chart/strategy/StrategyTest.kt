@@ -1,22 +1,15 @@
 package com.newy.algotrade.unit.chart.strategy
 
-import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
-import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import helpers.BooleanRule
-import org.junit.jupiter.api.*
+import helpers.createOrderSignal
 import org.junit.jupiter.api.Assertions.assertEquals
-import java.time.Duration
-import java.time.OffsetDateTime
-
-private fun createOrderSignal(tradeType: OrderType) =
-    StrategySignal(
-        tradeType,
-        Candle.TimeRange(Duration.ofMinutes(1), OffsetDateTime.now()),
-        1000.0.toBigDecimal()
-    )
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
 
 class StrategyTest {
     private val index = 0
@@ -40,82 +33,73 @@ class StrategyTest {
 
     @Test
     fun `진입(enter) 신호가 발생하는 경우`() {
-        val strategy = Strategy(
+        val enterSignalStrategy = Strategy(
             entryType = entryType,
             entryRule = BooleanRule(true),
             exitRule = BooleanRule(false),
         )
 
-        assertEquals(OrderType.BUY, strategy.shouldOperate(index, emptyHistory))
-        assertEquals(OrderType.NONE, strategy.shouldOperate(index, enteredHistory), "이미 진입했기 때문에 entry 신호를 무시한다")
-        assertEquals(OrderType.BUY, strategy.shouldOperate(index, exitedHistory))
+        assertEquals(OrderType.BUY, enterSignalStrategy.shouldOperate(index, emptyHistory))
+        assertEquals(
+            OrderType.NONE,
+            enterSignalStrategy.shouldOperate(index, enteredHistory),
+            "이미 진입했기 때문에 entry 신호를 무시한다"
+        )
+        assertEquals(OrderType.BUY, enterSignalStrategy.shouldOperate(index, exitedHistory))
     }
 
     @Test
     fun `진출(exit) 신호가 발생하는 경우`() {
-        val strategy = Strategy(
+        val exitSignalStrategy = Strategy(
             entryType = entryType,
             entryRule = BooleanRule(false),
             exitRule = BooleanRule(true),
         )
 
-        assertEquals(OrderType.NONE, strategy.shouldOperate(index, emptyHistory), "진출할 주문이 없으므로 exit 신호를 무시한다")
-        assertEquals(OrderType.SELL, strategy.shouldOperate(index, enteredHistory))
-        assertEquals(OrderType.NONE, strategy.shouldOperate(index, exitedHistory), "진출할 주문이 없으므로 exit 신호를 무시한다")
+        assertEquals(
+            OrderType.NONE,
+            exitSignalStrategy.shouldOperate(index, emptyHistory),
+            "진출할 주문이 없으므로 exit 신호를 무시한다"
+        )
+        assertEquals(OrderType.SELL, exitSignalStrategy.shouldOperate(index, enteredHistory))
+        assertEquals(
+            OrderType.NONE,
+            exitSignalStrategy.shouldOperate(index, exitedHistory),
+            "진출할 주문이 없으므로 exit 신호를 무시한다"
+        )
     }
 
     @Test
     fun `진입, 진출 신호가 발생하지 않는 경우`() {
-        val strategy = Strategy(
+        val noneSignalStrategy = Strategy(
             entryType = entryType,
             entryRule = BooleanRule(false),
             exitRule = BooleanRule(false),
         )
 
-        assertEquals(OrderType.NONE, strategy.shouldOperate(index, emptyHistory))
-        assertEquals(OrderType.NONE, strategy.shouldOperate(index, enteredHistory))
-        assertEquals(OrderType.NONE, strategy.shouldOperate(index, exitedHistory))
-    }
-
-    @Test
-    @Disabled
-    @Deprecated("쓸데 없는 테스트임")
-    fun `진입, 진출 신호가 동시에 발생하는 경우`() {
-        val strategy = Strategy(
-            entryType = entryType,
-            entryRule = BooleanRule(true),
-            exitRule = BooleanRule(true),
-        )
-
-        assertThrows<IllegalStateException>("enter, exit 신호가 동시에 발생하면 알고리즘 에러") {
-            strategy.shouldOperate(index, emptyHistory)
-        }
-        assertThrows<IllegalStateException>("enter, exit 신호가 동시에 발생하면 알고리즘 에러") {
-            strategy.shouldOperate(index, enteredHistory)
-        }
-        assertThrows<IllegalStateException>("enter, exit 신호가 동시에 발생하면 알고리즘 에러") {
-            strategy.shouldOperate(index, exitedHistory)
-        }
+        assertEquals(OrderType.NONE, noneSignalStrategy.shouldOperate(index, emptyHistory))
+        assertEquals(OrderType.NONE, noneSignalStrategy.shouldOperate(index, enteredHistory))
+        assertEquals(OrderType.NONE, noneSignalStrategy.shouldOperate(index, exitedHistory))
     }
 }
 
 
 class DifferentEntryOrderTypeTest {
     private val index = 0
-    private val entryType = OrderType.SELL
+    private val shortPositionType = OrderType.SELL
 
     private lateinit var emptyHistory: StrategySignalHistory
-    private lateinit var enteredHistory: StrategySignalHistory
-    private lateinit var enteredHistoryWithDifferentOrderType: StrategySignalHistory
+    private lateinit var shortPositionHistory: StrategySignalHistory
+    private lateinit var longPositionHistory: StrategySignalHistory
 
     @BeforeEach
     fun setUp() {
         emptyHistory = StrategySignalHistory()
-        enteredHistory = StrategySignalHistory().also {
-            it.add(createOrderSignal(entryType))
+        shortPositionHistory = StrategySignalHistory().also {
+            it.add(createOrderSignal(shortPositionType))
         }
-        enteredHistoryWithDifferentOrderType = StrategySignalHistory().also {
-            it.add(createOrderSignal(entryType.completedType()))
+        longPositionHistory = StrategySignalHistory().also {
+            it.add(createOrderSignal(shortPositionType.completedType()))
         }
     }
 
@@ -123,15 +107,15 @@ class DifferentEntryOrderTypeTest {
     @Test
     fun `entryType 이 다른 OrderHistory 를 사용하면 에러`() {
         val strategy = Strategy(
-            entryType = entryType,
+            entryType = shortPositionType,
             entryRule = BooleanRule(false),
             exitRule = BooleanRule(false),
         )
 
         assertDoesNotThrow { strategy.shouldOperate(index, emptyHistory) }
-        assertDoesNotThrow { strategy.shouldOperate(index, enteredHistory) }
+        assertDoesNotThrow { strategy.shouldOperate(index, shortPositionHistory) }
         assertThrows<IllegalArgumentException>("entryType 이 다른 OrderHistory 를 사용하면 에러") {
-            strategy.shouldOperate(index, enteredHistoryWithDifferentOrderType)
+            strategy.shouldOperate(index, longPositionHistory)
         }
     }
 }

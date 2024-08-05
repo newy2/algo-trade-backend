@@ -67,11 +67,12 @@ class Ta4jCandlesTest {
 
     @Test
     fun `캔들 등록하기`() {
-        candles.upsert(oneMinuteCandle(lastBeginTime.plusMinutes(1), 2000))
+        val afterBeginTime = lastBeginTime.plusMinutes(1)
+        candles.upsert(oneMinuteCandle(afterBeginTime, 2000))
 
         assertEquals(3, candles.size)
         assertEquals(oneMinuteCandle(lastBeginTime.minusMinutes(1), 500), candles[candles.firstIndex])
-        assertEquals(oneMinuteCandle(lastBeginTime.minusMinutes(0), 1000), candles[candles.firstIndex + 1])
+        assertEquals(oneMinuteCandle(lastBeginTime.plusMinutes(0), 1000), candles[candles.firstIndex + 1])
         assertEquals(oneMinuteCandle(lastBeginTime.plusMinutes(1), 2000), candles[candles.firstIndex + 2])
     }
 
@@ -81,7 +82,8 @@ class Ta4jCandlesTest {
         candles.upsert(oneMinuteCandle(sameBeginTime, 2000))
 
         assertEquals(2, candles.size)
-        assertEquals(oneMinuteCandle(lastBeginTime, 2000), candles[candles.lastIndex])
+        assertEquals(oneMinuteCandle(lastBeginTime.minusMinutes(1), 500), candles[candles.firstIndex])
+        assertEquals(oneMinuteCandle(lastBeginTime.plusMinutes(0), 2000), candles[candles.lastIndex])
     }
 
     @Test
@@ -95,7 +97,8 @@ class Ta4jCandlesTest {
         )
 
         assertEquals(3, candles.size)
-        assertEquals(oneMinuteCandle(lastBeginTime, 2000), candles[candles.lastIndex - 1])
+        assertEquals(oneMinuteCandle(lastBeginTime.minusMinutes(1), 500), candles[candles.firstIndex])
+        assertEquals(oneMinuteCandle(lastBeginTime.plusMinutes(0), 2000), candles[candles.lastIndex - 1])
         assertEquals(oneMinuteCandle(lastBeginTime.plusMinutes(1), 3000), candles[candles.lastIndex])
     }
 
@@ -120,24 +123,24 @@ class Ta4jCandlesTest {
 
     @Test
     fun `과거 시간 캔들을 등록하는 경우`() {
+        val beforeBeginTime = lastBeginTime.minusMinutes(1)
         assertThrows<IllegalArgumentException>("과거 시간의 Candle 을 등록하면 에러발생") {
-            val beforeBeginTime = lastBeginTime.minusMinutes(1)
             candles.upsert(oneMinuteCandle(beforeBeginTime, 2000))
         }
     }
 
     @Test
     fun `마지막 캔들 beginTime 과 endTime 사이의 시간으로 Candle 을 등록하는 경우`() {
+        val irregularBeginTime = lastBeginTime.plusSeconds(30)
         assertThrows<IllegalArgumentException>("마지막 beginTime 이 00:00:00 이고, 신규 beginTime 이 00:00:30 이면 에러발생") {
-            val irregularBeginTime = lastBeginTime.plusSeconds(30)
             candles.upsert(oneMinuteCandle(irregularBeginTime, 2000))
         }
     }
 
     @Test
     fun `시간 간격이 다른 Candle 을 등록하는 경우`() {
+        val hour1Candle = oneHourCandle(lastBeginTime.plusMinutes(1), 2000)
         assertThrows<IllegalArgumentException>("1분봉 Candles 에 1시간봉 Candle 을 등록하면 에러발생") {
-            val hour1Candle = oneHourCandle(lastBeginTime.plusMinutes(1), 2000)
             candles.upsert(hour1Candle)
         }
     }
@@ -151,11 +154,6 @@ class Ta4jCandlesTest {
             candles[candles.lastIndex + 1]
         }
     }
-
-    // TODO Candles 의 이름을 알아야 하나?
-    // TODO Candles#upsert 연속적인 시간대의 Candle 이 확인하는 로직?
-    //      TODO 시작시간 종료시간이 있는 금융시장: 예) 국내/해외 주식
-    //      TODO 시작시간 종료시간이 없는 금융시장: 예) 암호화폐 거래
 }
 
 @DisplayName("최대 크기 제한")

@@ -6,6 +6,7 @@ import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.unit.common.helper.RESOURCE_CONTENT
 import com.newy.algotrade.unit.common.helper.RESOURCE_PATH
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.assertArrayEquals
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 import java.time.*
@@ -20,8 +21,8 @@ import kotlin.time.toJavaDuration
 class KotlinTest {
     @Test
     fun `Duration 팩토리 메소드는 객체를 캐싱하지 않는다`() {
-        Assertions.assertNotSame(Duration.ofMinutes(1), Duration.ofMinutes(1))
-        Assertions.assertNotSame(Duration.ofMinutes(1), 1.minutes.toJavaDuration())
+        assertNotSame(Duration.ofMinutes(1), Duration.ofMinutes(1))
+        assertNotSame(Duration.ofMinutes(1), 1.minutes.toJavaDuration())
     }
 
     @Test
@@ -29,6 +30,15 @@ class KotlinTest {
         assertSame(BigDecimal.valueOf(0), BigDecimal.valueOf(0))
         assertSame(BigDecimal.valueOf(0), BigDecimal.ZERO)
         assertSame(BigDecimal.valueOf(0), 0.toBigDecimal())
+    }
+
+    @Test
+    fun `BigDecimal 의 'plus operator(+)' 는 scale(소수점 자리수)을 변경한다`() {
+        val hundred = 100.toBigDecimal()
+        val decimal = 0.01.toBigDecimal()
+
+        assertEquals(BigDecimal("1.00"), ((hundred + decimal) / hundred))
+        assertEquals(BigDecimal("1.0001"), hundred.plus(decimal).divide(hundred))
     }
 
     @Test
@@ -45,10 +55,8 @@ class KotlinTest {
     fun `list 를 array 로 변환하는 방법`() {
         val list = listOf("abc", "def")
 
-        Assertions.assertArrayEquals(arrayOf("abc", "def"), list.toTypedArray<String>())
-        Assertions.assertArrayEquals(
-            arrayOf("abc", "def"),
-            list.stream().toArray<String> { length -> arrayOfNulls(length) })
+        assertArrayEquals(arrayOf("abc", "def"), list.toTypedArray<String>())
+        assertArrayEquals(arrayOf("abc", "def"), list.stream().toArray<String> { length -> arrayOfNulls(length) })
     }
 }
 

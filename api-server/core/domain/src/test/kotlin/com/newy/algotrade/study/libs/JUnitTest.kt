@@ -2,6 +2,7 @@ package com.newy.algotrade.study.libs
 
 import com.newy.algotrade.study.libs.ta4j.assertDoubleNumEquals
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.ta4j.core.num.DecimalNum
 import kotlin.test.assertEquals
 
@@ -10,7 +11,7 @@ class JUnitTest {
     @Test
     fun `부동소수점 소수점 2자리 반올림`() {
         assertEquals(0.01, 0.005, 0.005)
-        Assertions.assertNotEquals(0.01, 0.004, 0.005)
+        assertNotEquals(0.01, 0.004, 0.005)
     }
 
     @Test

@@ -5,7 +5,7 @@ import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.Trade
 import com.newy.algotrade.domain.chart.strategy.TradeResult
-import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -34,7 +34,7 @@ class LongPositionTradeResultTest {
             1000.0.toBigDecimal()
         )
 
-        Assertions.assertEquals(TradeResult.DRAW, Trade(entrySignal, exitSignal).result())
+        assertEquals(TradeResult.DRAW, Trade(entrySignal, exitSignal).result())
     }
 
     @Test
@@ -48,7 +48,7 @@ class LongPositionTradeResultTest {
             1100.toBigDecimal()
         )
 
-        Assertions.assertEquals(TradeResult.WIN, Trade(entrySignal, exitSignal).result())
+        assertEquals(TradeResult.WIN, Trade(entrySignal, exitSignal).result())
     }
 
     @Test
@@ -62,7 +62,7 @@ class LongPositionTradeResultTest {
             900.toBigDecimal()
         )
 
-        Assertions.assertEquals(TradeResult.LOSS, Trade(entrySignal, exitSignal).result())
+        assertEquals(TradeResult.LOSS, Trade(entrySignal, exitSignal).result())
     }
 }
 
@@ -88,7 +88,7 @@ class ShortPositionTradeResultTest {
             1000.0.toBigDecimal()
         )
 
-        Assertions.assertEquals(TradeResult.DRAW, Trade(entrySignal, exitSignal).result())
+        assertEquals(TradeResult.DRAW, Trade(entrySignal, exitSignal).result())
     }
 
     @Test
@@ -102,7 +102,7 @@ class ShortPositionTradeResultTest {
             1100.toBigDecimal()
         )
 
-        Assertions.assertEquals(TradeResult.LOSS, Trade(entrySignal, exitSignal).result())
+        assertEquals(TradeResult.LOSS, Trade(entrySignal, exitSignal).result())
     }
 
     @Test
@@ -116,6 +116,6 @@ class ShortPositionTradeResultTest {
             900.toBigDecimal()
         )
 
-        Assertions.assertEquals(TradeResult.WIN, Trade(entrySignal, exitSignal).result())
+        assertEquals(TradeResult.WIN, Trade(entrySignal, exitSignal).result())
     }
 }

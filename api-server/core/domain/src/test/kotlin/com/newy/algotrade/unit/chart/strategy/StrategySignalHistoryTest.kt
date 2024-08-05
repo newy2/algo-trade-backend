@@ -1,24 +1,13 @@
 package com.newy.algotrade.unit.chart.strategy
 
-import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
-import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
-import org.junit.jupiter.api.Assertions
+import helpers.createOrderSignal
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import java.time.Duration
-import java.time.OffsetDateTime
 import kotlin.test.assertFalse
-
-private fun createOrderSignal(tradeType: OrderType) =
-    StrategySignal(
-        tradeType,
-        Candle.TimeRange(Duration.ofMinutes(1), OffsetDateTime.now()),
-        1000.0.toBigDecimal()
-    )
 
 class StrategySignalHistoryTest {
     private lateinit var history: StrategySignalHistory
@@ -37,8 +26,10 @@ class StrategySignalHistoryTest {
     }
 
     @Test
-    fun `먼저 Buy Order 를 추가한 경우`() {
-        val isAdded = history.add(createOrderSignal(OrderType.BUY))
+    fun `Buy OrderType 을 먼저 추가하면 long 포지션 히스토리가 된다`() {
+        val isAdded = createOrderSignal(OrderType.BUY).let { entrySignal ->
+            history.add(entrySignal)
+        }
 
         assertTrue(isAdded)
         assertFalse(history.isEmpty())
@@ -48,8 +39,10 @@ class StrategySignalHistoryTest {
     }
 
     @Test
-    fun `먼저 Sell Order 를 추가한 경우`() {
-        val isAdded = history.add(createOrderSignal(OrderType.SELL))
+    fun `Sell OrderType 을 먼저 추가하면 short 포지션 히스토리가 된다`() {
+        val isAdded = createOrderSignal(OrderType.SELL).let { entrySignal ->
+            history.add(entrySignal)
+        }
 
         assertTrue(isAdded)
         assertFalse(history.isEmpty())
@@ -60,20 +53,19 @@ class StrategySignalHistoryTest {
 
     @Test
     fun `같은 OrderType 는 이어서 추가할 수 없다`() {
-        val firstAdded = history.add(createOrderSignal(OrderType.BUY))
-        val secondAdded = history.add(createOrderSignal(OrderType.BUY))
+        val entrySignal = createOrderSignal(OrderType.BUY)
 
-        assertTrue(firstAdded)
-        Assertions.assertFalse(secondAdded)
+        assertTrue(history.add(entrySignal), "첫 번째 add")
+        assertFalse(history.add(entrySignal), "두 번째 add")
     }
 
     @Test
     fun `다른 OrderType 는 이어서 추가할 수 있다`() {
-        val firstAdded = history.add(createOrderSignal(OrderType.BUY))
-        val secondAdded = history.add(createOrderSignal(OrderType.SELL))
+        val entrySignal = createOrderSignal(OrderType.BUY)
+        val exitSignal = createOrderSignal(OrderType.SELL)
 
-        assertTrue(firstAdded)
-        assertTrue(secondAdded)
+        assertTrue(history.add(entrySignal))
+        assertTrue(history.add(exitSignal))
         assertEquals(OrderType.BUY, history.firstOrderType())
         assertEquals(OrderType.SELL, history.lastOrderType())
     }

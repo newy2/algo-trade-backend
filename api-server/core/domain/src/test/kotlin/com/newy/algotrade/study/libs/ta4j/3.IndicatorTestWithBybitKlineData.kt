@@ -17,7 +17,7 @@ import kotlin.test.assertEquals
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
 
-val bybitKlineList =
+val byBitKlineList =
     SimpleCsvParser.parseFromResource("/csv/[ByBit] BTCUSDT - 1m - 1000count - until 2024-03-09T00:00Z(UTC).csv")
 
 val TEST_TARGET_BAR_EXPECTED_VALUES = mapOf(
@@ -28,7 +28,7 @@ val TEST_TARGET_BAR_EXPECTED_VALUES = mapOf(
     "EMA50" to 68232.69
 )
 
-private fun getBarSeries(length: Int, list: Array<Array<String>> = bybitKlineList) =
+private fun getBarSeries(length: Int, list: Array<Array<String>> = byBitKlineList) =
     BaseBarSeries().also { results ->
         list.sliceArray(IntRange(0, length - 1))
             .also { it.reverse() }
@@ -129,7 +129,7 @@ class IndicatorExceptionTest {
 
 @DisplayName("테스트 헬퍼 메소드 테스트")
 class GetBarSeriesTest {
-    private val bybitKlineList = arrayOf(
+    private val byBitKlineList = arrayOf(
         arrayOf("1709942400000", "68165.0", "68224.8", "68165.0", "68185.8", "23.258"),
         arrayOf("1709942340000", "68196.1", "68196.1", "68151.5", "68165.0", "12.019"),
         arrayOf("1709942280000", "68247.7", "68247.8", "68167.3", "68196.1", "13.425"),
@@ -137,7 +137,7 @@ class GetBarSeriesTest {
 
     @Test
     fun `바이빗 클레인 리스트 데이터로 BarSeries 생성하기`() {
-        val series = getBarSeries(2, bybitKlineList)
+        val series = getBarSeries(2, byBitKlineList)
 
         assertEquals(2, series.barCount)
         series.lastBar.beginTime.run {
