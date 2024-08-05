@@ -13,9 +13,7 @@ class InitControllerTest {
     private val methodCallLogs = mutableListOf<String>()
     private val userStrategyKeys = mutableListOf<UserStrategyKey>()
     private val controller = InitController(
-        setRunnableStrategyUseCase = {
-            methodCallLogs.add("setRunnableStrategyUseCase")
-        },
+        setRunnableStrategyUseCase = { methodCallLogs.add("setRunnableStrategyUseCase") },
         getAllUserStrategyProductQuery = {
             userStrategyKeys.also {
                 methodCallLogs.add("getAllUserStrategyProductQuery")

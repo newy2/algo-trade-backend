@@ -6,7 +6,6 @@ import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.*
-import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -14,6 +13,7 @@ import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.product.ProductPriceKey
 import helpers.TestEnv
+import helpers.productPriceKey
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.launch
@@ -69,14 +69,9 @@ private fun newClient(
                 coroutineContext,
             )
         ),
-        object : OnReceivePollingPricePort {
-            override suspend fun onReceivePrice(
-                productPriceKey: ProductPriceKey,
-                productPriceList: List<ProductPrice>
-            ) {
-                CoroutineScope(coroutineContext).launch {
-                    callback(productPriceKey to productPriceList)
-                }
+        { productPriceKey, productPriceList ->
+            CoroutineScope(coroutineContext).launch {
+                callback(productPriceKey to productPriceList)
             }
         }
     )
@@ -93,11 +88,9 @@ class ByBitWebSocketTest {
         }
 
         client.subscribe(
-            ProductPriceKey(
-                Market.BY_BIT,
-                ProductType.SPOT,
-                "BTCUSDT",
-                Duration.ofMinutes(1)
+            productPriceKey(
+                productCode = "BTCUSDT",
+                interval = Duration.ofMinutes(1)
             )
         )
         client.start()
@@ -106,11 +99,9 @@ class ByBitWebSocketTest {
         client.cancel()
 
         assertEquals(
-            ProductPriceKey(
-                Market.BY_BIT,
-                ProductType.SPOT,
-                "BTCUSDT",
-                Duration.ofMinutes(1)
+            productPriceKey(
+                productCode = "BTCUSDT",
+                interval = Duration.ofMinutes(1)
             ),
             response.first
         )
@@ -153,11 +144,9 @@ class LsSecHttpPollingTest {
         }
 
         client.subscribe(
-            ProductPriceKey(
-                Market.LS_SEC,
-                ProductType.SPOT,
-                "078020",
-                Duration.ofMinutes(1),
+            productPriceKey(
+                productCode = "078020",
+                interval = Duration.ofMinutes(1),
             )
         )
         client.start()
@@ -166,11 +155,9 @@ class LsSecHttpPollingTest {
         client.cancel()
 
         assertEquals(
-            ProductPriceKey(
-                Market.LS_SEC,
-                ProductType.SPOT,
-                "078020",
-                Duration.ofMinutes(1),
+            productPriceKey(
+                productCode = "078020",
+                interval = Duration.ofMinutes(1),
             ),
             response.first
         )

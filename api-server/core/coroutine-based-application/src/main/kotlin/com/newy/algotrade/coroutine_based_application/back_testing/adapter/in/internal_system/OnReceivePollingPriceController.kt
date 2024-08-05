@@ -7,11 +7,11 @@ import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.product.ProductPriceKey
 
 open class OnReceivePollingPriceController(
-    private val candleUseCase: AddCandlesUseCase,
+    private val addCandlesUseCase: AddCandlesUseCase,
     private val runStrategyUseCase: RunStrategyUseCase,
 ) : OnReceivePollingPricePort {
     override suspend fun onReceivePrice(productPriceKey: ProductPriceKey, productPriceList: List<ProductPrice>) {
-        candleUseCase.addCandles(productPriceKey, productPriceList)
+        addCandlesUseCase.addCandles(productPriceKey, productPriceList)
         runStrategyUseCase.runStrategy(productPriceKey)
     }
 }

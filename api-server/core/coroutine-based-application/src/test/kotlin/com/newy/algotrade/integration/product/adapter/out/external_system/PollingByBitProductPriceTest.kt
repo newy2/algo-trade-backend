@@ -9,11 +9,11 @@ import com.newy.algotrade.coroutine_based_application.product.adapter.out.extern
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.product.ProductPriceKey
 import helpers.TestEnv
+import helpers.productPriceKey
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.isActive
@@ -68,22 +68,21 @@ class PollingByBitProductPriceTest {
 
         pollingJob.start()
         pollingJob.subscribe(
-            ProductPriceKey(
-                Market.BY_BIT,
-                ProductType.SPOT,
-                "BTCUSDT",
-                Duration.ofMinutes(1),
+            productPriceKey(
+                productCode = "BTCUSDT",
+                interval = Duration.ofMinutes(1)
             )
         )
 
-        var productPriceKey: ProductPriceKey? = null
-        val productPrices = mutableListOf<ProductPrice>()
+
+        var receiveProductPriceKey: ProductPriceKey? = null
+        val receiveProductPrices = mutableListOf<ProductPrice>()
         val watcher = launch {
             while (isActive) {
                 val (key, value) = channel.receive()
-                productPriceKey = key
-                productPrices.add(value)
-                if (productPrices.size == 2) {
+                receiveProductPriceKey = key
+                receiveProductPrices.add(value)
+                if (receiveProductPrices.size == 2) {
                     pollingJob.cancel()
                     cancel()
                 }
@@ -92,13 +91,11 @@ class PollingByBitProductPriceTest {
         watcher.join()
 
         assertEquals(
-            ProductPriceKey(
-                Market.BY_BIT,
-                ProductType.SPOT,
-                "BTCUSDT",
-                Duration.ofMinutes(1),
+            productPriceKey(
+                productCode = "BTCUSDT",
+                interval = Duration.ofMinutes(1)
             ),
-            productPriceKey
+            receiveProductPriceKey
         )
         assertEquals(
             listOf(
@@ -118,7 +115,7 @@ class PollingByBitProductPriceTest {
                     closePrice = 60379.28.toBigDecimal(),
                     volume = 0.133579.toBigDecimal()
                 )
-            ), productPrices
+            ), receiveProductPrices
         )
     }
 }

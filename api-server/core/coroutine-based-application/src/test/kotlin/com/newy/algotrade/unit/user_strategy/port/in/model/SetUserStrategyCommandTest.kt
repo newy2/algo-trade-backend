@@ -13,7 +13,7 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
 
-val dto = SetUserStrategyCommand(
+val incomingPortModel = SetUserStrategyCommand(
     marketAccountId = 1,
     strategyClassName = "BuyTripleRSIStrategy",
     productCategory = ProductCategory.USER_PICK,
@@ -25,41 +25,41 @@ val dto = SetUserStrategyCommand(
 class SetUserStrategyCommandTest {
     @Test
     fun `marketAccountId 은 0 이상 이어야 한다`() {
-        assertThrows<ConstraintViolationException> { dto.copy(marketAccountId = -1) }
-        assertThrows<ConstraintViolationException> { dto.copy(marketAccountId = 0) }
+        assertThrows<ConstraintViolationException> { incomingPortModel.copy(marketAccountId = -1) }
+        assertThrows<ConstraintViolationException> { incomingPortModel.copy(marketAccountId = 0) }
         assertDoesNotThrow {
-            dto.copy(marketAccountId = 1)
-            dto.copy(marketAccountId = 2)
+            incomingPortModel.copy(marketAccountId = 1)
+            incomingPortModel.copy(marketAccountId = 2)
         }
     }
 
     @Test
     fun `strategyClassName 는 NotBlank 이어야 한다`() {
-        assertThrows<ConstraintViolationException> { dto.copy(strategyClassName = "") }
-        assertThrows<ConstraintViolationException> { dto.copy(strategyClassName = " ") }
+        assertThrows<ConstraintViolationException> { incomingPortModel.copy(strategyClassName = "") }
+        assertThrows<ConstraintViolationException> { incomingPortModel.copy(strategyClassName = " ") }
         assertDoesNotThrow {
-            dto.copy(strategyClassName = "NotBlankString")
+            incomingPortModel.copy(strategyClassName = "NotBlankString")
         }
     }
 
     @Test
     fun `productCodes 의 item 들은 NotBlank 이어야 한다`() {
         assertThrows<ConstraintViolationException> {
-            dto.copy(productCodes = listOf(""))
-            dto.copy(productCodes = listOf(" ", ""))
+            incomingPortModel.copy(productCodes = listOf(""))
+            incomingPortModel.copy(productCodes = listOf(" ", ""))
         }
     }
 
     @Test
     fun `productCategory 값이 'USER_PICK' 인 경우, productCodes 는 1개 이상이여야 한다`() {
         assertThrows<IllegalArgumentException> {
-            dto.copy(
+            incomingPortModel.copy(
                 productCategory = ProductCategory.USER_PICK,
                 productCodes = emptyList()
             )
         }
         assertDoesNotThrow {
-            dto.copy(
+            incomingPortModel.copy(
                 productCategory = ProductCategory.USER_PICK,
                 productCodes = listOf("BTCUSDT")
             )
@@ -69,13 +69,13 @@ class SetUserStrategyCommandTest {
     @Test
     fun `productCategory 값이 'TOP_TRADING_VALUE' 인 경우, productCodes 는 emptyList 여야 한다`() {
         assertThrows<IllegalArgumentException> {
-            dto.copy(
+            incomingPortModel.copy(
                 productCategory = ProductCategory.TOP_TRADING_VALUE,
                 productCodes = listOf("BTCUSDT")
             )
         }
         assertDoesNotThrow {
-            dto.copy(
+            incomingPortModel.copy(
                 productCategory = ProductCategory.TOP_TRADING_VALUE,
                 productCodes = emptyList()
             )
@@ -94,14 +94,7 @@ class SetUserStrategyCommandTest {
                 productCategory = ProductCategory.USER_PICK,
                 timeFrame = Candle.TimeFrame.M1,
             ),
-            SetUserStrategyCommand(
-                marketAccountId = 1,
-                strategyClassName = "BuyTripleRSIStrategy",
-                productType = ProductType.SPOT,
-                productCategory = ProductCategory.USER_PICK,
-                productCodes = listOf("BTCUSDT"),
-                timeFrame = Candle.TimeFrame.M1,
-            ).toDomainEntity()
+            incomingPortModel.toDomainEntity()
         )
     }
 }

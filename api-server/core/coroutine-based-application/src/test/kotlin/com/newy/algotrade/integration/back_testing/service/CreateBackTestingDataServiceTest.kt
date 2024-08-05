@@ -114,6 +114,19 @@ class LsSecCreateBackTestingDataServiceTest {
     }
 
     @Test
+    fun `seedSize 만 있는 경우`() = runTest {
+        val beginTime = OffsetDateTime.parse("2024-05-31T08:59+09:00")
+        val endTime = OffsetDateTime.parse("2024-05-31T08:59+09:00")
+        val seedSize = 400
+
+        val list = service.createData(BackTestingDataKey(productPriceKey, beginTime, endTime), seedSize)
+
+        assertEquals(400, list.size)
+        assertTrue(OffsetDateTime.parse("2024-05-29T15:02+09:00").isEqual(list.first().time.begin))
+        assertTrue(OffsetDateTime.parse("2024-05-30T15:29+09:00").isEqual(list.last().time.begin))
+    }
+
+    @Test
     fun `장휴일 기간이 포함된 경우`() = runTest {
         val beginTime = OffsetDateTime.parse("2024-05-31T09:00+09:00")
         val endTime = OffsetDateTime.parse("2024-06-03T09:01+09:00")
@@ -128,19 +141,6 @@ class LsSecCreateBackTestingDataServiceTest {
         assertTrue(OffsetDateTime.parse("2024-05-31T09:00+09:00").isEqual(list.first().time.begin))
         assertTrue(OffsetDateTime.parse("2024-05-31T15:29+09:00").isEqual(list[list.size - 2].time.begin))
         assertTrue(OffsetDateTime.parse("2024-06-03T09:00+09:00").isEqual(list[list.size - 1].time.begin))
-    }
-
-    @Test
-    fun `seedSize 만 있는 경우`() = runTest {
-        val beginTime = OffsetDateTime.parse("2024-05-31T08:59+09:00")
-        val endTime = OffsetDateTime.parse("2024-05-31T08:59+09:00")
-        val seedSize = 400
-
-        val list = service.createData(BackTestingDataKey(productPriceKey, beginTime, endTime), seedSize)
-
-        assertEquals(400, list.size)
-        assertTrue(OffsetDateTime.parse("2024-05-29T15:02+09:00").isEqual(list.first().time.begin))
-        assertTrue(OffsetDateTime.parse("2024-05-30T15:29+09:00").isEqual(list.last().time.begin))
     }
 }
 

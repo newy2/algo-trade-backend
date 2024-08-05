@@ -6,6 +6,7 @@ import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runTest
 import okhttp3.*
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
@@ -35,7 +36,7 @@ open class BaseWebSocketListener(
 open class BaseTest {
     private val port = TestServerPort.nextValue()
     protected lateinit var server: MockWebServer
-    lateinit var request: Request
+    private lateinit var request: Request
 
     @BeforeEach
     fun setUp() {
@@ -87,7 +88,7 @@ class OkHttpWebSocketCancelTest : BaseTest() {
     }
 
     @Test
-    fun `서버가 종료된 경우`() = runBlocking {
+    fun `서버가 종료된 경우`() = runTest {
         val serverListener = ServerListener(coroutineContext)
         val clientListener = ClientListener(coroutineContext)
         initServerAndClient(serverListener, clientListener)
@@ -113,7 +114,7 @@ class OkHttpWebSocketCancelTest : BaseTest() {
 
     @ParameterizedTest
     @ValueSource(ints = [1000, 1001, 1002])
-    fun `클라이언트가 커낵션을 종료한 경우`(closeCode: Int) = runBlocking {
+    fun `클라이언트가 커낵션을 종료한 경우`(closeCode: Int) = runTest {
         val serverListener = ServerListener(coroutineContext)
         val clientListener = ClientListener(coroutineContext)
         val client = initServerAndClient(serverListener, clientListener)

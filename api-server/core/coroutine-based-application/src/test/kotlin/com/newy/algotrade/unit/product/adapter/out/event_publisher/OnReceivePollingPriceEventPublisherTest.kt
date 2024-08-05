@@ -14,7 +14,7 @@ import java.time.Duration
 
 class OnReceivePollingPriceEventPublisherTest {
     @Test
-    fun `캔들 가격 데이터 수신 이벤트 발행 테스트`() = runTest {
+    fun `onReceivePrice 메소드가 호출되면 ReceivePollingPriceEvent 가 발행된다`() = runTest {
         var receiveMessage: ReceivePollingPriceEvent? = null
         val adapter = EventBus<ReceivePollingPriceEvent>()
             .also { eventBus ->
@@ -27,8 +27,8 @@ class OnReceivePollingPriceEventPublisherTest {
             }
 
         adapter.onReceivePrice(
-            productPriceKey("BTCUSDT"),
-            listOf(productPrice(1000, Duration.ofMinutes(1)))
+            productPriceKey = productPriceKey("BTCUSDT"),
+            productPriceList = listOf(productPrice(1000, Duration.ofMinutes(1)))
         )
         coroutineContext.cancelChildren()
 

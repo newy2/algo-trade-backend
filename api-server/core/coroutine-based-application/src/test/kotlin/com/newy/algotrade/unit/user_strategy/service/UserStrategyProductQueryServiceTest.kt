@@ -6,7 +6,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-@DisplayName("port 호출순서 확인")
+@DisplayName("단순 조회 Service - port 호출순서 확인")
 class UserStrategyProductQueryServiceTest {
     private val methodCallLogs = mutableListOf<String>()
     private val service = UserStrategyProductQueryService(

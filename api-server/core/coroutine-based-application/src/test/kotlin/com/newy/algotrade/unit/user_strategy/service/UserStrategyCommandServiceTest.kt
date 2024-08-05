@@ -107,6 +107,22 @@ class UserStrategyCommandServiceExceptionTest {
                 assertEquals("productCode 를 찾을 수 없습니다. ([ETHUSDT])", e.message)
             }
         }
+
+        @Test
+        fun `DB 에 저장된 productCode 와 일치하는 경우`() = runTest {
+            val getFullProductAdapter = GetProductPort { _, _, _ ->
+                listOf(Product(1, "BTCUSDT"), Product(2, "ETHUSDT"))
+            }
+            val service = newUserStrategyCommandService(
+                getProductPort = getFullProductAdapter,
+            )
+
+            try {
+                service.setUserStrategy(incomingPortModel)
+            } catch (e: NotFoundRowException) {
+                fail()
+            }
+        }
     }
 }
 
@@ -121,6 +137,7 @@ class UserPickProductUserStrategyCommandServiceTest {
             }
             delay(1000) // wait for addListener
         }
+
         val createdUserStrategyId: Long = 10
         val service = newUserStrategyCommandService(
             eventBus = eventBus,
@@ -137,9 +154,10 @@ class UserPickProductUserStrategyCommandServiceTest {
     fun `해피패스 port 메소드 실행순서`() = runTest {
         val methodCallLogs = mutableListOf<String>()
         val service = newUserStrategyCommandService(
-            setUserStrategyPort = { _ ->
-                methodCallLogs.add("setUserStrategyPort")
-                1
+            setUserStrategyPort = {
+                1.toLong().also {
+                    methodCallLogs.add("setUserStrategyPort")
+                }
             },
             setUserStrategyProductPort = { _, _ ->
                 methodCallLogs.add("setUserStrategyProductPort")

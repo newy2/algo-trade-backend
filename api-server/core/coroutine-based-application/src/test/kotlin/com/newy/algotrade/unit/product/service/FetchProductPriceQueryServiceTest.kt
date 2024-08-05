@@ -14,7 +14,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.Duration
 
-@DisplayName("port 호출 순서 확인")
+@DisplayName("단순 조회 Service - port 호출 확인")
 class FetchProductPriceQueryServiceTest : NoErrorProductPriceQueryAdapter, SubscribablePollingProductPricePort {
     private val methodCallLogs = mutableListOf<String>()
     private val productPriceKey = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
@@ -42,21 +42,21 @@ class FetchProductPriceQueryServiceTest : NoErrorProductPriceQueryAdapter, Subsc
     }
 
     @Test
-    fun `fetchInitProductPrices - port 호출 순서 확인`() = runTest {
+    fun `fetchInitProductPrices - port 호출 확인`() = runTest {
         service.fetchInitProductPrices(productPriceKey)
 
         assertEquals(listOf("getProductPrices"), methodCallLogs)
     }
 
     @Test
-    fun `requestPollingProductPrice - port 호출 순서 확인`() = runTest {
+    fun `requestPollingProductPrice - port 호출 확인`() = runTest {
         service.requestPollingProductPrice(productPriceKey)
 
         assertEquals(listOf("subscribe"), methodCallLogs)
     }
 
     @Test
-    fun `requestUnPollingProductPrice - port 호출 순서 확인`() = runTest {
+    fun `requestUnPollingProductPrice - port 호출 확인`() = runTest {
         service.requestUnPollingProductPrice(productPriceKey)
 
         assertEquals(listOf("unSubscribe"), methodCallLogs)

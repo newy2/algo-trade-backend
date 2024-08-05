@@ -5,13 +5,14 @@ import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
+import kotlinx.coroutines.yield
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
 class TickerTest {
     @OptIn(ObsoleteCoroutinesApi::class)
     @Test
-    fun `ticker - 주기적인 체널 파이프라이닝이 필요한 경우 사용`() = runTest {
+    fun `ticker - delayMillis 시간 동안 일시정지 되는 랑데뷰 체널`() = runTest {
         val intervalChannel = ticker(
             delayMillis = 10,
             initialDelayMillis = 0,
@@ -24,7 +25,7 @@ class TickerTest {
             for (signal in intervalChannel) {
                 counter++
                 log += "request1 "
-                delay(1)
+                yield()
             }
         }
 
@@ -32,11 +33,11 @@ class TickerTest {
             for (signal in intervalChannel) {
                 counter++
                 log += "request2 "
-                delay(3)
+                yield()
             }
         }
 
-        delay(39)
+        delay(35)
         intervalChannel.cancel()
         assertEquals(3, counter)
         assertEquals("request1 request2 request1 ", log)

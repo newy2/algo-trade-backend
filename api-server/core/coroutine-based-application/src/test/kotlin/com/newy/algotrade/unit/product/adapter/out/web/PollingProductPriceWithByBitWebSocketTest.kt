@@ -11,6 +11,7 @@ import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.product.ProductPriceKey
 import helpers.TestServerPort
+import helpers.productPriceKey
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.test.runTest
@@ -21,6 +22,7 @@ import okhttp3.WebSocketListener
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import kotlin.coroutines.CoroutineContext
@@ -73,7 +75,7 @@ class ByBitProductPriceWebSocketSendMessageTest : BaseByBitProductPriceWebSocket
     }
 
     @Test
-    fun `핑 메세지`() = runTest {
+    fun `ByBit 웹소켓은 20초 주기로 핑 메세지를 전송한다`() = runTest {
         val socket = newClient(coroutineContext)
 
         socket.start()
@@ -88,7 +90,7 @@ class ByBitProductPriceWebSocketSendMessageTest : BaseByBitProductPriceWebSocket
     }
 
     @Test
-    fun `subscribe 메세지`() = runBlocking {
+    fun `subscribe 메세지 전송하기`() = runBlocking {
         val client = newClient(coroutineContext)
 
         client.start()
@@ -108,7 +110,7 @@ class ByBitProductPriceWebSocketSendMessageTest : BaseByBitProductPriceWebSocket
     }
 
     @Test
-    fun `unsubscribe 메세지`() = runBlocking {
+    fun `unsubscribe 메세지 전송하기`() = runBlocking {
         val client = newClient(coroutineContext)
 
         client.start()
@@ -128,27 +130,23 @@ class ByBitProductPriceWebSocketSendMessageTest : BaseByBitProductPriceWebSocket
     }
 
     @Test
-    fun `시작하기 전에 subscribe 한 경우 - 접속 후 subscribe 메세지 전송`() = runBlocking {
-        val client = newClient(coroutineContext)
+    fun `start 하기 전에 subscribe 한 경우 - 웹소켓 접속 완료 후 subscribe 메세지가 전송된다`() = runBlocking {
+        val client = newClient(coroutineContext).also {
+            it.subscribe(
+                productPriceKey(
+                    productCode = "BTCUSDT",
+                    interval = Duration.ofMinutes(1)
+                )
+            )
+            it.subscribe(
+                productPriceKey(
+                    productCode = "BTCUSDT",
+                    interval = Duration.ofMinutes(5)
+                )
+            )
+        }
 
-        client.subscribe(
-            ProductPriceKey(
-                Market.BY_BIT,
-                ProductType.SPOT,
-                "BTCUSDT",
-                Duration.ofMinutes(1)
-            )
-        )
-        client.subscribe(
-            ProductPriceKey(
-                Market.BY_BIT,
-                ProductType.SPOT,
-                "BTCUSDT",
-                Duration.ofMinutes(5)
-            )
-        )
         client.start()
-
 
         val message = serverListener.receiveMessage.receive()
         client.cancel()
@@ -157,16 +155,15 @@ class ByBitProductPriceWebSocketSendMessageTest : BaseByBitProductPriceWebSocket
     }
 }
 
+@DisplayName("가격 정보 메세지 수신 테스트")
 class ByBitProductPriceWebSocketReceiveMessageTest : BaseByBitProductPriceWebSocketTest() {
-    private lateinit var serverListener: ServerListener
     private lateinit var server: MockWebServer
 
     @BeforeEach
     fun setUp() {
-        serverListener = ServerListener()
         server = MockWebServer().also {
             it.start(port)
-            it.enqueue(MockResponse().withWebSocketUpgrade(serverListener))
+            it.enqueue(MockResponse().withWebSocketUpgrade(ServerListener()))
         }
     }
 
@@ -208,17 +205,15 @@ class ByBitProductPriceWebSocketReceiveMessageTest : BaseByBitProductPriceWebSoc
 
         client.start()
 
-        val (productPriceKey, productPrices) = receiveMessage.receive()
+        val (receiveProductPriceKey, receiveProductPrices) = receiveMessage.receive()
         client.cancel()
 
         assertEquals(
-            ProductPriceKey(
-                Market.BY_BIT,
-                ProductType.SPOT,
-                "BTCUSDT",
-                Duration.ofMinutes(1)
+            productPriceKey(
+                productCode = "BTCUSDT",
+                interval = Duration.ofMinutes(1)
             ),
-            productPriceKey
+            receiveProductPriceKey
         )
         assertEquals(
             listOf(
@@ -231,21 +226,20 @@ class ByBitProductPriceWebSocketReceiveMessageTest : BaseByBitProductPriceWebSoc
                     volume = "0.00010".toBigDecimal(),
                 )
             ),
-            productPrices
+            receiveProductPrices
         )
     }
 }
 
+@DisplayName("가격 정보 이외의 메세지 수신 테스트")
 class ByBitProductPriceWebSocketReceiveMessageTest2 : BaseByBitProductPriceWebSocketTest() {
-    private lateinit var serverListener: ServerListener
     private lateinit var server: MockWebServer
 
     @BeforeEach
     fun setUp() {
-        serverListener = ServerListener()
         server = MockWebServer().also {
             it.start(port)
-            it.enqueue(MockResponse().withWebSocketUpgrade(serverListener))
+            it.enqueue(MockResponse().withWebSocketUpgrade(ServerListener()))
         }
     }
 

@@ -70,7 +70,7 @@ class SetMarketAccountCommandTest {
     }
 
     @Test
-    fun mapToDomainEntity() {
+    fun toDomainEntity() {
         assertEquals(
             MarketAccount(
                 userId = 1,

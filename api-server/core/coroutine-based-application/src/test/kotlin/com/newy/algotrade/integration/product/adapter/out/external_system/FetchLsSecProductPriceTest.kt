@@ -9,13 +9,12 @@ import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.LsSecTrCode
 import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
 import com.newy.algotrade.domain.product.GetProductPriceHttpParam
-import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.domain.product.adapter.out.web.model.jackson.LsSecProductPriceHttpResponse
 import helpers.TestEnv
+import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.DisplayName
@@ -30,7 +29,7 @@ class LsSecProductPriceResponseDtoTest {
 
     @Test
     fun `분봉 차트 조회 Response`() {
-        val json = """
+        val rawResponse = """
             {
                 "t8412OutBlock": {
                     "rec_count": 500
@@ -49,13 +48,12 @@ class LsSecProductPriceResponseDtoTest {
             }
         """.trimIndent()
 
-        val response = converter.toObject<LsSecProductPriceHttpResponse>(
-            json,
-            LsSecProductPriceHttpResponse.jsonExtraValues(
-                code = LsSecTrCode.GET_PRODUCT_PRICE_BY_MINUTE.code,
-                interval = Duration.ofMinutes(1).toMinutes(),
-            )
-        )
+        val response = LsSecProductPriceHttpResponse.jsonExtraValues(
+            code = LsSecTrCode.GET_PRODUCT_PRICE_BY_MINUTE.code,
+            interval = Duration.ofMinutes(1).toMinutes(),
+        ).let { jsonExtraValues ->
+            converter.toObject<LsSecProductPriceHttpResponse>(rawResponse, jsonExtraValues)
+        }
 
         assertEquals(
             listOf(
@@ -73,7 +71,7 @@ class LsSecProductPriceResponseDtoTest {
 
     @Test
     fun `일봉 차트 조회 Response`() {
-        val json = """
+        val rawResponse = """
             {
                 "t8410OutBlock": {
                     "e_time": "153000"
@@ -92,13 +90,12 @@ class LsSecProductPriceResponseDtoTest {
         """.trimIndent()
 
 
-        val response = converter.toObject<LsSecProductPriceHttpResponse>(
-            json,
-            LsSecProductPriceHttpResponse.jsonExtraValues(
-                code = LsSecTrCode.GET_PRODUCT_PRICE_BY_DAY.code,
-                interval = Duration.ofDays(1).toMinutes(),
-            )
-        )
+        val response = LsSecProductPriceHttpResponse.jsonExtraValues(
+            code = LsSecTrCode.GET_PRODUCT_PRICE_BY_DAY.code,
+            interval = Duration.ofDays(1).toMinutes(),
+        ).let { jsonExtraValues ->
+            converter.toObject<LsSecProductPriceHttpResponse>(rawResponse, jsonExtraValues)
+        }
 
         assertEquals(
             listOf(
@@ -150,14 +147,12 @@ class FetchLsSecProductPriceTest {
             ),
             api.getProductPrices(
                 GetProductPriceHttpParam(
-                    ProductPriceKey(
-                        Market.LS_SEC,
-                        ProductType.SPOT,
-                        "078020",
-                        Duration.ofMinutes(1),
+                    productPriceKey = productPriceKey(
+                        productCode = "078020",
+                        interval = Duration.ofMinutes(1)
                     ),
-                    OffsetDateTime.parse("2024-05-03T00:00Z"),
-                    1,
+                    endTime = OffsetDateTime.parse("2024-05-03T00:00Z"),
+                    limit = 1,
                 )
             )
         )
@@ -178,14 +173,12 @@ class FetchLsSecProductPriceTest {
             ),
             api.getProductPrices(
                 GetProductPriceHttpParam(
-                    ProductPriceKey(
-                        Market.LS_SEC,
-                        ProductType.SPOT,
-                        "078020",
-                        Duration.ofDays(1),
+                    productPriceKey = productPriceKey(
+                        productCode = "078020",
+                        interval = Duration.ofDays(1)
                     ),
-                    OffsetDateTime.parse("2024-05-03T00:00Z"),
-                    1,
+                    endTime = OffsetDateTime.parse("2024-05-03T00:00Z"),
+                    limit = 1,
                 )
             )
         )

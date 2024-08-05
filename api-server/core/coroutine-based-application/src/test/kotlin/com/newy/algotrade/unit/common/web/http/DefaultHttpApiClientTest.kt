@@ -15,8 +15,8 @@ import okhttp3.OkHttpClient
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Assertions.assertEquals
 
-// TODO 테스트 코드 중복 제거(-> HttpApiClientTest)
 open class BaseTest {
     private val port = TestServerPort.nextValue()
     protected lateinit var client: HttpApiClient
@@ -61,27 +61,27 @@ class CommonFunctionTest : BaseTest() {
         )
 
         server.takeRequest().let {
-            Assertions.assertEquals("application/json", it.headers["Content-Type"])
-            Assertions.assertEquals("1", it.headers["X-Custom-Header"])
+            assertEquals("application/json", it.headers["Content-Type"])
+            assertEquals("1", it.headers["X-Custom-Header"])
         }
     }
 
     @Test
     fun `Response 무시하기`() = runBlocking {
         val parsed = client.get<Unit>(path = "/path")
-        Assertions.assertEquals(Unit, parsed)
+        assertEquals(Unit, parsed)
     }
 
     @Test
     fun `Response 를 String 으로 파싱하기`() = runBlocking {
         val parsed = client.get<String>(path = "/path")
-        Assertions.assertEquals("""{"key":1,"value":"a"}""", parsed)
+        assertEquals("""{"key":1,"value":"a"}""", parsed)
     }
 
     @Test
     fun `Response 를 Object 로 파싱하기`() = runBlocking {
         val parsed = client.get<SimpleData>(path = "/path")
-        Assertions.assertEquals(SimpleData(key = 1, value = "a"), parsed)
+        assertEquals(SimpleData(key = 1, value = "a"), parsed)
     }
 
     @Test
@@ -97,7 +97,13 @@ class CommonFunctionTest : BaseTest() {
             jsonExtraValues = mapOf("extraValue" to "b2"),
         )
 
-        Assertions.assertEquals(ExtraClass(key = 1, value = "a", extraValue = "b2"), parsed)
+        assertEquals(
+            ExtraClass(
+                key = 1,
+                value = "a",
+                extraValue = "b2"
+            ), parsed
+        )
     }
 }
 
@@ -113,7 +119,7 @@ class HttpMethodTest : BaseTest() {
             )
         )
 
-        Assertions.assertEquals("/path?category=spot&symbol=BTCUSDT", server.takeRequest().path)
+        assertEquals("/path?category=spot&symbol=BTCUSDT", server.takeRequest().path)
     }
 
     @Test
@@ -123,7 +129,7 @@ class HttpMethodTest : BaseTest() {
             body = SimpleData(key = 2, value = "b")
         )
 
-        Assertions.assertEquals("""{"key":2,"value":"b"}""", server.takeRequest().body.readUtf8())
+        assertEquals("""{"key":2,"value":"b"}""", server.takeRequest().body.readUtf8())
     }
 
     @Test
@@ -134,6 +140,6 @@ class HttpMethodTest : BaseTest() {
             body = FormData(Pair("value", "a"))
         )
 
-        Assertions.assertEquals("value=a", server.takeRequest().body.readUtf8())
+        assertEquals("value=a", server.takeRequest().body.readUtf8())
     }
 }

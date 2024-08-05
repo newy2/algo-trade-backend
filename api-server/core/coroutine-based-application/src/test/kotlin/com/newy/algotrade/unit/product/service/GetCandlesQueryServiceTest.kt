@@ -15,14 +15,14 @@ class GetCandlesQueryServiceTest {
         val beginTime = OffsetDateTime.parse("2024-05-01T00:00Z")
         val candlesPort = InMemoryCandleStoreAdapter().also {
             it.setCandles(
-                productPriceKey("BTCUSDT"),
-                listOf(productPrice(1000, Duration.ofMinutes(1), beginTime))
+                productPriceKey(productCode = "BTCUSDT"),
+                listOf(productPrice(amount = 1000, interval = Duration.ofMinutes(1), beginTime))
             )
             it.setCandles(
-                productPriceKey("005930"),
+                productPriceKey(productCode = "005930"),
                 listOf(
-                    productPrice(2000, Duration.ofMinutes(1), beginTime),
-                    productPrice(3000, Duration.ofMinutes(1), beginTime.plusMinutes(1)),
+                    productPrice(amount = 2000, interval = Duration.ofMinutes(1), beginTime),
+                    productPrice(amount = 3000, interval = Duration.ofMinutes(1), beginTime.plusMinutes(1)),
                 )
             )
         }
@@ -31,12 +31,12 @@ class GetCandlesQueryServiceTest {
 
         service.getCandles(productPriceKey("BTCUSDT")).let {
             assertEquals(1, it.size)
-            assertEquals(productPrice(1000, Duration.ofMinutes(1), beginTime), it[0])
+            assertEquals(productPrice(amount = 1000, interval = Duration.ofMinutes(1), beginTime), it[0])
         }
         service.getCandles(productPriceKey("005930")).let {
             assertEquals(2, it.size)
-            assertEquals(productPrice(2000, Duration.ofMinutes(1), beginTime), it[0])
-            assertEquals(productPrice(3000, Duration.ofMinutes(1), beginTime.plusMinutes(1)), it[1])
+            assertEquals(productPrice(amount = 2000, interval = Duration.ofMinutes(1), beginTime), it[0])
+            assertEquals(productPrice(amount = 3000, interval = Duration.ofMinutes(1), beginTime.plusMinutes(1)), it[1])
         }
     }
 }

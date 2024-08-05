@@ -15,6 +15,7 @@ import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
 class InMemoryStrategySignalHistoryStoreAdapterTest {
+    private val userStrategyId = "1"
     private val signal = StrategySignal(
         OrderType.BUY,
         Candle.TimeRange(
@@ -29,36 +30,28 @@ class InMemoryStrategySignalHistoryStoreAdapterTest {
     @BeforeEach
     fun setUp() = runBlocking {
         store = InMemoryStrategySignalHistoryStoreAdapter().also {
-            it.addHistory("id1", signal)
+            it.addHistory(userStrategyId, signal)
         }
     }
 
     @Test
     fun `등록한 히스토리 가져오기`() = runTest {
-        val registeredId = "id1"
-        val history = store.getHistory(registeredId)
-
-        history.strategySignals().let {
+        store.getHistory(userStrategyId).strategySignals().let {
             assertEquals(1, it.size)
             assertEquals(signal, it.first())
         }
     }
 
     @Test
-    fun `등록하지 않은 히스토리 가져오기`() = runTest {
-        val unRegisteredId = "id2"
-        val history = store.getHistory(unRegisteredId)
+    fun `등록한 히스토리 삭제하기`() = runTest {
+        store.removeHistory(userStrategyId)
 
-        assertTrue(history.isEmpty())
+        assertTrue(store.getHistory(userStrategyId).isEmpty())
     }
 
     @Test
-    fun `등록한 히스토리 삭제하기`() = runTest {
-        store.removeHistory("id1")
-
-        val removedId = "id1"
-        val history = store.getHistory(removedId)
-
-        assertTrue(history.isEmpty())
+    fun `등록하지 않은 히스토리 가져오기`() = runTest {
+        val unRegisteredId = "id2"
+        assertTrue(store.getHistory(unRegisteredId).isEmpty())
     }
 }

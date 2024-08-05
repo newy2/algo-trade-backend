@@ -10,9 +10,9 @@ import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
 import com.newy.algotrade.domain.product.GetProductPriceHttpParam
-import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.domain.product.adapter.out.web.model.jackson.ByBitProductPriceHttpResponse
 import helpers.TestEnv
+import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.DisplayName
@@ -23,11 +23,11 @@ import kotlin.test.assertEquals
 @DisplayName("상품 가격조회 API Response DTO")
 class ByBitProductPriceResponseDtoTest {
     private val converter = JsonConverterByJackson(jacksonObjectMapper())
-    private val extraValues = ByBitProductPriceHttpResponse.jsonExtraValues(1)
+    private val extraValues = ByBitProductPriceHttpResponse.jsonExtraValues(interval = 1)
 
     @Test
     fun `가격 정보가 없는 경우`() {
-        val json = """
+        val rawResponse = """
             {
                 "retCode": 0,
                 "retMsg": "OK",
@@ -41,14 +41,14 @@ class ByBitProductPriceResponseDtoTest {
             }
         """.trimIndent()
 
-        val response = converter.toObject<ByBitProductPriceHttpResponse>(json, extraValues)
+        val response = converter.toObject<ByBitProductPriceHttpResponse>(rawResponse, extraValues)
 
-        assertEquals(listOf(), response.prices)
+        assertEquals(emptyList(), response.prices)
     }
 
     @Test
     fun `가격 정보가 1개 있는 경우`() {
-        val json = """
+        val rawResponse = """
             {
                 "retCode": 0,
                 "retMsg": "OK",
@@ -72,7 +72,7 @@ class ByBitProductPriceResponseDtoTest {
             }
         """.trimIndent()
 
-        val response = converter.toObject<ByBitProductPriceHttpResponse>(json, extraValues)
+        val response = converter.toObject<ByBitProductPriceHttpResponse>(rawResponse, extraValues)
 
         assertEquals(
             listOf(
@@ -117,14 +117,12 @@ class FetchByBitProductPriceTest {
             ),
             client.getProductPrices(
                 GetProductPriceHttpParam(
-                    ProductPriceKey(
-                        Market.BY_BIT,
-                        ProductType.SPOT,
-                        "BTCUSDT",
-                        Duration.ofMinutes(1),
+                    productPriceKey = productPriceKey(
+                        productCode = "BTCUSDT",
+                        interval = Duration.ofMinutes(1),
                     ),
-                    OffsetDateTime.parse("2024-05-01T00:00Z"),
-                    1,
+                    endTime = OffsetDateTime.parse("2024-05-01T00:00Z"),
+                    limit = 1,
                 )
             )
         )
@@ -145,14 +143,12 @@ class FetchByBitProductPriceTest {
             ),
             client.getProductPrices(
                 GetProductPriceHttpParam(
-                    ProductPriceKey(
-                        Market.BY_BIT,
-                        ProductType.SPOT,
-                        "BTCUSDT",
-                        Duration.ofDays(1),
+                    productPriceKey = productPriceKey(
+                        productCode = "BTCUSDT",
+                        interval = Duration.ofDays(1),
                     ),
-                    OffsetDateTime.parse("2024-05-01T00:00Z"),
-                    1,
+                    endTime = OffsetDateTime.parse("2024-05-01T00:00Z"),
+                    limit = 1,
                 )
             )
         )
@@ -173,14 +169,13 @@ class FetchByBitProductPriceTest {
             ),
             client.getProductPrices(
                 GetProductPriceHttpParam(
-                    ProductPriceKey(
-                        Market.BY_BIT,
-                        ProductType.PERPETUAL_FUTURE,
-                        "BTCUSDT",
-                        Duration.ofMinutes(1),
+                    productPriceKey = productPriceKey(
+                        productCode = "BTCUSDT",
+                        productType = ProductType.PERPETUAL_FUTURE,
+                        interval = Duration.ofMinutes(1),
                     ),
-                    OffsetDateTime.parse("2024-05-01T00:00Z"),
-                    1,
+                    endTime = OffsetDateTime.parse("2024-05-01T00:00Z"),
+                    limit = 1,
                 )
             )
         )

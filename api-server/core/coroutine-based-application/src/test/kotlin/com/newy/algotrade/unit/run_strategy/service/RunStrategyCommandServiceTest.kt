@@ -6,7 +6,6 @@ import com.newy.algotrade.coroutine_based_application.product.service.GetCandles
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategySignalHistoryStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.OnCreatedStrategySignalPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategySignalHistoryPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyCommandService
 import com.newy.algotrade.domain.chart.order.OrderType
@@ -24,7 +23,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.OffsetDateTime
 
-private val now = OffsetDateTime.parse("2024-05-01T00:00Z")
+private val beginTime = OffsetDateTime.parse("2024-05-01T00:00Z")
 
 class BooleanStrategy(entry: Boolean, exit: Boolean) : Strategy(
     OrderType.BUY,
@@ -32,18 +31,15 @@ class BooleanStrategy(entry: Boolean, exit: Boolean) : Strategy(
     BooleanRule(exit),
 )
 
-private val BTC_1MINUTE = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
-private val ETH_1MINUTE = productPriceKey("ETHUSDT", Duration.ofMinutes(1))
+private val BTC_1MINUTE = productPriceKey(productCode = "BTCUSDT", interval = Duration.ofMinutes(1))
+private val ETH_1MINUTE = productPriceKey(productCode = "ETHUSDT", interval = Duration.ofMinutes(1))
 
+// TODO refector 테스트가 좀 복잡하다.
 @DisplayName("전략 실행하기 테스트")
-class RunStrategyCommandServiceTest : OnCreatedStrategySignalPort {
+class RunStrategyCommandServiceTest {
     private lateinit var service: RunStrategyUseCase
     private lateinit var strategySignalHistoryPort: StrategySignalHistoryPort
     private lateinit var results: MutableMap<String, StrategySignal>
-
-    override suspend fun onCreatedSignal(userStrategyId: String, orderSignal: StrategySignal) {
-        results[userStrategyId] = orderSignal
-    }
 
     @BeforeEach
     fun setUp() {
@@ -53,13 +49,13 @@ class RunStrategyCommandServiceTest : OnCreatedStrategySignalPort {
                 InMemoryCandleStoreAdapter().also {
                     it.setCandles(
                         BTC_1MINUTE, listOf(
-                            productPrice(1000, Duration.ofMinutes(1), now.plusMinutes(0)),
-                            productPrice(2000, Duration.ofMinutes(1), now.plusMinutes(1)),
+                            productPrice(amount = 1000, interval = Duration.ofMinutes(1), beginTime),
+                            productPrice(amount = 2000, interval = Duration.ofMinutes(1), beginTime.plusMinutes(1)),
                         )
                     )
                     it.setCandles(
                         ETH_1MINUTE, listOf(
-                            productPrice(1000, Duration.ofMinutes(1), now.plusMinutes(0)),
+                            productPrice(amount = 1000, interval = Duration.ofMinutes(1), beginTime),
                         )
                     )
                 }
@@ -70,16 +66,18 @@ class RunStrategyCommandServiceTest : OnCreatedStrategySignalPort {
                 it.setStrategy(userStrategyKey("id3", ETH_1MINUTE), BooleanStrategy(entry = true, exit = false))
             },
             strategySignalHistoryPort = strategySignalHistoryPort,
-            onCreatedStrategySignalPort = this
+            onCreatedStrategySignalPort = { userStrategyId, orderSignal ->
+                results[userStrategyId] = orderSignal
+            }
         )
         results = mutableMapOf()
     }
 
     @Test
-    fun `BTC 상품코드로 실행`() = runTest {
+    fun `BTC 상품코드로 전략 실행하기`() = runTest {
         service.runStrategy(BTC_1MINUTE)
 
-        val lastPrice = productPrice(2000, Duration.ofMinutes(1), now.plusMinutes(1))
+        val lastPrice = productPrice(2000, Duration.ofMinutes(1), beginTime.plusMinutes(1))
         val signal = StrategySignal(OrderType.BUY, lastPrice.time, lastPrice.price.close)
 
         assertEquals(mapOf("id1" to signal), results, "OrderSignal 은 Candles#lastCandle 값으로 생성되야 한다")
@@ -93,7 +91,7 @@ class RunStrategyCommandServiceTest : OnCreatedStrategySignalPort {
     fun `ETH 상품 코드로 실행`() = runTest {
         service.runStrategy(ETH_1MINUTE)
 
-        val lastPrice = productPrice(1000, Duration.ofMinutes(1), now.plusMinutes(0))
+        val lastPrice = productPrice(1000, Duration.ofMinutes(1), beginTime.plusMinutes(0))
         val signal = StrategySignal(OrderType.BUY, lastPrice.time, lastPrice.price.close)
 
         assertEquals(mapOf("id3" to signal), results, "OrderSignal 은 Candles#lastCandle 값으로 생성되야 한다")

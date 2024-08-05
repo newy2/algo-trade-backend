@@ -21,7 +21,7 @@ import kotlin.test.assertEquals
 
 @DisplayName("setCandles - 외부 API 호출 횟수 확인 테스트")
 class SetCandlesServiceApiCallTest : DefaultFetchProductPriceQuery() {
-    private val productPriceKey = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
+    private val productPriceKey = productPriceKey(productCode = "BTCUSDT", interval = Duration.ofMinutes(1))
     private var apiCallCount = 0
     private var pollingSubscribeCallCount = 0
     private lateinit var service: CandlesUseCase
@@ -58,7 +58,7 @@ class SetCandlesServiceApiCallTest : DefaultFetchProductPriceQuery() {
 
     @Test
     fun `같은 상품을 등록한 경우`() = runBlocking {
-        val sameProductPriceKey = productPriceKey
+        val sameProductPriceKey = productPriceKey.copy()
         service.setCandles(sameProductPriceKey)
 
         assertEquals(1, apiCallCount, "ProductPriceKey 가 같으므로 초기 데이터 조회 API 호출하지 않음")
@@ -79,12 +79,12 @@ class SetCandlesServiceApiCallTest : DefaultFetchProductPriceQuery() {
 
 @DisplayName("setCandles - CandlePort 확인 테스트")
 class SetCandleCandlePortTest : DefaultFetchProductPriceQuery() {
-    private val productPriceKey = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
+    private val productPriceKey = productPriceKey(productCode = "BTCUSDT", interval = Duration.ofMinutes(1))
     private lateinit var candlePort: CandlePort
     private lateinit var service: CandlesUseCase
 
     override suspend fun fetchInitProductPrices(productPriceKey: ProductPriceKey): List<ProductPrice> {
-        return listOf(productPrice(1000, productPriceKey.interval))
+        return listOf(productPrice(amount = 2000, interval = productPriceKey.interval))
     }
 
     @BeforeEach
@@ -98,43 +98,45 @@ class SetCandleCandlePortTest : DefaultFetchProductPriceQuery() {
 
     @BeforeEach
     fun `초기 데이터 입력`(): Unit = runBlocking {
-        service.setCandles(productPriceKey).also { savedCandles ->
-            assertEquals(savedCandles, candlePort.getCandles(productPriceKey))
-        }
+        candlePort.setCandles(
+            key = productPriceKey,
+            list = listOf(productPrice(amount = 1000, interval = productPriceKey.interval))
+        )
     }
 
     @Test
     fun `CandlePort 저장 상태 확인`() = runBlocking {
         assertCandles(
-            expectedFirstCandle = productPrice(1000, Duration.ofMinutes(1)),
+            expectedFirstCandle = productPrice(amount = 1000, interval = Duration.ofMinutes(1)),
             candles = candlePort.getCandles(productPriceKey)
         )
     }
 
     @Test
-    fun `같은 상품을 등록한 경우`() = runBlocking {
+    fun `같은 상품을 등록하는 경우 - candlePort 에 데이터가 저장되어 있으면, 외부 API(fetchInitProductPrices)를 호출하지 않는다`() = runBlocking {
         val sameProductPriceKey = productPriceKey.also {
             service.setCandles(it)
         }
 
         assertCandles(
-            expectedFirstCandle = productPrice(1000, Duration.ofMinutes(1)),
+            expectedFirstCandle = productPrice(amount = 1000, interval = Duration.ofMinutes(1)),
             candles = candlePort.getCandles(sameProductPriceKey)
         )
     }
 
     @Test
-    fun `다른 상품을 등록한 경우`() = runBlocking {
+    fun `다른 상품을 등록한 경우 - 외부 API(fetchInitProductPrices)를 호출해서 candlePort 에 저장한다`() = runBlocking {
         val differentProductPriceKey = productPriceKey.copy(interval = Duration.ofMinutes(5)).also {
             service.setCandles(it)
         }
 
         assertCandles(
-            expectedFirstCandle = productPrice(1000, Duration.ofMinutes(1)),
+            expectedFirstCandle = productPrice(amount = 1000, interval = Duration.ofMinutes(1)),
             candles = candlePort.getCandles(productPriceKey)
         )
         assertCandles(
-            expectedFirstCandle = productPrice(1000, Duration.ofMinutes(5)),
+            // fetchInitProductPrices 메소드의 결과값으로 등록됨
+            expectedFirstCandle = productPrice(amount = 2000, interval = Duration.ofMinutes(5)),
             candles = candlePort.getCandles(differentProductPriceKey)
         )
     }
@@ -147,7 +149,7 @@ class SetCandleCandlePortTest : DefaultFetchProductPriceQuery() {
 
 @DisplayName("addCandle - 캔들 추가 테스트")
 class AddCandleServiceTest {
-    private val productPriceKey = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
+    private val productPriceKey = productPriceKey(productCode = "BTCUSDT", interval = Duration.ofMinutes(1))
     private lateinit var candlePort: CandlePort
     private lateinit var service: CandlesCommandService
 
@@ -176,8 +178,11 @@ class AddCandleServiceTest {
                     productPrice(1000, Duration.ofMinutes(1), beginTime.plusMinutes(1)),
                 )
             }.also {
+                // 초기 데이터 설정
                 candlePort.setCandles(productPriceKey, listOf(it[0]))
             }
+
+        // 이후 데이터 추가
         service.addCandles(productPriceKey, listOf(productPriceList[1]))
 
         candlePort.getCandles(productPriceKey).let {
@@ -190,7 +195,7 @@ class AddCandleServiceTest {
 
 @DisplayName("removeCandles - 캔들 삭제 테스트")
 class RemoveCandleServiceTest : DefaultFetchProductPriceQuery() {
-    private val productPriceKey = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
+    private val productPriceKey = productPriceKey(productCode = "BTCUSDT", interval = Duration.ofMinutes(1))
     private var unPollingSubscribeCallCount = 0
     private lateinit var candlePort: CandlePort
     private lateinit var service: CandlesCommandService

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.awaitCall
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import helpers.TestServerPort
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import okhttp3.FormBody
 import okhttp3.Headers
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
+@OptIn(ExperimentalCoroutinesApi::class)
 class OkHttpTest {
     private val port = TestServerPort.nextValue()
     private val jsonConverter = JsonConverterByJackson(jacksonObjectMapper())
@@ -58,13 +60,13 @@ class OkHttpTest {
     }
 
     @Test
-    fun `기본 header 값 오버라이딩`() = runBlocking {
-        val request = baseRequest.newBuilder()
+    fun `기본 request header 값 오버라이딩`() = runBlocking {
+        val overrideHeadersRequest = baseRequest.newBuilder()
             .header("X-Custom-Header", "2")
             .header("X-Other-Custom-Header", "abc")
             .build()
 
-        client.newCall(request).awaitCall()
+        client.newCall(overrideHeadersRequest).awaitCall()
 
         server.takeRequest().let {
             assertEquals("application/json", it.headers["Content-Type"])

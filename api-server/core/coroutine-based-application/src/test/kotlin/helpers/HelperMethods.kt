@@ -8,11 +8,15 @@ import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import java.time.Duration
 import java.time.OffsetDateTime
 
-fun productPriceKey(productCode: String, interval: Duration = Duration.ofMinutes(1)) =
+fun productPriceKey(
+    productCode: String,
+    interval: Duration = Duration.ofMinutes(1),
+    productType: ProductType = ProductType.SPOT,
+) =
     if (productCode == "BTCUSDT")
-        ProductPriceKey(Market.BY_BIT, ProductType.SPOT, productCode, interval)
+        ProductPriceKey(Market.BY_BIT, productType, productCode, interval)
     else
-        ProductPriceKey(Market.LS_SEC, ProductType.SPOT, productCode, interval)
+        ProductPriceKey(Market.LS_SEC, productType, productCode, interval)
 
 fun userStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey) =
     UserStrategyKey(

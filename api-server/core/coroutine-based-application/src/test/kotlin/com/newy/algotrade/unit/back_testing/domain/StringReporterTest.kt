@@ -12,36 +12,39 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.OffsetDateTime
 
+@DisplayName("빈 문자열 리포트")
+class EmptyHistoryStringReporterTest {
+    @Test
+    fun `빈 히스토리 리포트`() {
+        val emptyHistory = StrategySignalHistory()
+
+        assertEquals("", StringReporter(emptyHistory).report())
+    }
+}
+
 @DisplayName("롱주문 문자열 리포트")
 class LongOrderStringReporterTest {
-    private val emptyHistory = StrategySignalHistory()
     private lateinit var history: StrategySignalHistory
+    private lateinit var reporter: StringReporter
 
     @BeforeEach
     fun setUp() {
         history = StrategySignalHistory().also {
-            it.add(
-                StrategySignal(
-                    OrderType.BUY,
-                    Candle.TimeRange(
-                        Duration.ofMinutes(1),
-                        OffsetDateTime.parse("2024-05-09T00:00+09:00")
-                    ),
-                    1000.toBigDecimal()
-                )
+            val entrySignal = StrategySignal(
+                orderType = OrderType.BUY,
+                timeFrame = Candle.TimeRange(
+                    Duration.ofMinutes(1),
+                    OffsetDateTime.parse("2024-05-09T00:00+09:00")
+                ),
+                price = 1000.toBigDecimal()
             )
+            it.add(entrySignal)
         }
-    }
-
-    @Test
-    fun empty() {
-        val reporter = StringReporter(emptyHistory)
-        assertEquals("", reporter.report())
+        reporter = StringReporter(history)
     }
 
     @Test
     fun `entry 주문만 있는 경우`() {
-        val reporter = StringReporter(history)
         assertEquals(
             """
                 ENTRY TIME: 2024-05-09T00:00+09:00
@@ -59,18 +62,17 @@ class LongOrderStringReporterTest {
 
     @Test
     fun `entry, exit 주문이 있는 경우`() {
-        history.add(
-            StrategySignal(
-                history.lastOrderType().completedType(),
-                Candle.TimeRange(
-                    Duration.ofMinutes(1),
-                    OffsetDateTime.parse("2024-05-09T00:01+09:00")
-                ),
-                1500.toBigDecimal()
-            )
-        )
+        StrategySignal(
+            orderType = history.lastOrderType().completedType(),
+            timeFrame = Candle.TimeRange(
+                Duration.ofMinutes(1),
+                OffsetDateTime.parse("2024-05-09T00:01+09:00")
+            ),
+            price = 1500.toBigDecimal()
+        ).let { exitSignal ->
+            history.add(exitSignal)
+        }
 
-        val reporter = StringReporter(history)
         assertEquals(
             """
                 ENTRY TIME: 2024-05-09T00:00+09:00
@@ -88,28 +90,28 @@ class LongOrderStringReporterTest {
 
     @Test
     fun `entry, exit, entry 주문이 있는 경우`() {
-        history.add(
-            StrategySignal(
-                history.lastOrderType().completedType(),
-                Candle.TimeRange(
-                    Duration.ofMinutes(1),
-                    OffsetDateTime.parse("2024-05-09T00:01+09:00")
-                ),
-                1500.toBigDecimal()
-            )
-        )
-        history.add(
-            StrategySignal(
-                history.lastOrderType().completedType(),
-                Candle.TimeRange(
-                    Duration.ofMinutes(1),
-                    OffsetDateTime.parse("2024-05-09T00:02+09:00")
-                ),
-                2000.toBigDecimal()
-            )
-        )
+        StrategySignal(
+            orderType = history.lastOrderType().completedType(),
+            timeFrame = Candle.TimeRange(
+                Duration.ofMinutes(1),
+                OffsetDateTime.parse("2024-05-09T00:01+09:00")
+            ),
+            price = 1500.toBigDecimal()
+        ).let { exitSignal ->
+            history.add(exitSignal)
+        }
 
-        val reporter = StringReporter(history)
+        StrategySignal(
+            orderType = history.lastOrderType().completedType(),
+            timeFrame = Candle.TimeRange(
+                Duration.ofMinutes(1),
+                OffsetDateTime.parse("2024-05-09T00:02+09:00")
+            ),
+            price = 2000.toBigDecimal()
+        ).let { nextEntrySignal ->
+            history.add(nextEntrySignal)
+        }
+
         assertEquals(
             """
                 ENTRY TIME: 2024-05-09T00:00+09:00
@@ -134,26 +136,26 @@ class LongOrderStringReporterTest {
 @DisplayName("숏주문 문자열 리포트")
 class ShortOrderStringReporterTest {
     private lateinit var history: StrategySignalHistory
+    private lateinit var reporter: StringReporter
 
     @BeforeEach
     fun setUp() {
         history = StrategySignalHistory().also {
-            it.add(
-                StrategySignal(
-                    OrderType.SELL,
-                    Candle.TimeRange(
-                        Duration.ofMinutes(1),
-                        OffsetDateTime.parse("2024-05-09T00:00+09:00")
-                    ),
-                    1000.toBigDecimal()
-                )
+            val entrySignal = StrategySignal(
+                orderType = OrderType.SELL,
+                timeFrame = Candle.TimeRange(
+                    Duration.ofMinutes(1),
+                    OffsetDateTime.parse("2024-05-09T00:00+09:00")
+                ),
+                price = 1000.toBigDecimal()
             )
+            it.add(entrySignal)
         }
+        reporter = StringReporter(history)
     }
 
     @Test
     fun `entry 주문만 있는 경우`() {
-        val reporter = StringReporter(history)
         assertEquals(
             """
                 ENTRY TIME: 2024-05-09T00:00+09:00
@@ -171,18 +173,17 @@ class ShortOrderStringReporterTest {
 
     @Test
     fun `entry, exit 주문이 있는 경우`() {
-        history.add(
-            StrategySignal(
-                history.lastOrderType().completedType(),
-                Candle.TimeRange(
-                    Duration.ofMinutes(1),
-                    OffsetDateTime.parse("2024-05-09T00:01+09:00")
-                ),
-                500.toBigDecimal()
-            )
-        )
+        StrategySignal(
+            orderType = history.lastOrderType().completedType(),
+            timeFrame = Candle.TimeRange(
+                Duration.ofMinutes(1),
+                OffsetDateTime.parse("2024-05-09T00:01+09:00")
+            ),
+            price = 500.toBigDecimal()
+        ).let { exitSignal ->
+            history.add(exitSignal)
+        }
 
-        val reporter = StringReporter(history)
         assertEquals(
             """
                 ENTRY TIME: 2024-05-09T00:00+09:00
@@ -200,28 +201,28 @@ class ShortOrderStringReporterTest {
 
     @Test
     fun `entry, exit, entry 주문이 있는 경우`() {
-        history.add(
-            StrategySignal(
-                history.lastOrderType().completedType(),
-                Candle.TimeRange(
-                    Duration.ofMinutes(1),
-                    OffsetDateTime.parse("2024-05-09T00:01+09:00")
-                ),
-                500.toBigDecimal()
-            )
-        )
-        history.add(
-            StrategySignal(
-                history.lastOrderType().completedType(),
-                Candle.TimeRange(
-                    Duration.ofMinutes(1),
-                    OffsetDateTime.parse("2024-05-09T00:02+09:00")
-                ),
-                300.toBigDecimal()
-            )
-        )
+        StrategySignal(
+            orderType = history.lastOrderType().completedType(),
+            timeFrame = Candle.TimeRange(
+                Duration.ofMinutes(1),
+                OffsetDateTime.parse("2024-05-09T00:01+09:00")
+            ),
+            price = 500.toBigDecimal()
+        ).let { exitSignal ->
+            history.add(exitSignal)
+        }
 
-        val reporter = StringReporter(history)
+        StrategySignal(
+            orderType = history.lastOrderType().completedType(),
+            timeFrame = Candle.TimeRange(
+                Duration.ofMinutes(1),
+                OffsetDateTime.parse("2024-05-09T00:02+09:00")
+            ),
+            price = 300.toBigDecimal()
+        ).let { nextEntrySignal ->
+            history.add(nextEntrySignal)
+        }
+
         assertEquals(
             """
                 ENTRY TIME: 2024-05-09T00:00+09:00

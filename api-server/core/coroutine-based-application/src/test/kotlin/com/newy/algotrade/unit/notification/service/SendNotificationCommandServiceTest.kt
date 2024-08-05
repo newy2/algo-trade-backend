@@ -50,6 +50,7 @@ class RequestSendNotificationTest {
             }
             delay(1000) // wait for addListener
         }
+
         val savedId: Long = 100
         val service = newSendNotificationCommandService(
             createSendNotificationLogPort = { _, _ -> savedId },
@@ -122,6 +123,12 @@ class SendNotificationCommandServiceHttpClientTest() {
     fun `http client 가 호출하는 path 와 body 확인하기`() = runTest {
         var calledPath = ""
         var calledBody: NotificationRequestMessageFormat? = null
+        val httpApiClient = newHttpClient { path, body ->
+            calledPath = path
+            calledBody = body as NotificationRequestMessageFormat
+            "ok"
+        }
+
         val service = newSendNotificationCommandService(
             getSendNotificationLogPort = { _ ->
                 slackSendNotificationLog.copy(
@@ -129,11 +136,7 @@ class SendNotificationCommandServiceHttpClientTest() {
                     requestMessage = "매수 알림"
                 )
             },
-            httpApiClient = newHttpClient { path, body ->
-                calledPath = path
-                calledBody = body as NotificationRequestMessageFormat
-                "ok"
-            },
+            httpApiClient = httpApiClient,
         )
 
         service.sendNotification(SendNotificationEvent(sendNotificationLogId = 1))
@@ -147,9 +150,9 @@ class SendNotificationCommandServiceHttpClientTest() {
 class SendNotificationCommandServiceExceptionTest {
     @Test
     fun `저장되지 않은 ID 로 sendNotification 을 호출하는 경우`() = runTest {
-        val service = newSendNotificationCommandService(
-            getSendNotificationLogPort = { _ -> null },
-        )
+        val notFoundLogAdapter = GetSendNotificationLogPort { null }
+        val service = newSendNotificationCommandService(getSendNotificationLogPort = notFoundLogAdapter)
+
         try {
             service.sendNotification(SendNotificationEvent(sendNotificationLogId = 2))
             fail()
@@ -164,9 +167,11 @@ class SendNotificationCommandServiceExceptionTest {
             .values()
             .filter { it != REQUESTED }
             .forEach { notRequestStatus ->
-                val service = newSendNotificationCommandService(
-                    getSendNotificationLogPort = { _ -> slackSendNotificationLog.copy(status = notRequestStatus) },
-                )
+                val notPreConditionLogAdapter = GetSendNotificationLogPort {
+                    slackSendNotificationLog.copy(status = notRequestStatus)
+                }
+                val service = newSendNotificationCommandService(getSendNotificationLogPort = notPreConditionLogAdapter)
+
                 try {
                     service.sendNotification(SendNotificationEvent(sendNotificationLogId = 1))
                     fail()
@@ -191,7 +196,6 @@ private fun newSendNotificationCommandService(
     getSendNotificationLogPort = getSendNotificationLogPort,
 )
 
-//private typealias PostMethodBlock
 private fun newHttpClient(postMethodBlock: (String, Any) -> String): NoErrorHttpClient {
     return object : NoErrorHttpClient() {
         override suspend fun <T : Any> _post(

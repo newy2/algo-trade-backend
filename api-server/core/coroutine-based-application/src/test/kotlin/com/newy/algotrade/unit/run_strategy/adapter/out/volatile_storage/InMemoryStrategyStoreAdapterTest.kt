@@ -15,24 +15,6 @@ import java.time.Duration
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-open class BaseTest {
-    protected fun createStrategy(key: UserStrategyKey): Strategy {
-        return Strategy.fromClassName(key.strategyClassName, DEFAULT_CHART_FACTORY.candles())
-    }
-
-    protected fun createUserStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey): UserStrategyKey {
-        return UserStrategyKey(
-            userStrategyId,
-            "BuyTripleRSIStrategy",
-            productPriceKey
-        )
-    }
-
-    protected fun createProductPriceKey(productCode: String): ProductPriceKey {
-        return productPriceKey(productCode, Duration.ofMinutes(1))
-    }
-}
-
 @DisplayName("InMemoryStrategyStoreTest 기본 기능 테스트")
 class InMemoryStrategyStoreAdapterTest : BaseTest() {
     private val productPriceKey = createProductPriceKey("BTCUSDT")
@@ -60,26 +42,23 @@ class InMemoryStrategyStoreAdapterTest : BaseTest() {
 
     @Test
     fun `productPriceKey 에 매칭되는 strategy 맵 가져오기`() {
-        val filteredMap = store.filterBy(productPriceKey)
-
-        assertEquals(mapOf(userStrategyKey to strategy), filteredMap)
+        assertEquals(mapOf(userStrategyKey to strategy), store.filterBy(productPriceKey))
     }
 
     @Test
     fun `같은 productPriceKey 를 가진 사용자 전략을 추가한 경우`() {
-        val sameProduct = createProductPriceKey("BTCUSDT")
-        val userStrategyKey2 = createUserStrategyKey("id2", sameProduct)
+        val sameProductKey = createProductPriceKey("BTCUSDT")
+        val userStrategyKey2 = createUserStrategyKey("id2", sameProductKey)
         val strategy2 = createStrategy(userStrategyKey2)
 
         store.setStrategy(userStrategyKey2, strategy2)
-        val filteredMap = store.filterBy(createProductPriceKey("BTCUSDT"))
 
         assertEquals(
             mapOf(
                 userStrategyKey to strategy,
                 userStrategyKey2 to strategy2
             ),
-            filteredMap
+            store.filterBy(sameProductKey)
         )
     }
 
@@ -90,8 +69,26 @@ class InMemoryStrategyStoreAdapterTest : BaseTest() {
         val strategy2 = createStrategy(userStrategyKey2)
 
         store.setStrategy(userStrategyKey2, strategy2)
-        val filteredMap = store.filterBy(createProductPriceKey("BTCUSDT"))
 
-        assertEquals(mapOf(userStrategyKey to strategy), filteredMap)
+        assertEquals(mapOf(userStrategyKey to strategy), store.filterBy(productPriceKey))
+        assertEquals(mapOf(userStrategyKey2 to strategy2), store.filterBy(differentProduct))
+    }
+}
+
+open class BaseTest {
+    protected fun createStrategy(key: UserStrategyKey): Strategy {
+        return Strategy.fromClassName(key.strategyClassName, DEFAULT_CHART_FACTORY.candles())
+    }
+
+    protected fun createUserStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey): UserStrategyKey {
+        return UserStrategyKey(
+            userStrategyId,
+            "BuyTripleRSIStrategy",
+            productPriceKey
+        )
+    }
+
+    protected fun createProductPriceKey(productCode: String): ProductPriceKey {
+        return productPriceKey(productCode, Duration.ofMinutes(1))
     }
 }

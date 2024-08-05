@@ -3,9 +3,8 @@ package com.newy.algotrade.unit.back_testing.domain
 import com.newy.algotrade.coroutine_based_application.back_testing.domain.BackTestingFileManager
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.product.ProductPriceKey
+import helpers.productPriceKey
 import org.junit.AfterClass
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.DisplayName
@@ -20,14 +19,12 @@ import kotlin.test.assertTrue
 @DisplayName("저장된 파일 테스트")
 class ExistsFileBackTestingFileManagerTest {
     private val key = BackTestingDataKey(
-        ProductPriceKey(
-            Market.BY_BIT,
-            ProductType.SPOT,
-            "BTCUSDT",
-            Duration.ofMinutes(1),
+        productPriceKey = productPriceKey(
+            productCode = "BTCUSDT",
+            interval = Duration.ofMinutes(1)
         ),
-        OffsetDateTime.parse("9999-01-01T00:00+09:00"),
-        OffsetDateTime.parse("9999-01-01T00:01+09:00")
+        searchBeginTime = OffsetDateTime.parse("9999-01-01T00:00+09:00"),
+        searchEndTime = OffsetDateTime.parse("9999-01-01T00:01+09:00")
     )
     private val manager = BackTestingFileManager()
 
@@ -64,14 +61,13 @@ class ExistsFileBackTestingFileManagerTest {
 @DisplayName("없는 파일 테스트")
 class EmptyFileBackTestingFileManagerTest {
     private val key = BackTestingDataKey(
-        ProductPriceKey(
-            Market.LS_SEC,
-            ProductType.PERPETUAL_FUTURE,
-            "078020",
-            Duration.ofDays(1),
+        productPriceKey = productPriceKey(
+            productCode = "078020",
+            interval = Duration.ofDays(1),
+            productType = ProductType.PERPETUAL_FUTURE,
         ),
-        OffsetDateTime.parse("0000-01-01T00:00Z"),
-        OffsetDateTime.parse("0000-01-01T00:01Z")
+        searchBeginTime = OffsetDateTime.parse("0000-01-01T00:00Z"),
+        searchEndTime = OffsetDateTime.parse("0000-01-01T00:01Z")
     )
     private val manager = BackTestingFileManager()
 
@@ -98,11 +94,9 @@ class EmptyFileBackTestingFileManagerTest {
 @DisplayName("기본 기능 테스트")
 class BackTestingFileManagerTest {
     private val key = BackTestingDataKey(
-        ProductPriceKey(
-            Market.BY_BIT,
-            ProductType.SPOT,
-            "BTCUSDT",
-            Duration.ofMinutes(1)
+        productPriceKey = productPriceKey(
+            productCode = "BTCUSDT",
+            interval = Duration.ofMinutes(1)
         ),
         searchBeginTime = OffsetDateTime.parse("8888-01-01T00:00+09:00"),
         searchEndTime = OffsetDateTime.parse("8888-01-01T00:01+09:00"),
@@ -134,7 +128,7 @@ class BackTestingFileManagerTest {
 
         manager.setList(key, list)
 
-        assertEquals(manager.getList(key), list)
+        assertEquals(list, manager.getList(key))
     }
 
     @Test
@@ -152,7 +146,7 @@ class BackTestingFileManagerTest {
             )
         )
 
-        val list = listOf(
+        val replacedList = listOf(
             Candle.TimeFrame.M1(
                 OffsetDateTime.parse("8888-01-01T00:00+09:00"),
                 openPrice = 200.0.toBigDecimal(),
@@ -162,8 +156,8 @@ class BackTestingFileManagerTest {
                 volume = 50.0.toBigDecimal(),
             )
         )
-        manager.setList(key, list)
+        manager.setList(key, replacedList)
 
-        assertEquals(manager.getList(key), list)
+        assertEquals(replacedList, manager.getList(key))
     }
 }

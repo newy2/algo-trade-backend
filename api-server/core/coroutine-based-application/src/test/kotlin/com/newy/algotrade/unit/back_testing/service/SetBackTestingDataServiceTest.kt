@@ -5,9 +5,7 @@ import com.newy.algotrade.coroutine_based_application.back_testing.domain.BackTe
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.back_testing.service.SetBackTestingDataService
 import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.product.ProductPriceKey
+import helpers.productPriceKey
 import kotlinx.coroutines.test.runTest
 import org.junit.AfterClass
 import org.junit.jupiter.api.Test
@@ -19,11 +17,9 @@ import kotlin.test.assertTrue
 
 class SetBackTestingDataServiceTest {
     private val key = BackTestingDataKey(
-        ProductPriceKey(
-            Market.BY_BIT,
-            ProductType.SPOT,
-            "BTCUSDT",
-            Duration.ofMinutes(1)
+        productPriceKey = productPriceKey(
+            productCode = "BTCUSDT",
+            interval = Duration.ofMinutes(1)
         ),
         searchBeginTime = OffsetDateTime.parse("8888-01-01T00:00+09:00"),
         searchEndTime = OffsetDateTime.parse("8888-01-01T00:01+09:00"),

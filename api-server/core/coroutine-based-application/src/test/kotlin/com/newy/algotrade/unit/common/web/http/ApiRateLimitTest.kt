@@ -10,11 +10,8 @@ import kotlin.test.assertEquals
 
 class ApiRateLimitTest {
     @Test
-    fun `외부 API 초당 최대 호출 제한`() = runTest {
-        val limiter = HttpApiRateLimit(
-            delayMillis = 10,
-            coroutineContext
-        )
+    fun `요청 IP 단위로 API 호출 횟수 제한이 걸린 경우`() = runTest {
+        val limiter = HttpApiRateLimit(delayMillis = 10, coroutineContext)
 
         var counter = 0
         var log = ""
@@ -32,28 +29,26 @@ class ApiRateLimitTest {
                 limiter.await()
                 counter++
                 log += "request2 "
-                delay(3)
+                delay(1)
             }
         }
 
-        delay(39)
+        delay(35)
         limiter.cancel()
+
         assertEquals(3, counter)
-        assertEquals("request1 request2 request1 ", log)
+        assertEquals("request1 request2 request1 ", log, "총 3번만 실행됨")
     }
 
     @Test
-    fun `계정별로 초당 호출 제한이 있는 경우`() = runTest {
-        val limiter = HttpApiRateLimit(
-            delayMillis = 10,
-            coroutineContext
-        )
+    fun `계정 별로 API 호출 횟수 제한이 걸린 경우`() = runTest {
+        val limiter = HttpApiRateLimit(delayMillis = 10, coroutineContext)
 
         var counter = 0
         var log = ""
         launch {
             while (isActive) {
-                limiter.await("user1")
+                limiter.await(requestId = "user1")
                 counter++
                 log += "request1 "
                 delay(1)
@@ -62,16 +57,16 @@ class ApiRateLimitTest {
 
         launch {
             while (isActive) {
-                limiter.await("user2")
+                limiter.await(requestId = "user2")
                 counter++
                 log += "request2 "
-                delay(3)
+                delay(1)
             }
         }
 
-        delay(39)
+        delay(35)
         limiter.cancel()
         assertEquals(6, counter)
-        assertEquals("request1 request2 request1 request2 request1 request2 ", log)
+        assertEquals("request1 request2 request1 request2 request1 request2 ", log, "계정 별로 각각 3번씩 실행됨")
     }
 }

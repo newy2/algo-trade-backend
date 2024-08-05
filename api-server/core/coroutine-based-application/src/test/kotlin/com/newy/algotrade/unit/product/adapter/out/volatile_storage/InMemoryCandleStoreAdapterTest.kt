@@ -35,43 +35,49 @@ class InMemoryCandleStoreAdapterTest {
 
     @Test
     fun `candles 등록하기`() = runBlocking {
-        store.setCandles(productPriceKey, listOf(productPriceWith(1000, now)))
+        store.setCandles(productPriceKey, listOf(productPriceWith(price = 1000, beginTime = now)))
 
         assertCandleSize(expectedSize = 1)
-        assertEquals(productPriceWith(1000, now), store.getCandles(productPriceKey)[0])
+        assertEquals(
+            productPriceWith(price = 1000, beginTime = now),
+            store.getCandles(productPriceKey)[0]
+        )
     }
 
     @Test
     fun `candles 덮어쓰기`() = runBlocking {
-        store.setCandles(productPriceKey, listOf(productPriceWith(1000, now.plusMinutes(0))))
-        store.setCandles(productPriceKey, listOf(productPriceWith(2000, now.plusMinutes(1))))
+        store.setCandles(productPriceKey, listOf(productPriceWith(price = 1000, beginTime = now.plusMinutes(0))))
+        store.setCandles(productPriceKey, listOf(productPriceWith(price = 2000, beginTime = now.plusMinutes(1))))
 
         assertCandleSize(expectedSize = 1)
-        assertEquals(productPriceWith(2000, now.plusMinutes(1)), store.getCandles(productPriceKey)[0])
+        assertEquals(
+            productPriceWith(price = 2000, beginTime = now.plusMinutes(1)),
+            store.getCandles(productPriceKey)[0]
+        )
     }
 
     @Test
     fun `candles 등록 후 추가하기`() = runBlocking {
-        store.setCandles(productPriceKey, listOf(productPriceWith(1000, now.plusMinutes(0))))
-        store.addCandles(productPriceKey, listOf(productPriceWith(2000, now.plusMinutes(1))))
+        store.setCandles(productPriceKey, listOf(productPriceWith(price = 1000, beginTime = now.plusMinutes(0))))
+        store.addCandles(productPriceKey, listOf(productPriceWith(price = 2000, beginTime = now.plusMinutes(1))))
 
         assertCandleSize(expectedSize = 2)
         store.getCandles(productPriceKey).let {
-            assertEquals(productPriceWith(1000, now), it[0])
-            assertEquals(productPriceWith(2000, now.plusMinutes(1)), it[1])
+            assertEquals(productPriceWith(price = 1000, beginTime = now), it[0])
+            assertEquals(productPriceWith(price = 2000, beginTime = now.plusMinutes(1)), it[1])
         }
     }
 
     @Test
     fun `CandlePort#setCandles 을 호출하지 않으면, CandlePort#addCandles 의 호출은 무시된다`() = runBlocking {
-        store.addCandles(productPriceKey, listOf(productPriceWith(1000, now)))
+        store.addCandles(productPriceKey, listOf(productPriceWith(price = 1000, beginTime = now)))
 
         assertCandleSize(expectedSize = 0)
     }
 
     @Test
     fun `candles 삭제하기`() = runBlocking {
-        store.setCandles(productPriceKey, listOf(productPriceWith(1000, now)))
+        store.setCandles(productPriceKey, listOf(productPriceWith(price = 1000, beginTime = now)))
         store.removeCandles(productPriceKey)
 
         assertCandleSize(expectedSize = 0)

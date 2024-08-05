@@ -7,31 +7,31 @@ import org.junit.jupiter.api.assertDoesNotThrow
 import org.junit.jupiter.api.assertThrows
 
 class SendNotificationCommandTest {
-    private val dto = SendNotificationCommand(
+    private val incomingPortModel = SendNotificationCommand(
         notificationAppId = 1,
         requestMessage = "request message",
     )
 
     @Test
     fun `notificationAppId 는 0 이상이어야 함`() {
-        assertThrows<ConstraintViolationException> { dto.copy(notificationAppId = -1) }
-        assertThrows<ConstraintViolationException> { dto.copy(notificationAppId = 0) }
+        assertThrows<ConstraintViolationException> { incomingPortModel.copy(notificationAppId = -1) }
+        assertThrows<ConstraintViolationException> { incomingPortModel.copy(notificationAppId = 0) }
         assertDoesNotThrow {
-            dto.copy(notificationAppId = 1)
-            dto.copy(notificationAppId = 2)
+            incomingPortModel.copy(notificationAppId = 1)
+            incomingPortModel.copy(notificationAppId = 2)
         }
     }
 
     @Test
     fun `message 는 빈 문자열이연 안됨`() {
         assertThrows<ConstraintViolationException> {
-            dto.copy(requestMessage = "")
+            incomingPortModel.copy(requestMessage = "")
         }
         assertThrows<ConstraintViolationException> {
-            dto.copy(requestMessage = " ")
+            incomingPortModel.copy(requestMessage = " ")
         }
         assertDoesNotThrow {
-            dto.copy(requestMessage = "a")
+            incomingPortModel.copy(requestMessage = "a")
         }
     }
 }

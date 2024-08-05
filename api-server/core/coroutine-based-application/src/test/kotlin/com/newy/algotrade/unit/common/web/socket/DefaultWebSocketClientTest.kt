@@ -5,13 +5,15 @@ import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocke
 import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketPing
 import helpers.TestServerPort
 import kotlinx.coroutines.*
-import okhttp3.*
+import okhttp3.OkHttpClient
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Timeout
 import kotlin.coroutines.CoroutineContext
 import kotlin.test.assertEquals
 
@@ -44,12 +46,12 @@ class PingTest {
 
     @Test
     fun `ping 메세지 전송 확인`() = runBlocking {
-        client = object : DefaultWebSocketClient(
+        client = DefaultWebSocketClient(
             OkHttpClient(),
             "http://localhost:$port",
             coroutineContext,
-            WebSocketPing(10, "ping"),
-        ) {}
+            WebSocketPing(intervalMillis = 10, message = "ping"),
+        )
 
         client.start()
 
@@ -61,12 +63,12 @@ class PingTest {
 
     @Test
     fun `restart 하는 경우, ping interval 이 초기화 됨`() = runBlocking {
-        client = object : DefaultWebSocketClient(
+        client = DefaultWebSocketClient(
             OkHttpClient(),
             "http://localhost:$port",
             coroutineContext,
-            WebSocketPing(10, "ping"),
-        ) {}
+            WebSocketPing(intervalMillis = 10, message = "ping"),
+        )
 
         client.start()
         delay(9)
@@ -111,13 +113,12 @@ class AutoRestartTest {
 
     @Disabled
     @Test
-    @Timeout(6)
     fun `서버 에러시, 자동 재시작`() = runBlocking {
-        client = object : DefaultWebSocketClient(
+        client = DefaultWebSocketClient(
             OkHttpClient(),
             "http://localhost:$port",
             coroutineContext,
-        ) {}
+        )
 
         var openCount = 0
         var restartCount = 0
@@ -181,7 +182,7 @@ class SendReceiveMessageTest {
         }
 
         val results = mutableListOf<String>()
-        client = object : DefaultWebSocketClient(
+        client = DefaultWebSocketClient(
             OkHttpClient(),
             "http://localhost:$port",
             coroutineContext,
@@ -190,7 +191,7 @@ class SendReceiveMessageTest {
                     results.add(message)
                 }
             }
-        ) {}
+        )
 
         client.start()
 
@@ -206,11 +207,11 @@ class SendReceiveMessageTest {
         val serverListener = ServerListener(coroutineContext)
         server.enqueue(MockResponse().withWebSocketUpgrade(serverListener))
 
-        client = object : DefaultWebSocketClient(
+        client = DefaultWebSocketClient(
             OkHttpClient(),
             "http://localhost:$port",
-            coroutineContext = coroutineContext,
-        ) {}
+            coroutineContext,
+        )
 
         client.start()
 
