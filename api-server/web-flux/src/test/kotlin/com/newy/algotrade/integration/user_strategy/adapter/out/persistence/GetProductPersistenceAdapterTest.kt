@@ -1,9 +1,9 @@
 package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
 import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.GetProductPersistenceAdapter
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.MarketRepositoryForStrategy
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.ProductRepository
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.GetProductPersistenceAdapter
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.MarketRepositoryForStrategy
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.ProductRepository
 import helpers.BaseDbTest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking

@@ -1,8 +1,8 @@
 package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.HasStrategyPersistenceAdapter
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyR2dbcEntity
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistent.repository.StrategyRepository
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.HasStrategyPersistenceAdapter
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.StrategyR2dbcEntity
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.StrategyRepository
 import helpers.BaseDbTest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking

@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.market_account.adapter.out.persistent.repository
 
 import com.newy.algotrade.domain.market_account.MarketAccount
 import com.newy.algotrade.domain.market_account.MarketServer
-import com.newy.algotrade.web_flux.market_account.adapter.out.persistent.repository.MarketAccountR2dbcEntity
+import com.newy.algotrade.web_flux.market_account.adapter.out.persistence.repository.MarketAccountR2dbcEntity
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

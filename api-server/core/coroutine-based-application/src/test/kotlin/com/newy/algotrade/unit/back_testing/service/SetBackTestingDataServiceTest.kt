@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.back_testing.service
 
-import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistent.BackTestingDataFileStorageAdapter
+import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistence.BackTestingDataFileStorageAdapter
 import com.newy.algotrade.coroutine_based_application.back_testing.domain.BackTestingFileManager
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.back_testing.service.SetBackTestingDataService

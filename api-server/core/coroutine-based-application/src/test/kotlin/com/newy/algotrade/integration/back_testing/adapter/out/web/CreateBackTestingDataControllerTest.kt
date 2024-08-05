@@ -3,7 +3,7 @@ package com.newy.algotrade.integration.back_testing.adapter.out.web
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecAccessTokenHttpApi
 import com.newy.algotrade.coroutine_based_application.back_testing.adapter.`in`.web.CreateBackTestingDataController
-import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistent.BackTestingDataFileStorageAdapter
+import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistence.BackTestingDataFileStorageAdapter
 import com.newy.algotrade.coroutine_based_application.back_testing.domain.BackTestingFileManager
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.back_testing.service.CreateBackTestingDataService
