@@ -4,8 +4,8 @@ import com.newy.algotrade.coroutine_based_application.auth.port.out.GetAccessTok
 import com.newy.algotrade.coroutine_based_application.common.web.http.FormData
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.http.post
-import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
-import com.newy.algotrade.domain.auth.adapter.out.web.model.jackson.LsSecAccessTokenHttpResponse
+import com.newy.algotrade.domain.auth.PrivateApiInfo
+import com.newy.algotrade.domain.auth.jackson.LsSecAccessTokenHttpResponse
 
 class LsSecAccessTokenHttpApi(
     private val client: HttpApiClient,

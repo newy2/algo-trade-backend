@@ -1,4 +1,4 @@
-package com.newy.algotrade.unit.product.adapter.out.web.model.jackson
+package com.newy.algotrade.unit.product.jackson
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.domain.chart.Candle
@@ -7,7 +7,7 @@ import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.common.mapper.toObject
 import com.newy.algotrade.domain.product.ProductPriceKey
-import com.newy.algotrade.domain.product.adapter.out.web.model.jackson.ByBitProductPriceWebSocketResponse
+import com.newy.algotrade.domain.product.jackson.ByBitProductPriceWebSocketResponse
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import kotlin.test.assertEquals

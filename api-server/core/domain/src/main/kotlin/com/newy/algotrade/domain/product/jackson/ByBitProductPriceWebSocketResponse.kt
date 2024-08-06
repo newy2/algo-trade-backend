@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.product.adapter.out.web.model.jackson
+package com.newy.algotrade.domain.product.jackson
 
 import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.annotation.JsonCreator

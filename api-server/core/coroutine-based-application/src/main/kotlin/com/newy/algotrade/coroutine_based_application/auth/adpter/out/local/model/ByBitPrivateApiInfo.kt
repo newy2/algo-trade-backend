@@ -1,6 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.auth.adpter.out.local.model
 
-import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
+import com.newy.algotrade.domain.auth.PrivateApiInfo
 
 class ByBitPrivateApiInfo(
     key: String,

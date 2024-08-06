@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.product.adapter.out.web.model.jackson
+package com.newy.algotrade.domain.product.jackson
 
 import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.annotation.JsonCreator
@@ -22,8 +22,6 @@ class ByBitProductPriceHttpResponse(val prices: List<ProductPrice>) {
         @JsonProperty("result") node: JsonNode,
     ) : this(
         prices = node["list"].map {
-            // TODO 사용 가능한 interval (1,3,5,15,30,60,120,240,360,720,D,M,W)
-            // TODO 실제로는 좀 줄이자 (1,3,4,15,30,60,D)
             Candle.TimeFrame.from(Duration.ofMinutes(interval))!!(
                 beginTime = it[0].asLong(),
                 openPrice = it[1].asDouble().toBigDecimal(),

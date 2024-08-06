@@ -9,7 +9,7 @@ import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverter
 import com.newy.algotrade.domain.common.mapper.toObject
 import com.newy.algotrade.domain.product.ProductPriceKey
-import com.newy.algotrade.domain.product.adapter.out.web.model.jackson.ByBitProductPriceWebSocketResponse
+import com.newy.algotrade.domain.product.jackson.ByBitProductPriceWebSocketResponse
 import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
 

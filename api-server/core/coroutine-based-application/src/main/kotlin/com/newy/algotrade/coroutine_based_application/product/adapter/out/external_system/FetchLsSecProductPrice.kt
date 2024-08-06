@@ -5,10 +5,10 @@ import com.newy.algotrade.coroutine_based_application.common.consts.LsSecHttpApi
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.http.post
 import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
-import com.newy.algotrade.domain.auth.adapter.out.common.model.PrivateApiInfo
+import com.newy.algotrade.domain.auth.PrivateApiInfo
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.product.GetProductPriceHttpParam
-import com.newy.algotrade.domain.product.adapter.out.web.model.jackson.LsSecProductPriceHttpResponse
+import com.newy.algotrade.domain.product.jackson.LsSecProductPriceHttpResponse
 
 class FetchLsSecProductPrice(
     private val client: HttpApiClient,

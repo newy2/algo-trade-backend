@@ -1,4 +1,4 @@
-package com.newy.algotrade.domain.auth.adapter.out.web.model.jackson
+package com.newy.algotrade.domain.auth.jackson
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties
 import com.fasterxml.jackson.annotation.JsonProperty
