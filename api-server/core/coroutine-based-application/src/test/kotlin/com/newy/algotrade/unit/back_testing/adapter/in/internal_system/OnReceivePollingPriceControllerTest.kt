@@ -6,6 +6,7 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.product.ProductPriceKey
+import com.newy.algotrade.domain.run_strategy.RunStrategyResult
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
@@ -22,7 +23,9 @@ class OnReceivePollingPriceControllerTest {
                 }
             },
             runStrategyUseCase = {
-                methodCallLogs.add("runStrategyUseCase")
+                RunStrategyResult().also {
+                    methodCallLogs.add("runStrategyUseCase")
+                }
             }
         )
         val productPriceKey = ProductPriceKey(Market.BY_BIT, ProductType.SPOT, "BTCUSDT", Duration.ofMinutes(1))

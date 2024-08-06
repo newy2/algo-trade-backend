@@ -6,6 +6,7 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.*
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.product.ProductPriceKey
+import com.newy.algotrade.domain.run_strategy.RunStrategyResult
 
 open class RunStrategyCommandService(
     private val getCandlesQuery: GetCandlesQuery,
@@ -27,25 +28,40 @@ open class RunStrategyCommandService(
         onCreatedStrategySignalPort = onCreatedStrategySignalPort,
     )
 
-    override suspend fun runStrategy(productPriceKey: ProductPriceKey) {
-        val candles = getCandlesQuery.getCandles(productPriceKey).takeIf { it.size > 0 } ?: return
+    override suspend fun runStrategy(productPriceKey: ProductPriceKey): RunStrategyResult =
+        RunStrategyResult().also { result ->
+            getCandlesQuery.getCandles(productPriceKey).takeIf { it.size > 0 }?.let { candles ->
+                getStrategyFilterByProductPriceKeyPort.filterBy(productPriceKey)
+                    .also { result.totalStrategyCount = it.size }
+                    .map { (userStrategyKey, strategy) ->
+                        // TODO Log(userStrategyKey)
+                        val userStrategyId = userStrategyKey.userStrategyId
 
-        getStrategyFilterByProductPriceKeyPort.filterBy(productPriceKey).forEach { (userStrategyKey, strategy) ->
-            val userStrategyId = userStrategyKey.userStrategyId
-
-            // TODO transaction?
-            val history = getStrategySignalHistoryPort.getHistory(userStrategyId)
-
-            strategy.shouldOperate(candles.lastIndex, history).let { orderType ->
-                if (orderType == OrderType.NONE) {
-                    return
-                }
-
-                // TODO 확인: 이 부분이 다른 곳에서도 사용하려나?
-                val signal = StrategySignal(orderType, candles.lastCandle.time, candles.lastCandle.price.close)
-                addStrategySignalHistoryPort.addHistory(userStrategyId, signal)
-                onCreatedStrategySignalPort.onCreatedSignal(userStrategyId, signal)
+                        strategy.shouldOperate(
+                            index = candles.lastIndex,
+                            history = getStrategySignalHistoryPort.getHistory(userStrategyId)
+                        ).also { orderType ->
+                            when (orderType) {
+                                OrderType.NONE -> result.noneSignalCount++.also { return@map null }
+                                OrderType.SELL -> result.sellSignalCount++
+                                OrderType.BUY -> result.buySignalCount++
+                            }
+                        }.let { orderType ->
+                            Pair(
+                                userStrategyId,
+                                StrategySignal(
+                                    orderType = orderType,
+                                    timeFrame = candles.lastCandle.time,
+                                    price = candles.lastCandle.price.close
+                                )
+                            )
+                        }
+                    }
+                    .filterNotNull().takeIf { it.isNotEmpty() }?.forEach { (userStrategyId, signal) ->
+                        // TODO bulk add history
+                        addStrategySignalHistoryPort.addHistory(userStrategyId, signal)
+                        onCreatedStrategySignalPort.onCreatedSignal(userStrategyId, signal)
+                    }
             }
         }
-    }
 }

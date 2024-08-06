@@ -1,23 +1,26 @@
 package com.newy.algotrade.unit.run_strategy.service
 
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.GetCandlesQuery
 import com.newy.algotrade.coroutine_based_application.product.port.out.*
-import com.newy.algotrade.coroutine_based_application.product.service.GetCandlesQueryService
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategySignalHistoryStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunStrategyUseCase
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategySignalHistoryPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.*
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyCommandService
+import com.newy.algotrade.domain.chart.Candle
+import com.newy.algotrade.domain.chart.Candles
+import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
+import com.newy.algotrade.domain.product.ProductPriceKey
+import com.newy.algotrade.domain.run_strategy.RunStrategyResult
 import helpers.BooleanRule
 import helpers.productPrice
 import helpers.productPriceKey
 import helpers.userStrategyKey
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import java.time.Duration
@@ -25,79 +28,214 @@ import java.time.OffsetDateTime
 
 private val beginTime = OffsetDateTime.parse("2024-05-01T00:00Z")
 
-class BooleanStrategy(entry: Boolean, exit: Boolean) : Strategy(
-    OrderType.BUY,
-    BooleanRule(entry),
-    BooleanRule(exit),
+class LongPositionStrategy(entry: Boolean, exit: Boolean) : Strategy(
+    entryType = OrderType.BUY,
+    entryRule = BooleanRule(entry),
+    exitRule = BooleanRule(exit),
+)
+
+class ShortPositionStrategy(entry: Boolean, exit: Boolean) : Strategy(
+    entryType = OrderType.SELL,
+    entryRule = BooleanRule(entry),
+    exitRule = BooleanRule(exit),
 )
 
 private val BTC_1MINUTE = productPriceKey(productCode = "BTCUSDT", interval = Duration.ofMinutes(1))
-private val ETH_1MINUTE = productPriceKey(productCode = "ETHUSDT", interval = Duration.ofMinutes(1))
 
-// TODO refector 테스트가 좀 복잡하다.
-@DisplayName("전략 실행하기 테스트")
-class RunStrategyCommandServiceTest {
-    private lateinit var service: RunStrategyUseCase
-    private lateinit var strategySignalHistoryPort: StrategySignalHistoryPort
-    private lateinit var results: MutableMap<String, StrategySignal>
+@DisplayName("strategy 가 실행되지 않는 조건 테스트")
+class EmptyRunStrategyCommandServiceTest {
+    private val productPriceKey = productPriceKey(productCode = "BTCUSDT")
+    private val expectedResult = RunStrategyResult(
+        totalStrategyCount = 0,
+        noneSignalCount = 0,
+        buySignalCount = 0,
+        sellSignalCount = 0,
+    )
 
-    @BeforeEach
-    fun setUp() {
-        strategySignalHistoryPort = InMemoryStrategySignalHistoryStoreAdapter()
-        service = RunStrategyCommandService(
-            getCandlesQuery = GetCandlesQueryService(
-                InMemoryCandleStoreAdapter().also {
-                    it.setCandles(
-                        BTC_1MINUTE, listOf(
-                            productPrice(amount = 1000, interval = Duration.ofMinutes(1), beginTime),
-                            productPrice(amount = 2000, interval = Duration.ofMinutes(1), beginTime.plusMinutes(1)),
-                        )
-                    )
-                    it.setCandles(
-                        ETH_1MINUTE, listOf(
-                            productPrice(amount = 1000, interval = Duration.ofMinutes(1), beginTime),
-                        )
-                    )
-                }
+    @Test
+    fun `candle 데이터가 없으면 실행되지 않는다`() = runTest {
+        val notFoundCandlesQuery = GetCandlesQuery { DEFAULT_CHART_FACTORY.candles() }
+        val service = newRunStrategyCommandService(
+            getCandlesQuery = notFoundCandlesQuery,
+        )
+
+        val result = service.runStrategy(productPriceKey)
+
+        assertEquals(expectedResult, result)
+    }
+
+    @Test
+    fun `strategy 를 찾을 수 없으면 실행되지 않는다`() = runTest {
+        val notFoundRunnableStrategyAdapter = GetStrategyFilterByProductPriceKeyPort { emptyMap() }
+        val service = newRunStrategyCommandService(
+            getStrategyFilterByProductPriceKeyPort = notFoundRunnableStrategyAdapter
+        )
+
+        val result = service.runStrategy(productPriceKey)
+
+        assertEquals(expectedResult, result)
+    }
+}
+
+@DisplayName("StrategySignalHistory 를 사용한 테스트 - 진입 이력이 있는 경우와 없는 경우")
+class RunStrategyCommandServiceWithStrategySignalHistoryTest {
+    private val productPriceKey = productPriceKey(productCode = "BTCUSDT")
+    private val getTestDataAdapter = GetStrategyFilterByProductPriceKeyPort {
+        mapOf(
+            userStrategyKey("id1", BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = true),
+            userStrategyKey("id2", BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = false),
+            userStrategyKey("id3", BTC_1MINUTE) to LongPositionStrategy(entry = false, exit = false),
+        )
+    }
+    private val enteredSignalHistoryAdapter = GetStrategySignalHistoryPort {
+        StrategySignalHistory().also {
+            it.add(
+                StrategySignal(
+                    orderType = OrderType.BUY,
+                    timeFrame = Candle.TimeRange(
+                        period = Duration.ofMinutes(1),
+                        begin = beginTime
+                    ),
+                    price = 1000.toBigDecimal(),
+                )
+            )
+        }
+    }
+
+    @Test
+    fun `entry 주문 히스토리가 없는 경우`() = runTest {
+        val service = newRunStrategyCommandService(
+            getStrategyFilterByProductPriceKeyPort = getTestDataAdapter,
+        )
+
+        val result = service.runStrategy(productPriceKey)
+
+        assertEquals(
+            RunStrategyResult(
+                totalStrategyCount = 3,
+                noneSignalCount = 1,
+                buySignalCount = 2,
+                sellSignalCount = 0,
             ),
-            strategyPort = InMemoryStrategyStoreAdapter().also {
-                it.setStrategy(userStrategyKey("id1", BTC_1MINUTE), BooleanStrategy(entry = true, exit = true))
-                it.setStrategy(userStrategyKey("id2", BTC_1MINUTE), BooleanStrategy(entry = false, exit = false))
-                it.setStrategy(userStrategyKey("id3", ETH_1MINUTE), BooleanStrategy(entry = true, exit = false))
+            result
+        )
+    }
+
+    @Test
+    fun `entry 주문 히스토리가 있는 경우`() = runTest {
+        val service = newRunStrategyCommandService(
+            getStrategyFilterByProductPriceKeyPort = getTestDataAdapter,
+            getStrategySignalHistoryPort = enteredSignalHistoryAdapter,
+        )
+
+        val result = service.runStrategy(productPriceKey)
+
+        assertEquals(
+            RunStrategyResult(
+                totalStrategyCount = 3,
+                noneSignalCount = 2,
+                buySignalCount = 0,
+                sellSignalCount = 1,
+            ),
+            result
+        )
+    }
+}
+
+@DisplayName("strategy 에 여러 포지션이 섞인 경우에 대한 테스트")
+class MixedPositionRunStrategyCommandServiceTest {
+    @Test
+    fun `여러 position 전략이 섞인 경우`() = runTest {
+        val productPriceKey = productPriceKey(productCode = "BTCUSDT")
+        val getTestDataAdapter = GetStrategyFilterByProductPriceKeyPort {
+            mapOf(
+                userStrategyKey("id1", BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = true),
+                userStrategyKey("id2", BTC_1MINUTE) to ShortPositionStrategy(entry = true, exit = true),
+                userStrategyKey("id3", BTC_1MINUTE) to LongPositionStrategy(entry = false, exit = false),
+            )
+        }
+        val service = newRunStrategyCommandService(
+            getStrategyFilterByProductPriceKeyPort = getTestDataAdapter,
+        )
+
+        val result = service.runStrategy(productPriceKey)
+
+        assertEquals(
+            RunStrategyResult(
+                totalStrategyCount = 3,
+                noneSignalCount = 1,
+                buySignalCount = 1,
+                sellSignalCount = 1,
+            ),
+            result
+        )
+    }
+}
+
+@DisplayName("port 호출 확인 테스트")
+class RunStrategyCommandServiceTest {
+    private val productPriceKey = productPriceKey(productCode = "BTCUSDT")
+    private val getTestDataAdapter = GetStrategyFilterByProductPriceKeyPort {
+        mapOf(
+            userStrategyKey("id1", BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = true),
+            userStrategyKey("id2", BTC_1MINUTE) to ShortPositionStrategy(entry = true, exit = false),
+            userStrategyKey("id3", BTC_1MINUTE) to LongPositionStrategy(entry = false, exit = false),
+        )
+    }
+
+    @Test
+    fun `strategy signal 발생시 호출하는 port 확인`() = runTest {
+        val logs = mutableListOf<String>()
+
+        val service = newRunStrategyCommandService(
+            getStrategyFilterByProductPriceKeyPort = getTestDataAdapter,
+            addStrategySignalHistoryPort = { userStrategyId, signal ->
+                logs.add("addStrategySignalHistoryPort($userStrategyId:${signal.orderType})")
             },
-            strategySignalHistoryPort = strategySignalHistoryPort,
-            onCreatedStrategySignalPort = { userStrategyId, orderSignal ->
-                results[userStrategyId] = orderSignal
+            onCreatedStrategySignalPort = { userStrategyId, signal ->
+                logs.add("onCreatedStrategySignalPort($userStrategyId:${signal.orderType})")
             }
         )
-        results = mutableMapOf()
+
+        service.runStrategy(productPriceKey)
+
+        assertEquals(
+            listOf(
+                "addStrategySignalHistoryPort(id1:BUY)",
+                "onCreatedStrategySignalPort(id1:BUY)",
+                "addStrategySignalHistoryPort(id2:SELL)",
+                "onCreatedStrategySignalPort(id2:SELL)",
+            ),
+            logs
+        )
     }
+}
 
-    @Test
-    fun `BTC 상품코드로 전략 실행하기`() = runTest {
-        service.runStrategy(BTC_1MINUTE)
+fun newRunStrategyCommandService(
+    strategySignalHistoryPort: StrategySignalHistoryPort = InMemoryStrategySignalHistoryStoreAdapter(),
 
-        val lastPrice = productPrice(2000, Duration.ofMinutes(1), beginTime.plusMinutes(1))
-        val signal = StrategySignal(OrderType.BUY, lastPrice.time, lastPrice.price.close)
+    getCandlesQuery: GetCandlesQuery = NoErrorGetCandlesQueryService(),
+    getStrategyFilterByProductPriceKeyPort: GetStrategyFilterByProductPriceKeyPort = InMemoryStrategyStoreAdapter(),
+    getStrategySignalHistoryPort: GetStrategySignalHistoryPort = strategySignalHistoryPort,
+    addStrategySignalHistoryPort: AddStrategySignalHistoryPort = strategySignalHistoryPort,
+    onCreatedStrategySignalPort: OnCreatedStrategySignalPort = NoErrorOnCreatedStrategySignalAdapter(),
+) = RunStrategyCommandService(
+    getCandlesQuery = getCandlesQuery,
+    getStrategyFilterByProductPriceKeyPort = getStrategyFilterByProductPriceKeyPort,
+    getStrategySignalHistoryPort = getStrategySignalHistoryPort,
+    addStrategySignalHistoryPort = addStrategySignalHistoryPort,
+    onCreatedStrategySignalPort = onCreatedStrategySignalPort,
+)
 
-        assertEquals(mapOf("id1" to signal), results, "OrderSignal 은 Candles#lastCandle 값으로 생성되야 한다")
-        strategySignalHistoryPort.getHistory("id1").let {
-            assertEquals(1, it.strategySignals().size)
-            assertEquals(signal, it.lastStrategySignal())
+class NoErrorGetCandlesQueryService(
+) : GetCandlesQuery {
+    override fun getCandles(key: ProductPriceKey): Candles =
+        DEFAULT_CHART_FACTORY.candles().also {
+            it.upsert(productPrice(amount = 1000, interval = Duration.ofMinutes(1)))
         }
-    }
+}
 
-    @Test
-    fun `ETH 상품 코드로 실행`() = runTest {
-        service.runStrategy(ETH_1MINUTE)
-
-        val lastPrice = productPrice(1000, Duration.ofMinutes(1), beginTime.plusMinutes(0))
-        val signal = StrategySignal(OrderType.BUY, lastPrice.time, lastPrice.price.close)
-
-        assertEquals(mapOf("id3" to signal), results, "OrderSignal 은 Candles#lastCandle 값으로 생성되야 한다")
-        strategySignalHistoryPort.getHistory("id3").let {
-            assertEquals(1, it.strategySignals().size)
-            assertEquals(signal, it.lastStrategySignal())
-        }
+class NoErrorOnCreatedStrategySignalAdapter : OnCreatedStrategySignalPort {
+    override suspend fun onCreatedSignal(userStrategyId: String, signal: StrategySignal) {
     }
 }
