@@ -1,6 +1,7 @@
 package com.newy.algotrade.web_flux.config
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
+import com.newy.algotrade.coroutine_based_application.common.event.CreateStrategySignalEvent
 import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStrategyEvent
 import com.newy.algotrade.coroutine_based_application.common.event.ReceivePollingPriceEvent
 import com.newy.algotrade.coroutine_based_application.common.event.SendNotificationEvent
@@ -13,8 +14,11 @@ open class EventBusConfig {
     open fun createUserStrategyEventBus() = EventBus<CreateUserStrategyEvent>()
 
     @Bean
-    open fun createSendNotificationEventBus() = EventBus<SendNotificationEvent>()
+    open fun sendNotificationEventBus() = EventBus<SendNotificationEvent>()
 
     @Bean
-    open fun createReceivePollingPriceEventBus() = EventBus<ReceivePollingPriceEvent>()
+    open fun receivePollingPriceEventBus() = EventBus<ReceivePollingPriceEvent>()
+
+    @Bean
+    open fun createStrategySignalEventBus() = EventBus<CreateStrategySignalEvent>()
 }

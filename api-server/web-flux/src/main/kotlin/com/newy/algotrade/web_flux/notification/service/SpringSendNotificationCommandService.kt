@@ -13,6 +13,6 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional
 open class SpringSendNotificationCommandService(
     adapter: SendNotificationLogPort,
-    @Qualifier("createSendNotificationEventBus") eventBus: EventBus<SendNotificationEvent>,
+    @Qualifier("sendNotificationEventBus") eventBus: EventBus<SendNotificationEvent>,
     @Qualifier("slackHttpApiClient") httpApiClient: HttpApiClient
 ) : SendNotificationCommandService(adapter, eventBus, httpApiClient)

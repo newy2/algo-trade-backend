@@ -1,9 +1,11 @@
 package com.newy.algotrade.web_flux
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
+import com.newy.algotrade.coroutine_based_application.common.event.CreateStrategySignalEvent
 import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStrategyEvent
 import com.newy.algotrade.coroutine_based_application.common.event.ReceivePollingPriceEvent
 import com.newy.algotrade.coroutine_based_application.common.event.SendNotificationEvent
+import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SendNotificationCommand
 import com.newy.algotrade.coroutine_based_application.notification.service.SendNotificationCommandService
 import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.internal_system.InitController
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.AddCandlesUseCase
@@ -45,8 +47,9 @@ class RegisterEventHandler(
     private val candlesUseCase: AddCandlesUseCase,
     private val runStrategyUseCase: RunStrategyUseCase,
     @Qualifier("createUserStrategyEventBus") val createUserStrategyEventBus: EventBus<CreateUserStrategyEvent>,
-    @Qualifier("createSendNotificationEventBus") val createSendNotificationEventBus: EventBus<SendNotificationEvent>,
-    @Qualifier("createReceivePollingPriceEventBus") val createReceivePollingPriceEventBus: EventBus<ReceivePollingPriceEvent>,
+    @Qualifier("sendNotificationEventBus") val sendNotificationEventBus: EventBus<SendNotificationEvent>,
+    @Qualifier("receivePollingPriceEventBus") val receivePollingPriceEventBus: EventBus<ReceivePollingPriceEvent>,
+    @Qualifier("createStrategySignalEventBus") val createStrategySignalEventBus: EventBus<CreateStrategySignalEvent>,
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
         CoroutineScope(Dispatchers.IO).launch {
@@ -58,15 +61,28 @@ class RegisterEventHandler(
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            createSendNotificationEventBus.addListener(coroutineContext) {
+            sendNotificationEventBus.addListener(coroutineContext) {
                 sendNotificationService.sendNotification(it)
             }
         }
 
         CoroutineScope(Dispatchers.IO).launch {
-            createReceivePollingPriceEventBus.addListener(coroutineContext) { (productPriceKey, productPriceList) ->
+            receivePollingPriceEventBus.addListener(coroutineContext) { (productPriceKey, productPriceList) ->
                 candlesUseCase.addCandles(productPriceKey, productPriceList)
                 runStrategyUseCase.runStrategy(productPriceKey)
+            }
+        }
+
+        CoroutineScope(Dispatchers.IO).launch {
+            createStrategySignalEventBus.addListener(coroutineContext) { (userStrategyId, strategySignal) ->
+                // TODO order 패키지로 이동
+                print("@@@userStrategyId: $userStrategyId, signal: $strategySignal")
+                sendNotificationService.requestSendNotification(
+                    SendNotificationCommand(
+                        notificationAppId = 1,
+                        requestMessage = "@@@userStrategyId: $userStrategyId, signal: $strategySignal",
+                    )
+                )
             }
         }
     }
