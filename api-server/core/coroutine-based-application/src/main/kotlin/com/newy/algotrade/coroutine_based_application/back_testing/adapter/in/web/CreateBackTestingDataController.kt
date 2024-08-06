@@ -2,7 +2,7 @@ package com.newy.algotrade.coroutine_based_application.back_testing.adapter.`in`
 
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.CreateBackTestingDataUseCase
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.SetBackTestingDataUseCase
-import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
+import com.newy.algotrade.domain.back_testing.BackTestingDataKey
 
 class CreateBackTestingDataController(
     private val createBackTestingDataUseCase: CreateBackTestingDataUseCase,

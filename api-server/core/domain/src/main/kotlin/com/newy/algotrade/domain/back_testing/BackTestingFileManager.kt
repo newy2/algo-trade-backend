@@ -1,6 +1,5 @@
-package com.newy.algotrade.coroutine_based_application.back_testing.domain
+package com.newy.algotrade.domain.back_testing
 
-import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.helper.SimpleCsvParser

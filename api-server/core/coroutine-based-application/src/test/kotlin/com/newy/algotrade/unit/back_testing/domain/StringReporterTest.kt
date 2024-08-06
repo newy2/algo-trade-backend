@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.back_testing.domain
 
-import com.newy.algotrade.coroutine_based_application.back_testing.domain.StringReporter
+import com.newy.algotrade.domain.back_testing.StringReporter
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal

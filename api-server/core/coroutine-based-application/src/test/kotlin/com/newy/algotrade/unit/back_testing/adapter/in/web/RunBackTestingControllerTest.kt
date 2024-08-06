@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.back_testing.adapter.`in`.web
 
 import com.newy.algotrade.coroutine_based_application.back_testing.adapter.`in`.web.RunBackTestingController
-import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
+import com.newy.algotrade.domain.back_testing.BackTestingDataKey
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal

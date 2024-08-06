@@ -1,6 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.back_testing.port.out
 
-import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
+import com.newy.algotrade.domain.back_testing.BackTestingDataKey
 import com.newy.algotrade.domain.common.extension.ProductPrice
 
 interface BackTestingDataPort : GetBackTestingDataPort, SetBackTestingDataPort

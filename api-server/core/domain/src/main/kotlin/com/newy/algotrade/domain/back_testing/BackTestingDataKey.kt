@@ -1,4 +1,4 @@
-package com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model
+package com.newy.algotrade.domain.back_testing
 
 import com.newy.algotrade.domain.product.ProductPriceKey
 import java.time.OffsetDateTime

@@ -1,8 +1,8 @@
 package com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistence
 
-import com.newy.algotrade.coroutine_based_application.back_testing.domain.BackTestingFileManager
-import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.back_testing.port.out.BackTestingDataPort
+import com.newy.algotrade.domain.back_testing.BackTestingDataKey
+import com.newy.algotrade.domain.back_testing.BackTestingFileManager
 import com.newy.algotrade.domain.common.extension.ProductPrice
 
 class BackTestingDataFileStorageAdapter(

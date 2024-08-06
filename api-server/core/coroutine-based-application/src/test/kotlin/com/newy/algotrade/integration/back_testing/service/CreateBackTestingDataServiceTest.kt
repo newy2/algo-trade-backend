@@ -2,13 +2,13 @@ package com.newy.algotrade.integration.back_testing.service
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecAccessTokenHttpApi
-import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.back_testing.service.CreateBackTestingDataService
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchByBitProductPrice
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchLsSecProductPrice
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchProductPriceProxy
 import com.newy.algotrade.domain.auth.PrivateApiInfo
+import com.newy.algotrade.domain.back_testing.BackTestingDataKey
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson

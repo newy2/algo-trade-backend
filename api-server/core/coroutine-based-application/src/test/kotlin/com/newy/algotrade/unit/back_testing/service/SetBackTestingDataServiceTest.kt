@@ -1,9 +1,9 @@
 package com.newy.algotrade.unit.back_testing.service
 
 import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistence.BackTestingDataFileStorageAdapter
-import com.newy.algotrade.coroutine_based_application.back_testing.domain.BackTestingFileManager
-import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.model.BackTestingDataKey
 import com.newy.algotrade.coroutine_based_application.back_testing.service.SetBackTestingDataService
+import com.newy.algotrade.domain.back_testing.BackTestingDataKey
+import com.newy.algotrade.domain.back_testing.BackTestingFileManager
 import com.newy.algotrade.domain.chart.Candle
 import helpers.productPriceKey
 import kotlinx.coroutines.test.runTest
