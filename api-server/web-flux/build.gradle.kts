@@ -2,6 +2,11 @@ plugins {
     id("spring-conventions")
 }
 
+tasks.test {
+    // 테스트 JVM 에게 옵션 전달하기
+    systemProperties.putAll(System.getProperties().toMap() as Map<String, String>)
+}
+
 dependencies {
     implementation(project(":api-server:core:coroutine-based-application"))
     implementation("org.springframework.boot:spring-boot-starter-webflux")

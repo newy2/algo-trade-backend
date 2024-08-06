@@ -38,3 +38,6 @@ fun productPrice(
         amount.toBigDecimal(),
         0.toBigDecimal(),
     )
+
+fun getSystemProperty(name: String): String =
+    System.getProperty(name, System.getenv(name))

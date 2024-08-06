@@ -24,7 +24,7 @@ open class BaseDbTest {
     private lateinit var reactiveTransactionManager: ReactiveTransactionManager
 
     companion object {
-        private val dbmsType = DbmsType.valueOf(System.getenv("X_DBMS_NAME").uppercase())
+        private val dbmsType = DbmsType.valueOf(getSystemProperty("X_DBMS_NAME").uppercase())
         private val databaseContainer: JdbcDatabaseContainer<*> = dbmsType.getJdbcDatabaseContainer()
 
         @JvmStatic
