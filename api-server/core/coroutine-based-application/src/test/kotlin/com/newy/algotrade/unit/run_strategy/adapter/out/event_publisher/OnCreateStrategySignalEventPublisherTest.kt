@@ -36,9 +36,9 @@ class OnCreateStrategySignalEventPublisherTest {
             price = 2000.toBigDecimal()
         )
 
-        adapter.onCreatedSignal(userStrategyId = "id1", signal = strategySignal)
+        adapter.onCreatedSignal(userStrategyId = 1, signal = strategySignal)
         coroutineContext.cancelChildren()
 
-        assertEquals(CreateStrategySignalEvent(userStrategyId = "id1", strategySignal = strategySignal), receiveMessage)
+        assertEquals(CreateStrategySignalEvent(userStrategyId = 1, strategySignal = strategySignal), receiveMessage)
     }
 }

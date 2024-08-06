@@ -36,7 +36,7 @@ class InitControllerTest {
 
     @Test
     fun `userStrategyProduct 가 1개 인 경우`() = runTest {
-        userStrategyKeys.add(userStrategyKey(userStrategyId = "1", productPriceKey = productPriceKey("BTCUSDT")))
+        userStrategyKeys.add(userStrategyKey(userStrategyId = 1, productPriceKey = productPriceKey("BTCUSDT")))
 
         controller.init()
 
@@ -51,9 +51,9 @@ class InitControllerTest {
 
     @Test
     fun `userStrategyProduct 가 여러개 인 경우`() = runTest {
-        userStrategyKeys.add(userStrategyKey(userStrategyId = "1", productPriceKey = productPriceKey("BTCUSDT")))
-        userStrategyKeys.add(userStrategyKey(userStrategyId = "1", productPriceKey = productPriceKey("ETHUSDT")))
-        userStrategyKeys.add(userStrategyKey(userStrategyId = "2", productPriceKey = productPriceKey("BTCUSDT")))
+        userStrategyKeys.add(userStrategyKey(userStrategyId = 1, productPriceKey = productPriceKey("BTCUSDT")))
+        userStrategyKeys.add(userStrategyKey(userStrategyId = 1, productPriceKey = productPriceKey("ETHUSDT")))
+        userStrategyKeys.add(userStrategyKey(userStrategyId = 2, productPriceKey = productPriceKey("BTCUSDT")))
 
         controller.init()
 

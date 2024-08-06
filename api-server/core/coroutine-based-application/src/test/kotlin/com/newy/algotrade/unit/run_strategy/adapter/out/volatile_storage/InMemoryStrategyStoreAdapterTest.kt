@@ -18,7 +18,7 @@ import kotlin.test.assertTrue
 @DisplayName("InMemoryStrategyStoreTest 기본 기능 테스트")
 class InMemoryStrategyStoreAdapterTest : BaseTest() {
     private val productPriceKey = createProductPriceKey("BTCUSDT")
-    private val userStrategyKey = createUserStrategyKey("id1", productPriceKey)
+    private val userStrategyKey = createUserStrategyKey(1, productPriceKey)
     private val strategy = createStrategy(userStrategyKey)
     private lateinit var store: StrategyPort
 
@@ -48,7 +48,7 @@ class InMemoryStrategyStoreAdapterTest : BaseTest() {
     @Test
     fun `같은 productPriceKey 를 가진 사용자 전략을 추가한 경우`() {
         val sameProductKey = createProductPriceKey("BTCUSDT")
-        val userStrategyKey2 = createUserStrategyKey("id2", sameProductKey)
+        val userStrategyKey2 = createUserStrategyKey(2, sameProductKey)
         val strategy2 = createStrategy(userStrategyKey2)
 
         store.setStrategy(userStrategyKey2, strategy2)
@@ -65,7 +65,7 @@ class InMemoryStrategyStoreAdapterTest : BaseTest() {
     @Test
     fun `다른 productPriceKey 를 가진 사용자 전략을 추가한 경우`() {
         val differentProduct = createProductPriceKey("ETHUSDT")
-        val userStrategyKey2 = createUserStrategyKey("id2", differentProduct)
+        val userStrategyKey2 = createUserStrategyKey(2, differentProduct)
         val strategy2 = createStrategy(userStrategyKey2)
 
         store.setStrategy(userStrategyKey2, strategy2)
@@ -80,7 +80,7 @@ open class BaseTest {
         return Strategy.fromClassName(key.strategyClassName, DEFAULT_CHART_FACTORY.candles())
     }
 
-    protected fun createUserStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey): UserStrategyKey {
+    protected fun createUserStrategyKey(userStrategyId: Long, productPriceKey: ProductPriceKey): UserStrategyKey {
         return UserStrategyKey(
             userStrategyId,
             "BuyTripleRSIStrategy",

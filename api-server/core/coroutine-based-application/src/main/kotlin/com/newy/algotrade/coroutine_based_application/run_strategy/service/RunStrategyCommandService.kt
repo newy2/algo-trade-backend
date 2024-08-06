@@ -7,6 +7,7 @@ import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.domain.run_strategy.RunStrategyResult
+import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
 
 open class RunStrategyCommandService(
     private val getCandlesQuery: GetCandlesQuery,
@@ -39,7 +40,12 @@ open class RunStrategyCommandService(
 
                         strategy.shouldOperate(
                             index = candles.lastIndex,
-                            history = getStrategySignalHistoryPort.getHistory(userStrategyId)
+                            history = getStrategySignalHistoryPort.getHistory(
+                                StrategySignalHistoryKey(
+                                    userStrategyId = userStrategyId,
+                                    productPriceKey = productPriceKey
+                                )
+                            )
                         ).also { orderType ->
                             when (orderType) {
                                 OrderType.NONE -> result.noneSignalCount++.also { return@map null }
@@ -59,7 +65,12 @@ open class RunStrategyCommandService(
                     }
                     .filterNotNull().takeIf { it.isNotEmpty() }?.forEach { (userStrategyId, signal) ->
                         // TODO bulk add history
-                        addStrategySignalHistoryPort.addHistory(userStrategyId, signal)
+                        addStrategySignalHistoryPort.addHistory(
+                            StrategySignalHistoryKey(
+                                userStrategyId = userStrategyId,
+                                productPriceKey = productPriceKey
+                            ), signal
+                        )
                         onCreatedStrategySignalPort.onCreatedSignal(userStrategyId, signal)
                     }
             }

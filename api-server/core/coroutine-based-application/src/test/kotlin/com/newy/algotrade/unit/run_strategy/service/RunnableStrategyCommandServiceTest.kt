@@ -58,7 +58,7 @@ class ManyRunnableStrategyTest : BaseRunnableStrategyTest() {
         val sameProductPriceKey = productPriceKey
         service.setRunnableStrategy(
             userStrategyKey.copy(
-                userStrategyId = "test2",
+                userStrategyId = 2,
                 productPriceKey = sameProductPriceKey
             )
         )
@@ -77,7 +77,7 @@ class ManyRunnableStrategyTest : BaseRunnableStrategyTest() {
         val differentProductPriceKey = productPriceKey.copy(productCode = "ETHUSDT")
         service.setRunnableStrategy(
             userStrategyKey.copy(
-                userStrategyId = "test2",
+                userStrategyId = 2,
                 productPriceKey = differentProductPriceKey
             )
         )
@@ -95,7 +95,7 @@ class ManyRunnableStrategyTest : BaseRunnableStrategyTest() {
 open class BaseRunnableStrategyTest {
     protected val productPriceKey = productPriceKey("BTCUSDT")
     protected val userStrategyKey = UserStrategyKey(
-        userStrategyId = "test1",
+        userStrategyId = 1,
         strategyClassName = "BuyTripleRSIStrategy",
         productPriceKey = productPriceKey,
     )

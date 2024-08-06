@@ -34,7 +34,7 @@ class GetAllUserStrategyKeysTest : BaseUserStrategyQueryPersistenceAdapterTest()
         val actualList = adapter.getAllUserStrategyKeys()
         val expectedList = listOf(
             UserStrategyKey(
-                userStrategyId = userStrategyId.toString(),
+                userStrategyId = userStrategyId,
                 strategyClassName = "A",
                 productPriceKey = ProductPriceKey(
                     market = Market.BY_BIT,
@@ -56,7 +56,7 @@ class GetAllUserStrategyKeysTest : BaseUserStrategyQueryPersistenceAdapterTest()
         val actualList = adapter.getAllUserStrategyKeys()
         val expectedList = listOf(
             UserStrategyKey(
-                userStrategyId = userStrategyId1.toString(),
+                userStrategyId = userStrategyId1,
                 strategyClassName = "A",
                 productPriceKey = ProductPriceKey(
                     market = Market.BY_BIT,
@@ -66,7 +66,7 @@ class GetAllUserStrategyKeysTest : BaseUserStrategyQueryPersistenceAdapterTest()
                 ),
             ),
             UserStrategyKey(
-                userStrategyId = userStrategyId1.toString(),
+                userStrategyId = userStrategyId1,
                 strategyClassName = "A",
                 productPriceKey = ProductPriceKey(
                     market = Market.BY_BIT,
@@ -76,7 +76,7 @@ class GetAllUserStrategyKeysTest : BaseUserStrategyQueryPersistenceAdapterTest()
                 ),
             ),
             UserStrategyKey(
-                userStrategyId = userStrategyId2.toString(),
+                userStrategyId = userStrategyId2,
                 strategyClassName = "B",
                 productPriceKey = ProductPriceKey(
                     market = Market.BY_BIT,
@@ -107,7 +107,7 @@ class GetUserStrategyKeysTest : BaseUserStrategyQueryPersistenceAdapterTest() {
         val actual = adapter.getUserStrategyKeys(userStrategyId)
         val expected = listOf(
             UserStrategyKey(
-                userStrategyId = userStrategyId.toString(),
+                userStrategyId = userStrategyId,
                 strategyClassName = "A",
                 productPriceKey = ProductPriceKey(
                     market = Market.BY_BIT,
@@ -117,7 +117,7 @@ class GetUserStrategyKeysTest : BaseUserStrategyQueryPersistenceAdapterTest() {
                 ),
             ),
             UserStrategyKey(
-                userStrategyId = userStrategyId.toString(),
+                userStrategyId = userStrategyId,
                 strategyClassName = "A",
                 productPriceKey = ProductPriceKey(
                     market = Market.BY_BIT,

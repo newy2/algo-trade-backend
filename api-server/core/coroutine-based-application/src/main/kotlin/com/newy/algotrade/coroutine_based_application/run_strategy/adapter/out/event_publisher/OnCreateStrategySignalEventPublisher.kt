@@ -8,7 +8,7 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignal
 open class OnCreateStrategySignalEventPublisher(
     private val eventBus: EventBus<CreateStrategySignalEvent>
 ) : OnCreatedStrategySignalPort {
-    override suspend fun onCreatedSignal(userStrategyId: String, signal: StrategySignal) {
+    override suspend fun onCreatedSignal(userStrategyId: Long, signal: StrategySignal) {
         eventBus.publishEvent(
             CreateStrategySignalEvent(
                 userStrategyId = userStrategyId,

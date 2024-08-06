@@ -18,7 +18,7 @@ fun productPriceKey(
     else
         ProductPriceKey(Market.LS_SEC, productType, productCode, interval)
 
-fun userStrategyKey(userStrategyId: String, productPriceKey: ProductPriceKey) =
+fun userStrategyKey(userStrategyId: Long, productPriceKey: ProductPriceKey) =
     UserStrategyKey(
         userStrategyId,
         "BuyTripleRSIStrategy",

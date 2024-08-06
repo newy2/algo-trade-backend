@@ -74,7 +74,7 @@ data class UserStrategyProductR2dbcEntity(
 class UserStrategyKeyReadingConverter : Converter<Row, UserStrategyKey> {
     override fun convert(source: Row): UserStrategyKey {
         return UserStrategyKey(
-            userStrategyId = (source.get("user_trade_strategy_id") as Long).toString(),
+            userStrategyId = source.get("user_trade_strategy_id") as Long,
             strategyClassName = source.get("strategy_class_name") as String,
             productPriceKey = ProductPriceKey(
                 market = Market.valueOf(source.get("market_code") as String),

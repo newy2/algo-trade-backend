@@ -21,6 +21,7 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import com.newy.algotrade.domain.chart.strategy.TrafficLight
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.product.ProductPriceKey
+import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 
 class RunBackTestingController {
@@ -32,15 +33,20 @@ class RunBackTestingController {
         val strategyStore = InMemoryStrategyStoreAdapter()
         val strategySignalHistoryStore = InMemoryStrategySignalHistoryStoreAdapter()
 
+        val backTestingUserStrategyId: Long = 1
         val resultHistory = StrategySignalHistory()
-        val onCreatedStrategySignalPort =
-            OnCreatedStrategySignalPort { _, signal ->
-                val history = strategySignalHistoryStore.getHistory("backTesting")
+        val onCreatedStrategySignalPort = OnCreatedStrategySignalPort { _, signal ->
+            val history = strategySignalHistoryStore.getHistory(
+                StrategySignalHistoryKey(
+                    userStrategyId = backTestingUserStrategyId,
+                    productPriceKey = backTestingDataKey.productPriceKey
+                )
+            )
 
-                if (resultHistory.isOpened() || TrafficLight(10).isGreen(history)) {
-                    resultHistory.add(signal)
-                }
+            if (resultHistory.isOpened() || TrafficLight(10).isGreen(history)) {
+                resultHistory.add(signal)
             }
+        }
 
         val onReceivePollingPriceController = createOnReceivePollingPriceController(
             candleStore,
@@ -59,9 +65,9 @@ class RunBackTestingController {
                 backTestingDataLoader = it
             ).setRunnableStrategy(
                 UserStrategyKey(
-                    "backTesting",
-                    strategyClassName,
-                    backTestingDataKey.productPriceKey
+                    userStrategyId = backTestingUserStrategyId,
+                    strategyClassName = strategyClassName,
+                    productPriceKey = backTestingDataKey.productPriceKey
                 )
             )
         }

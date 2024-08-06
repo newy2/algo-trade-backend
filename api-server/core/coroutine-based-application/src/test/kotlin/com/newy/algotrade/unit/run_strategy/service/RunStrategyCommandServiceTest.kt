@@ -82,9 +82,9 @@ class RunStrategyCommandServiceWithStrategySignalHistoryTest {
     private val productPriceKey = productPriceKey(productCode = "BTCUSDT")
     private val getTestDataAdapter = GetStrategyFilterByProductPriceKeyPort {
         mapOf(
-            userStrategyKey("id1", BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = true),
-            userStrategyKey("id2", BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = false),
-            userStrategyKey("id3", BTC_1MINUTE) to LongPositionStrategy(entry = false, exit = false),
+            userStrategyKey(1, BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = true),
+            userStrategyKey(2, BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = false),
+            userStrategyKey(3, BTC_1MINUTE) to LongPositionStrategy(entry = false, exit = false),
         )
     }
     private val enteredSignalHistoryAdapter = GetStrategySignalHistoryPort {
@@ -149,9 +149,9 @@ class MixedPositionRunStrategyCommandServiceTest {
         val productPriceKey = productPriceKey(productCode = "BTCUSDT")
         val getTestDataAdapter = GetStrategyFilterByProductPriceKeyPort {
             mapOf(
-                userStrategyKey("id1", BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = true),
-                userStrategyKey("id2", BTC_1MINUTE) to ShortPositionStrategy(entry = true, exit = true),
-                userStrategyKey("id3", BTC_1MINUTE) to LongPositionStrategy(entry = false, exit = false),
+                userStrategyKey(1, BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = true),
+                userStrategyKey(2, BTC_1MINUTE) to ShortPositionStrategy(entry = true, exit = true),
+                userStrategyKey(3, BTC_1MINUTE) to LongPositionStrategy(entry = false, exit = false),
             )
         }
         val service = newRunStrategyCommandService(
@@ -177,9 +177,9 @@ class RunStrategyCommandServiceTest {
     private val productPriceKey = productPriceKey(productCode = "BTCUSDT")
     private val getTestDataAdapter = GetStrategyFilterByProductPriceKeyPort {
         mapOf(
-            userStrategyKey("id1", BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = true),
-            userStrategyKey("id2", BTC_1MINUTE) to ShortPositionStrategy(entry = true, exit = false),
-            userStrategyKey("id3", BTC_1MINUTE) to LongPositionStrategy(entry = false, exit = false),
+            userStrategyKey(1, BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = true),
+            userStrategyKey(2, BTC_1MINUTE) to ShortPositionStrategy(entry = true, exit = false),
+            userStrategyKey(3, BTC_1MINUTE) to LongPositionStrategy(entry = false, exit = false),
         )
     }
 
@@ -189,11 +189,11 @@ class RunStrategyCommandServiceTest {
 
         val service = newRunStrategyCommandService(
             getStrategyFilterByProductPriceKeyPort = getTestDataAdapter,
-            addStrategySignalHistoryPort = { userStrategyId, signal ->
-                logs.add("addStrategySignalHistoryPort($userStrategyId:${signal.orderType})")
+            addStrategySignalHistoryPort = { strategySignalHistoryKey, signal ->
+                logs.add("addStrategySignalHistoryPort(id: ${strategySignalHistoryKey.userStrategyId}, signal: ${signal.orderType})")
             },
             onCreatedStrategySignalPort = { userStrategyId, signal ->
-                logs.add("onCreatedStrategySignalPort($userStrategyId:${signal.orderType})")
+                logs.add("onCreatedStrategySignalPort(id: $userStrategyId, signal: ${signal.orderType})")
             }
         )
 
@@ -201,10 +201,10 @@ class RunStrategyCommandServiceTest {
 
         assertEquals(
             listOf(
-                "addStrategySignalHistoryPort(id1:BUY)",
-                "onCreatedStrategySignalPort(id1:BUY)",
-                "addStrategySignalHistoryPort(id2:SELL)",
-                "onCreatedStrategySignalPort(id2:SELL)",
+                "addStrategySignalHistoryPort(id: 1, signal: BUY)",
+                "onCreatedStrategySignalPort(id: 1, signal: BUY)",
+                "addStrategySignalHistoryPort(id: 2, signal: SELL)",
+                "onCreatedStrategySignalPort(id: 2, signal: SELL)",
             ),
             logs
         )
@@ -236,6 +236,6 @@ class NoErrorGetCandlesQueryService(
 }
 
 class NoErrorOnCreatedStrategySignalAdapter : OnCreatedStrategySignalPort {
-    override suspend fun onCreatedSignal(userStrategyId: String, signal: StrategySignal) {
+    override suspend fun onCreatedSignal(userStrategyId: Long, signal: StrategySignal) {
     }
 }

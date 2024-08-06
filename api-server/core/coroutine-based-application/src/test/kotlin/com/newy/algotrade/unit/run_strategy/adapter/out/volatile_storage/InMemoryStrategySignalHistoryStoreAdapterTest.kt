@@ -5,6 +5,8 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.Stra
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
+import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -15,7 +17,10 @@ import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
 class InMemoryStrategySignalHistoryStoreAdapterTest {
-    private val userStrategyId = "1"
+    private val key = StrategySignalHistoryKey(
+        userStrategyId = 1,
+        productPriceKey = productPriceKey("BTCUSDT")
+    )
     private val signal = StrategySignal(
         OrderType.BUY,
         Candle.TimeRange(
@@ -30,13 +35,13 @@ class InMemoryStrategySignalHistoryStoreAdapterTest {
     @BeforeEach
     fun setUp() = runBlocking {
         store = InMemoryStrategySignalHistoryStoreAdapter().also {
-            it.addHistory(userStrategyId, signal)
+            it.addHistory(key, signal)
         }
     }
 
     @Test
     fun `등록한 히스토리 가져오기`() = runTest {
-        store.getHistory(userStrategyId).strategySignals().let {
+        store.getHistory(key).strategySignals().let {
             assertEquals(1, it.size)
             assertEquals(signal, it.first())
         }
@@ -44,14 +49,15 @@ class InMemoryStrategySignalHistoryStoreAdapterTest {
 
     @Test
     fun `등록한 히스토리 삭제하기`() = runTest {
-        store.removeHistory(userStrategyId)
+        store.removeHistory(key)
 
-        assertTrue(store.getHistory(userStrategyId).isEmpty())
+        assertTrue(store.getHistory(key).isEmpty())
     }
 
     @Test
     fun `등록하지 않은 히스토리 가져오기`() = runTest {
-        val unRegisteredId = "id2"
-        assertTrue(store.getHistory(unRegisteredId).isEmpty())
+        val unRegisteredKey = key.copy(userStrategyId = 2)
+
+        assertTrue(store.getHistory(unRegisteredKey).isEmpty())
     }
 }

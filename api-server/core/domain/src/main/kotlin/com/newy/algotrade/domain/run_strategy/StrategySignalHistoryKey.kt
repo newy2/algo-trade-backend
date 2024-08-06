@@ -1,9 +1,8 @@
-package com.newy.algotrade.domain.user_strategy
+package com.newy.algotrade.domain.run_strategy
 
 import com.newy.algotrade.domain.product.ProductPriceKey
 
-data class UserStrategyKey(
+data class StrategySignalHistoryKey(
     val userStrategyId: Long,
-    val strategyClassName: String,
     val productPriceKey: ProductPriceKey,
 )
