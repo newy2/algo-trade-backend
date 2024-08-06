@@ -17,7 +17,6 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunSt
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
 import com.newy.algotrade.domain.back_testing.BackTestingDataKey
 import com.newy.algotrade.domain.back_testing.BackTestingFileManager
-import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import com.newy.algotrade.domain.chart.strategy.TrafficLight
 import com.newy.algotrade.domain.common.extension.ProductPrice
@@ -34,15 +33,14 @@ class RunBackTestingController {
         val strategySignalHistoryStore = InMemoryStrategySignalHistoryStoreAdapter()
 
         val resultHistory = StrategySignalHistory()
-        val onCreatedStrategySignalPort = object : OnCreatedStrategySignalPort {
-            override suspend fun onCreatedSignal(userStrategyId: String, signal: StrategySignal) {
+        val onCreatedStrategySignalPort =
+            OnCreatedStrategySignalPort { _, signal ->
                 val history = strategySignalHistoryStore.getHistory("backTesting")
 
                 if (resultHistory.isOpened() || TrafficLight(10).isGreen(history)) {
                     resultHistory.add(signal)
                 }
             }
-        }
 
         val onReceivePollingPriceController = createOnReceivePollingPriceController(
             candleStore,

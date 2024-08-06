@@ -19,7 +19,7 @@ open class GlobalEnvConfig {
     open fun globalEnv(
         databaseClient: DatabaseClient,
     ): GlobalEnv = runBlocking {
-        val (list, adminUser) =
+        val (marketServers, adminUser) =
             arrayListOf(
                 async {
                     databaseClient
@@ -56,8 +56,8 @@ open class GlobalEnvConfig {
                 Pair(it[0] as List<Map<String, String>>, it[1] as Map<String, Long>)
             }
 
-        val byBitInfo = list.find { it["market_code"] == "BY_BIT" }!!
-        val lsSecInfo = list.find { it["market_code"] == "LS_SEC" }!!
+        val byBitInfo = marketServers.find { it["market_code"] == "BY_BIT" }!!
+        val lsSecInfo = marketServers.find { it["market_code"] == "LS_SEC" }!!
 
         GlobalEnv.initialize(
             byBitWebUrl = byBitInfo["web_url"] as String,
@@ -67,6 +67,7 @@ open class GlobalEnvConfig {
             lsSecWebSocketUrl = lsSecInfo["web_socket_url"] as String,
             lsSecApiKey = lsSecInfo["api_key"] as String,
             lsSecApiSecret = lsSecInfo["api_secret"] as String,
+
             adminUserId = adminUser["id"] as Long,
         )
         return@runBlocking GlobalEnv
