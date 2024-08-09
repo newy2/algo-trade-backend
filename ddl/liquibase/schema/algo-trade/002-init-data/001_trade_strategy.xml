@@ -17,6 +17,7 @@
 
         <insert tableName="${currentTable}">
             <column name="class_name" value="BuyTripleRSIStrategy"/>
+            <column name="entry_order_type" value="BUY"/>
             <column name="name_ko" value="(롱) 트리플 RSI 전략"/>
             <column name="name_en" value="(Long) Triple RSI Strategy"/>
         </insert>

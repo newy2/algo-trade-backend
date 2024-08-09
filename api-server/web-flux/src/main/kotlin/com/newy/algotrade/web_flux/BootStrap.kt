@@ -12,11 +12,13 @@ import com.newy.algotrade.coroutine_based_application.product.port.`in`.AddCandl
 import com.newy.algotrade.coroutine_based_application.product.port.out.PollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.strategy.port.`in`.StrategyQuery
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.GetAllUserStrategyProductQuery
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.UserStrategyProductQuery
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.springframework.beans.factory.annotation.Qualifier
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Profile
@@ -25,11 +27,15 @@ import org.springframework.stereotype.Component
 @Profile("!test")
 @Component
 class Bootstrap(
+    private val strategyQuery: StrategyQuery,
     private val runnableStrategyUseCase: RunnableStrategyUseCase,
     private val getAllUserStrategyProductQuery: GetAllUserStrategyProductQuery,
     private val pollingProductPricePort: PollingProductPricePort,
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
+        runBlocking {
+            strategyQuery.checkRegisteredStrategyClasses()
+        }
         CoroutineScope(Dispatchers.IO).launch {
             pollingProductPricePort.start()
         }

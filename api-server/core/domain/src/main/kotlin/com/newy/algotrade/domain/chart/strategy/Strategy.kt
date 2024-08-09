@@ -6,7 +6,7 @@ import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.chart.Rule
 import com.newy.algotrade.domain.chart.order.OrderType
 
-open class Strategy(private val entryType: OrderType, private val entryRule: Rule, private val exitRule: Rule) {
+open class Strategy(val entryType: OrderType, private val entryRule: Rule, private val exitRule: Rule) {
     companion object {
         fun fromClassName(strategyClassName: String, candles: Candles): Strategy {
             val packageName = "com.newy.algotrade.domain.chart.strategy.custom"

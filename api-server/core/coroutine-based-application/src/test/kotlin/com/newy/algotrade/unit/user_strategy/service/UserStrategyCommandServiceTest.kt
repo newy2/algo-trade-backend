@@ -2,6 +2,7 @@ package com.newy.algotrade.unit.user_strategy.service
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
 import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStrategyEvent
+import com.newy.algotrade.coroutine_based_application.strategy.port.`in`.HasStrategyQuery
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model.SetUserStrategyCommand
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.*
 import com.newy.algotrade.coroutine_based_application.user_strategy.service.UserStrategyCommandService
@@ -33,7 +34,7 @@ private val incomingPortModel = SetUserStrategyCommand(
 class UserStrategyCommandServiceExceptionTest {
     @Test
     fun `marketAccountId 가 없는 경우`() = runTest {
-        val notFoundMarketAdapter = GetMarketPort { _ -> emptyList() }
+        val notFoundMarketAdapter = GetMarketPort { emptyList() }
         val service = newUserStrategyCommandService(
             getMarketPort = notFoundMarketAdapter,
         )
@@ -48,9 +49,9 @@ class UserStrategyCommandServiceExceptionTest {
 
     @Test
     fun `strategyId 가 없는 경우`() = runTest {
-        val hasNotStrategyAdapter = HasStrategyPort { _ -> false }
+        val hasNotStrategyService = HasStrategyQuery { false }
         val service = newUserStrategyCommandService(
-            hasStrategyPort = hasNotStrategyAdapter,
+            hasStrategyQuery = hasNotStrategyService,
         )
 
         try {
@@ -63,7 +64,7 @@ class UserStrategyCommandServiceExceptionTest {
 
     @Test
     fun `이미 등록한 userStrategy 인 경우`() = runTest {
-        val alreadySavedUserStrategyAdapter = HasUserStrategyPort { _ -> true }
+        val alreadySavedUserStrategyAdapter = HasUserStrategyPort { true }
         val service = newUserStrategyCommandService(
             hasUserStrategyPort = alreadySavedUserStrategyAdapter,
         )
@@ -183,16 +184,16 @@ class UserPickProductUserStrategyCommandServiceTest {
 }
 
 private fun newUserStrategyCommandService(
+    hasStrategyQuery: HasStrategyQuery = NoErrorHasStrategyService(),
     getMarketPort: GetMarketPort = NoErrorGetMarketAdapter(),
-    hasStrategyPort: HasStrategyPort = NoErrorHasStrategyAdapter(),
     getProductPort: GetProductPort = NoErrorGetProductAdapter(),
     hasUserStrategyPort: HasUserStrategyPort = NoErrorUserStrategyAdapter(),
     setUserStrategyPort: SetUserStrategyPort = NoErrorUserStrategyAdapter(),
     setUserStrategyProductPort: SetUserStrategyProductPort = NoErrorSetUserStrategyProductAdapter(),
     eventBus: EventBus<CreateUserStrategyEvent> = EventBus(),
 ) = UserStrategyCommandService(
+    hasStrategyQuery = hasStrategyQuery,
     getMarketPort = getMarketPort,
-    hasStrategyPort = hasStrategyPort,
     getProductPort = getProductPort,
     hasUserStrategyPort = hasUserStrategyPort,
     setUserStrategyPort = setUserStrategyPort,
@@ -201,15 +202,15 @@ private fun newUserStrategyCommandService(
 )
 
 
-class NoErrorGetMarketAdapter : GetMarketPort {
-    override suspend fun getMarketIdsBy(marketAccountId: Long): List<Long> {
-        return listOf(1)
+class NoErrorHasStrategyService : HasStrategyQuery {
+    override suspend fun hasStrategy(className: String): Boolean {
+        return true
     }
 }
 
-class NoErrorHasStrategyAdapter : HasStrategyPort {
-    override suspend fun hasStrategyByClassName(strategyClassName: String): Boolean {
-        return true
+class NoErrorGetMarketAdapter : GetMarketPort {
+    override suspend fun getMarketIdsBy(marketAccountId: Long): List<Long> {
+        return listOf(1)
     }
 }
 

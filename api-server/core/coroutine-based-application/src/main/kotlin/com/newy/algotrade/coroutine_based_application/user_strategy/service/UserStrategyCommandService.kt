@@ -2,6 +2,7 @@ package com.newy.algotrade.coroutine_based_application.user_strategy.service
 
 import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
 import com.newy.algotrade.coroutine_based_application.common.event.CreateUserStrategyEvent
+import com.newy.algotrade.coroutine_based_application.strategy.port.`in`.HasStrategyQuery
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.UserStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model.SetUserStrategyCommand
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.*
@@ -12,26 +13,26 @@ import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.withContext
 
 open class UserStrategyCommandService(
+    private val hasStrategyQuery: HasStrategyQuery,
     private val hasUserStrategyPort: HasUserStrategyPort,
     private val setUserStrategyPort: SetUserStrategyPort,
     private val getMarketPort: GetMarketPort,
-    private val hasStrategyPort: HasStrategyPort,
     private val getProductPort: GetProductPort,
     private val setUserStrategyProductPort: SetUserStrategyProductPort,
     private val eventBus: EventBus<CreateUserStrategyEvent>,
 ) : UserStrategyUseCase {
     constructor(
+        hasStrategyQuery: HasStrategyQuery,
         userStrategyPort: UserStrategyPort,
         getMarketPort: GetMarketPort,
-        hasStrategyPort: HasStrategyPort,
         getProductPort: GetProductPort,
         setUserStrategyProductPort: SetUserStrategyProductPort,
         eventBus: EventBus<CreateUserStrategyEvent>,
     ) : this(
+        hasStrategyQuery = hasStrategyQuery,
         hasUserStrategyPort = userStrategyPort,
         setUserStrategyPort = userStrategyPort,
         getMarketPort = getMarketPort,
-        hasStrategyPort = hasStrategyPort,
         getProductPort = getProductPort,
         setUserStrategyProductPort = setUserStrategyProductPort,
         eventBus = eventBus,
@@ -40,7 +41,7 @@ open class UserStrategyCommandService(
     override suspend fun setUserStrategy(userStrategy: SetUserStrategyCommand): Boolean = withContext(Dispatchers.IO) {
         val marketIds = listOf(
             async { getMarketPort.getMarketIdsBy(userStrategy.marketAccountId) },
-            async { hasStrategyPort.hasStrategyByClassName(userStrategy.strategyClassName) },
+            async { hasStrategyQuery.hasStrategy(userStrategy.strategyClassName) },
             async { hasUserStrategyPort.hasUserStrategy(userStrategy.toDomainEntity().setUserStrategyKey) }
         ).awaitAll().let {
             val (marketIds, hasStrategy, hasUserStrategy) = it
