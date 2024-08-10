@@ -9,6 +9,24 @@ sourceSets {
 plugins {
     id("kotlin-conventions")
     id("org.liquibase.gradle") version "2.2.1"
+    id("com.nocwriter.runsql") version "1.0.3"
+}
+
+fun getDatabaseArguments(): Map<String, String> {
+    return mapOf(
+        "mysql" to mapOf(
+            "url" to getSystemProperty("X_MYSQL_JDBC_URL"),
+            "username" to getSystemProperty("X_MYSQL_USERNAME"),
+            "password" to getSystemProperty("X_MYSQL_PASSWORD"),
+            "driver" to "com.mysql.cj.jdbc.Driver",
+        ),
+        "postgresql" to mapOf(
+            "url" to getSystemProperty("X_POSTGRESQL_JDBC_URL"),
+            "username" to getSystemProperty("X_POSTGRESQL_USERNAME"),
+            "password" to getSystemProperty("X_POSTGRESQL_PASSWORD"),
+            "driver" to "org.postgresql.Driver",
+        ),
+    )[getSystemProperty("X_DBMS_NAME")] ?: emptyMap()
 }
 
 fun getSystemProperty(name: String): String {
@@ -18,37 +36,55 @@ fun getSystemProperty(name: String): String {
      * --
      * 둘 다 지원하기 위해서 아래처럼 구현 함
      */
-    val result = System.getProperty(name, System.getenv(name))
+    val result = System.getProperty(name, System.getenv(name)) ?: ""
     System.setProperty(name, result) // xml 에서 property 접근하는 로직을 위해서 사용
     return result
 }
 
 liquibase {
     activities.register("main") {
-        // TODO defaultSchemaName 변경 (스키마, 데이터베이스 자동 생성기능 확인)
         val baseArguments = mapOf(
             "searchPath" to "ddl/liquibase",
             "changelogFile" to "master_change_log.xml",
             "liquibaseSchemaName" to "liquibase",
-            "defaultSchemaName" to "public",
+            "defaultSchemaName" to "algo_trade",
         )
 
-        val dbArguments = mapOf(
-            "mysql" to mapOf(
-                "url" to getSystemProperty("X_MYSQL_JDBC_URL"),
-                "username" to getSystemProperty("X_MYSQL_USERNAME"),
-                "password" to getSystemProperty("X_MYSQL_PASSWORD"),
-            ),
-            "postgresql" to mapOf(
-                "url" to getSystemProperty("X_POSTGRESQL_JDBC_URL"),
-                "username" to getSystemProperty("X_POSTGRESQL_USERNAME"),
-                "password" to getSystemProperty("X_POSTGRESQL_PASSWORD"),
-            ),
-        )
+        this.arguments = baseArguments + getDatabaseArguments()
+    }
+    this.runList = "main"
+}
 
-        this.arguments = baseArguments + dbArguments[getSystemProperty("X_DBMS_NAME")]!!
+tasks.named("update").configure {
+    dependsOn("createSchema")
+}
+
+task<RunSQL>("createSchema") {
+    val dbArguments = getDatabaseArguments()
+
+    config {
+        username = dbArguments["username"]
+        password = dbArguments["password"]
+        url = dbArguments["url"]
+        driverClassName = dbArguments["driver"]
+        scriptFile = "create_schema.sql"
     }
 }
+
+//tasks.register("createSchema", Exec::class) {
+//    // TODO fix: postgres 는 실행 가능하지만, mysql 이 driver 를 로딩하지 못함
+//    val dbArguments = getDatabaseArguments()
+//
+//    commandLine(
+//        "liquibase",
+//        "execute-sql",
+//        "--sql-file=create_schema.sql",
+//        "--url=${dbArguments["url"]}",
+//        "--username=${dbArguments["username"]}",
+//        "--password=${dbArguments["password"]}",
+//        "--driver=${dbArguments["driver"]}"
+//    )
+//}
 
 dependencies {
     implementation("org.liquibase:liquibase-core:4.27.0")
