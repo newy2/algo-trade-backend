@@ -48,6 +48,7 @@
             <column name="product_type" type="VARCHAR2(50)" remarks="상품 유형">
                 <constraints nullable="false"/>
             </column>
+            <!-- TODO time_frame -> candle_interval -->
             <column name="time_frame" type="VARCHAR2(3)" remarks="candle 차트 기준 시간">
                 <constraints nullable="false"/>
             </column>

@@ -16,7 +16,7 @@ class UserStrategyControllerTest {
         var incomingPortModel: SetUserStrategyCommand? = null
         val controller = SetUserStrategyController(
             setUserStrategyUseCase = { strategy ->
-                true.also {
+                1.toLong().also {
                     incomingPortModel = strategy
                 }
             }

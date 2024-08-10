@@ -1,4 +1,4 @@
-package com.newy.algotrade.web_flux.strategy.adapter.service
+package com.newy.algotrade.web_flux.strategy.service
 
 import com.newy.algotrade.coroutine_based_application.strategy.port.out.StrategyPort
 import com.newy.algotrade.coroutine_based_application.strategy.service.StrategyQueryService

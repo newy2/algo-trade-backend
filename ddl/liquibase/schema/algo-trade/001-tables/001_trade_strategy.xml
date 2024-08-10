@@ -47,7 +47,7 @@
         <!-- pro 모드 대체 로직  -->
         <sql>
             ALTER TABLE ${currentTable}
-                ADD CONSTRAINT ${currentTable}__entry_order_type_check CHECK ("entry_order_type" IN ('BUY', 'SELL'));
+                ADD CONSTRAINT ${currentTable}__entry_order_type_check CHECK (entry_order_type IN ('BUY', 'SELL'));
         </sql>
     </changeSet>
 </databaseChangeLog>

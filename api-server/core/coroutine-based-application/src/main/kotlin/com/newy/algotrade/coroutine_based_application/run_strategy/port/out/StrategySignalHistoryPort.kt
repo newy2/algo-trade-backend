@@ -9,8 +9,8 @@ interface StrategySignalHistoryPort :
     RemoveStrategySignalHistoryPort,
     AddStrategySignalHistoryPort
 
-fun interface GetStrategySignalHistoryPort {
-    suspend fun getHistory(key: StrategySignalHistoryKey): StrategySignalHistory
+interface GetStrategySignalHistoryPort {
+    suspend fun getHistory(key: StrategySignalHistoryKey, maxSize: Int = 10): StrategySignalHistory
 }
 
 fun interface RemoveStrategySignalHistoryPort {

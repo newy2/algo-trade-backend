@@ -42,16 +42,16 @@
             </column>
 
             <!-- 일반 필드 -->
-            <column name="signal" type="CHAR(3)" remarks="신호 (ENT: 진입신호, EXT: 진출신호)">
+            <column name="order_type" type="VARCHAR(4)" remarks="주문유형 (BUY: 매수, SELL: 매도)">
                 <constraints nullable="false"/>
             </column>
             <column name="price" type="NUMERIC" remarks="상품 가격">
                 <constraints nullable="false"/>
             </column>
-            <column name="version" type="TINYINT" remarks="자동매매 전략 버전" defaultValue="1">
+            <column name="candle_begin_time" type="DATETIME" remarks="candle 시작시간">
                 <constraints nullable="false"/>
             </column>
-            <column name="candle_time_range" type="NUMERIC" remarks="사용한 분봉">
+            <column name="candle_interval" type="VARCHAR2(3)" remarks="candle 간격">
                 <constraints nullable="false"/>
             </column>
 
@@ -64,7 +64,7 @@
         <!-- pro 모드 대체 로직  -->
         <sql>
             ALTER TABLE ${currentTable}
-                ADD CONSTRAINT ${currentTable}__signal_check CHECK ("signal" IN ('ENT', 'EXT'));
+                ADD CONSTRAINT ${currentTable}__order_type_check CHECK (order_type IN ('BUY', 'SELL'));
         </sql>
     </changeSet>
 </databaseChangeLog>

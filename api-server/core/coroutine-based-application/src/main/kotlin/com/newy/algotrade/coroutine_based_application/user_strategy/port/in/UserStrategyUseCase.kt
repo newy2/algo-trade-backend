@@ -6,5 +6,5 @@ interface UserStrategyUseCase :
     SetUserStrategyUseCase
 
 fun interface SetUserStrategyUseCase {
-    suspend fun setUserStrategy(strategy: SetUserStrategyCommand): Boolean
+    suspend fun setUserStrategy(strategy: SetUserStrategyCommand): Long
 }

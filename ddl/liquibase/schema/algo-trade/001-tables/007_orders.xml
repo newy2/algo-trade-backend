@@ -73,7 +73,7 @@
         <!-- pro 모드 대체 로직  -->
         <sql>
             ALTER TABLE ${currentTable}
-                ADD CONSTRAINT ${currentTable}__trade_amount_check CHECK ( trade_amount &lt;= amount );
+                ADD CONSTRAINT ${currentTable}__trade_amount_check CHECK (trade_amount &lt;= amount);
 
             ALTER TABLE ${currentTable}
                 ADD CONSTRAINT ${currentTable}__status_check CHECK (status IN (

@@ -15,6 +15,7 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import com.newy.algotrade.domain.product.ProductPriceKey
 import com.newy.algotrade.domain.run_strategy.RunStrategyResult
+import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
 import helpers.BooleanRule
 import helpers.productPrice
 import helpers.productPriceKey
@@ -87,18 +88,20 @@ class RunStrategyCommandServiceWithStrategySignalHistoryTest {
             userStrategyKey(3, BTC_1MINUTE) to LongPositionStrategy(entry = false, exit = false),
         )
     }
-    private val enteredSignalHistoryAdapter = GetStrategySignalHistoryPort {
-        StrategySignalHistory().also {
-            it.add(
-                StrategySignal(
-                    orderType = OrderType.BUY,
-                    timeFrame = Candle.TimeRange(
-                        period = Duration.ofMinutes(1),
-                        begin = beginTime
-                    ),
-                    price = 1000.toBigDecimal(),
+    private val enteredSignalHistoryAdapter = object : GetStrategySignalHistoryPort {
+        override suspend fun getHistory(key: StrategySignalHistoryKey, maxSize: Int): StrategySignalHistory {
+            return StrategySignalHistory().also {
+                it.add(
+                    StrategySignal(
+                        orderType = OrderType.BUY,
+                        timeFrame = Candle.TimeRange(
+                            period = Duration.ofMinutes(1),
+                            begin = beginTime
+                        ),
+                        price = 1000.toBigDecimal(),
+                    )
                 )
-            )
+            }
         }
     }
 

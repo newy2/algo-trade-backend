@@ -38,7 +38,7 @@ open class UserStrategyCommandService(
         eventBus = eventBus,
     )
 
-    override suspend fun setUserStrategy(userStrategy: SetUserStrategyCommand): Boolean = withContext(Dispatchers.IO) {
+    override suspend fun setUserStrategy(userStrategy: SetUserStrategyCommand): Long = withContext(Dispatchers.IO) {
         val marketIds = listOf(
             async { getMarketPort.getMarketIdsBy(userStrategy.marketAccountId) },
             async { hasStrategyQuery.hasStrategy(userStrategy.strategyClassName) },
@@ -81,6 +81,6 @@ open class UserStrategyCommandService(
 
         eventBus.publishEvent(CreateUserStrategyEvent(userStrategyId))
 
-        return@withContext true
+        return@withContext userStrategyId
     }
 }
