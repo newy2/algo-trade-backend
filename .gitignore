@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### Dev Environment ###
+local-infra/*
+!local-infra/docker-compose.yml

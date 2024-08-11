@@ -1,0 +1,29 @@
+version: '3'
+services:
+  mysql:
+    platform: linux/x86_64
+    image: library/mysql:8.0.33
+    container_name: mysql
+    restart: always
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      TZ: Asia/Seoul
+    volumes:
+      - ./db/mysql/data:/var/lib/mysql
+
+  postgres:
+    image: postgres
+    container_name: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_PASSWORD: root
+      TZ: Asia/Seoul
+    volumes:
+      - ./db/postgres/data:/var/lib/postgresql/data
