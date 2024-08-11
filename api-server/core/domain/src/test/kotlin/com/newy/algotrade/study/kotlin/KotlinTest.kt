@@ -48,7 +48,7 @@ class KotlinTest {
             def
         """.trimIndent()
 
-        assertEquals(listOf("abc", "def"), multiLineText.split("\n"))
+        assertEquals(listOf("abc", "def"), multiLineText.split(System.lineSeparator()))
     }
 
     @Test
@@ -89,7 +89,7 @@ class AccessResourceFolderTest {
         val fromStream = javaClass.getResourceAsStream(RESOURCE_PATH)!!
             .bufferedReader()
             .lines()
-            .collect(Collectors.joining("\n"))
+            .collect(Collectors.joining(System.lineSeparator()))
 
         assertEquals(RESOURCE_CONTENT, fromStream)
     }

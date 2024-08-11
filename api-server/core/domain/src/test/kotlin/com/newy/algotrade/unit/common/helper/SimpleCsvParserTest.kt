@@ -8,9 +8,10 @@ import java.io.File
 
 const val RESOURCE_PATH = "/csv/for-unit-test-file.csv"
 val RESOURCE_CONTENT =
-    "startTime, openPrice, highPrice, lowPrice, closePrice, volume" +
-            System.lineSeparator() +
-            "1709942400000, 68180.0, 68236.5, 68179.8, 68236.4, 18.308"
+    """
+        startTime, openPrice, highPrice, lowPrice, closePrice, volume
+        1709942400000, 68180.0, 68236.5, 68179.8, 68236.4, 18.308
+    """.trimIndent()
 
 @DisplayName("csv 파일을 문자열 array 로 파싱하기")
 class SimpleCsvParserTest {
@@ -20,7 +21,7 @@ class SimpleCsvParserTest {
             제목1,제목2
             111,aaa
             222,bbb
-        """.trimIndent().split("\n").stream()
+        """.trimIndent().split(System.lineSeparator()).stream()
 
         assertArrayEquals(
             arrayOf(
@@ -37,7 +38,7 @@ class SimpleCsvParserTest {
             제목1,제목2
             111 , aaa
              222, bbb   
-        """.trimIndent().split("\n").stream()
+        """.trimIndent().split(System.lineSeparator()).stream()
 
         assertArrayEquals(
             arrayOf(
