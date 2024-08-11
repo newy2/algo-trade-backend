@@ -18,12 +18,12 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.assertEquals
 
 open class BaseTest {
-    private val port = TestServerPort.nextValue()
     protected lateinit var client: HttpApiClient
     protected lateinit var server: MockWebServer
 
     @BeforeEach
     fun setUp() {
+        val port = TestServerPort.nextValue()
         client = DefaultHttpApiClient(
             OkHttpClient(),
             "http://localhost:$port",

@@ -15,16 +15,18 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import kotlin.coroutines.CoroutineContext
+import kotlin.properties.Delegates
 import kotlin.test.assertEquals
 
 class PingTest {
-    private val port = TestServerPort.nextValue()
+    private var port by Delegates.notNull<Int>()
     private lateinit var serverListener: ServerListener
     private lateinit var server: MockWebServer
     private lateinit var client: DefaultWebSocketClient
 
     @BeforeEach
     fun setUp() {
+        port = TestServerPort.nextValue()
         serverListener = ServerListener()
         server = MockWebServer().also {
             it.start(port)
@@ -82,13 +84,14 @@ class PingTest {
 }
 
 class AutoRestartTest {
-    private val port = TestServerPort.nextValue()
+    private var port by Delegates.notNull<Int>()
     private lateinit var serverListener: ServerListener
     private lateinit var server: MockWebServer
     private lateinit var client: DefaultWebSocketClient
 
     @BeforeEach
     fun setUp() {
+        port = TestServerPort.nextValue()
         serverListener = ServerListener()
         server = MockWebServer().also {
             it.start(port)
@@ -145,12 +148,13 @@ class AutoRestartTest {
 }
 
 class SendReceiveMessageTest {
-    private val port = TestServerPort.nextValue()
+    private var port by Delegates.notNull<Int>()
     private lateinit var server: MockWebServer
     private lateinit var client: DefaultWebSocketClient
 
     @BeforeEach
     fun setUp() {
+        port = TestServerPort.nextValue()
         server = MockWebServer().also {
             it.start(port)
         }

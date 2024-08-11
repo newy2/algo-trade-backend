@@ -34,12 +34,12 @@ open class BaseWebSocketListener(
 }
 
 open class BaseTest {
-    private val port = TestServerPort.nextValue()
     protected lateinit var server: MockWebServer
     private lateinit var request: Request
 
     @BeforeEach
     fun setUp() {
+        val port = TestServerPort.nextValue()
         server = MockWebServer().also {
             it.start(port)
         }

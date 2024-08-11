@@ -21,7 +21,6 @@ import org.junit.jupiter.api.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class OkHttpTest {
-    private val port = TestServerPort.nextValue()
     private val jsonConverter = JsonConverterByJackson(jacksonObjectMapper())
     private val client = OkHttpClient()
     private lateinit var baseRequest: Request
@@ -29,6 +28,7 @@ class OkHttpTest {
 
     @BeforeEach
     fun setUp() {
+        val port = TestServerPort.nextValue()
         baseRequest = Request.Builder()
             .url("http://localhost:$port")
             .headers(

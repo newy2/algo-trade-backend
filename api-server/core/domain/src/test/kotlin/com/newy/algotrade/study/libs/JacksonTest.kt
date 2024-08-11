@@ -74,7 +74,7 @@ class JacksonDeserializeTest {
     }
 
     @Test
-    fun `multi depth JSON 파싱하기 - 사용하지 않는 2depth 이상의 JSON key("result" 의 "key2") 는 자동으로 무시된다`() {
+    fun `multi depth JSON 파싱하기 - 사용하지 않는 2depth 이상의 JSON key('result' 의 'key2') 는 자동으로 무시된다`() {
         val json = """
             {
                 "result": {

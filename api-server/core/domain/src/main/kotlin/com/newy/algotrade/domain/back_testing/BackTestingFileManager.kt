@@ -5,7 +5,6 @@ import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.helper.SimpleCsvParser
 import com.newy.algotrade.domain.common.helper.SimpleCsvWriter
 import java.io.File
-import java.nio.file.Paths
 import java.time.Instant
 import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
@@ -20,7 +19,7 @@ class BackTestingFileManager {
     }
 
     private fun getFile(key: BackTestingDataKey): File {
-        return Paths.get(folderPath(), fileName(key)).toFile()
+        return File(folderPath(), fileName(key))
     }
 
     fun hasFile(key: BackTestingDataKey): Boolean {

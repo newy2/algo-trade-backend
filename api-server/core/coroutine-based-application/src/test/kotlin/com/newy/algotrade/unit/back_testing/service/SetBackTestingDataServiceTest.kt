@@ -9,7 +9,7 @@ import helpers.productPriceKey
 import kotlinx.coroutines.test.runTest
 import org.junit.AfterClass
 import org.junit.jupiter.api.Test
-import java.nio.file.Paths
+import java.io.File
 import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.test.assertFalse
@@ -29,7 +29,7 @@ class SetBackTestingDataServiceTest {
 
     @AfterClass
     fun tearDown() {
-        Paths.get(fileManager.folderPath(), fileManager.fileName(key)).toFile().deleteOnExit()
+        File(fileManager.folderPath(), fileManager.fileName(key)).deleteOnExit()
     }
 
     @Test

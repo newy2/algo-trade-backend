@@ -18,12 +18,12 @@ import org.springframework.web.reactive.function.client.WebClient
 
 // TODO 테스트 코드 중복 제거(-> HttpApiClientTest)
 open class BaseTest {
-    private val port = TestServerPort.nextValue()
     protected lateinit var client: HttpApiClient
     protected lateinit var server: MockWebServer
 
     @BeforeEach
     fun setUp() {
+        val port = TestServerPort.nextValue()
         client = HttpApiClientByWebClient(
             WebClient.builder().build(),
             "http://localhost:$port",

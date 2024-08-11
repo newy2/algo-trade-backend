@@ -7,7 +7,7 @@ import com.newy.algotrade.domain.chart.Candle
 import helpers.productPriceKey
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
-import java.nio.file.Paths
+import java.io.File
 import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.test.assertEquals
@@ -81,6 +81,6 @@ class BackTestingDataFileStorageAdapterTest {
 
         assertEquals(adapter.getBackTestingData(key), list)
 
-        Paths.get(fileManager.folderPath(), fileManager.fileName(key)).toFile().deleteOnExit()
+        File(fileManager.folderPath(), fileManager.fileName(key)).deleteOnExit()
     }
 }

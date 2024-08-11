@@ -9,7 +9,7 @@ import org.junit.AfterClass
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
-import java.nio.file.Paths
+import java.io.File
 import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.test.assertEquals
@@ -105,7 +105,7 @@ class BackTestingFileManagerTest {
 
     @AfterClass
     fun tearDown() {
-        Paths.get(manager.folderPath(), manager.fileName(key)).toFile().deleteOnExit()
+        File(manager.folderPath(), manager.fileName(key)).deleteOnExit()
     }
 
     @Test

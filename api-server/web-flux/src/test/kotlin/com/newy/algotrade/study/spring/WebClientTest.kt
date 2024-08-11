@@ -14,12 +14,12 @@ import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.awaitBodyOrNull
 
 class WebClientTest {
-    private val port = TestServerPort.nextValue()
     private lateinit var client: WebClient
     private lateinit var server: MockWebServer
 
     @BeforeEach
     fun setUp() {
+        val port = TestServerPort.nextValue()
         client = WebClient.builder()
             .baseUrl("http://localhost:$port")
             .defaultHeaders {

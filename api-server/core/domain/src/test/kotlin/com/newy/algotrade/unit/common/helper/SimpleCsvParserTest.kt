@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test
 import java.io.File
 
 const val RESOURCE_PATH = "/csv/for-unit-test-file.csv"
-val RESOURCE_CONTENT = """
-    startTime, openPrice, highPrice, lowPrice, closePrice, volume
-    1709942400000, 68180.0, 68236.5, 68179.8, 68236.4, 18.308
-""".trimIndent()
+val RESOURCE_CONTENT =
+    "startTime, openPrice, highPrice, lowPrice, closePrice, volume" +
+            System.lineSeparator() +
+            "1709942400000, 68180.0, 68236.5, 68179.8, 68236.4, 18.308"
 
 @DisplayName("csv 파일을 문자열 array 로 파싱하기")
 class SimpleCsvParserTest {
