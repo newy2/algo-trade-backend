@@ -18,7 +18,7 @@ import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
 
 val byBitKlineList =
-    SimpleCsvParser.parseFromResource("/csv/[ByBit] BTCUSDT - 1m - 1000count - until 2024-03-09T00:00Z(UTC).csv")
+    SimpleCsvParser.parseFromResource("/csv/[ByBit] BTCUSDT - 1m - 1000count - until 2024-03-09T00_00Z(UTC).csv")
 
 val TEST_TARGET_BAR_EXPECTED_VALUES = mapOf(
     "RSI7" to 44.49,
