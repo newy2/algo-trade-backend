@@ -8,6 +8,7 @@ import java.io.File
 import java.nio.file.Paths
 import java.time.Instant
 import java.time.ZoneOffset
+import java.time.format.DateTimeFormatter
 
 class BackTestingFileManager {
     companion object {
@@ -64,13 +65,15 @@ class BackTestingFileManager {
         return key.run {
             val beginTime = searchBeginTime.withOffsetSameInstant(ZoneOffset.ofHours(9))
             val endTime = searchEndTime.withOffsetSameInstant(ZoneOffset.ofHours(9))
+            val formatter = DateTimeFormatter.ofPattern("YYYY-MM-dd'T'HH_mmZ")
+                .withZone(ZoneOffset.ofHours(9))
 
             listOf(
                 productPriceKey.market,
                 productPriceKey.productType,
                 productPriceKey.productCode,
                 Candle.TimeFrame.from(productPriceKey.interval)!!,
-                "$beginTime - $endTime"
+                "${formatter.format(beginTime)} - ${formatter.format(endTime)}"
             ).joinToString(
                 separator = "",
                 transform = { "[$it]" },

@@ -117,6 +117,17 @@ class DateTimeFormatterTest {
 
         assertEquals("2024-05-01T09:00+09:00", offsetDateTime.toString())
     }
+
+    @Test
+    fun `OffsetDateTime 문자열 포멧팅`() {
+        val dateTime = OffsetDateTime.parse("2018-12-30T06:00:00Z")
+            .withOffsetSameInstant(ZoneOffset.ofHours(9))
+
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH-mm-ssZ")
+            .withZone(ZoneOffset.ofHours(9))
+
+        assertEquals("2018-12-30T15-00-00+0900", formatter.format(dateTime))
+    }
 }
 
 class DurationTest {

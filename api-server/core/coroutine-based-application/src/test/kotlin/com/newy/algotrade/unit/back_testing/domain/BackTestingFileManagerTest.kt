@@ -31,7 +31,7 @@ class ExistsFileBackTestingFileManagerTest {
     @Test
     fun `파일 이름`() {
         assertEquals(
-            "[BY_BIT][SPOT][BTCUSDT][M1][9999-01-01T00:00+09:00 - 9999-01-01T00:01+09:00].csv",
+            "[BY_BIT][SPOT][BTCUSDT][M1][9999-01-01T00_00+0900 - 9999-01-01T00_01+0900].csv",
             manager.fileName(key)
         )
     }
@@ -74,7 +74,7 @@ class EmptyFileBackTestingFileManagerTest {
     @Test
     fun `파일 이름`() {
         assertEquals(
-            "[LS_SEC][PERPETUAL_FUTURE][078020][D1][0000-01-01T09:00+09:00 - 0000-01-01T09:01+09:00].csv",
+            "[LS_SEC][PERPETUAL_FUTURE][078020][D1][0000-01-01T09_00+0900 - 0000-01-01T09_01+0900].csv",
             manager.fileName(key)
         )
     }
