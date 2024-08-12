@@ -4,13 +4,13 @@ import com.newy.algotrade.domain.user_strategy.SetUserStrategy
 import com.newy.algotrade.domain.user_strategy.SetUserStrategyKey
 
 interface UserStrategyPort :
-    SetUserStrategyPort,
-    HasUserStrategyPort
+    SaveUserStrategyPort,
+    ExistsUserStrategyPort
 
-fun interface SetUserStrategyPort {
-    suspend fun setUserStrategy(setUserStrategy: SetUserStrategy): Long
+fun interface SaveUserStrategyPort {
+    suspend fun saveUserStrategy(setUserStrategy: SetUserStrategy): Long
 }
 
-fun interface HasUserStrategyPort {
-    suspend fun hasUserStrategy(setUserStrategyKey: SetUserStrategyKey): Boolean
+fun interface ExistsUserStrategyPort {
+    suspend fun existsUserStrategy(setUserStrategyKey: SetUserStrategyKey): Boolean
 }

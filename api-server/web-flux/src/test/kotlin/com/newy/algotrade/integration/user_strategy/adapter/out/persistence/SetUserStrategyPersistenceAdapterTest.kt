@@ -31,7 +31,7 @@ class SetUserStrategyPersistenceAdapterTest(
     fun `userStrategy 등록하기`() = runTransactional {
         val (marketAccountId, strategyClassName, strategyId) = setInitData()
 
-        val userStrategyId = adapter.setUserStrategy(newSetUserStrategy(marketAccountId, strategyClassName))
+        val userStrategyId = adapter.saveUserStrategy(newSetUserStrategy(marketAccountId, strategyClassName))
 
         assertEquals(
             UserStrategyR2dbcEntity(
@@ -55,15 +55,15 @@ class SetUserStrategyPersistenceAdapterTest(
             productType = ProductType.SPOT,
         )
 
-        val beforeSaved = adapter.hasUserStrategy(setUserStrategyKey)
-        adapter.setUserStrategy(
+        val beforeSaved = adapter.existsUserStrategy(setUserStrategyKey)
+        adapter.saveUserStrategy(
             SetUserStrategy(
                 setUserStrategyKey = setUserStrategyKey,
                 productCategory = ProductCategory.USER_PICK,
                 timeFrame = Candle.TimeFrame.M1,
             )
         )
-        val afterSaved = adapter.hasUserStrategy(setUserStrategyKey)
+        val afterSaved = adapter.existsUserStrategy(setUserStrategyKey)
 
         assertFalse(beforeSaved)
         assertTrue(afterSaved)
@@ -75,10 +75,10 @@ class SetUserStrategyPersistenceAdapterTest(
         val (marketAccountId, strategyClassName) = setInitData()
         val setUserStrategy = newSetUserStrategy(marketAccountId, strategyClassName)
 
-        adapter.setUserStrategy(setUserStrategy)
+        adapter.saveUserStrategy(setUserStrategy)
 
         assertThrows<DataIntegrityViolationException> {
-            adapter.setUserStrategy(
+            adapter.saveUserStrategy(
                 setUserStrategy.copy(
                     productCategory = ProductCategory.TOP_TRADING_VALUE,
                 )

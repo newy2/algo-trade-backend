@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 class UserStrategyProductPersistenceAdapter(
     private val repository: UserStrategyProductRepository,
 ) : UserStrategyProductPort {
-    override suspend fun setUserStrategyProducts(userStrategyId: Long, productIds: List<Long>): Boolean {
+    override suspend fun saveAllUserStrategyProducts(userStrategyId: Long, productIds: List<Long>): Boolean {
         if (productIds.isEmpty()) {
             return false
         }
@@ -28,12 +28,12 @@ class UserStrategyProductPersistenceAdapter(
         return true
     }
 
-    override suspend fun getAllUserStrategyKeys(): List<UserStrategyKey> =
+    override suspend fun findAllUserStrategyKeys(): List<UserStrategyKey> =
         repository
             .findAllAsUserStrategyKey()
             .toList()
 
-    override suspend fun getUserStrategyKeys(userStrategyId: Long): List<UserStrategyKey> =
+    override suspend fun findUserStrategyKeys(userStrategyId: Long): List<UserStrategyKey> =
         repository
             .findByUserStrategyIdAsUserStrategyKey(userStrategyId)
             .toList()

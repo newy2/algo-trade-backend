@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence
 
-import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.GetProductPort
+import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.ProductPort
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.user_strategy.Product
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.ProductRepository
@@ -9,10 +9,10 @@ import kotlinx.coroutines.flow.toList
 import org.springframework.stereotype.Component
 
 @Component
-class GetProductPersistenceAdapter(
+class FindProductPersistenceAdapter(
     private val productRepository: ProductRepository
-) : GetProductPort {
-    override suspend fun getProducts(
+) : ProductPort {
+    override suspend fun findProducts(
         marketIds: List<Long>,
         productType: ProductType,
         productCodes: List<String>

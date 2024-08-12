@@ -13,7 +13,7 @@ class UserStrategyPersistenceAdapter(
     private val strategyRepository: StrategyRepository,
     private val userStrategyRepository: UserStrategyRepository,
 ) : UserStrategyPort {
-    override suspend fun setUserStrategy(setUserStrategy: SetUserStrategy): Long =
+    override suspend fun saveUserStrategy(setUserStrategy: SetUserStrategy): Long =
         userStrategyRepository.save(
             UserStrategyR2dbcEntity(
                 domainEntity = setUserStrategy,
@@ -21,7 +21,7 @@ class UserStrategyPersistenceAdapter(
             )
         ).id
 
-    override suspend fun hasUserStrategy(setUserStrategyKey: SetUserStrategyKey): Boolean {
+    override suspend fun existsUserStrategy(setUserStrategyKey: SetUserStrategyKey): Boolean {
         return userStrategyRepository.existsByMarketAccountIdAndStrategyIdAndProductType(
             marketAccountId = setUserStrategyKey.marketServerAccountId,
             strategyId = strategyRepository.findByClassName(setUserStrategyKey.strategyClassName)!!.id,

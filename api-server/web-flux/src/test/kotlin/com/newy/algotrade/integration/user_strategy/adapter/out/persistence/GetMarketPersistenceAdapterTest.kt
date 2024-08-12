@@ -3,7 +3,7 @@ package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.SetMarketAccountUseCase
 import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.GetMarketPersistenceAdapter
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.FindMarketPersistenceAdapter
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.MarketRepositoryForStrategy
 import helpers.BaseDbTest
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -14,14 +14,14 @@ import org.springframework.r2dbc.core.awaitSingle
 
 class GetMarketPersistenceAdapterTest(
     @Autowired private val marketRepository: MarketRepositoryForStrategy,
-    @Autowired private val adapter: GetMarketPersistenceAdapter,
+    @Autowired private val adapter: FindMarketPersistenceAdapter,
 ) : BaseGetMarketPersistenceAdapterTest() {
     @Test
     fun `등록한 marketAccountId 로 조회하기`() = runTransactional {
         val market = marketRepository.findByCode(Market.BY_BIT.name)!!
         val registeredMarketAccountId = saveMarketAccount(Market.BY_BIT).id
 
-        val marketIds = adapter.getMarketIdsBy(registeredMarketAccountId)
+        val marketIds = adapter.findMarketIdsBy(registeredMarketAccountId)
 
         assertEquals(listOf(market.parentMarketId, market.id), marketIds)
     }
@@ -29,7 +29,7 @@ class GetMarketPersistenceAdapterTest(
     @Test
     fun `등록하지 않은 marketAccountId 로 조회하기`() = runTransactional {
         val unRegisteredMarketAccountId = 100.toLong()
-        val marketIds = adapter.getMarketIdsBy(unRegisteredMarketAccountId)
+        val marketIds = adapter.findMarketIdsBy(unRegisteredMarketAccountId)
 
         assertEquals(emptyList<Long>(), marketIds)
     }

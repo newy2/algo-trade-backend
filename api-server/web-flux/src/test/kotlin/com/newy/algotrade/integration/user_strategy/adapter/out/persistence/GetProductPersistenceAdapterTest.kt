@@ -1,7 +1,7 @@
 package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
 import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.GetProductPersistenceAdapter
+import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.FindProductPersistenceAdapter
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.MarketRepositoryForStrategy
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.ProductRepository
 import helpers.BaseDbTest
@@ -16,7 +16,7 @@ import kotlin.properties.Delegates
 class GetProductPersistenceAdapterTest(
     @Autowired private val marketRepository: MarketRepositoryForStrategy,
     @Autowired private val productRepository: ProductRepository,
-    @Autowired private val adapter: GetProductPersistenceAdapter
+    @Autowired private val adapter: FindProductPersistenceAdapter
 ) : BaseDbTest() {
     private var marketId by Delegates.notNull<Long>()
 
@@ -37,7 +37,7 @@ class GetProductPersistenceAdapterTest(
     fun `저장된 상품코드 조회하기`() = runBlocking {
         assertEquals(
             listOf("BTCUSDT", "ETHUSDT"),
-            adapter.getProducts(
+            adapter.findProducts(
                 marketIds = listOf(marketId),
                 productType = ProductType.SPOT,
                 productCodes = listOf("BTCUSDT", "ETHUSDT")
@@ -49,7 +49,7 @@ class GetProductPersistenceAdapterTest(
     fun `저장되지 않은 상품코드 조회하기`() = runBlocking {
         assertEquals(
             emptyList<String>(),
-            adapter.getProducts(
+            adapter.findProducts(
                 marketIds = listOf(marketId),
                 productType = ProductType.SPOT,
                 productCodes = listOf("XXXUSDT")
@@ -61,7 +61,7 @@ class GetProductPersistenceAdapterTest(
     fun `저장된 상품코드와 저장되지 않은 상품코드 함께 조회하기`() = runBlocking {
         assertEquals(
             listOf("BTCUSDT"),
-            adapter.getProducts(
+            adapter.findProducts(
                 marketIds = listOf(marketId),
                 productType = ProductType.SPOT,
                 productCodes = listOf("BTCUSDT", "XXXUSDT")

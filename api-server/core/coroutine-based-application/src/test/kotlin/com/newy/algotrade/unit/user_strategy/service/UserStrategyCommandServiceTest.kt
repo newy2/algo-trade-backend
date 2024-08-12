@@ -34,9 +34,9 @@ private val incomingPortModel = SetUserStrategyCommand(
 class UserStrategyCommandServiceExceptionTest {
     @Test
     fun `marketAccountId 가 없는 경우`() = runTest {
-        val notFoundMarketAdapter = GetMarketPort { emptyList() }
+        val notFoundMarketAdapter = FindMarketPort { emptyList() }
         val service = newUserStrategyCommandService(
-            getMarketPort = notFoundMarketAdapter,
+            findMarketPort = notFoundMarketAdapter,
         )
 
         try {
@@ -64,9 +64,9 @@ class UserStrategyCommandServiceExceptionTest {
 
     @Test
     fun `이미 등록한 userStrategy 인 경우`() = runTest {
-        val alreadySavedUserStrategyAdapter = HasUserStrategyPort { true }
+        val alreadySavedUserStrategyAdapter = ExistsUserStrategyPort { true }
         val service = newUserStrategyCommandService(
-            hasUserStrategyPort = alreadySavedUserStrategyAdapter,
+            existsUserStrategyPort = alreadySavedUserStrategyAdapter,
         )
 
         try {
@@ -81,9 +81,9 @@ class UserStrategyCommandServiceExceptionTest {
     class UserPickUserStrategyCommandServiceExceptionTest {
         @Test
         fun `DB 에 저장되지 않은 productCode 를 입력한 경우`() = runTest {
-            val notFoundProductAdapter = GetProductPort { _, _, _ -> emptyList() }
+            val notFoundProductAdapter = FindProductPort { _, _, _ -> emptyList() }
             val service = newUserStrategyCommandService(
-                getProductPort = notFoundProductAdapter,
+                findProductPort = notFoundProductAdapter,
             )
 
             try {
@@ -96,9 +96,9 @@ class UserStrategyCommandServiceExceptionTest {
 
         @Test
         fun `DB 에 일부만 저장된 productCode 를 입력한 경우`() = runTest {
-            val getOnlyBtcProductAdapter = GetProductPort { _, _, _ -> listOf(Product(1, "BTCUSDT")) }
+            val getOnlyBtcProductAdapter = FindProductPort { _, _, _ -> listOf(Product(1, "BTCUSDT")) }
             val service = newUserStrategyCommandService(
-                getProductPort = getOnlyBtcProductAdapter,
+                findProductPort = getOnlyBtcProductAdapter,
             )
 
             try {
@@ -111,11 +111,11 @@ class UserStrategyCommandServiceExceptionTest {
 
         @Test
         fun `DB 에 저장된 productCode 와 일치하는 경우`() = runTest {
-            val getFullProductAdapter = GetProductPort { _, _, _ ->
+            val getFullProductAdapter = FindProductPort { _, _, _ ->
                 listOf(Product(1, "BTCUSDT"), Product(2, "ETHUSDT"))
             }
             val service = newUserStrategyCommandService(
-                getProductPort = getFullProductAdapter,
+                findProductPort = getFullProductAdapter,
             )
 
             try {
@@ -142,7 +142,7 @@ class UserPickProductUserStrategyCommandServiceTest {
         val createdUserStrategyId: Long = 10
         val service = newUserStrategyCommandService(
             eventBus = eventBus,
-            setUserStrategyPort = { _ -> createdUserStrategyId }
+            saveUserStrategyPort = { _ -> createdUserStrategyId }
         )
 
         service.setUserStrategy(incomingPortModel)
@@ -155,12 +155,12 @@ class UserPickProductUserStrategyCommandServiceTest {
     fun `해피패스 port 메소드 실행순서`() = runTest {
         val methodCallLogs = mutableListOf<String>()
         val service = newUserStrategyCommandService(
-            setUserStrategyPort = {
+            saveUserStrategyPort = {
                 1.toLong().also {
                     methodCallLogs.add("setUserStrategyPort")
                 }
             },
-            setUserStrategyProductPort = { _, _ ->
+            saveAllUserStrategyProductPort = { _, _ ->
                 methodCallLogs.add("setUserStrategyProductPort")
             },
             eventBus = object : EventBus<CreateUserStrategyEvent>() {
@@ -185,19 +185,19 @@ class UserPickProductUserStrategyCommandServiceTest {
 
 private fun newUserStrategyCommandService(
     hasStrategyQuery: HasStrategyQuery = NoErrorHasStrategyService(),
-    getMarketPort: GetMarketPort = NoErrorGetMarketAdapter(),
-    getProductPort: GetProductPort = NoErrorGetProductAdapter(),
-    hasUserStrategyPort: HasUserStrategyPort = NoErrorUserStrategyAdapter(),
-    setUserStrategyPort: SetUserStrategyPort = NoErrorUserStrategyAdapter(),
-    setUserStrategyProductPort: SetUserStrategyProductPort = NoErrorSetUserStrategyProductAdapter(),
+    findMarketPort: FindMarketPort = NoErrorFindMarketAdapter(),
+    findProductPort: FindProductPort = NoErrorFindProductAdapter(),
+    existsUserStrategyPort: ExistsUserStrategyPort = NoErrorUserStrategyAdapter(),
+    saveUserStrategyPort: SaveUserStrategyPort = NoErrorUserStrategyAdapter(),
+    saveAllUserStrategyProductPort: SaveAllUserStrategyProductPort = NoErrorSaveAllUserStrategyProductAdapter(),
     eventBus: EventBus<CreateUserStrategyEvent> = EventBus(),
 ) = UserStrategyCommandService(
     hasStrategyQuery = hasStrategyQuery,
-    getMarketPort = getMarketPort,
-    getProductPort = getProductPort,
-    hasUserStrategyPort = hasUserStrategyPort,
-    setUserStrategyPort = setUserStrategyPort,
-    setUserStrategyProductPort = setUserStrategyProductPort,
+    findMarketPort = findMarketPort,
+    findProductPort = findProductPort,
+    existsUserStrategyPort = existsUserStrategyPort,
+    saveUserStrategyPort = saveUserStrategyPort,
+    saveAllUserStrategyProductPort = saveAllUserStrategyProductPort,
     eventBus = eventBus,
 )
 
@@ -208,14 +208,14 @@ class NoErrorHasStrategyService : HasStrategyQuery {
     }
 }
 
-class NoErrorGetMarketAdapter : GetMarketPort {
-    override suspend fun getMarketIdsBy(marketAccountId: Long): List<Long> {
+class NoErrorFindMarketAdapter : FindMarketPort {
+    override suspend fun findMarketIdsBy(marketAccountId: Long): List<Long> {
         return listOf(1)
     }
 }
 
-class NoErrorGetProductAdapter : GetProductPort {
-    override suspend fun getProducts(
+class NoErrorFindProductAdapter : FindProductPort {
+    override suspend fun findProducts(
         marketIds: List<Long>,
         productType: ProductType,
         productCodes: List<String>
@@ -227,10 +227,10 @@ class NoErrorGetProductAdapter : GetProductPort {
 }
 
 open class NoErrorUserStrategyAdapter : UserStrategyPort {
-    override suspend fun setUserStrategy(setUserStrategy: SetUserStrategy): Long = 1
-    override suspend fun hasUserStrategy(setUserStrategyKey: SetUserStrategyKey): Boolean = false
+    override suspend fun saveUserStrategy(setUserStrategy: SetUserStrategy): Long = 1
+    override suspend fun existsUserStrategy(setUserStrategyKey: SetUserStrategyKey): Boolean = false
 }
 
-class NoErrorSetUserStrategyProductAdapter : SetUserStrategyProductPort {
-    override suspend fun setUserStrategyProducts(userStrategyId: Long, productIds: List<Long>): Boolean = true
+class NoErrorSaveAllUserStrategyProductAdapter : SaveAllUserStrategyProductPort {
+    override suspend fun saveAllUserStrategyProducts(userStrategyId: Long, productIds: List<Long>): Boolean = true
 }

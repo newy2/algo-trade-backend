@@ -34,7 +34,7 @@ class GetAllUserStrategyKeysTest : BaseUserStrategyQueryPersistenceAdapterTest()
     fun `user strategy 가 1개인 경우`() = runTransactional {
         val userStrategyId = setInitData(strategyClassName = "A", listOf("BTCUSDT"))
 
-        val actualList = adapter.getAllUserStrategyKeys()
+        val actualList = adapter.findAllUserStrategyKeys()
         val expectedList = listOf(
             UserStrategyKey(
                 userStrategyId = userStrategyId,
@@ -56,7 +56,7 @@ class GetAllUserStrategyKeysTest : BaseUserStrategyQueryPersistenceAdapterTest()
         val userStrategyId1 = setInitData(strategyClassName = "A", listOf("BTCUSDT", "ETHUSDT"))
         val userStrategyId2 = setInitData(strategyClassName = "B", listOf("SOLUSDT"))
 
-        val actualList = adapter.getAllUserStrategyKeys()
+        val actualList = adapter.findAllUserStrategyKeys()
         val expectedList = listOf(
             UserStrategyKey(
                 userStrategyId = userStrategyId1,
@@ -100,14 +100,14 @@ class GetUserStrategyKeysTest : BaseUserStrategyQueryPersistenceAdapterTest() {
     fun `ID 가 없는 경우`() = runTransactional {
         val unRegisteredId: Long = 100
 
-        assertTrue(adapter.getUserStrategyKeys(unRegisteredId).isEmpty())
+        assertTrue(adapter.findUserStrategyKeys(unRegisteredId).isEmpty())
     }
 
     @Test
     fun `ID 가 있는 경우`() = runTransactional {
         val userStrategyId = setInitData(strategyClassName = "A", listOf("BTCUSDT", "ETHUSDT"))
 
-        val actual = adapter.getUserStrategyKeys(userStrategyId)
+        val actual = adapter.findUserStrategyKeys(userStrategyId)
         val expected = listOf(
             UserStrategyKey(
                 userStrategyId = userStrategyId,
@@ -165,7 +165,7 @@ open class BaseUserStrategyQueryPersistenceAdapterTest : BaseDbTest() {
 
     @BeforeEach
     fun empty() = runBlocking {
-        val list = adapter.getAllUserStrategyKeys()
+        val list = adapter.findAllUserStrategyKeys()
         assertEquals(0, list.size)
     }
 

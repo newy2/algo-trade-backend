@@ -43,7 +43,7 @@ class SetUserStrategyProductsTest(
     fun `strategy product 등록하기`() = runTransactional {
         val (userStrategyId, productIds) = setInitData(productCodes = listOf("BTCUSDT", "ETHUSDT"))
 
-        val isSaved = adapter.setUserStrategyProducts(
+        val isSaved = adapter.saveAllUserStrategyProducts(
             userStrategyId = userStrategyId,
             productIds = productIds
         )
@@ -75,7 +75,7 @@ class SetUserStrategyProductsTest(
     fun `strategy product 가 없는 경우`() = runTransactional {
         val (userStrategyId, emptyProductIds) = setInitData(productCodes = emptyList())
 
-        val isSaved = adapter.setUserStrategyProducts(
+        val isSaved = adapter.saveAllUserStrategyProducts(
             userStrategyId = userStrategyId,
             productIds = emptyProductIds
         )

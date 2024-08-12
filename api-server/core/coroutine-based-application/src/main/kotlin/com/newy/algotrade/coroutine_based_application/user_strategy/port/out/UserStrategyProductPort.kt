@@ -3,18 +3,18 @@ package com.newy.algotrade.coroutine_based_application.user_strategy.port.out
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 
 interface UserStrategyProductPort :
-    SetUserStrategyProductPort,
-    GetAllUserStrategyProductPort,
-    GetUserStrategyProductPort
+    SaveAllUserStrategyProductPort,
+    FindAllUserStrategyProductPort,
+    FindUserStrategyProductPort
 
-fun interface SetUserStrategyProductPort {
-    suspend fun setUserStrategyProducts(userStrategyId: Long, productIds: List<Long>): Boolean
+fun interface SaveAllUserStrategyProductPort {
+    suspend fun saveAllUserStrategyProducts(userStrategyId: Long, productIds: List<Long>): Boolean
 }
 
-fun interface GetAllUserStrategyProductPort {
-    suspend fun getAllUserStrategyKeys(): List<UserStrategyKey>
+fun interface FindAllUserStrategyProductPort {
+    suspend fun findAllUserStrategyKeys(): List<UserStrategyKey>
 }
 
-fun interface GetUserStrategyProductPort {
-    suspend fun getUserStrategyKeys(userStrategyId: Long): List<UserStrategyKey>
+fun interface FindUserStrategyProductPort {
+    suspend fun findUserStrategyKeys(userStrategyId: Long): List<UserStrategyKey>
 }

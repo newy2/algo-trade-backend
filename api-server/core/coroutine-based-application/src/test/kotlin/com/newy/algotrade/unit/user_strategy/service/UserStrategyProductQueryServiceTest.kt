@@ -10,11 +10,11 @@ import kotlin.test.assertEquals
 class UserStrategyProductQueryServiceTest {
     private val methodCallLogs = mutableListOf<String>()
     private val service = UserStrategyProductQueryService(
-        getAllUserStrategyProductPort = {
+        findAllUserStrategyProductPort = {
             methodCallLogs.add("getAllUserStrategyProductPort")
             emptyList()
         },
-        getUserStrategyProductPort = {
+        findUserStrategyProductPort = {
             methodCallLogs.add("getUserStrategyProductPort")
             emptyList()
         },
