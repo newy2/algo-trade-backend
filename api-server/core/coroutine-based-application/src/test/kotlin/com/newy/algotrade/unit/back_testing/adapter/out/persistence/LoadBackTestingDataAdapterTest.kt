@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.back_testing.adapter.out.persistence
 
 import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistence.LoadBackTestingDataAdapter
-import com.newy.algotrade.coroutine_based_application.back_testing.port.out.GetBackTestingDataPort
+import com.newy.algotrade.coroutine_based_application.back_testing.port.out.FindBackTestingDataPort
 import com.newy.algotrade.coroutine_based_application.product_price.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.domain.back_testing.BackTestingDataKey
 import com.newy.algotrade.domain.common.extension.ProductPrice
@@ -16,7 +16,7 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.OffsetDateTime
 
-class LoadBackTestingDataAdapterTest : GetBackTestingDataPort, OnReceivePollingPricePort {
+class LoadBackTestingDataAdapterTest : FindBackTestingDataPort, OnReceivePollingPricePort {
     private val interval = Duration.ofMinutes(1)
     private val fakeKey = BackTestingDataKey(
         productPriceKey("BTCUSDT", interval),
@@ -36,7 +36,7 @@ class LoadBackTestingDataAdapterTest : GetBackTestingDataPort, OnReceivePollingP
 
     private lateinit var receiveDataList: MutableList<ProductPrice>
 
-    override suspend fun getBackTestingData(key: BackTestingDataKey): List<ProductPrice> {
+    override suspend fun findBackTestingData(key: BackTestingDataKey): List<ProductPrice> {
         return listOf(
             productPrice(100, interval, OffsetDateTime.parse("2024-05-01T00:00Z")),
             productPrice(200, interval, OffsetDateTime.parse("2024-05-01T00:01Z")),

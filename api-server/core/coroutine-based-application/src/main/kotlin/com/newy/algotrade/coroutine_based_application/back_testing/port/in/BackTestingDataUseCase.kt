@@ -7,3 +7,7 @@ import com.newy.algotrade.domain.common.extension.ProductPrice
 interface CreateBackTestingDataUseCase {
     suspend fun createData(key: BackTestingDataKey, seedSize: Int = DEFAULT_CANDLE_SIZE): List<ProductPrice>
 }
+
+interface SetBackTestingDataUseCase {
+    suspend fun setBackTestingData(key: BackTestingDataKey, list: List<ProductPrice>): Boolean
+}

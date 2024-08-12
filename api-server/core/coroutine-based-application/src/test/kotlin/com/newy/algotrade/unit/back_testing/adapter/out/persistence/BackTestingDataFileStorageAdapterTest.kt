@@ -28,7 +28,7 @@ class BackTestingDataFileStorageAdapterTest {
             searchEndTime = OffsetDateTime.parse("0000-01-01T00:01Z")
         )
 
-        val results = adapter.getBackTestingData(notExistsFile)
+        val results = adapter.findBackTestingData(notExistsFile)
 
         assertEquals(emptyList(), results)
     }
@@ -41,7 +41,7 @@ class BackTestingDataFileStorageAdapterTest {
             searchEndTime = OffsetDateTime.parse("9999-01-01T00:01+09:00")
         )
 
-        val results = adapter.getBackTestingData(existsFile)
+        val results = adapter.findBackTestingData(existsFile)
 
         assertEquals(
             listOf(
@@ -77,9 +77,9 @@ class BackTestingDataFileStorageAdapterTest {
             )
         )
 
-        adapter.setBackTestingData(key, list)
+        adapter.saveBackTestingData(key, list)
 
-        assertEquals(adapter.getBackTestingData(key), list)
+        assertEquals(adapter.findBackTestingData(key), list)
 
         File(fileManager.folderPath(), fileManager.fileName(key)).deleteOnExit()
     }

@@ -1,16 +1,16 @@
 package com.newy.algotrade.coroutine_based_application.back_testing.service
 
 import com.newy.algotrade.coroutine_based_application.back_testing.port.`in`.SetBackTestingDataUseCase
-import com.newy.algotrade.coroutine_based_application.back_testing.port.out.SetBackTestingDataPort
+import com.newy.algotrade.coroutine_based_application.back_testing.port.out.SaveBackTestingDataPort
 import com.newy.algotrade.domain.back_testing.BackTestingDataKey
 import com.newy.algotrade.domain.common.extension.ProductPrice
 
 class SetBackTestingDataService(
-    private val backTestingDataPort: SetBackTestingDataPort
+    private val backTestingDataPort: SaveBackTestingDataPort
 ) : SetBackTestingDataUseCase {
     override suspend fun setBackTestingData(key: BackTestingDataKey, list: List<ProductPrice>): Boolean {
         return try {
-            backTestingDataPort.setBackTestingData(key, list)
+            backTestingDataPort.saveBackTestingData(key, list)
             true
         } catch (e: IllegalArgumentException) {
             false

@@ -8,10 +8,10 @@ import com.newy.algotrade.domain.common.extension.ProductPrice
 class BackTestingDataFileStorageAdapter(
     private val backTestingFileManager: BackTestingFileManager
 ) : BackTestingDataPort {
-    override suspend fun getBackTestingData(key: BackTestingDataKey): List<ProductPrice> =
+    override suspend fun findBackTestingData(key: BackTestingDataKey): List<ProductPrice> =
         backTestingFileManager.getList(key)
 
-    override suspend fun setBackTestingData(key: BackTestingDataKey, list: List<ProductPrice>) {
+    override suspend fun saveBackTestingData(key: BackTestingDataKey, list: List<ProductPrice>) {
         backTestingFileManager.setList(key, list)
     }
 }
