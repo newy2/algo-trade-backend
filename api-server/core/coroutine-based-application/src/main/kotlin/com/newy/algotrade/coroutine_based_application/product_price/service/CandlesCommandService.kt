@@ -2,14 +2,14 @@ package com.newy.algotrade.coroutine_based_application.product_price.service
 
 import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.CandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.ProductPriceQuery
-import com.newy.algotrade.coroutine_based_application.product_price.port.out.CandlePort
+import com.newy.algotrade.coroutine_based_application.product_price.port.out.CandlesPort
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.product_price.ProductPriceKey
 
 open class CandlesCommandService(
     private val productPriceQuery: ProductPriceQuery,
-    private val candlePort: CandlePort,
+    private val candlesPort: CandlesPort,
 ) : CandlesUseCase {
     override suspend fun setCandles(productPriceKey: ProductPriceKey): Candles =
         fetchInitCandles(productPriceKey).also {
@@ -17,17 +17,17 @@ open class CandlesCommandService(
         }
 
     override fun addCandles(productPriceKey: ProductPriceKey, candleList: List<ProductPrice>): Candles =
-        candlePort.addCandles(productPriceKey, candleList)
+        candlesPort.saveWithAppendCandles(productPriceKey, candleList)
 
     override fun removeCandles(productPriceKey: ProductPriceKey) {
-        candlePort.removeCandles(productPriceKey)
+        candlesPort.deleteCandles(productPriceKey)
         productPriceQuery.requestUnPollingProductPrice(productPriceKey)
     }
 
     private suspend fun fetchInitCandles(productPriceKey: ProductPriceKey): Candles =
-        candlePort.getCandles(productPriceKey).takeIf { it.size > 0 }
+        candlesPort.findCandles(productPriceKey).takeIf { it.size > 0 }
             ?: productPriceQuery.getInitProductPrices(productPriceKey).let { initCandles ->
-                candlePort.setCandles(productPriceKey, initCandles)
+                candlesPort.saveWithReplaceCandles(productPriceKey, initCandles)
             }
 
     private fun requestPollingCandles(productPriceKey: ProductPriceKey) {

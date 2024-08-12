@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.product_price.service
 
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.volatile_storage.InMemoryCandlesStoreAdapter
 import com.newy.algotrade.coroutine_based_application.product_price.service.CandlesQueryService
 import helpers.productPrice
 import helpers.productPriceKey
@@ -13,12 +13,12 @@ class CandlesQueryServiceTest {
     @Test
     fun `getCandles 메소드 테스트`() {
         val beginTime = OffsetDateTime.parse("2024-05-01T00:00Z")
-        val candlesPort = InMemoryCandleStoreAdapter().also {
-            it.setCandles(
+        val candlesPort = InMemoryCandlesStoreAdapter().also {
+            it.saveWithReplaceCandles(
                 productPriceKey(productCode = "BTCUSDT"),
                 listOf(productPrice(amount = 1000, interval = Duration.ofMinutes(1), beginTime))
             )
-            it.setCandles(
+            it.saveWithReplaceCandles(
                 productPriceKey(productCode = "005930"),
                 listOf(
                     productPrice(amount = 2000, interval = Duration.ofMinutes(1), beginTime),

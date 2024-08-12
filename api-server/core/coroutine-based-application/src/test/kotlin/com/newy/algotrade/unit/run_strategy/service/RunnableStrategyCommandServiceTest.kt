@@ -1,9 +1,9 @@
 package com.newy.algotrade.unit.run_strategy.service
 
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.volatile_storage.InMemoryCandlesStoreAdapter
 import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.RemoveCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.SetCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product_price.port.out.CandlePort
+import com.newy.algotrade.coroutine_based_application.product_price.port.out.CandlesPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.DeleteStrategyPort
@@ -30,7 +30,7 @@ class RunnableStrategyTest : BaseRunnableStrategyTest() {
     fun `RunnableStrategy 등록하기`() = runTest {
         service.setRunnableStrategy(userStrategyKey)
 
-        assertEquals(1, candlePort.getCandles(productPriceKey).size)
+        assertEquals(1, candlesPort.findCandles(productPriceKey).size)
     }
 
     @Test
@@ -40,7 +40,7 @@ class RunnableStrategyTest : BaseRunnableStrategyTest() {
 
         assertEquals(
             0,
-            candlePort.getCandles(productPriceKey).size,
+            candlesPort.findCandles(productPriceKey).size,
             "더이상 candle 을 사용하는 strategy 가 없어서, candle 이 삭제된다."
         )
     }
@@ -67,7 +67,7 @@ class ManyRunnableStrategyTest : BaseRunnableStrategyTest() {
 
         assertEquals(
             1,
-            candlePort.getCandles(productPriceKey).size,
+            candlesPort.findCandles(productPriceKey).size,
             "userStrategyKey2 가 같은 candle(BTCUSDT) 를 사용하기 때문에 삭제되지 않는다."
         )
     }
@@ -86,7 +86,7 @@ class ManyRunnableStrategyTest : BaseRunnableStrategyTest() {
 
         assertEquals(
             0,
-            candlePort.getCandles(productPriceKey).size,
+            candlesPort.findCandles(productPriceKey).size,
             "userStrategyKey2 가 다른 candle(ETHUSDT) 를 사용하기 때문에 삭제되지 않는다."
         )
     }
@@ -99,24 +99,24 @@ open class BaseRunnableStrategyTest {
         strategyClassName = "BuyTripleRSIStrategy",
         productPriceKey = productPriceKey,
     )
-    protected lateinit var candlePort: CandlePort
+    protected lateinit var candlesPort: CandlesPort
     protected lateinit var service: RunnableStrategyUseCase
 
     @BeforeEach
     fun setUp() {
-        candlePort = InMemoryCandleStoreAdapter()
+        candlesPort = InMemoryCandlesStoreAdapter()
         service = newRunnableStrategyCommandService(
-            candlePort = candlePort
+            candlesPort = candlesPort
         )
     }
 }
 
 private fun newRunnableStrategyCommandService(
-    candlePort: CandlePort = InMemoryCandleStoreAdapter(),
+    candlesPort: CandlesPort = InMemoryCandlesStoreAdapter(),
     strategyPort: StrategyPort = InMemoryStrategyStoreAdapter(),
 
-    setCandlesUseCase: SetCandlesUseCase = DefaultCandlesUseCase(candlePort),
-    removeCandlesUseCase: RemoveCandlesUseCase = DefaultCandlesUseCase(candlePort),
+    setCandlesUseCase: SetCandlesUseCase = DefaultCandlesUseCase(candlesPort),
+    removeCandlesUseCase: RemoveCandlesUseCase = DefaultCandlesUseCase(candlesPort),
     saveStrategyPort: SaveStrategyPort = strategyPort,
     deleteStrategyPort: DeleteStrategyPort = strategyPort,
     isStrategyUsingProductPriceKeyPort: IsStrategyUsingProductPriceKeyPort = strategyPort,
@@ -129,15 +129,15 @@ private fun newRunnableStrategyCommandService(
 )
 
 private class DefaultCandlesUseCase(
-    private val candlePort: CandlePort
+    private val candlesPort: CandlesPort
 ) : SetCandlesUseCase, RemoveCandlesUseCase {
     override suspend fun setCandles(productPriceKey: ProductPriceKey): Candles =
-        candlePort.setCandles(
+        candlesPort.saveWithReplaceCandles(
             key = productPriceKey,
             listOf(productPrice(1000, Duration.ofMinutes(1)))
         )
 
     override fun removeCandles(productPriceKey: ProductPriceKey) {
-        candlePort.removeCandles(productPriceKey)
+        candlesPort.deleteCandles(productPriceKey)
     }
 }

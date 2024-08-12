@@ -1,9 +1,9 @@
 package com.newy.algotrade.unit.product_price.service
 
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.volatile_storage.InMemoryCandlesStoreAdapter
 import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.CandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.ProductPriceQuery
-import com.newy.algotrade.coroutine_based_application.product_price.port.out.CandlePort
+import com.newy.algotrade.coroutine_based_application.product_price.port.out.CandlesPort
 import com.newy.algotrade.coroutine_based_application.product_price.service.CandlesCommandService
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.common.extension.ProductPrice
@@ -41,7 +41,7 @@ class SetCandlesServiceApiCallTest : DefaultProductPriceQuery() {
         pollingSubscribeCallCount = 0
         service = CandlesCommandService(
             productPriceQuery = this,
-            candlePort = InMemoryCandleStoreAdapter(),
+            candlesPort = InMemoryCandlesStoreAdapter(),
         )
     }
 
@@ -78,9 +78,9 @@ class SetCandlesServiceApiCallTest : DefaultProductPriceQuery() {
 }
 
 @DisplayName("setCandles - CandlePort 확인 테스트")
-class SetCandleCandlePortTest : DefaultProductPriceQuery() {
+class SetCandleCandlesPortTest : DefaultProductPriceQuery() {
     private val productPriceKey = productPriceKey(productCode = "BTCUSDT", interval = Duration.ofMinutes(1))
-    private lateinit var candlePort: CandlePort
+    private lateinit var candlesPort: CandlesPort
     private lateinit var service: CandlesUseCase
 
     override suspend fun getInitProductPrices(productPriceKey: ProductPriceKey): List<ProductPrice> {
@@ -89,16 +89,16 @@ class SetCandleCandlePortTest : DefaultProductPriceQuery() {
 
     @BeforeEach
     fun setUp() {
-        candlePort = InMemoryCandleStoreAdapter()
+        candlesPort = InMemoryCandlesStoreAdapter()
         service = CandlesCommandService(
             productPriceQuery = this,
-            candlePort = candlePort,
+            candlesPort = candlesPort,
         )
     }
 
     @BeforeEach
     fun `초기 데이터 입력`(): Unit = runBlocking {
-        candlePort.setCandles(
+        candlesPort.saveWithReplaceCandles(
             key = productPriceKey,
             list = listOf(productPrice(amount = 1000, interval = productPriceKey.interval))
         )
@@ -108,7 +108,7 @@ class SetCandleCandlePortTest : DefaultProductPriceQuery() {
     fun `CandlePort 저장 상태 확인`() = runBlocking {
         assertCandles(
             expectedFirstCandle = productPrice(amount = 1000, interval = Duration.ofMinutes(1)),
-            candles = candlePort.getCandles(productPriceKey)
+            candles = candlesPort.findCandles(productPriceKey)
         )
     }
 
@@ -120,7 +120,7 @@ class SetCandleCandlePortTest : DefaultProductPriceQuery() {
 
         assertCandles(
             expectedFirstCandle = productPrice(amount = 1000, interval = Duration.ofMinutes(1)),
-            candles = candlePort.getCandles(sameProductPriceKey)
+            candles = candlesPort.findCandles(sameProductPriceKey)
         )
     }
 
@@ -132,12 +132,12 @@ class SetCandleCandlePortTest : DefaultProductPriceQuery() {
 
         assertCandles(
             expectedFirstCandle = productPrice(amount = 1000, interval = Duration.ofMinutes(1)),
-            candles = candlePort.getCandles(productPriceKey)
+            candles = candlesPort.findCandles(productPriceKey)
         )
         assertCandles(
             // fetchInitProductPrices 메소드의 결과값으로 등록됨
             expectedFirstCandle = productPrice(amount = 2000, interval = Duration.ofMinutes(5)),
-            candles = candlePort.getCandles(differentProductPriceKey)
+            candles = candlesPort.findCandles(differentProductPriceKey)
         )
     }
 
@@ -150,15 +150,15 @@ class SetCandleCandlePortTest : DefaultProductPriceQuery() {
 @DisplayName("addCandle - 캔들 추가 테스트")
 class AddCandleServiceTest {
     private val productPriceKey = productPriceKey(productCode = "BTCUSDT", interval = Duration.ofMinutes(1))
-    private lateinit var candlePort: CandlePort
+    private lateinit var candlesPort: CandlesPort
     private lateinit var service: CandlesCommandService
 
     @BeforeEach
     fun setUp() {
-        candlePort = InMemoryCandleStoreAdapter()
+        candlesPort = InMemoryCandlesStoreAdapter()
         service = CandlesCommandService(
             productPriceQuery = DefaultProductPriceQuery(),
-            candlePort = candlePort,
+            candlesPort = candlesPort,
         )
     }
 
@@ -166,7 +166,7 @@ class AddCandleServiceTest {
     fun `빈 candles 에 addCandles 하는 경우 - 업데이트가 무시된다`() = runTest {
         service.addCandles(productPriceKey, listOf(productPrice(1000, Duration.ofMinutes(1))))
 
-        assertEquals(0, candlePort.getCandles(productPriceKey).size)
+        assertEquals(0, candlesPort.findCandles(productPriceKey).size)
     }
 
     @Test
@@ -179,13 +179,13 @@ class AddCandleServiceTest {
                 )
             }.also {
                 // 초기 데이터 설정
-                candlePort.setCandles(productPriceKey, listOf(it[0]))
+                candlesPort.saveWithReplaceCandles(productPriceKey, listOf(it[0]))
             }
 
         // 이후 데이터 추가
         service.addCandles(productPriceKey, listOf(productPriceList[1]))
 
-        candlePort.getCandles(productPriceKey).let {
+        candlesPort.findCandles(productPriceKey).let {
             assertEquals(2, it.size)
             assertEquals(productPriceList[0], it.firstCandle)
             assertEquals(productPriceList[1], it.lastCandle)
@@ -197,7 +197,7 @@ class AddCandleServiceTest {
 class RemoveCandleServiceTest : DefaultProductPriceQuery() {
     private val productPriceKey = productPriceKey(productCode = "BTCUSDT", interval = Duration.ofMinutes(1))
     private var unPollingSubscribeCallCount = 0
-    private lateinit var candlePort: CandlePort
+    private lateinit var candlesPort: CandlesPort
     private lateinit var service: CandlesCommandService
 
     override fun requestUnPollingProductPrice(productPriceKey: ProductPriceKey) {
@@ -207,21 +207,21 @@ class RemoveCandleServiceTest : DefaultProductPriceQuery() {
     @BeforeEach
     fun setUp() {
         unPollingSubscribeCallCount = 0
-        candlePort = InMemoryCandleStoreAdapter()
+        candlesPort = InMemoryCandlesStoreAdapter()
         service = CandlesCommandService(
             productPriceQuery = this,
-            candlePort = candlePort,
+            candlesPort = candlesPort,
         )
     }
 
     @Test
     fun `캔들 삭제하기`() {
-        candlePort.setCandles(productPriceKey, listOf(productPrice(1000, Duration.ofMinutes(1))))
-        assertEquals(1, candlePort.getCandles(productPriceKey).size)
+        candlesPort.saveWithReplaceCandles(productPriceKey, listOf(productPrice(1000, Duration.ofMinutes(1))))
+        assertEquals(1, candlesPort.findCandles(productPriceKey).size)
         assertEquals(0, unPollingSubscribeCallCount)
 
         service.removeCandles(productPriceKey)
-        assertEquals(0, candlePort.getCandles(productPriceKey).size)
+        assertEquals(0, candlesPort.findCandles(productPriceKey).size)
         assertEquals(1, unPollingSubscribeCallCount)
     }
 }
