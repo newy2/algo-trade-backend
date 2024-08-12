@@ -3,13 +3,13 @@ package com.newy.algotrade.coroutine_based_application.notification.port.out
 import com.newy.algotrade.domain.notification.NotificationApp
 
 interface NotificationAppPort :
-    HasNotificationAppPort,
-    SetNotificationAppPort
+    ExistsHasNotificationAppPort,
+    SaveNotificationAppPort
 
-fun interface HasNotificationAppPort {
-    suspend fun hasNotificationApp(userId: Long): Boolean
+fun interface ExistsHasNotificationAppPort {
+    suspend fun existsNotificationApp(userId: Long): Boolean
 }
 
-fun interface SetNotificationAppPort {
-    suspend fun setNotificationApp(domainEntity: NotificationApp): Boolean
+fun interface SaveNotificationAppPort {
+    suspend fun saveNotificationApp(domainEntity: NotificationApp): Boolean
 }

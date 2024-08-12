@@ -2,25 +2,25 @@ package com.newy.algotrade.coroutine_based_application.notification.service
 
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.NotificationAppUseCase
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SetNotificationAppCommand
-import com.newy.algotrade.coroutine_based_application.notification.port.out.HasNotificationAppPort
+import com.newy.algotrade.coroutine_based_application.notification.port.out.ExistsHasNotificationAppPort
 import com.newy.algotrade.coroutine_based_application.notification.port.out.NotificationAppPort
-import com.newy.algotrade.coroutine_based_application.notification.port.out.SetNotificationAppPort
+import com.newy.algotrade.coroutine_based_application.notification.port.out.SaveNotificationAppPort
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
 
 open class NotificationAppCommandService(
-    private val hasNotificationAppPort: HasNotificationAppPort,
-    private val setNotificationAppPort: SetNotificationAppPort,
+    private val existsHasNotificationAppPort: ExistsHasNotificationAppPort,
+    private val saveNotificationAppPort: SaveNotificationAppPort,
 ) : NotificationAppUseCase {
     constructor(notificationAppPort: NotificationAppPort) : this(
-        hasNotificationAppPort = notificationAppPort,
-        setNotificationAppPort = notificationAppPort,
+        existsHasNotificationAppPort = notificationAppPort,
+        saveNotificationAppPort = notificationAppPort,
     )
 
     override suspend fun setNotificationApp(command: SetNotificationAppCommand): Boolean {
-        if (hasNotificationAppPort.hasNotificationApp(command.userId)) {
+        if (existsHasNotificationAppPort.existsNotificationApp(command.userId)) {
             throw DuplicateDataException("이미 알림 앱을 등록했습니다.")
         }
 
-        return setNotificationAppPort.setNotificationApp(command.toDomainEntity())
+        return saveNotificationAppPort.saveNotificationApp(command.toDomainEntity())
     }
 }

@@ -24,14 +24,14 @@ class NotificationAppAdapterTest(
     fun `알림 앱 등록 여부 확인하기`() = runTransactional {
         val userId = getAdminUserId()
 
-        assertFalse(adapter.hasNotificationApp(userId))
+        assertFalse(adapter.existsNotificationApp(userId))
     }
 
     @Test
     fun `알림 앱 등록하기`() = runTransactional {
         val userId = getAdminUserId()
 
-        val isSaved = adapter.setNotificationApp(
+        val isSaved = adapter.saveNotificationApp(
             NotificationApp(
                 userId = userId,
                 type = NotificationAppType.SLACK,
@@ -40,7 +40,7 @@ class NotificationAppAdapterTest(
         )
 
         assertTrue(isSaved)
-        assertTrue(adapter.hasNotificationApp(userId))
+        assertTrue(adapter.existsNotificationApp(userId))
     }
 
     private suspend fun getAdminUserId(): Long {

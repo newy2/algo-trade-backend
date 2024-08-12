@@ -27,9 +27,9 @@ class CreateByStatusRequestedTest(
     fun `REQUESTED 상태로 생성하기`() = runTransactional {
         val notificationAppId = setNotificationAppId()
         val sendNotificationLogId = let {
-            adapter.createSendNotificationLog(notificationAppId, requestMessage = "not used(for ID test)")
-            adapter.createSendNotificationLog(notificationAppId, requestMessage = "not used(for ID test)")
-            adapter.createSendNotificationLog(notificationAppId, requestMessage = "message")
+            adapter.saveSendNotificationLog(notificationAppId, requestMessage = "not used(for ID test)")
+            adapter.saveSendNotificationLog(notificationAppId, requestMessage = "not used(for ID test)")
+            adapter.saveSendNotificationLog(notificationAppId, requestMessage = "message")
         }
 
         assertNotEquals(notificationAppId, sendNotificationLogId)
@@ -42,7 +42,7 @@ class CreateByStatusRequestedTest(
                 url = "url",
                 requestMessage = "message",
             ),
-            adapter.getSendNotificationLog(sendNotificationLogId)
+            adapter.findSendNotificationLog(sendNotificationLogId)
         )
     }
 }
@@ -61,13 +61,13 @@ class SaveSendNotificationLogTest(
     fun setUp(): Unit = runBlocking {
         notificationAppId = setNotificationAppId()
         sendNotificationLogId = let {
-            adapter.createSendNotificationLog(notificationAppId, requestMessage = "not used(for ID test)")
-            adapter.createSendNotificationLog(notificationAppId, requestMessage = "not used(for ID test)")
-            adapter.createSendNotificationLog(notificationAppId, requestMessage = "message")
+            adapter.saveSendNotificationLog(notificationAppId, requestMessage = "not used(for ID test)")
+            adapter.saveSendNotificationLog(notificationAppId, requestMessage = "not used(for ID test)")
+            adapter.saveSendNotificationLog(notificationAppId, requestMessage = "message")
         }
         assertNotEquals(notificationAppId, sendNotificationLogId)
 
-        domainEntity = adapter.getSendNotificationLog(sendNotificationLogId)!!
+        domainEntity = adapter.findSendNotificationLog(sendNotificationLogId)!!
         expected = SendNotificationLog(
             sendNotificationLogId = sendNotificationLogId,
             notificationAppId = notificationAppId,
@@ -90,7 +90,7 @@ class SaveSendNotificationLogTest(
 
         assertEquals(
             expected.copy(status = SendNotificationLogStatus.PROCESSING),
-            adapter.getSendNotificationLog(sendNotificationLogId)
+            adapter.findSendNotificationLog(sendNotificationLogId)
         )
     }
 
@@ -104,7 +104,7 @@ class SaveSendNotificationLogTest(
                 status = SendNotificationLogStatus.SUCCEED,
                 responseMessage = successMessage,
             ),
-            adapter.getSendNotificationLog(sendNotificationLogId)
+            adapter.findSendNotificationLog(sendNotificationLogId)
         )
     }
 
@@ -118,7 +118,7 @@ class SaveSendNotificationLogTest(
                 status = SendNotificationLogStatus.FAILED,
                 responseMessage = notSuccessMessage,
             ),
-            adapter.getSendNotificationLog(sendNotificationLogId)
+            adapter.findSendNotificationLog(sendNotificationLogId)
         )
     }
 }

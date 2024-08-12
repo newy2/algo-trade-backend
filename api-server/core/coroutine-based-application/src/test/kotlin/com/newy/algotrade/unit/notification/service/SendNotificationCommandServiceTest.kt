@@ -4,8 +4,8 @@ import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
 import com.newy.algotrade.coroutine_based_application.common.event.SendNotificationEvent
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SendNotificationCommand
-import com.newy.algotrade.coroutine_based_application.notification.port.out.CreateSendNotificationLogPort
-import com.newy.algotrade.coroutine_based_application.notification.port.out.GetSendNotificationLogPort
+import com.newy.algotrade.coroutine_based_application.notification.port.out.FindSendNotificationLogPort
+import com.newy.algotrade.coroutine_based_application.notification.port.out.SaveRequestedStatusSendNotificationLogPort
 import com.newy.algotrade.coroutine_based_application.notification.port.out.SaveSendNotificationLogPort
 import com.newy.algotrade.coroutine_based_application.notification.port.out.SendNotificationLogPort
 import com.newy.algotrade.coroutine_based_application.notification.service.SendNotificationCommandService
@@ -53,7 +53,7 @@ class RequestSendNotificationTest {
 
         val savedId: Long = 100
         val service = newSendNotificationCommandService(
-            createSendNotificationLogPort = { _, _ -> savedId },
+            saveRequestedStatusSendNotificationLogPort = { _, _ -> savedId },
             eventBus = eventBus
         )
 
@@ -68,7 +68,7 @@ class RequestSendNotificationTest {
 class SendNotificationTest {
     private val beginSendNotificationLog = slackSendNotificationLog
     private val savedHistory = mutableListOf<SendNotificationLog>()
-    private val getSendNotificationLogPort = GetSendNotificationLogPort { _ -> beginSendNotificationLog }
+    private val findSendNotificationLogPort = FindSendNotificationLogPort { _ -> beginSendNotificationLog }
     private val saveSendNotificationLogPort = SaveSendNotificationLogPort { log -> savedHistory.add(log) }
 
     @BeforeEach
@@ -80,7 +80,7 @@ class SendNotificationTest {
     fun `sendNotification 성공 메세지 수신 테스트`() = runTest {
         val slackSuccessMessage = "ok"
         val service = newSendNotificationCommandService(
-            getSendNotificationLogPort = getSendNotificationLogPort,
+            findSendNotificationLogPort = findSendNotificationLogPort,
             saveSendNotificationLogPort = saveSendNotificationLogPort,
             httpApiClient = newHttpClient { _, _ -> slackSuccessMessage },
         )
@@ -100,7 +100,7 @@ class SendNotificationTest {
     fun `sendNotification 실패 메세지 수신 테스트`() = runTest {
         val slackNotSuccessMessage = "not ok"
         val service = newSendNotificationCommandService(
-            getSendNotificationLogPort = getSendNotificationLogPort,
+            findSendNotificationLogPort = findSendNotificationLogPort,
             saveSendNotificationLogPort = saveSendNotificationLogPort,
             httpApiClient = newHttpClient { _, _ -> slackNotSuccessMessage },
         )
@@ -130,7 +130,7 @@ class SendNotificationCommandServiceHttpClientTest() {
         }
 
         val service = newSendNotificationCommandService(
-            getSendNotificationLogPort = { _ ->
+            findSendNotificationLogPort = { _ ->
                 slackSendNotificationLog.copy(
                     url = "${NotificationAppType.SLACK.host}/services/TXXXX/BXXXX/abc123",
                     requestMessage = "매수 알림"
@@ -150,8 +150,8 @@ class SendNotificationCommandServiceHttpClientTest() {
 class SendNotificationCommandServiceExceptionTest {
     @Test
     fun `저장되지 않은 ID 로 sendNotification 을 호출하는 경우`() = runTest {
-        val notFoundLogAdapter = GetSendNotificationLogPort { null }
-        val service = newSendNotificationCommandService(getSendNotificationLogPort = notFoundLogAdapter)
+        val notFoundLogAdapter = FindSendNotificationLogPort { null }
+        val service = newSendNotificationCommandService(findSendNotificationLogPort = notFoundLogAdapter)
 
         try {
             service.sendNotification(SendNotificationEvent(sendNotificationLogId = 2))
@@ -167,10 +167,10 @@ class SendNotificationCommandServiceExceptionTest {
             .values()
             .filter { it != REQUESTED }
             .forEach { notRequestStatus ->
-                val notPreConditionLogAdapter = GetSendNotificationLogPort {
+                val notPreConditionLogAdapter = FindSendNotificationLogPort {
                     slackSendNotificationLog.copy(status = notRequestStatus)
                 }
-                val service = newSendNotificationCommandService(getSendNotificationLogPort = notPreConditionLogAdapter)
+                val service = newSendNotificationCommandService(findSendNotificationLogPort = notPreConditionLogAdapter)
 
                 try {
                     service.sendNotification(SendNotificationEvent(sendNotificationLogId = 1))
@@ -183,17 +183,17 @@ class SendNotificationCommandServiceExceptionTest {
 }
 
 private fun newSendNotificationCommandService(
-    createSendNotificationLogPort: CreateSendNotificationLogPort = NoErrorSendNotificationAdapter(),
-    getSendNotificationLogPort: GetSendNotificationLogPort = NoErrorSendNotificationAdapter(),
+    saveRequestedStatusSendNotificationLogPort: SaveRequestedStatusSendNotificationLogPort = NoErrorSendNotificationAdapter(),
+    findSendNotificationLogPort: FindSendNotificationLogPort = NoErrorSendNotificationAdapter(),
     saveSendNotificationLogPort: SaveSendNotificationLogPort = NoErrorSendNotificationAdapter(),
     eventBus: EventBus<SendNotificationEvent> = EventBus(),
     httpApiClient: HttpApiClient = NoErrorHttpClient(),
 ) = SendNotificationCommandService(
-    createSendNotificationLogPort = createSendNotificationLogPort,
+    saveRequestedStatusSendNotificationLogPort = saveRequestedStatusSendNotificationLogPort,
     saveSendNotificationLogPort = saveSendNotificationLogPort,
     eventBus = eventBus,
     httpApiClient = httpApiClient,
-    getSendNotificationLogPort = getSendNotificationLogPort,
+    findSendNotificationLogPort = findSendNotificationLogPort,
 )
 
 private fun newHttpClient(postMethodBlock: (String, Any) -> String): NoErrorHttpClient {
@@ -212,10 +212,10 @@ private fun newHttpClient(postMethodBlock: (String, Any) -> String): NoErrorHttp
 }
 
 open class NoErrorSendNotificationAdapter : SendNotificationLogPort {
-    override suspend fun createSendNotificationLog(notificationAppId: Long, requestMessage: String): Long =
+    override suspend fun saveSendNotificationLog(notificationAppId: Long, requestMessage: String): Long =
         slackSendNotificationLog.sendNotificationLogId
 
-    override suspend fun getSendNotificationLog(sendNotificationLogId: Long): SendNotificationLog? =
+    override suspend fun findSendNotificationLog(sendNotificationLogId: Long): SendNotificationLog? =
         slackSendNotificationLog
 
     override suspend fun saveSendNotificationLog(domainEntity: SendNotificationLog): Boolean =

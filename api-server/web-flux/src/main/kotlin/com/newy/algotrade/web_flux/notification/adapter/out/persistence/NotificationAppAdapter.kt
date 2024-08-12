@@ -10,10 +10,10 @@ import com.newy.algotrade.web_flux.notification.adapter.out.persistence.reposito
 class NotificationAppAdapter(
     private val repository: NotificationAppRepository,
 ) : NotificationAppPort {
-    override suspend fun hasNotificationApp(userId: Long): Boolean {
+    override suspend fun existsNotificationApp(userId: Long): Boolean {
         return repository.existsByUserId(userId)
     }
 
-    override suspend fun setNotificationApp(domainEntity: NotificationApp): Boolean =
+    override suspend fun saveNotificationApp(domainEntity: NotificationApp): Boolean =
         repository.save(NotificationAppR2dbcEntity(domainEntity)).id > 0
 }

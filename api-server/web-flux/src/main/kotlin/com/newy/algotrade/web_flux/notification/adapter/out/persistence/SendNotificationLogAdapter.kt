@@ -11,10 +11,10 @@ import com.newy.algotrade.web_flux.notification.adapter.out.persistence.reposito
 class SendNotificationLogAdapter(
     private val repository: SendNotificationLogRepository,
 ) : SendNotificationLogPort {
-    override suspend fun getSendNotificationLog(sendNotificationLogId: Long) =
+    override suspend fun findSendNotificationLog(sendNotificationLogId: Long) =
         repository.findByIdAsDomainEntity(sendNotificationLogId)
 
-    override suspend fun createSendNotificationLog(notificationAppId: Long, requestMessage: String) =
+    override suspend fun saveSendNotificationLog(notificationAppId: Long, requestMessage: String) =
         repository.save(
             SendNotificationLogR2dbcEntity(
                 notificationAppId = notificationAppId,
