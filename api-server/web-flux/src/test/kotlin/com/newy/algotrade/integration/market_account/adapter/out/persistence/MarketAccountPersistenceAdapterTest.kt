@@ -28,7 +28,7 @@ class MarketServerTest(
     fun `저장되지 않은 MarketServer 조회하기`() = runTransactional {
         marketServerRepository.deleteAll()
         assertNull(
-            adapter.getMarketServer(
+            adapter.findMarketServer(
                 market = Market.BY_BIT,
                 isProductionServer = true
             )
@@ -38,7 +38,7 @@ class MarketServerTest(
     @Test
     fun `저장된 MarketServer 조회하기`() = runBlocking {
         assertNotNull(
-            adapter.getMarketServer(
+            adapter.findMarketServer(
                 market = Market.BY_BIT,
                 isProductionServer = true
             )
@@ -56,7 +56,7 @@ class SaveMarketAccountTest(
     fun setUp(): Unit = runBlocking {
         domainEntity = MarketAccount(
             userId = getAdminUserId(),
-            marketServer = adapter.getMarketServer(
+            marketServer = adapter.findMarketServer(
                 market = Market.BY_BIT,
                 isProductionServer = true
             )!!,
@@ -68,7 +68,7 @@ class SaveMarketAccountTest(
 
     @Test
     fun `MarketAccount 등록여부 조회하기`() = runBlocking {
-        assertFalse(adapter.hasMarketAccount(domainEntity))
+        assertFalse(adapter.existsMarketAccount(domainEntity))
     }
 
     @Test
@@ -76,7 +76,7 @@ class SaveMarketAccountTest(
         val isSaved = adapter.saveMarketAccount(domainEntity).id > 0
 
         assertTrue(isSaved)
-        assertTrue(adapter.hasMarketAccount(domainEntity))
+        assertTrue(adapter.existsMarketAccount(domainEntity))
     }
 }
 
@@ -91,11 +91,11 @@ class DuplicateExceptionTest(
 
     @BeforeEach
     fun setUp(): Unit = runBlocking {
-        byBitServer = adapter.getMarketServer(
+        byBitServer = adapter.findMarketServer(
             market = Market.BY_BIT,
             isProductionServer = true
         )!!
-        lsSecServer = adapter.getMarketServer(
+        lsSecServer = adapter.findMarketServer(
             market = Market.LS_SEC,
             isProductionServer = true
         )!!

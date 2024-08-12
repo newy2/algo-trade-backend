@@ -5,16 +5,16 @@ import com.newy.algotrade.domain.market_account.MarketAccount
 import com.newy.algotrade.domain.market_account.MarketServer
 
 interface MarketAccountPort :
-    HasMarketAccountPort,
-    GetMarketServerPort,
+    ExistsMarketAccountPort,
+    FindMarketServerPort,
     SaveMarketAccountPort
 
-fun interface HasMarketAccountPort {
-    suspend fun hasMarketAccount(domainEntity: MarketAccount): Boolean
+fun interface ExistsMarketAccountPort {
+    suspend fun existsMarketAccount(domainEntity: MarketAccount): Boolean
 }
 
-fun interface GetMarketServerPort {
-    suspend fun getMarketServer(market: Market, isProductionServer: Boolean): MarketServer?
+fun interface FindMarketServerPort {
+    suspend fun findMarketServer(market: Market, isProductionServer: Boolean): MarketServer?
 }
 
 fun interface SaveMarketAccountPort {

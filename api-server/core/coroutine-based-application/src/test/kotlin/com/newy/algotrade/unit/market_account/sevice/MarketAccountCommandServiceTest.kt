@@ -1,10 +1,10 @@
 package com.newy.algotrade.unit.market_account.sevice
 
 import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
-import com.newy.algotrade.coroutine_based_application.market_account.port.out.GetMarketServerPort
-import com.newy.algotrade.coroutine_based_application.market_account.port.out.HasMarketAccountPort
+import com.newy.algotrade.coroutine_based_application.market_account.port.out.ExistsMarketAccountPort
+import com.newy.algotrade.coroutine_based_application.market_account.port.out.FindMarketServerPort
 import com.newy.algotrade.coroutine_based_application.market_account.port.out.MarketAccountPort
-import com.newy.algotrade.coroutine_based_application.market_account.service.SetMarketAccountCommandService
+import com.newy.algotrade.coroutine_based_application.market_account.service.MarketAccountCommandService
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
@@ -28,11 +28,11 @@ private val incomingPortModel = SetMarketAccountCommand(
 class MarketAccountCommandServiceExceptionTest {
     @Test
     fun `MarketServer 를 찾을 수 없는 경우`() = runTest {
-        val notFoundMarketServerAdapter = GetMarketServerPort { _, _ -> null }
-        val service = SetMarketAccountCommandService(
-            hasMarketAccountPort = NoErrorMarketAccountAdapter(),
+        val notFoundMarketServerAdapter = FindMarketServerPort { _, _ -> null }
+        val service = MarketAccountCommandService(
+            existsMarketAccountPort = NoErrorMarketAccountAdapter(),
             saveMarketAccountPort = NoErrorMarketAccountAdapter(),
-            getMarketServerPort = notFoundMarketServerAdapter,
+            findMarketServerPort = notFoundMarketServerAdapter,
         )
 
         try {
@@ -48,11 +48,11 @@ class MarketAccountCommandServiceExceptionTest {
 
     @Test
     fun `중복된 MarketAccount 를 등록하려는 경우`() = runTest {
-        val alreadySavedMarketAccountAdapter = HasMarketAccountPort { _ -> true }
-        val service = SetMarketAccountCommandService(
+        val alreadySavedMarketAccountAdapter = ExistsMarketAccountPort { _ -> true }
+        val service = MarketAccountCommandService(
             saveMarketAccountPort = NoErrorMarketAccountAdapter(),
-            getMarketServerPort = NoErrorMarketAccountAdapter(),
-            hasMarketAccountPort = alreadySavedMarketAccountAdapter,
+            findMarketServerPort = NoErrorMarketAccountAdapter(),
+            existsMarketAccountPort = alreadySavedMarketAccountAdapter,
         )
 
         try {
@@ -79,9 +79,9 @@ class MarketAccountCommandServiceTest {
             appKey = "appKey",
             appSecret = "appSecret",
         )
-        val service = SetMarketAccountCommandService(
-            getMarketServerPort = NoErrorMarketAccountAdapter(),
-            hasMarketAccountPort = NoErrorMarketAccountAdapter(),
+        val service = MarketAccountCommandService(
+            findMarketServerPort = NoErrorMarketAccountAdapter(),
+            existsMarketAccountPort = NoErrorMarketAccountAdapter(),
             saveMarketAccountPort = { (_) -> expected },
         )
 
@@ -90,7 +90,7 @@ class MarketAccountCommandServiceTest {
 }
 
 open class NoErrorMarketAccountAdapter : MarketAccountPort {
-    override suspend fun hasMarketAccount(domainEntity: MarketAccount) = false
+    override suspend fun existsMarketAccount(domainEntity: MarketAccount) = false
     override suspend fun saveMarketAccount(domainEntity: MarketAccount) = MarketAccount(
         id = 10,
         userId = 1,
@@ -103,7 +103,7 @@ open class NoErrorMarketAccountAdapter : MarketAccountPort {
         appSecret = "appSecret",
     )
 
-    override suspend fun getMarketServer(market: Market, isProductionServer: Boolean): MarketServer? =
+    override suspend fun findMarketServer(market: Market, isProductionServer: Boolean): MarketServer? =
         MarketServer(
             id = 1,
             marketId = 2,

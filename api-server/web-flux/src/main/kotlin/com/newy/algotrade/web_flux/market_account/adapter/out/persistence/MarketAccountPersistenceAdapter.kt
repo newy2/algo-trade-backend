@@ -14,13 +14,13 @@ class MarketAccountPersistenceAdapter(
     private val marketAccountRepository: MarketAccountRepository
 ) : MarketAccountPort {
 
-    override suspend fun getMarketServer(market: Market, isProductionServer: Boolean) =
+    override suspend fun findMarketServer(market: Market, isProductionServer: Boolean) =
         marketServerRepository.findByMarketCodeAndIsProductionServer(
             marketCode = market.name,
             isProductionServer = isProductionServer
         )?.toDomainEntity()
 
-    override suspend fun hasMarketAccount(domainEntity: MarketAccount) =
+    override suspend fun existsMarketAccount(domainEntity: MarketAccount) =
         marketAccountRepository.existsByMarketServerIdAndAppKeyAndAppSecret(
             marketServerId = domainEntity.marketServer.id,
             appKey = domainEntity.appKey,
