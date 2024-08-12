@@ -1,8 +1,8 @@
 package com.newy.algotrade.coroutine_based_application.run_strategy.service
 
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.CandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.RemoveCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
+import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.CandlesUseCase
+import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.RemoveCandlesUseCase
+import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.SetCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.IsStrategyUsingProductPriceKeyPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.RemoveStrategyPort

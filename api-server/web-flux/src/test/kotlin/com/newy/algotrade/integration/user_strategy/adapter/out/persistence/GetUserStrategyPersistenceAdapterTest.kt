@@ -7,7 +7,7 @@ import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.product.ProductPriceKey
+import com.newy.algotrade.domain.product_price.ProductPriceKey
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import com.newy.algotrade.web_flux.strategy.adapter.out.persistence.repository.StrategyR2dbcEntity
 import com.newy.algotrade.web_flux.strategy.adapter.out.persistence.repository.StrategyRepository

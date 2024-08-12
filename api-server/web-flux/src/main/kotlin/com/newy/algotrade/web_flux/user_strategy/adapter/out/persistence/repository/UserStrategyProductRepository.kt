@@ -3,7 +3,7 @@ package com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.reposi
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.product.ProductPriceKey
+import com.newy.algotrade.domain.product_price.ProductPriceKey
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import io.r2dbc.spi.Row
 import kotlinx.coroutines.flow.Flow

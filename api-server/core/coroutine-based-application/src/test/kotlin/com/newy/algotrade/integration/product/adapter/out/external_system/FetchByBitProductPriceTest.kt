@@ -2,13 +2,13 @@ package com.newy.algotrade.integration.product.adapter.out.external_system
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchByBitProductPrice
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchByBitProductPrice
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchProductPriceProxy
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
-import com.newy.algotrade.domain.product.GetProductPriceHttpParam
+import com.newy.algotrade.domain.product_price.GetProductPriceHttpParam
 import helpers.TestEnv
 import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking

@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.run_strategy.service
 
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.GetCandlesQuery
+import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.GetCandlesQuery
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.OnCreatedStrategySignalPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategySignalHistoryPort

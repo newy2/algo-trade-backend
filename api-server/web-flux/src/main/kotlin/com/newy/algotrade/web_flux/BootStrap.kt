@@ -7,9 +7,9 @@ import com.newy.algotrade.coroutine_based_application.common.event.ReceivePollin
 import com.newy.algotrade.coroutine_based_application.common.event.SendNotificationEvent
 import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SendNotificationCommand
 import com.newy.algotrade.coroutine_based_application.notification.service.SendNotificationCommandService
-import com.newy.algotrade.coroutine_based_application.product.adapter.`in`.internal_system.InitController
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.AddCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.out.PollingProductPricePort
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.`in`.internal_system.InitController
+import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.AddCandlesUseCase
+import com.newy.algotrade.coroutine_based_application.product_price.port.out.PollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.strategy.port.`in`.StrategyQuery

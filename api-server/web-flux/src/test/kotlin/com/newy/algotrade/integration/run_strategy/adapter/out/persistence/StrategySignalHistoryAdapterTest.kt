@@ -11,7 +11,7 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
-import com.newy.algotrade.domain.product.ProductPriceKey
+import com.newy.algotrade.domain.product_price.ProductPriceKey
 import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
 import com.newy.algotrade.web_flux.run_strategy.adapter.out.persistence.StrategySignalHistoryAdapter
 import com.newy.algotrade.web_flux.run_strategy.adapter.out.persistence.repository.MarketRepositoryForRunStrategy

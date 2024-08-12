@@ -5,7 +5,7 @@ import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
-import com.newy.algotrade.domain.product.ProductPriceKey
+import com.newy.algotrade.domain.product_price.ProductPriceKey
 import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
 import com.newy.algotrade.web_flux.common.annotation.PersistenceAdapter
 import com.newy.algotrade.web_flux.run_strategy.adapter.out.persistence.repository.*

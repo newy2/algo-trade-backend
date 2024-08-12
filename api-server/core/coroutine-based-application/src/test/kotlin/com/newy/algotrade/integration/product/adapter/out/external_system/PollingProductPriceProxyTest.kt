@@ -5,13 +5,13 @@ import com.newy.algotrade.coroutine_based_application.auth.adpter.out.web.LsSecA
 import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.*
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.*
 import com.newy.algotrade.domain.auth.PrivateApiInfo
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
-import com.newy.algotrade.domain.product.ProductPriceKey
+import com.newy.algotrade.domain.product_price.ProductPriceKey
 import helpers.TestEnv
 import helpers.productPriceKey
 import kotlinx.coroutines.CoroutineScope

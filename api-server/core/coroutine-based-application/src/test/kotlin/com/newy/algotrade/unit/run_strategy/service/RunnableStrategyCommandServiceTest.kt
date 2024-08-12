@@ -1,9 +1,9 @@
 package com.newy.algotrade.unit.run_strategy.service
 
-import com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.RemoveCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.SetCandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePort
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
+import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.RemoveCandlesUseCase
+import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.SetCandlesUseCase
+import com.newy.algotrade.coroutine_based_application.product_price.port.out.CandlePort
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.IsStrategyUsingProductPriceKeyPort
@@ -12,7 +12,7 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.SetS
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
 import com.newy.algotrade.domain.chart.Candles
-import com.newy.algotrade.domain.product.ProductPriceKey
+import com.newy.algotrade.domain.product_price.ProductPriceKey
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import helpers.productPrice
 import helpers.productPriceKey
