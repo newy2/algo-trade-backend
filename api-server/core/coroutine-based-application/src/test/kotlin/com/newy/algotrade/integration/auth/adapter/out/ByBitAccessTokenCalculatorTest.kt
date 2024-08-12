@@ -24,7 +24,7 @@ class ByBitPrivateApiTest {
         )
 
         val now = Instant.now().toEpochMilli()
-        val signature = ByBitAccessTokenCalculator().accessToken(
+        val signature = ByBitAccessTokenCalculator().findAccessToken(
             ByBitPrivateApiInfo(
                 key = TestEnv.ByBit.apiKey,
                 secret = TestEnv.ByBit.apiSecret,

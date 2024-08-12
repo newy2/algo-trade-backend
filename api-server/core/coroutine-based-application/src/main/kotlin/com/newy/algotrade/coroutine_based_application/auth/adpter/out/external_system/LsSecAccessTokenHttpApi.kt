@@ -1,6 +1,6 @@
-package com.newy.algotrade.coroutine_based_application.auth.adpter.out.web
+package com.newy.algotrade.coroutine_based_application.auth.adpter.out.external_system
 
-import com.newy.algotrade.coroutine_based_application.auth.port.out.GetAccessTokenPort
+import com.newy.algotrade.coroutine_based_application.auth.port.out.AccessTokenPort
 import com.newy.algotrade.coroutine_based_application.common.web.http.FormData
 import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.http.post
@@ -9,8 +9,8 @@ import com.newy.algotrade.domain.auth.jackson.LsSecAccessTokenHttpResponse
 
 class LsSecAccessTokenHttpApi(
     private val client: HttpApiClient,
-) : GetAccessTokenPort<PrivateApiInfo> {
-    override suspend fun accessToken(info: PrivateApiInfo): String =
+) : AccessTokenPort<PrivateApiInfo> {
+    override suspend fun findAccessToken(info: PrivateApiInfo): String =
         client.post<LsSecAccessTokenHttpResponse>(
             path = "/oauth2/token",
             headers = mapOf("Content-Type" to "application/x-www-form-urlencoded"),
