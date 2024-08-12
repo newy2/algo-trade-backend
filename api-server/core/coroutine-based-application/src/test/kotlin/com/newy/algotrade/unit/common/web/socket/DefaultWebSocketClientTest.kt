@@ -28,10 +28,10 @@ class PingTest {
     fun setUp() {
         port = TestServerPort.nextValue()
         serverListener = ServerListener()
-        server = MockWebServer().also {
-            it.start(port)
-            repeat(1000) { _ ->
-                it.enqueue(MockResponse().withWebSocketUpgrade(serverListener))
+        server = MockWebServer().also { mockServer ->
+            mockServer.start(port)
+            repeat(1000) {
+                mockServer.enqueue(MockResponse().withWebSocketUpgrade(serverListener))
             }
         }
     }
@@ -93,10 +93,10 @@ class AutoRestartTest {
     fun setUp() {
         port = TestServerPort.nextValue()
         serverListener = ServerListener()
-        server = MockWebServer().also {
-            it.start(port)
-            repeat(1000) { _ ->
-                it.enqueue(MockResponse().withWebSocketUpgrade(serverListener))
+        server = MockWebServer().also { mockServer ->
+            mockServer.start(port)
+            repeat(1000) {
+                mockServer.enqueue(MockResponse().withWebSocketUpgrade(serverListener))
             }
         }
     }
@@ -181,7 +181,7 @@ class SendReceiveMessageTest {
     @Test
     fun `메세지 수신`() = runBlocking {
         val serverListener = ServerListener(coroutineContext)
-        repeat(1000) { _ ->
+        repeat(1000) {
             server.enqueue(MockResponse().withWebSocketUpgrade(serverListener))
         }
 

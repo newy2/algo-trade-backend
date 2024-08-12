@@ -48,7 +48,7 @@ class MarketAccountCommandServiceExceptionTest {
 
     @Test
     fun `중복된 MarketAccount 를 등록하려는 경우`() = runTest {
-        val alreadySavedMarketAccountAdapter = ExistsMarketAccountPort { _ -> true }
+        val alreadySavedMarketAccountAdapter = ExistsMarketAccountPort { true }
         val service = MarketAccountCommandService(
             saveMarketAccountPort = NoErrorMarketAccountAdapter(),
             findMarketServerPort = NoErrorMarketAccountAdapter(),

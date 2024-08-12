@@ -53,7 +53,7 @@ class NotificationAppCommandServiceTest {
 class NotificationAppCommandServiceExceptionTest {
     @Test
     fun `이미 알림 앱을 등록한 경우`() = runTest {
-        val alreadySavedNotificationAppAdapter = ExistsHasNotificationAppPort { _ -> true }
+        val alreadySavedNotificationAppAdapter = ExistsHasNotificationAppPort { true }
         val service = newNotificationAppCommandService(
             existsHasNotificationAppPort = alreadySavedNotificationAppAdapter,
         )

@@ -68,7 +68,7 @@ class RequestSendNotificationTest {
 class SendNotificationTest {
     private val beginSendNotificationLog = slackSendNotificationLog
     private val savedHistory = mutableListOf<SendNotificationLog>()
-    private val findSendNotificationLogPort = FindSendNotificationLogPort { _ -> beginSendNotificationLog }
+    private val findSendNotificationLogPort = FindSendNotificationLogPort { beginSendNotificationLog }
     private val saveSendNotificationLogPort = SaveSendNotificationLogPort { log -> savedHistory.add(log) }
 
     @BeforeEach
@@ -130,7 +130,7 @@ class SendNotificationCommandServiceHttpClientTest() {
         }
 
         val service = newSendNotificationCommandService(
-            findSendNotificationLogPort = { _ ->
+            findSendNotificationLogPort = {
                 slackSendNotificationLog.copy(
                     url = "${NotificationAppType.SLACK.host}/services/TXXXX/BXXXX/abc123",
                     requestMessage = "매수 알림"

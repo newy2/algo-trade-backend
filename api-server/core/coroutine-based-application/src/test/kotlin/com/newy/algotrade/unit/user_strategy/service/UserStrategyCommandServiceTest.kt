@@ -142,7 +142,7 @@ class UserPickProductUserStrategyCommandServiceTest {
         val createdUserStrategyId: Long = 10
         val service = newUserStrategyCommandService(
             eventBus = eventBus,
-            saveUserStrategyPort = { _ -> createdUserStrategyId }
+            saveUserStrategyPort = { createdUserStrategyId }
         )
 
         service.setUserStrategy(incomingPortModel)
