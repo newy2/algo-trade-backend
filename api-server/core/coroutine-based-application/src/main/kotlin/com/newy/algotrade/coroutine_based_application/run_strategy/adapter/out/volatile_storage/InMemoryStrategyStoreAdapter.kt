@@ -11,11 +11,11 @@ open class InMemoryStrategyStoreAdapter : StrategyPort {
         return map.keys.find { it.productPriceKey == productPriceKey } != null
     }
 
-    override fun setStrategy(key: UserStrategyKey, strategy: Strategy) {
+    override fun saveStrategy(key: UserStrategyKey, strategy: Strategy) {
         map[key] = strategy
     }
 
-    override fun removeStrategy(key: UserStrategyKey) {
+    override fun deleteStrategy(key: UserStrategyKey) {
         map.remove(key)
     }
 

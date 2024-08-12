@@ -67,9 +67,9 @@ class EmptyRunStrategyCommandServiceTest {
 
     @Test
     fun `strategy 를 찾을 수 없으면 실행되지 않는다`() = runTest {
-        val notFoundRunnableStrategyAdapter = GetStrategyFilterByProductPriceKeyPort { emptyMap() }
+        val notFoundRunnableStrategyAdapter = FilterStrategyPort { emptyMap() }
         val service = newRunStrategyCommandService(
-            getStrategyFilterByProductPriceKeyPort = notFoundRunnableStrategyAdapter
+            filterStrategyPort = notFoundRunnableStrategyAdapter
         )
 
         val result = service.runStrategy(productPriceKey)
@@ -81,15 +81,15 @@ class EmptyRunStrategyCommandServiceTest {
 @DisplayName("StrategySignalHistory 를 사용한 테스트 - 진입 이력이 있는 경우와 없는 경우")
 class RunStrategyCommandServiceWithStrategySignalHistoryTest {
     private val productPriceKey = productPriceKey(productCode = "BTCUSDT")
-    private val getTestDataAdapter = GetStrategyFilterByProductPriceKeyPort {
+    private val getTestDataAdapter = FilterStrategyPort {
         mapOf(
             userStrategyKey(1, BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = true),
             userStrategyKey(2, BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = false),
             userStrategyKey(3, BTC_1MINUTE) to LongPositionStrategy(entry = false, exit = false),
         )
     }
-    private val enteredSignalHistoryAdapter = object : GetStrategySignalHistoryPort {
-        override suspend fun getHistory(key: StrategySignalHistoryKey, maxSize: Int): StrategySignalHistory {
+    private val enteredSignalHistoryAdapter = object : FindStrategySignalHistoryPort {
+        override suspend fun findHistory(key: StrategySignalHistoryKey, maxSize: Int): StrategySignalHistory {
             return StrategySignalHistory().also {
                 it.add(
                     StrategySignal(
@@ -108,7 +108,7 @@ class RunStrategyCommandServiceWithStrategySignalHistoryTest {
     @Test
     fun `entry 주문 히스토리가 없는 경우`() = runTest {
         val service = newRunStrategyCommandService(
-            getStrategyFilterByProductPriceKeyPort = getTestDataAdapter,
+            filterStrategyPort = getTestDataAdapter,
         )
 
         val result = service.runStrategy(productPriceKey)
@@ -127,8 +127,8 @@ class RunStrategyCommandServiceWithStrategySignalHistoryTest {
     @Test
     fun `entry 주문 히스토리가 있는 경우`() = runTest {
         val service = newRunStrategyCommandService(
-            getStrategyFilterByProductPriceKeyPort = getTestDataAdapter,
-            getStrategySignalHistoryPort = enteredSignalHistoryAdapter,
+            filterStrategyPort = getTestDataAdapter,
+            findStrategySignalHistoryPort = enteredSignalHistoryAdapter,
         )
 
         val result = service.runStrategy(productPriceKey)
@@ -150,7 +150,7 @@ class MixedPositionRunStrategyCommandServiceTest {
     @Test
     fun `여러 position 전략이 섞인 경우`() = runTest {
         val productPriceKey = productPriceKey(productCode = "BTCUSDT")
-        val getTestDataAdapter = GetStrategyFilterByProductPriceKeyPort {
+        val getTestDataAdapter = FilterStrategyPort {
             mapOf(
                 userStrategyKey(1, BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = true),
                 userStrategyKey(2, BTC_1MINUTE) to ShortPositionStrategy(entry = true, exit = true),
@@ -158,7 +158,7 @@ class MixedPositionRunStrategyCommandServiceTest {
             )
         }
         val service = newRunStrategyCommandService(
-            getStrategyFilterByProductPriceKeyPort = getTestDataAdapter,
+            filterStrategyPort = getTestDataAdapter,
         )
 
         val result = service.runStrategy(productPriceKey)
@@ -178,7 +178,7 @@ class MixedPositionRunStrategyCommandServiceTest {
 @DisplayName("port 호출 확인 테스트")
 class RunStrategyCommandServiceTest {
     private val productPriceKey = productPriceKey(productCode = "BTCUSDT")
-    private val getTestDataAdapter = GetStrategyFilterByProductPriceKeyPort {
+    private val getTestDataAdapter = FilterStrategyPort {
         mapOf(
             userStrategyKey(1, BTC_1MINUTE) to LongPositionStrategy(entry = true, exit = true),
             userStrategyKey(2, BTC_1MINUTE) to ShortPositionStrategy(entry = true, exit = false),
@@ -191,8 +191,8 @@ class RunStrategyCommandServiceTest {
         val logs = mutableListOf<String>()
 
         val service = newRunStrategyCommandService(
-            getStrategyFilterByProductPriceKeyPort = getTestDataAdapter,
-            addStrategySignalHistoryPort = { strategySignalHistoryKey, signal ->
+            filterStrategyPort = getTestDataAdapter,
+            saveStrategySignalHistoryPort = { strategySignalHistoryKey, signal ->
                 logs.add("addStrategySignalHistoryPort(id: ${strategySignalHistoryKey.userStrategyId}, signal: ${signal.orderType})")
             },
             onCreatedStrategySignalPort = { userStrategyId, signal ->
@@ -218,15 +218,15 @@ fun newRunStrategyCommandService(
     strategySignalHistoryPort: StrategySignalHistoryPort = InMemoryStrategySignalHistoryStoreAdapter(),
 
     getCandlesQuery: GetCandlesQuery = NoErrorGetCandlesQueryService(),
-    getStrategyFilterByProductPriceKeyPort: GetStrategyFilterByProductPriceKeyPort = InMemoryStrategyStoreAdapter(),
-    getStrategySignalHistoryPort: GetStrategySignalHistoryPort = strategySignalHistoryPort,
-    addStrategySignalHistoryPort: AddStrategySignalHistoryPort = strategySignalHistoryPort,
+    filterStrategyPort: FilterStrategyPort = InMemoryStrategyStoreAdapter(),
+    findStrategySignalHistoryPort: FindStrategySignalHistoryPort = strategySignalHistoryPort,
+    saveStrategySignalHistoryPort: SaveStrategySignalHistoryPort = strategySignalHistoryPort,
     onCreatedStrategySignalPort: OnCreatedStrategySignalPort = NoErrorOnCreatedStrategySignalAdapter(),
 ) = RunStrategyCommandService(
     getCandlesQuery = getCandlesQuery,
-    getStrategyFilterByProductPriceKeyPort = getStrategyFilterByProductPriceKeyPort,
-    getStrategySignalHistoryPort = getStrategySignalHistoryPort,
-    addStrategySignalHistoryPort = addStrategySignalHistoryPort,
+    filterStrategyPort = filterStrategyPort,
+    findStrategySignalHistoryPort = findStrategySignalHistoryPort,
+    saveStrategySignalHistoryPort = saveStrategySignalHistoryPort,
     onCreatedStrategySignalPort = onCreatedStrategySignalPort,
 )
 

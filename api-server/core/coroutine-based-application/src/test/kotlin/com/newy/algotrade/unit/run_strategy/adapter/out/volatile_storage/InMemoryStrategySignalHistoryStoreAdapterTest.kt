@@ -35,13 +35,13 @@ class InMemoryStrategySignalHistoryStoreAdapterTest {
     @BeforeEach
     fun setUp() = runBlocking {
         store = InMemoryStrategySignalHistoryStoreAdapter().also {
-            it.addHistory(key, signal)
+            it.saveHistory(key, signal)
         }
     }
 
     @Test
     fun `등록한 히스토리 가져오기`() = runTest {
-        store.getHistory(key).strategySignals().let {
+        store.findHistory(key).strategySignals().let {
             assertEquals(1, it.size)
             assertEquals(signal, it.first())
         }
@@ -49,15 +49,15 @@ class InMemoryStrategySignalHistoryStoreAdapterTest {
 
     @Test
     fun `등록한 히스토리 삭제하기`() = runTest {
-        store.removeHistory(key)
+        store.deleteHistory(key)
 
-        assertTrue(store.getHistory(key).isEmpty())
+        assertTrue(store.findHistory(key).isEmpty())
     }
 
     @Test
     fun `등록하지 않은 히스토리 가져오기`() = runTest {
         val unRegisteredKey = key.copy(userStrategyId = 2)
 
-        assertTrue(store.getHistory(unRegisteredKey).isEmpty())
+        assertTrue(store.findHistory(unRegisteredKey).isEmpty())
     }
 }

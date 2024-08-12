@@ -10,15 +10,15 @@ import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
 open class InMemoryStrategySignalHistoryStoreAdapter : StrategySignalHistoryPort {
     private val historyMap = mutableMapOf<StrategySignalHistoryKey, StrategySignalHistory>()
 
-    override suspend fun getHistory(key: StrategySignalHistoryKey, maxSize: Int): StrategySignalHistory {
+    override suspend fun findHistory(key: StrategySignalHistoryKey, maxSize: Int): StrategySignalHistory {
         return historyMap[key] ?: StrategySignalHistory()
     }
 
-    override suspend fun removeHistory(key: StrategySignalHistoryKey) {
+    override suspend fun deleteHistory(key: StrategySignalHistoryKey) {
         historyMap.remove(key)
     }
 
-    override suspend fun addHistory(key: StrategySignalHistoryKey, signal: StrategySignal) {
+    override suspend fun saveHistory(key: StrategySignalHistoryKey, signal: StrategySignal) {
         val history = historyMap[key] ?: StrategySignalHistory().also { historyMap[key] = it }
         history.add(signal)
     }

@@ -6,9 +6,9 @@ import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.Se
 import com.newy.algotrade.coroutine_based_application.product_price.port.out.CandlePort
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.DeleteStrategyPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.IsStrategyUsingProductPriceKeyPort
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.RemoveStrategyPort
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.SetStrategyPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.SaveStrategyPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunnableStrategyCommandService
 import com.newy.algotrade.domain.chart.Candles
@@ -117,14 +117,14 @@ private fun newRunnableStrategyCommandService(
 
     setCandlesUseCase: SetCandlesUseCase = DefaultCandlesUseCase(candlePort),
     removeCandlesUseCase: RemoveCandlesUseCase = DefaultCandlesUseCase(candlePort),
-    setStrategyPort: SetStrategyPort = strategyPort,
-    removeStrategyPort: RemoveStrategyPort = strategyPort,
+    saveStrategyPort: SaveStrategyPort = strategyPort,
+    deleteStrategyPort: DeleteStrategyPort = strategyPort,
     isStrategyUsingProductPriceKeyPort: IsStrategyUsingProductPriceKeyPort = strategyPort,
 ) = RunnableStrategyCommandService(
     setCandlesUseCase = setCandlesUseCase,
     removeCandlesUseCase = removeCandlesUseCase,
-    setStrategyPort = setStrategyPort,
-    removeStrategyPort = removeStrategyPort,
+    saveStrategyPort = saveStrategyPort,
+    deleteStrategyPort = deleteStrategyPort,
     isStrategyUsingProductPriceKeyPort = isStrategyUsingProductPriceKeyPort,
 )
 

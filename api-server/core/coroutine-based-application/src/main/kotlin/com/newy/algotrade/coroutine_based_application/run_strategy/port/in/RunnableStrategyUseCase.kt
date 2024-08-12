@@ -4,12 +4,12 @@ import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 
 interface RunnableStrategyUseCase :
     SetRunnableStrategyUseCase,
-    RemoveRunnableStrategy
+    RemoveRunnableStrategyUseCase
 
 fun interface SetRunnableStrategyUseCase {
     suspend fun setRunnableStrategy(userStrategyKey: UserStrategyKey)
 }
 
-fun interface RemoveRunnableStrategy {
+fun interface RemoveRunnableStrategyUseCase {
     suspend fun removeRunnableStrategy(userStrategyKey: UserStrategyKey)
 }

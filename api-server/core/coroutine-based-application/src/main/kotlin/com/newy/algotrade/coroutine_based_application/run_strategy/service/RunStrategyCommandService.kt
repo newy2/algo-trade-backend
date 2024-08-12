@@ -11,9 +11,9 @@ import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
 
 open class RunStrategyCommandService(
     private val getCandlesQuery: GetCandlesQuery,
-    private val getStrategyFilterByProductPriceKeyPort: GetStrategyFilterByProductPriceKeyPort,
-    private val getStrategySignalHistoryPort: GetStrategySignalHistoryPort,
-    private val addStrategySignalHistoryPort: AddStrategySignalHistoryPort,
+    private val filterStrategyPort: FilterStrategyPort,
+    private val findStrategySignalHistoryPort: FindStrategySignalHistoryPort,
+    private val saveStrategySignalHistoryPort: SaveStrategySignalHistoryPort,
     private val onCreatedStrategySignalPort: OnCreatedStrategySignalPort,
 ) : RunStrategyUseCase {
     constructor(
@@ -23,16 +23,16 @@ open class RunStrategyCommandService(
         onCreatedStrategySignalPort: OnCreatedStrategySignalPort,
     ) : this(
         getCandlesQuery = getCandlesQuery,
-        getStrategyFilterByProductPriceKeyPort = strategyPort,
-        getStrategySignalHistoryPort = strategySignalHistoryPort,
-        addStrategySignalHistoryPort = strategySignalHistoryPort,
+        filterStrategyPort = strategyPort,
+        findStrategySignalHistoryPort = strategySignalHistoryPort,
+        saveStrategySignalHistoryPort = strategySignalHistoryPort,
         onCreatedStrategySignalPort = onCreatedStrategySignalPort,
     )
 
     override suspend fun runStrategy(productPriceKey: ProductPriceKey): RunStrategyResult =
         RunStrategyResult().also { result ->
             getCandlesQuery.getCandles(productPriceKey).takeIf { it.size > 0 }?.let { candles ->
-                getStrategyFilterByProductPriceKeyPort.filterBy(productPriceKey)
+                filterStrategyPort.filterBy(productPriceKey)
                     .also { result.totalStrategyCount = it.size }
                     .map { (userStrategyKey, strategy) ->
                         // TODO Log(userStrategyKey)
@@ -40,7 +40,7 @@ open class RunStrategyCommandService(
 
                         strategy.shouldOperate(
                             index = candles.lastIndex,
-                            history = getStrategySignalHistoryPort.getHistory(
+                            history = findStrategySignalHistoryPort.findHistory(
                                 StrategySignalHistoryKey(
                                     userStrategyId = userStrategyId,
                                     productPriceKey = productPriceKey
@@ -65,7 +65,7 @@ open class RunStrategyCommandService(
                     }
                     .filterNotNull().takeIf { it.isNotEmpty() }?.forEach { (userStrategyId, signal) ->
                         // TODO bulk add history
-                        addStrategySignalHistoryPort.addHistory(
+                        saveStrategySignalHistoryPort.saveHistory(
                             StrategySignalHistoryKey(
                                 userStrategyId = userStrategyId,
                                 productPriceKey = productPriceKey

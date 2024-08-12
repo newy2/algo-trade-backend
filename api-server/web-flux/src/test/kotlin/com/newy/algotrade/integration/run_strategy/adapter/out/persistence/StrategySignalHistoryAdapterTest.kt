@@ -40,7 +40,7 @@ class ExceptionTest(
 
         marketRepository.deleteAll()
         try {
-            adapter.getHistory(historyKey)
+            adapter.findHistory(historyKey)
         } catch (e: NotFoundRowException) {
             assertEquals("product 를 찾을 수 없습니다. (market: BY_BIT, productType: SPOT, productCode: BTCUSDT)", e.message)
         }
@@ -53,7 +53,7 @@ class ExceptionTest(
 
         productRepository.deleteAll()
         try {
-            adapter.getHistory(historyKey)
+            adapter.findHistory(historyKey)
         } catch (e: NotFoundRowException) {
             assertEquals("product 를 찾을 수 없습니다. (market: BY_BIT, productType: SPOT, productCode: BTCUSDT)", e.message)
         }
@@ -68,13 +68,13 @@ class AddHistoryTest(
     fun `히스토리 저장하기`() = runTransactional {
         val userStrategyId = setUserStrategyId()
         val historyKey = newStrategySignalHistoryKey(userStrategyId)
-        assertTrue(adapter.getHistory(historyKey).isEmpty())
+        assertTrue(adapter.findHistory(historyKey).isEmpty())
 
-        adapter.addHistory(historyKey, newStrategySignal(OrderType.BUY, price = 1000))
+        adapter.saveHistory(historyKey, newStrategySignal(OrderType.BUY, price = 1000))
 
         assertEquals(
             listOf(newStrategySignal(OrderType.BUY, price = 1000)),
-            adapter.getHistory(historyKey).strategySignals()
+            adapter.findHistory(historyKey).strategySignals()
         )
     }
 }
@@ -87,7 +87,7 @@ class StrategySignalHistoryAdapterTest(
         val userStrategyId = setUserStrategyId()
         val historyKey = newStrategySignalHistoryKey(userStrategyId)
 
-        assertTrue(adapter.getHistory(historyKey).isEmpty())
+        assertTrue(adapter.findHistory(historyKey).isEmpty())
     }
 
     @Test
@@ -95,11 +95,11 @@ class StrategySignalHistoryAdapterTest(
         val userStrategyId = setUserStrategyId(entryType = OrderType.BUY)
         val historyKey = newStrategySignalHistoryKey(userStrategyId)
 
-        adapter.addHistory(historyKey, newStrategySignal(OrderType.BUY, price = 1000))
+        adapter.saveHistory(historyKey, newStrategySignal(OrderType.BUY, price = 1000))
 
         assertEquals(
             listOf(newStrategySignal(OrderType.BUY, price = 1000)),
-            adapter.getHistory(historyKey, maxSize = 1).strategySignals()
+            adapter.findHistory(historyKey, maxSize = 1).strategySignals()
         )
     }
 }
@@ -114,28 +114,28 @@ class GetHistoryFilteringTest(
             val userStrategyId = setUserStrategyId(entryType = OrderType.BUY)
             val historyKey = newStrategySignalHistoryKey(userStrategyId)
 
-            adapter.addHistory(historyKey, newStrategySignal(OrderType.BUY, price = 1000))
-            adapter.addHistory(historyKey, newStrategySignal(OrderType.SELL, price = 2000))
-            adapter.addHistory(historyKey, newStrategySignal(OrderType.BUY, price = 3000))
-            adapter.addHistory(historyKey, newStrategySignal(OrderType.SELL, price = 4000))
+            adapter.saveHistory(historyKey, newStrategySignal(OrderType.BUY, price = 1000))
+            adapter.saveHistory(historyKey, newStrategySignal(OrderType.SELL, price = 2000))
+            adapter.saveHistory(historyKey, newStrategySignal(OrderType.BUY, price = 3000))
+            adapter.saveHistory(historyKey, newStrategySignal(OrderType.SELL, price = 4000))
 
             assertEquals(
                 emptyList<StrategySignal>(),
-                adapter.getHistory(historyKey, maxSize = 1).strategySignals()
+                adapter.findHistory(historyKey, maxSize = 1).strategySignals()
             )
             assertEquals(
                 listOf(
                     newStrategySignal(OrderType.BUY, price = 3000),
                     newStrategySignal(OrderType.SELL, price = 4000),
                 ),
-                adapter.getHistory(historyKey, maxSize = 2).strategySignals()
+                adapter.findHistory(historyKey, maxSize = 2).strategySignals()
             )
             assertEquals(
                 listOf(
                     newStrategySignal(OrderType.BUY, price = 3000),
                     newStrategySignal(OrderType.SELL, price = 4000),
                 ),
-                adapter.getHistory(historyKey, maxSize = 3).strategySignals()
+                adapter.findHistory(historyKey, maxSize = 3).strategySignals()
             )
             assertEquals(
                 listOf(
@@ -144,7 +144,7 @@ class GetHistoryFilteringTest(
                     newStrategySignal(OrderType.BUY, price = 3000),
                     newStrategySignal(OrderType.SELL, price = 4000),
                 ),
-                adapter.getHistory(historyKey, maxSize = 4).strategySignals()
+                adapter.findHistory(historyKey, maxSize = 4).strategySignals()
             )
         }
 
@@ -154,28 +154,28 @@ class GetHistoryFilteringTest(
             val userStrategyId = setUserStrategyId(entryType = OrderType.SELL)
             val historyKey = newStrategySignalHistoryKey(userStrategyId)
 
-            adapter.addHistory(historyKey, newStrategySignal(OrderType.SELL, price = 1000))
-            adapter.addHistory(historyKey, newStrategySignal(OrderType.BUY, price = 2000))
-            adapter.addHistory(historyKey, newStrategySignal(OrderType.SELL, price = 3000))
-            adapter.addHistory(historyKey, newStrategySignal(OrderType.BUY, price = 4000))
+            adapter.saveHistory(historyKey, newStrategySignal(OrderType.SELL, price = 1000))
+            adapter.saveHistory(historyKey, newStrategySignal(OrderType.BUY, price = 2000))
+            adapter.saveHistory(historyKey, newStrategySignal(OrderType.SELL, price = 3000))
+            adapter.saveHistory(historyKey, newStrategySignal(OrderType.BUY, price = 4000))
 
             assertEquals(
                 emptyList<StrategySignal>(),
-                adapter.getHistory(historyKey, maxSize = 1).strategySignals()
+                adapter.findHistory(historyKey, maxSize = 1).strategySignals()
             )
             assertEquals(
                 listOf(
                     newStrategySignal(OrderType.SELL, price = 3000),
                     newStrategySignal(OrderType.BUY, price = 4000),
                 ),
-                adapter.getHistory(historyKey, maxSize = 2).strategySignals()
+                adapter.findHistory(historyKey, maxSize = 2).strategySignals()
             )
             assertEquals(
                 listOf(
                     newStrategySignal(OrderType.SELL, price = 3000),
                     newStrategySignal(OrderType.BUY, price = 4000),
                 ),
-                adapter.getHistory(historyKey, maxSize = 3).strategySignals()
+                adapter.findHistory(historyKey, maxSize = 3).strategySignals()
             )
             assertEquals(
                 listOf(
@@ -184,7 +184,7 @@ class GetHistoryFilteringTest(
                     newStrategySignal(OrderType.SELL, price = 3000),
                     newStrategySignal(OrderType.BUY, price = 4000),
                 ),
-                adapter.getHistory(historyKey, maxSize = 4).strategySignals()
+                adapter.findHistory(historyKey, maxSize = 4).strategySignals()
             )
         }
 }

@@ -22,7 +22,7 @@ class StrategySignalHistoryAdapter(
     private val productRepository: ProductRepositoryForRunStrategy,
     private val strategySignalRepository: StrategySignalRepository,
 ) : StrategySignalHistoryPort {
-    override suspend fun getHistory(key: StrategySignalHistoryKey, maxSize: Int): StrategySignalHistory =
+    override suspend fun findHistory(key: StrategySignalHistoryKey, maxSize: Int): StrategySignalHistory =
         withContext(Dispatchers.IO) {
             val productId = getProductId(key.productPriceKey)
 
@@ -58,7 +58,7 @@ class StrategySignalHistoryAdapter(
             }
         }
 
-    override suspend fun addHistory(key: StrategySignalHistoryKey, signal: StrategySignal) {
+    override suspend fun saveHistory(key: StrategySignalHistoryKey, signal: StrategySignal) {
         val productId = getProductId(key.productPriceKey)
 
         val strategySignal = StrategySignalR2dbcEntity(
@@ -82,7 +82,7 @@ class StrategySignalHistoryAdapter(
             ?: throw NotFoundRowException("product 를 찾을 수 없습니다. (market: ${productPriceKey.market}, productType: ${productPriceKey.productType}, productCode: ${productPriceKey.productCode})")
     }
 
-    override suspend fun removeHistory(key: StrategySignalHistoryKey) {
+    override suspend fun deleteHistory(key: StrategySignalHistoryKey) {
         TODO("Not yet implemented")
     }
 }

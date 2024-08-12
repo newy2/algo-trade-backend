@@ -36,7 +36,7 @@ class RunBackTestingController {
         val backTestingUserStrategyId: Long = 1
         val resultHistory = StrategySignalHistory()
         val onCreatedStrategySignalPort = OnCreatedStrategySignalPort { _, signal ->
-            val history = strategySignalHistoryStore.getHistory(
+            val history = strategySignalHistoryStore.findHistory(
                 StrategySignalHistoryKey(
                     userStrategyId = backTestingUserStrategyId,
                     productPriceKey = backTestingDataKey.productPriceKey

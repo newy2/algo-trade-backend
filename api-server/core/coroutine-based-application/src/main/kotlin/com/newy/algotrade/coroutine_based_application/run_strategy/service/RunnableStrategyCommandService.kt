@@ -4,9 +4,9 @@ import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.Ca
 import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.RemoveCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.SetCandlesUseCase
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.DeleteStrategyPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.IsStrategyUsingProductPriceKeyPort
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.RemoveStrategyPort
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.SetStrategyPort
+import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.SaveStrategyPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategyPort
 import com.newy.algotrade.domain.chart.strategy.Strategy
 import com.newy.algotrade.domain.user_strategy.UserStrategyKey
@@ -14,20 +14,20 @@ import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 open class RunnableStrategyCommandService(
     private val setCandlesUseCase: SetCandlesUseCase,
     private val removeCandlesUseCase: RemoveCandlesUseCase,
-    private val setStrategyPort: SetStrategyPort,
-    private val removeStrategyPort: RemoveStrategyPort,
+    private val saveStrategyPort: SaveStrategyPort,
+    private val deleteStrategyPort: DeleteStrategyPort,
     private val isStrategyUsingProductPriceKeyPort: IsStrategyUsingProductPriceKeyPort,
 ) : RunnableStrategyUseCase {
     constructor(candlesUseCase: CandlesUseCase, strategyPort: StrategyPort) : this(
         setCandlesUseCase = candlesUseCase,
         removeCandlesUseCase = candlesUseCase,
-        setStrategyPort = strategyPort,
-        removeStrategyPort = strategyPort,
+        saveStrategyPort = strategyPort,
+        deleteStrategyPort = strategyPort,
         isStrategyUsingProductPriceKeyPort = strategyPort,
     )
 
     override suspend fun setRunnableStrategy(userStrategyKey: UserStrategyKey) {
-        setStrategyPort.setStrategy(
+        saveStrategyPort.saveStrategy(
             key = userStrategyKey,
             strategy = Strategy.fromClassName(
                 strategyClassName = userStrategyKey.strategyClassName,
@@ -37,7 +37,7 @@ open class RunnableStrategyCommandService(
     }
 
     override suspend fun removeRunnableStrategy(userStrategyKey: UserStrategyKey) {
-        removeStrategyPort.removeStrategy(userStrategyKey)
+        deleteStrategyPort.deleteStrategy(userStrategyKey)
 
         val productPriceKey = userStrategyKey.productPriceKey
         if (!isStrategyUsingProductPriceKeyPort.isUsingProductPriceKey(productPriceKey)) {
