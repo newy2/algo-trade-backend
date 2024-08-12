@@ -52,7 +52,7 @@ class FetchLsSecProductPriceTest {
                     2650.0.toBigDecimal(),
                 )
             ),
-            api.getProductPrices(
+            api.fetchProductPrices(
                 GetProductPriceHttpParam(
                     productPriceKey = productPriceKey(
                         productCode = "078020",
@@ -78,7 +78,7 @@ class FetchLsSecProductPriceTest {
                     104407.0.toBigDecimal(),
                 )
             ),
-            api.getProductPrices(
+            api.fetchProductPrices(
                 GetProductPriceHttpParam(
                     productPriceKey = productPriceKey(
                         productCode = "078020",

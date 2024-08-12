@@ -4,11 +4,11 @@ import com.newy.algotrade.coroutine_based_application.back_testing.adapter.`in`.
 import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistence.BackTestingDataFileStorageAdapter
 import com.newy.algotrade.coroutine_based_application.back_testing.adapter.out.persistence.LoadBackTestingDataAdapter
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.FetchProductPriceQuery
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.ProductPriceQuery
 import com.newy.algotrade.coroutine_based_application.product.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.coroutine_based_application.product.service.CandlesCommandService
-import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceQueryService
-import com.newy.algotrade.coroutine_based_application.product.service.GetCandlesQueryService
+import com.newy.algotrade.coroutine_based_application.product.service.CandlesQueryService
+import com.newy.algotrade.coroutine_based_application.product.service.ProductPriceQueryService
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategySignalHistoryStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.`in`.RunnableStrategyUseCase
@@ -96,11 +96,11 @@ class RunBackTestingController {
         onCreatedStrategySignalPort: OnCreatedStrategySignalPort
     ): OnReceivePollingPricePort {
         val candlesService = CandlesCommandService(
-            fetchProductPriceQuery = NullFetchProductPriceQuery(),
+            productPriceQuery = NullProductPriceQuery(),
             candlePort = candleStore
         )
         val runStrategyService = RunStrategyCommandService(
-            getCandlesQuery = GetCandlesQueryService(candleStore),
+            getCandlesQuery = CandlesQueryService(candleStore),
             strategyPort = strategyStore,
             strategySignalHistoryPort = strategySignalHistoryStore,
             onCreatedStrategySignalPort = onCreatedStrategySignalPort,
@@ -115,7 +115,7 @@ class RunBackTestingController {
         backTestingDataLoader: LoadBackTestingDataAdapter
     ): RunnableStrategyUseCase {
         val candleService = CandlesCommandService(
-            fetchProductPriceQuery = FetchProductPriceQueryService(
+            productPriceQuery = ProductPriceQueryService(
                 productPricePort = backTestingDataLoader,
                 pollingProductPricePort = backTestingDataLoader,
             ),
@@ -129,8 +129,8 @@ class RunBackTestingController {
     }
 }
 
-private class NullFetchProductPriceQuery : FetchProductPriceQuery {
-    override suspend fun fetchInitProductPrices(productPriceKey: ProductPriceKey): List<ProductPrice> {
+private class NullProductPriceQuery : ProductPriceQuery {
+    override suspend fun getInitProductPrices(productPriceKey: ProductPriceKey): List<ProductPrice> {
         TODO("Not yet implemented")
     }
 

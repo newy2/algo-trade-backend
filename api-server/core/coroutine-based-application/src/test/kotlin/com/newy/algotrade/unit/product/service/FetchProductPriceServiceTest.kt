@@ -1,8 +1,8 @@
 package com.newy.algotrade.unit.product.service
 
-import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
+import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPricePort
 import com.newy.algotrade.coroutine_based_application.product.port.out.SubscribablePollingProductPricePort
-import com.newy.algotrade.coroutine_based_application.product.service.FetchProductPriceQueryService
+import com.newy.algotrade.coroutine_based_application.product.service.ProductPriceQueryService
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.product.GetProductPriceHttpParam
 import com.newy.algotrade.domain.product.ProductPriceKey
@@ -15,10 +15,10 @@ import org.junit.jupiter.api.Test
 import java.time.Duration
 
 @DisplayName("단순 조회 Service - port 호출 확인")
-class FetchProductPriceQueryServiceTest : NoErrorProductPriceQueryAdapter, SubscribablePollingProductPricePort {
+class FetchProductPriceServiceTest : NoErrorProductPriceAdapter, SubscribablePollingProductPricePort {
     private val methodCallLogs = mutableListOf<String>()
     private val productPriceKey = productPriceKey("BTCUSDT", Duration.ofMinutes(1))
-    private val service = FetchProductPriceQueryService(
+    private val service = ProductPriceQueryService(
         productPricePort = this,
         pollingProductPricePort = this,
     )
@@ -31,8 +31,8 @@ class FetchProductPriceQueryServiceTest : NoErrorProductPriceQueryAdapter, Subsc
         methodCallLogs.add("unSubscribe")
     }
 
-    override suspend fun getProductPrices(param: GetProductPriceHttpParam): List<ProductPrice> =
-        super.getProductPrices(param).also {
+    override suspend fun fetchProductPrices(param: GetProductPriceHttpParam): List<ProductPrice> =
+        super.fetchProductPrices(param).also {
             methodCallLogs.add("getProductPrices")
         }
 
@@ -43,7 +43,7 @@ class FetchProductPriceQueryServiceTest : NoErrorProductPriceQueryAdapter, Subsc
 
     @Test
     fun `fetchInitProductPrices - port 호출 확인`() = runTest {
-        service.fetchInitProductPrices(productPriceKey)
+        service.getInitProductPrices(productPriceKey)
 
         assertEquals(listOf("getProductPrices"), methodCallLogs)
     }
@@ -63,6 +63,6 @@ class FetchProductPriceQueryServiceTest : NoErrorProductPriceQueryAdapter, Subsc
     }
 }
 
-private interface NoErrorProductPriceQueryAdapter : ProductPriceQueryPort {
-    override suspend fun getProductPrices(param: GetProductPriceHttpParam): List<ProductPrice> = emptyList()
+private interface NoErrorProductPriceAdapter : ProductPricePort {
+    override suspend fun fetchProductPrices(param: GetProductPriceHttpParam): List<ProductPrice> = emptyList()
 }

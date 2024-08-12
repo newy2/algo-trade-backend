@@ -6,7 +6,7 @@ import com.newy.algotrade.coroutine_based_application.common.web.default_impleme
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchByBitProductPrice
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.FetchProductPriceProxy
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.external_system.PollingProductPriceWithHttpApi
-import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPriceQueryPort
+import com.newy.algotrade.coroutine_based_application.product.port.out.ProductPricePort
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.extension.ProductPrice
@@ -27,7 +27,7 @@ import kotlin.coroutines.CoroutineContext
 import kotlin.test.assertEquals
 
 class PollingProductPriceTestHelper(
-    loader: ProductPriceQueryPort,
+    loader: ProductPricePort,
     delayMillis: Long,
     coroutineContext: CoroutineContext,
     callback: PollingCallback<ProductPriceKey, List<ProductPrice>>

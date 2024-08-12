@@ -2,7 +2,7 @@ package com.newy.algotrade.unit.product.service
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
 import com.newy.algotrade.coroutine_based_application.product.port.`in`.CandlesUseCase
-import com.newy.algotrade.coroutine_based_application.product.port.`in`.FetchProductPriceQuery
+import com.newy.algotrade.coroutine_based_application.product.port.`in`.ProductPriceQuery
 import com.newy.algotrade.coroutine_based_application.product.port.out.CandlePort
 import com.newy.algotrade.coroutine_based_application.product.service.CandlesCommandService
 import com.newy.algotrade.domain.chart.Candles
@@ -20,14 +20,14 @@ import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
 @DisplayName("setCandles - 외부 API 호출 횟수 확인 테스트")
-class SetCandlesServiceApiCallTest : DefaultFetchProductPriceQuery() {
+class SetCandlesServiceApiCallTest : DefaultProductPriceQuery() {
     private val productPriceKey = productPriceKey(productCode = "BTCUSDT", interval = Duration.ofMinutes(1))
     private var apiCallCount = 0
     private var pollingSubscribeCallCount = 0
     private lateinit var service: CandlesUseCase
 
-    override suspend fun fetchInitProductPrices(productPriceKey: ProductPriceKey): List<ProductPrice> =
-        super.fetchInitProductPrices(productPriceKey).also {
+    override suspend fun getInitProductPrices(productPriceKey: ProductPriceKey): List<ProductPrice> =
+        super.getInitProductPrices(productPriceKey).also {
             apiCallCount++
         }
 
@@ -40,7 +40,7 @@ class SetCandlesServiceApiCallTest : DefaultFetchProductPriceQuery() {
         apiCallCount = 0
         pollingSubscribeCallCount = 0
         service = CandlesCommandService(
-            fetchProductPriceQuery = this,
+            productPriceQuery = this,
             candlePort = InMemoryCandleStoreAdapter(),
         )
     }
@@ -78,12 +78,12 @@ class SetCandlesServiceApiCallTest : DefaultFetchProductPriceQuery() {
 }
 
 @DisplayName("setCandles - CandlePort 확인 테스트")
-class SetCandleCandlePortTest : DefaultFetchProductPriceQuery() {
+class SetCandleCandlePortTest : DefaultProductPriceQuery() {
     private val productPriceKey = productPriceKey(productCode = "BTCUSDT", interval = Duration.ofMinutes(1))
     private lateinit var candlePort: CandlePort
     private lateinit var service: CandlesUseCase
 
-    override suspend fun fetchInitProductPrices(productPriceKey: ProductPriceKey): List<ProductPrice> {
+    override suspend fun getInitProductPrices(productPriceKey: ProductPriceKey): List<ProductPrice> {
         return listOf(productPrice(amount = 2000, interval = productPriceKey.interval))
     }
 
@@ -91,7 +91,7 @@ class SetCandleCandlePortTest : DefaultFetchProductPriceQuery() {
     fun setUp() {
         candlePort = InMemoryCandleStoreAdapter()
         service = CandlesCommandService(
-            fetchProductPriceQuery = this,
+            productPriceQuery = this,
             candlePort = candlePort,
         )
     }
@@ -157,7 +157,7 @@ class AddCandleServiceTest {
     fun setUp() {
         candlePort = InMemoryCandleStoreAdapter()
         service = CandlesCommandService(
-            fetchProductPriceQuery = DefaultFetchProductPriceQuery(),
+            productPriceQuery = DefaultProductPriceQuery(),
             candlePort = candlePort,
         )
     }
@@ -194,7 +194,7 @@ class AddCandleServiceTest {
 }
 
 @DisplayName("removeCandles - 캔들 삭제 테스트")
-class RemoveCandleServiceTest : DefaultFetchProductPriceQuery() {
+class RemoveCandleServiceTest : DefaultProductPriceQuery() {
     private val productPriceKey = productPriceKey(productCode = "BTCUSDT", interval = Duration.ofMinutes(1))
     private var unPollingSubscribeCallCount = 0
     private lateinit var candlePort: CandlePort
@@ -209,7 +209,7 @@ class RemoveCandleServiceTest : DefaultFetchProductPriceQuery() {
         unPollingSubscribeCallCount = 0
         candlePort = InMemoryCandleStoreAdapter()
         service = CandlesCommandService(
-            fetchProductPriceQuery = this,
+            productPriceQuery = this,
             candlePort = candlePort,
         )
     }
@@ -226,8 +226,8 @@ class RemoveCandleServiceTest : DefaultFetchProductPriceQuery() {
     }
 }
 
-open class DefaultFetchProductPriceQuery : FetchProductPriceQuery {
-    override suspend fun fetchInitProductPrices(productPriceKey: ProductPriceKey): List<ProductPrice> {
+open class DefaultProductPriceQuery : ProductPriceQuery {
+    override suspend fun getInitProductPrices(productPriceKey: ProductPriceKey): List<ProductPrice> {
         return listOf(productPrice(1000, productPriceKey.interval))
     }
 

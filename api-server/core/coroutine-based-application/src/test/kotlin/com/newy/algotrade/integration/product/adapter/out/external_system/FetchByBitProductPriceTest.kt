@@ -44,7 +44,7 @@ class FetchByBitProductPriceTest {
                     volume = "28.069189".toBigDecimal(),
                 )
             ),
-            client.getProductPrices(
+            client.fetchProductPrices(
                 GetProductPriceHttpParam(
                     productPriceKey = productPriceKey(
                         productCode = "BTCUSDT",
@@ -70,7 +70,7 @@ class FetchByBitProductPriceTest {
                     volume = "291706.443849".toBigDecimal(),
                 )
             ),
-            client.getProductPrices(
+            client.fetchProductPrices(
                 GetProductPriceHttpParam(
                     productPriceKey = productPriceKey(
                         productCode = "BTCUSDT",
@@ -96,7 +96,7 @@ class FetchByBitProductPriceTest {
                     volume = "0.632".toBigDecimal(),
                 )
             ),
-            client.getProductPrices(
+            client.fetchProductPrices(
                 GetProductPriceHttpParam(
                     productPriceKey = productPriceKey(
                         productCode = "BTCUSDT",

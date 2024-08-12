@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.product.service
 
 import com.newy.algotrade.coroutine_based_application.product.adapter.out.volatile_storage.InMemoryCandleStoreAdapter
-import com.newy.algotrade.coroutine_based_application.product.service.GetCandlesQueryService
+import com.newy.algotrade.coroutine_based_application.product.service.CandlesQueryService
 import helpers.productPrice
 import helpers.productPriceKey
 import org.junit.jupiter.api.Test
@@ -9,7 +9,7 @@ import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
-class GetCandlesQueryServiceTest {
+class CandlesQueryServiceTest {
     @Test
     fun `getCandles 메소드 테스트`() {
         val beginTime = OffsetDateTime.parse("2024-05-01T00:00Z")
@@ -27,7 +27,7 @@ class GetCandlesQueryServiceTest {
             )
         }
 
-        val service = GetCandlesQueryService(candlesPort)
+        val service = CandlesQueryService(candlesPort)
 
         service.getCandles(productPriceKey("BTCUSDT")).let {
             assertEquals(1, it.size)

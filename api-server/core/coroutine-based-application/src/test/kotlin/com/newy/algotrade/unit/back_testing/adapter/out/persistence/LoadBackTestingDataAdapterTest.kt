@@ -57,7 +57,7 @@ class LoadBackTestingDataAdapterTest : GetBackTestingDataPort, OnReceivePollingP
 
     @Test
     fun getProductPrices() = runTest {
-        val firstDataList = loader.getProductPrices(fakeParam)
+        val firstDataList = loader.fetchProductPrices(fakeParam)
 
         assertEquals(
             listOf(
@@ -70,7 +70,7 @@ class LoadBackTestingDataAdapterTest : GetBackTestingDataPort, OnReceivePollingP
 
     @Test
     fun await() = runTest {
-        loader.getProductPrices(fakeParam)
+        loader.fetchProductPrices(fakeParam)
 
         loader.await()
 
