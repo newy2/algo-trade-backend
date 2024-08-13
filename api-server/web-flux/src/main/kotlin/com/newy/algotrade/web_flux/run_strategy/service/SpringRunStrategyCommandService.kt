@@ -6,9 +6,11 @@ import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.Stra
 import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.StrategySignalHistoryPort
 import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyCommandService
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
-class SpringRunStrategyCommandService(
+@Transactional
+open class SpringRunStrategyCommandService(
     getCandlesQuery: GetCandlesQuery,
     strategyPort: StrategyPort,
     strategySignalHistoryPort: StrategySignalHistoryPort,
