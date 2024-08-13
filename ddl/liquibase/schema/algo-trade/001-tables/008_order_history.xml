@@ -31,9 +31,6 @@
             </column>
 
             <!-- 일반 필드 -->
-            <column name="trade_strategy_version" type="TINYINT" remarks="자동매매 전략 version">
-                <constraints nullable="false"/>
-            </column>
             <column name="currency" type="VARCHAR2(20)" remarks="거래 통화">
                 <constraints nullable="false"/>
             </column>

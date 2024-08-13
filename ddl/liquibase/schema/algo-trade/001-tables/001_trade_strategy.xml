@@ -19,7 +19,7 @@
             <column name="class_name" type="VARCHAR2(50)" remarks="클래스명">
                 <constraints nullable="false"/>
             </column>
-            <column name="entry_order_type" type="VARCHAR2(4)" remarks="진입 주문유형(BUY: 롱포지션, SELL: 숏포지션)">
+            <column name="entry_order_type" type="VARCHAR2(4)" remarks="시작 주문유형(BUY: 롱포지션, SELL: 숏포지션)">
                 <constraints nullable="false"/>
             </column>
             <column name="name_ko" type="VARCHAR2(50)" remarks="한글명">
