@@ -4,6 +4,7 @@ import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.m
 import com.newy.algotrade.coroutine_based_application.market_account.port.out.ExistsMarketAccountPort
 import com.newy.algotrade.coroutine_based_application.market_account.port.out.FindMarketServerPort
 import com.newy.algotrade.coroutine_based_application.market_account.port.out.MarketAccountPort
+import com.newy.algotrade.coroutine_based_application.market_account.port.out.SaveMarketAccountPort
 import com.newy.algotrade.coroutine_based_application.market_account.service.MarketAccountCommandService
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
@@ -29,9 +30,7 @@ class MarketAccountCommandServiceExceptionTest {
     @Test
     fun `MarketServer 를 찾을 수 없는 경우`() = runTest {
         val notFoundMarketServerAdapter = FindMarketServerPort { _, _ -> null }
-        val service = MarketAccountCommandService(
-            existsMarketAccountPort = NoErrorMarketAccountAdapter(),
-            saveMarketAccountPort = NoErrorMarketAccountAdapter(),
+        val service = newMarketAccountCommandService(
             findMarketServerPort = notFoundMarketServerAdapter,
         )
 
@@ -49,9 +48,7 @@ class MarketAccountCommandServiceExceptionTest {
     @Test
     fun `중복된 MarketAccount 를 등록하려는 경우`() = runTest {
         val alreadySavedMarketAccountAdapter = ExistsMarketAccountPort { true }
-        val service = MarketAccountCommandService(
-            saveMarketAccountPort = NoErrorMarketAccountAdapter(),
-            findMarketServerPort = NoErrorMarketAccountAdapter(),
+        val service = newMarketAccountCommandService(
             existsMarketAccountPort = alreadySavedMarketAccountAdapter,
         )
 
@@ -79,9 +76,7 @@ class MarketAccountCommandServiceTest {
             appKey = "appKey",
             appSecret = "appSecret",
         )
-        val service = MarketAccountCommandService(
-            findMarketServerPort = NoErrorMarketAccountAdapter(),
-            existsMarketAccountPort = NoErrorMarketAccountAdapter(),
+        val service = newMarketAccountCommandService(
             saveMarketAccountPort = { (_) -> expected },
         )
 
@@ -109,3 +104,13 @@ open class NoErrorMarketAccountAdapter : MarketAccountPort {
             marketId = 2,
         )
 }
+
+private fun newMarketAccountCommandService(
+    existsMarketAccountPort: ExistsMarketAccountPort = NoErrorMarketAccountAdapter(),
+    findMarketServerPort: FindMarketServerPort = NoErrorMarketAccountAdapter(),
+    saveMarketAccountPort: SaveMarketAccountPort = NoErrorMarketAccountAdapter(),
+) = MarketAccountCommandService(
+    existsMarketAccountPort = existsMarketAccountPort,
+    findMarketServerPort = findMarketServerPort,
+    saveMarketAccountPort = saveMarketAccountPort,
+)
