@@ -40,4 +40,4 @@ fun productPrice(
     )
 
 fun getSystemProperty(name: String): String =
-    System.getProperty(name, System.getenv(name))
+    System.getProperty(name, System.getenv(name)) ?: ""

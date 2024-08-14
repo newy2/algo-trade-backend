@@ -17,11 +17,13 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.product_price.ProductPriceKey
+import helpers.BaseDisabledTest
 import helpers.TestEnv
 import kotlinx.coroutines.test.runTest
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledIf
 import java.time.Duration
 import java.time.OffsetDateTime
 
@@ -56,7 +58,8 @@ private fun loadProductPriceProxy() =
         )
     )
 
-class CreateRealDataBackTestingData {
+class CreateRealDataBackTestingData : BaseDisabledTest {
+    @DisabledIf("hasNotLsSecApiInfo")
     @Test
     fun `백테스팅 데이터 생성하기`() = runTest {
         val createBackTestingDataUseCase = CreateBackTestingDataService(loadProductPriceProxy())

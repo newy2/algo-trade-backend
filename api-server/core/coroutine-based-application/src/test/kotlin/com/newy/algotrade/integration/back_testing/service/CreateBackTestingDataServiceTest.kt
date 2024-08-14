@@ -13,12 +13,14 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.product_price.ProductPriceKey
+import helpers.BaseDisabledTest
 import helpers.TestEnv
 import kotlinx.coroutines.test.runTest
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledIf
 import java.time.DayOfWeek
 import java.time.Duration
 import java.time.OffsetDateTime
@@ -57,7 +59,7 @@ private fun loadProductPriceProxy() =
     )
 
 @DisplayName("LS증권 백테스팅 데이터 조회 테스트")
-class LsSecCreateBackTestingDataServiceTest {
+class LsSecCreateBackTestingDataServiceTest : BaseDisabledTest {
     private val service = CreateBackTestingDataService(loadProductPriceProxy())
     private val productPriceKey = ProductPriceKey(
         Market.LS_SEC,
@@ -66,6 +68,7 @@ class LsSecCreateBackTestingDataServiceTest {
         Duration.ofMinutes(1),
     )
 
+    @DisabledIf("hasNotLsSecApiInfo")
     @Test
     fun `조회하는 시간이 장시작 이전인 경우`() = runTest {
         val beginTime = OffsetDateTime.parse("2024-05-31T08:59+09:00")
@@ -77,6 +80,7 @@ class LsSecCreateBackTestingDataServiceTest {
         assertEquals(emptyList(), list)
     }
 
+    @DisabledIf("hasNotLsSecApiInfo")
     @Test
     fun `조회 시작시간과 종료시간이 같은 경우`() = runTest {
         val beginTime = OffsetDateTime.parse("2024-05-31T09:00+09:00")
@@ -88,6 +92,7 @@ class LsSecCreateBackTestingDataServiceTest {
         assertEquals(emptyList(), list)
     }
 
+    @DisabledIf("hasNotLsSecApiInfo")
     @Test
     fun `1개 데이터 조회`() = runTest {
         val beginTime = OffsetDateTime.parse("2024-05-31T09:00+09:00")
@@ -100,6 +105,7 @@ class LsSecCreateBackTestingDataServiceTest {
         assertTrue(OffsetDateTime.parse("2024-05-31T09:00+09:00").isEqual(list.first().time.begin))
     }
 
+    @DisabledIf("hasNotLsSecApiInfo")
     @Test
     fun `seedSize 가 있는 경우`() = runTest {
         val beginTime = OffsetDateTime.parse("2024-05-31T09:00+09:00")
@@ -113,6 +119,7 @@ class LsSecCreateBackTestingDataServiceTest {
         assertTrue(OffsetDateTime.parse("2024-05-31T09:00+09:00").isEqual(list.last().time.begin))
     }
 
+    @DisabledIf("hasNotLsSecApiInfo")
     @Test
     fun `seedSize 만 있는 경우`() = runTest {
         val beginTime = OffsetDateTime.parse("2024-05-31T08:59+09:00")
@@ -126,6 +133,7 @@ class LsSecCreateBackTestingDataServiceTest {
         assertTrue(OffsetDateTime.parse("2024-05-30T15:29+09:00").isEqual(list.last().time.begin))
     }
 
+    @DisabledIf("hasNotLsSecApiInfo")
     @Test
     fun `장휴일 기간이 포함된 경우`() = runTest {
         val beginTime = OffsetDateTime.parse("2024-05-31T09:00+09:00")

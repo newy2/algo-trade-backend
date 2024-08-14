@@ -6,15 +6,18 @@ import com.newy.algotrade.coroutine_based_application.common.web.default_impleme
 import com.newy.algotrade.coroutine_based_application.common.web.http.get
 import com.newy.algotrade.domain.auth.ByBitPrivateApiInfo
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
+import helpers.BaseDisabledTest
 import helpers.TestEnv
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledIf
 import java.time.Instant
 
 // TODO 재작성 필요
-class ByBitPrivateApiTest {
+class ByBitPrivateApiTest : BaseDisabledTest {
+    @DisabledIf("hasNotByBitApiInfo")
     @Test
     fun test() = runBlocking {
         val client = DefaultHttpApiClient(

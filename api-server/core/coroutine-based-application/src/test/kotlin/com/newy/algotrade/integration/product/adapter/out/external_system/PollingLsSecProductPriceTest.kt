@@ -11,6 +11,7 @@ import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.product_price.ProductPriceKey
+import helpers.BaseDisabledTest
 import helpers.TestEnv
 import helpers.productPriceKey
 import kotlinx.coroutines.cancel
@@ -20,11 +21,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledIf
 import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
-class PollingLsSecProductPriceTest {
+class PollingLsSecProductPriceTest : BaseDisabledTest {
     private val client = DefaultHttpApiClient(
         OkHttpClient(),
         TestEnv.LsSec.url,
@@ -44,6 +46,7 @@ class PollingLsSecProductPriceTest {
         )
     )
 
+    @DisabledIf("hasNotLsSecApiInfo")
     @Test
     fun `LS증권 가격정보 폴링`() = runBlocking {
         val channel = Channel<Pair<ProductPriceKey, ProductPrice>>()

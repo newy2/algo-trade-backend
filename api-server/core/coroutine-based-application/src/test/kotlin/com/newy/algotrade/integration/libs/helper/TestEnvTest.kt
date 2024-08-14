@@ -1,11 +1,14 @@
 package com.newy.algotrade.integration.libs.helper
 
+import helpers.BaseDisabledTest
 import helpers.TestEnv
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledIf
 
-class TestEnvTest {
+class TestEnvTest : BaseDisabledTest {
+    @DisabledIf("hasNotApiInfo")
     @Test
     fun `테스트 환경변수 확인`() {
         TestEnv.ByBit.let {

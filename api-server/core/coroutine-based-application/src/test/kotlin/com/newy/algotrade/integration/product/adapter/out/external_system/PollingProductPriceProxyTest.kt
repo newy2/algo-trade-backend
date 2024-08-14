@@ -12,6 +12,7 @@ import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.product_price.ProductPriceKey
+import helpers.BaseDisabledTest
 import helpers.TestEnv
 import helpers.productPriceKey
 import kotlinx.coroutines.CoroutineScope
@@ -20,6 +21,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledIf
 import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.coroutines.CoroutineContext
@@ -134,7 +136,8 @@ class ByBitWebSocketTest {
     }
 }
 
-class LsSecHttpPollingTest {
+class LsSecHttpPollingTest : BaseDisabledTest {
+    @DisabledIf("hasNotLsSecApiInfo")
     @Test
     fun `LS증권 Http 폴링 response 테스트`() = runBlocking {
         val channel = Channel<Pair<ProductPriceKey, List<ProductPrice>>>()

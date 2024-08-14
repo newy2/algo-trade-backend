@@ -10,16 +10,18 @@ import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.product_price.GetProductPriceHttpParam
+import helpers.BaseDisabledTest
 import helpers.TestEnv
 import helpers.productPriceKey
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.condition.DisabledIf
 import java.time.Duration
 import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
-class FetchLsSecProductPriceTest {
+class FetchLsSecProductPriceTest : BaseDisabledTest {
     private val client = DefaultHttpApiClient(
         OkHttpClient(),
         TestEnv.LsSec.url,
@@ -39,6 +41,7 @@ class FetchLsSecProductPriceTest {
         )
     )
 
+    @DisabledIf("hasNotLsSecApiInfo")
     @Test
     fun `분봉 차트 조회 API`() = runBlocking {
         assertEquals(
@@ -65,6 +68,7 @@ class FetchLsSecProductPriceTest {
         )
     }
 
+    @DisabledIf("hasNotLsSecApiInfo")
     @Test
     fun `일봉 차트 조회 API`() = runBlocking {
         assertEquals(
