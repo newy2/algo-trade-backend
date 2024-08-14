@@ -397,7 +397,7 @@ interface CandlesQuery :
     GetCandlesQuery
 ```
 
-### 입력 모델
+### 입력 모델 이름
 
 접미사 `Command`를 사용한다. SelfValidating을 상속받아서, 입력 데이터 유횻값을 검증한다.
 
@@ -489,9 +489,10 @@ fun interface FetchProductPricesPort {
 }
 ```
 
-#### 이유
+#### 메소드 이름 짓는 규칙을 정한 이유
 
-`Input Port 의 메소드 이름`과 `Output Port 의 메소드 이름`이 같아지는 현상을 방지하기 위해서, Output Port 메소드 이름을 짓는 패턴을 변경했다.
+`Input Port 의 메소드 이름`과 `Output Port 의 메소드 이름`이 같아지는 현상을 방지하기 위해서,  
+Output Port 메소드 이름을 짓는 패턴을 변경했다.
 
 ```kotlin
 // AS-IS
