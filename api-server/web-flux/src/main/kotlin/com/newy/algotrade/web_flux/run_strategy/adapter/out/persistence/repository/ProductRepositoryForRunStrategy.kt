@@ -8,13 +8,6 @@ import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 
 interface ProductRepositoryForRunStrategy : CoroutineCrudRepository<ProductR2dbcEntity, Long> {
-    suspend fun findByMarketIdAndTypeAndCodeAndUseYn(
-        marketId: Long,
-        type: String,
-        code: String,
-        useYn: Char = 'Y'
-    ): ProductR2dbcEntity?
-
     @Query(
         """
         SELECT p.id
@@ -30,7 +23,7 @@ interface ProductRepositoryForRunStrategy : CoroutineCrudRepository<ProductR2dbc
         market: Market,
         productType: ProductType,
         productCode: String,
-        useYn: Char = 'Y'
+        useYn: String = "Y"
     ): Long?
 }
 

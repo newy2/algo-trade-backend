@@ -8,12 +8,11 @@ import com.newy.algotrade.domain.common.exception.NotFoundRowException
 import com.newy.algotrade.domain.product_price.ProductPriceKey
 import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
 import com.newy.algotrade.web_flux.common.annotation.PersistenceAdapter
-import com.newy.algotrade.web_flux.run_strategy.adapter.out.persistence.repository.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import com.newy.algotrade.web_flux.run_strategy.adapter.out.persistence.repository.ProductRepositoryForRunStrategy
+import com.newy.algotrade.web_flux.run_strategy.adapter.out.persistence.repository.StrategyRepositoryForRunStrategy
+import com.newy.algotrade.web_flux.run_strategy.adapter.out.persistence.repository.StrategySignalR2dbcEntity
+import com.newy.algotrade.web_flux.run_strategy.adapter.out.persistence.repository.StrategySignalRepository
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.withContext
 import org.springframework.data.domain.Limit
 
 @PersistenceAdapter
@@ -22,41 +21,31 @@ class StrategySignalHistoryAdapter(
     private val productRepository: ProductRepositoryForRunStrategy,
     private val strategySignalRepository: StrategySignalRepository,
 ) : StrategySignalHistoryPort {
-    override suspend fun findHistory(key: StrategySignalHistoryKey, maxSize: Int): StrategySignalHistory =
-        withContext(Dispatchers.IO) {
-            val productId = getProductId(key.productPriceKey)
+    override suspend fun findHistory(key: StrategySignalHistoryKey, maxSize: Int): StrategySignalHistory {
+        val productId = getProductId(key.productPriceKey)
+        val signals = strategySignalRepository.findAllByUserStrategyIdAndProductIdOrderByIdDesc(
+            userStrategyId = key.userStrategyId,
+            productId = productId,
+            limit = Limit.of(maxSize)
+        ).toList()
+        val strategy = strategyRepository.findByUserStrategyId(userStrategyId = key.userStrategyId)
 
-            val (signals, strategy) = listOf(
-                async {
-                    strategySignalRepository.findAllByUserStrategyIdAndProductIdOrderByIdDesc(
-                        userStrategyId = key.userStrategyId,
-                        productId = productId,
-                        limit = Limit.of(maxSize)
-                    ).toList()
-                },
-                async {
-                    strategyRepository.findByUserStrategyId(userStrategyId = key.userStrategyId)
+        return StrategySignalHistory().also {
+            signals
+                .takeIf { it.isNotEmpty() }
+                ?.reversed()
+                ?.let {
+                    if (it.first().orderType == strategy?.entryOrderType) {
+                        it
+                    } else {
+                        it.subList(1, it.size)
+                    }
                 }
-            ).awaitAll().let {
-                Pair(it[0] as List<StrategySignalR2dbcEntity>, it[1] as StrategyR2dbcEntity)
-            }
-
-            return@withContext StrategySignalHistory().also {
-                signals
-                    .takeIf { it.isNotEmpty() }
-                    ?.reversed()
-                    ?.let {
-                        if (it.first().orderType == strategy.entryOrderType) {
-                            it
-                        } else {
-                            it.subList(1, it.size)
-                        }
-                    }
-                    ?.forEach { eachSignal ->
-                        it.add(eachSignal.toDomainEntity())
-                    }
-            }
+                ?.forEach { eachSignal ->
+                    it.add(eachSignal.toDomainEntity())
+                }
         }
+    }
 
     override suspend fun saveHistory(key: StrategySignalHistoryKey, signal: StrategySignal) {
         val productId = getProductId(key.productPriceKey)

@@ -7,10 +7,6 @@ import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.Us
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model.SetUserStrategyCommand
 import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.*
 import com.newy.algotrade.domain.common.exception.NotFoundRowException
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.withContext
 
 open class UserStrategyCommandService(
     private val hasStrategyQuery: HasStrategyQuery,
@@ -38,24 +34,17 @@ open class UserStrategyCommandService(
         eventBus = eventBus,
     )
 
-    override suspend fun setUserStrategy(userStrategy: SetUserStrategyCommand): Long = withContext(Dispatchers.IO) {
-        val marketIds = listOf(
-            async { findMarketPort.findMarketIdsBy(userStrategy.marketAccountId) },
-            async { hasStrategyQuery.hasStrategy(userStrategy.strategyClassName) },
-            async { existsUserStrategyPort.existsUserStrategy(userStrategy.toDomainEntity().setUserStrategyKey) }
-        ).awaitAll().let {
-            val (marketIds, hasStrategy, hasUserStrategy) = it
-            if ((marketIds as List<Long>).isEmpty()) {
+    override suspend fun setUserStrategy(userStrategy: SetUserStrategyCommand): Long {
+        val marketIds = findMarketPort.findMarketIdsBy(userStrategy.marketAccountId).also {
+            if (it.isEmpty()) {
                 throw NotFoundRowException("marketAccountId 를 찾을 수 없습니다.")
             }
-            if (!(hasStrategy as Boolean)) {
-                throw NotFoundRowException("strategyId 를 찾을 수 없습니다.")
-            }
-            if (hasUserStrategy as Boolean) {
-                throw IllegalArgumentException("이미 등록한 전략입니다.")
-            }
-
-            marketIds
+        }
+        if (!hasStrategyQuery.hasStrategy(userStrategy.strategyClassName)) {
+            throw NotFoundRowException("strategyId 를 찾을 수 없습니다.")
+        }
+        if (existsUserStrategyPort.existsUserStrategy(userStrategy.toDomainEntity().setUserStrategyKey)) {
+            throw IllegalArgumentException("이미 등록한 전략입니다.")
         }
 
         val savedProducts = findProductPort.findProducts(
@@ -81,6 +70,6 @@ open class UserStrategyCommandService(
 
         eventBus.publishEvent(CreateUserStrategyEvent(userStrategyId))
 
-        return@withContext userStrategyId
+        return userStrategyId
     }
 }
