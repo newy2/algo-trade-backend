@@ -50,7 +50,7 @@
 해당 문서에서는 아래와 같이 `Bold`처리한 용어를 사용한다
 
 ![이미지 출처: https://tech.kakaobank.com/posts/2311-hexagonal-architecture-in-messaging-hub/](./document/image/hexagonal-architecture.png)  
-이미지 출처: https://reflectoring.io/spring-hexagonal/
+이미지 출처: https://tech.kakaobank.com/posts/2311-hexagonal-architecture-in-messaging-hub/
 
 - `인커밍 어댑터` (Driving Adapter)
     - 유스케이스를 호출하는 컴포넌트
@@ -129,7 +129,7 @@ Input Port는 적용하지 않을 예정이었지만, 테스트 코드 작성에
 
 중복 코드는 언제나 나쁘지만, 중복 코드의 장점은 어느 부분이 중복인지 확실히 알 수 있다는 점이다.  
 공통된 로직이 예상되는 기능을 구현할 때, 일단 각각 다른 클래스로 구현하고,  
-리팩토링 단계에서 두 클래스의 코드를 조금씩 닮아가도록 유도하면, 추상화된 로직을 뽑아낼 수 있다.
+리팩토링 단계에서 두 클래스의 코드를 조금씩 닮아가도록 유도하면, 공통된(추상화된) 로직을 발견하기가 쉬워진다.
 
 ### 생각할 점
 
@@ -155,8 +155,8 @@ Input Port는 적용하지 않을 예정이었지만, 테스트 코드 작성에
 학습 테스트 덕분에 오픈소스(ta4j)에 컨트리뷰션한 경험이 있다. ([Pull Request](https://github.com/ta4j/ta4j/pull/1138))
 
 이번 프로젝트에서 사용한 프로그래밍 언어, 라이브러리, 프레임워크는 모두 처음 사용한 기술들이다.  
-프로젝트에서 사용할 언어와 라이브러리 기능을 테스트 코드로 작성하면서 공부했다.  
-학습 테스트의 목적은 `프로그래밍 언어와 라이브러리 사용법`에 대한 학습과 `버전 업그레이드`를 쉽게 하기 위해서이다.
+프로젝트에서 사용할 프로그래밍 언어와 라이브러리 기능에 대한 사용법을 테스트 코드로 작성하면서 공부했다.  
+학습 테스트의 목적은 (1) 프로그래밍 언어와 라이브러리 사용법에 대한 학습과 (2) 버전 업그레이드를 쉽게 하기 위해서이다.
 
 ### 생각할 점
 
@@ -194,8 +194,7 @@ Input Port는 적용하지 않을 예정이었지만, 테스트 코드 작성에
     - 웹 애플리케이션 조립과 영속성 어댑터 구현을 담당한다
 - `ddl/liquibase`
     - 개발/테스트/운영용 RDB 스키마를 관리하기 위한 모듈이다
-    - 해당 모듈은 [Liquibase](https://www.liquibase.com/) 를 사용해서 구현했다
-    - 환경 변수(X_DBMS_NAME)로 postgresql과 mysql을 선택할 수 있게 구현했다
+    - [Liquibase](https://www.liquibase.com/) 를 사용해서 구현했고, 환경 변수(X_DBMS_NAME)로 `postgresql`과 `mysql`을 선택할 수 있게 구현했다
 
 # 테스트 패키지 설명
 
