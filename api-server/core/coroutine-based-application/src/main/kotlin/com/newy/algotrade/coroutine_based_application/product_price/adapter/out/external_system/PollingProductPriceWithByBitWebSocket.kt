@@ -27,9 +27,12 @@ class PollingProductPriceWithByBitWebSocket(
 
     override suspend fun parsingJson(json: String): Pair<ProductPriceKey, List<ProductPrice>>? {
         return try {
-            val extraValues = mapOf("productType" to productType.name)
-            val dto = jsonConverter.toObject<ByBitProductPriceWebSocketResponse>(json, extraValues)
-            return dto.productPriceKey to dto.prices
+            jsonConverter.toObject<ByBitProductPriceWebSocketResponse>(
+                source = json,
+                extraValues = ByBitProductPriceWebSocketResponse.jsonExtraValues(productType)
+            ).let {
+                Pair(it.productPriceKey, it.prices)
+            }
         } catch (e: Throwable) {
             null
         }

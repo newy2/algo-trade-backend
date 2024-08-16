@@ -17,6 +17,11 @@ class ByBitProductPriceWebSocketResponse(
     val productPriceKey: ProductPriceKey,
     val prices: List<ProductPrice>,
 ) {
+    companion object {
+        fun jsonExtraValues(productType: ProductType) =
+            mapOf("productType" to productType.name)
+    }
+
     @JsonCreator
     constructor(
         @JacksonInject("productType") productType: String,
@@ -32,8 +37,6 @@ class ByBitProductPriceWebSocketResponse(
             )
         },
         prices = node.map {
-            // TODO 사용 가능한 interval (1,3,5,15,30,60,120,240,360,720,D,M,W)
-            // TODO 실제로는 좀 줄이자 (1,3,4,15,30,60,D)
             Candle.TimeFrame.from(Duration.ofMinutes(it["interval"].asLong()))!!(
                 beginTime = it["start"].asLong(),
                 openPrice = it["open"].asDouble().toBigDecimal(),

@@ -40,8 +40,10 @@ class ByBitProductPriceWebSocketResponseTest {
             }
         """.trimIndent()
 
-        val extraValues = mapOf("productType" to "SPOT")
-        val response = converter.toObject<ByBitProductPriceWebSocketResponse>(json, extraValues)
+        val response = converter.toObject<ByBitProductPriceWebSocketResponse>(
+            source = json,
+            extraValues = ByBitProductPriceWebSocketResponse.jsonExtraValues(ProductType.SPOT)
+        )
         assertEquals(
             ProductPriceKey(
                 Market.BY_BIT,

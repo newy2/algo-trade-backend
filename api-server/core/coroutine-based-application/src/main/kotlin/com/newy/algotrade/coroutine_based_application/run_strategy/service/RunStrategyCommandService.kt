@@ -31,48 +31,52 @@ open class RunStrategyCommandService(
 
     override suspend fun runStrategy(productPriceKey: ProductPriceKey): RunStrategyResult =
         RunStrategyResult().also { result ->
-            getCandlesQuery.getCandles(productPriceKey).takeIf { it.size > 0 }?.let { candles ->
-                filterStrategyPort.filterBy(productPriceKey)
-                    .also { result.totalStrategyCount = it.size }
-                    .map { (userStrategyKey, strategy) ->
-                        // TODO Log(userStrategyKey)
-                        val userStrategyId = userStrategyKey.userStrategyId
+            val candles = getCandlesQuery.getCandles(productPriceKey)
+            if (candles.size == 0) {
+                return@also
+            }
 
-                        strategy.shouldOperate(
-                            index = candles.lastIndex,
-                            history = findStrategySignalHistoryPort.findHistory(
-                                StrategySignalHistoryKey(
-                                    userStrategyId = userStrategyId,
-                                    productPriceKey = productPriceKey
-                                )
-                            )
-                        ).also { orderType ->
-                            when (orderType) {
-                                OrderType.NONE -> result.noneSignalCount++.also { return@map null }
-                                OrderType.SELL -> result.sellSignalCount++
-                                OrderType.BUY -> result.buySignalCount++
-                            }
-                        }.let { orderType ->
-                            Pair(
-                                userStrategyId,
-                                StrategySignal(
-                                    orderType = orderType,
-                                    timeFrame = candles.lastCandle.time,
-                                    price = candles.lastCandle.price.close
-                                )
-                            )
-                        }
-                    }
-                    .filterNotNull().takeIf { it.isNotEmpty() }?.forEach { (userStrategyId, signal) ->
-                        // TODO bulk add history
-                        saveStrategySignalHistoryPort.saveHistory(
+            filterStrategyPort.filterBy(productPriceKey)
+                .also { result.totalStrategyCount = it.size }
+                .map { (userStrategyKey, strategy) ->
+                    // TODO Log(userStrategyKey)
+                    val userStrategyId = userStrategyKey.userStrategyId
+                    val orderType = strategy.shouldOperate(
+                        index = candles.lastIndex,
+                        history = findStrategySignalHistoryPort.findHistory(
                             StrategySignalHistoryKey(
                                 userStrategyId = userStrategyId,
                                 productPriceKey = productPriceKey
-                            ), signal
+                            )
                         )
-                        onCreatedStrategySignalPort.onCreatedSignal(userStrategyId, signal)
+                    )
+
+                    when (orderType) {
+                        OrderType.NONE -> result.noneSignalCount++.also { return@map null }
+                        OrderType.SELL -> result.sellSignalCount++
+                        OrderType.BUY -> result.buySignalCount++
                     }
-            }
+
+                    return@map Pair(
+                        userStrategyId,
+                        StrategySignal(
+                            orderType = orderType,
+                            timeFrame = candles.lastCandle.time,
+                            price = candles.lastCandle.price.close
+                        )
+                    )
+                }
+                .filterNotNull()
+                .takeIf { it.isNotEmpty() }
+                ?.forEach { (userStrategyId, signal) ->
+                    // TODO bulk add history
+                    saveStrategySignalHistoryPort.saveHistory(
+                        StrategySignalHistoryKey(
+                            userStrategyId = userStrategyId,
+                            productPriceKey = productPriceKey
+                        ), signal
+                    )
+                    onCreatedStrategySignalPort.onCreatedSignal(userStrategyId, signal)
+                }
         }
 }

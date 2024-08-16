@@ -22,14 +22,14 @@ open class MarketAccountCommandService(
 
     override suspend fun setMarketAccount(command: SetMarketAccountCommand) =
         getMarketServer(command)
-            .let {
-                command.toDomainEntity(it)
-            }.also {
-                if (existsMarketAccountPort.existsMarketAccount(it)) {
+            .let { marketServer ->
+                command.toDomainEntity(marketServer)
+            }.also { marketAccount ->
+                if (existsMarketAccountPort.existsMarketAccount(marketAccount)) {
                     throw DuplicateDataException("이미 등록된 appKey, appSecret 입니다.")
                 }
-            }.let {
-                saveMarketAccountPort.saveMarketAccount(it)
+            }.let { marketAccount ->
+                saveMarketAccountPort.saveMarketAccount(marketAccount)
             }
 
     private suspend fun getMarketServer(command: SetMarketAccountCommand) =

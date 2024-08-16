@@ -30,7 +30,7 @@ class StrategySignalHistoryAdapter(
         ).toList()
         val strategy = strategyRepository.findByUserStrategyId(userStrategyId = key.userStrategyId)
 
-        return StrategySignalHistory().also {
+        return StrategySignalHistory().also { history ->
             signals
                 .takeIf { it.isNotEmpty() }
                 ?.reversed()
@@ -42,14 +42,13 @@ class StrategySignalHistoryAdapter(
                     }
                 }
                 ?.forEach { eachSignal ->
-                    it.add(eachSignal.toDomainEntity())
+                    history.add(eachSignal.toDomainEntity())
                 }
         }
     }
 
     override suspend fun saveHistory(key: StrategySignalHistoryKey, signal: StrategySignal) {
         val productId = getProductId(key.productPriceKey)
-
         val strategySignal = StrategySignalR2dbcEntity(
             userStrategyId = key.userStrategyId,
             productId = productId,
