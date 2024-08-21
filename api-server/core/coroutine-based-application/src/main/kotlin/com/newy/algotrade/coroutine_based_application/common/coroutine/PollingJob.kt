@@ -9,7 +9,7 @@ import kotlin.coroutines.CoroutineContext
 abstract class PollingJob<K, V>(
     private val delayMillis: Long,
     private val coroutineContext: CoroutineContext,
-    override var callback: PollingCallback<K, V>? = null
+    private val pollingCallback: PollingCallback<K, V>
 ) : Polling<K, V> {
     private lateinit var nextTick: ReceiveChannel<Unit>
     private val nextJob = Channel<K>()
@@ -24,7 +24,7 @@ abstract class PollingJob<K, V>(
             for (tick in nextTick) {
                 val key = nextJob.receive()
                 val value = eachProcess(key)
-                onNextTick(key, value)
+                pollingCallback(Pair(key, value))
             }
         }
     }

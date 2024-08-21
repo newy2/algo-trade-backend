@@ -15,9 +15,7 @@ import com.newy.algotrade.domain.product_price.ProductPriceKey
 import helpers.BaseDisabledTest
 import helpers.TestEnv
 import helpers.productPriceKey
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import okhttp3.OkHttpClient
 import org.junit.jupiter.api.Test
@@ -56,26 +54,23 @@ private fun newClient(
     return PollingProductPriceProxy(
         mapOf(
             PollingProductPriceProxy.Key(Market.LS_SEC, ProductType.SPOT) to PollingProductPriceWithHttpApi(
-                loadProductPriceProxy,
-                1000,
-                coroutineContext,
+                loader = loadProductPriceProxy,
+                delayMillis = 1000,
+                coroutineContext = coroutineContext,
+                pollingCallback = callback,
             ),
             PollingProductPriceProxy.Key(Market.BY_BIT, ProductType.SPOT) to PollingProductPriceWithByBitWebSocket(
-                DefaultWebSocketClient(
+                client = DefaultWebSocketClient(
                     OkHttpClient(),
                     TestEnv.ByBit.socketUrl,
                     coroutineContext,
                 ),
-                ProductType.SPOT,
-                JsonConverterByJackson(jacksonObjectMapper()),
-                coroutineContext,
+                productType = ProductType.SPOT,
+                jsonConverter = JsonConverterByJackson(jacksonObjectMapper()),
+                coroutineContext = coroutineContext,
+                pollingCallback = callback,
             )
-        ),
-        { productPriceKey, productPriceList ->
-            CoroutineScope(coroutineContext).launch {
-                callback(productPriceKey to productPriceList)
-            }
-        }
+        )
     )
 }
 

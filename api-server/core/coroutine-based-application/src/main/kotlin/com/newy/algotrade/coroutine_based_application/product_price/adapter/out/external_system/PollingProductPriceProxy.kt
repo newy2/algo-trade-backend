@@ -1,25 +1,14 @@
 package com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system
 
-import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
-import com.newy.algotrade.coroutine_based_application.product_price.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.coroutine_based_application.product_price.port.out.PollingProductPricePort
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.product_price.ProductPriceKey
 
 @Suppress("INAPPLICABLE_JVM_NAME")
 open class PollingProductPriceProxy(
     private val components: Map<Key, PollingProductPricePort>,
-    onReceivePollingPricePort: OnReceivePollingPricePort,
-    override var callback: PollingCallback<ProductPriceKey, List<ProductPrice>>? = {
-        onReceivePollingPricePort.onReceivePrice(it.first, it.second)
-    },
 ) : PollingProductPricePort {
-    init {
-        callback?.let { setCallback(it) }
-    }
-
     override suspend fun start() {
         components.forEach { (_, polling) -> polling.start() }
     }
@@ -34,11 +23,6 @@ open class PollingProductPriceProxy(
 
     override fun subscribe(key: ProductPriceKey) {
         components[Key.from(key)]?.subscribe(key)
-    }
-
-    @JvmName("_setCallback")
-    override fun setCallback(callback: PollingCallback<ProductPriceKey, List<ProductPrice>>) {
-        components.forEach { (_, polling) -> polling.setCallback(callback) }
     }
 
     data class Key(val market: Market, val productType: ProductType) {

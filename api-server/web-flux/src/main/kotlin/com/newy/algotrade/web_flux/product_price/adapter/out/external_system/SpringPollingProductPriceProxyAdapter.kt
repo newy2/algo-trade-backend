@@ -25,7 +25,9 @@ class SpringPollingProductPriceProxyAdapter(
         Key(Market.LS_SEC, ProductType.SPOT) to PollingProductPriceWithHttpApi(
             loader = getProductPricePort,
             delayMillis = 1000,
-        ),
+        ) { (productPriceKey, productPriceList) ->
+            onReceivePollingPricePort.onReceivePrice(productPriceKey, productPriceList)
+        },
         Key(Market.BY_BIT, ProductType.SPOT) to PollingProductPriceWithByBitWebSocket(
             client = DefaultWebSocketClient(
                 client = okHttpClient,
@@ -33,8 +35,9 @@ class SpringPollingProductPriceProxyAdapter(
             ),
             productType = ProductType.SPOT,
             jsonConverter = jsonConverter,
-        )
+        ) { (productPriceKey, productPriceList) ->
+            onReceivePollingPricePort.onReceivePrice(productPriceKey, productPriceList)
+        },
     ),
-    onReceivePollingPricePort
 ) {
 }

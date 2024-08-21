@@ -1,5 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system
 
+import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
 import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingJob
 import com.newy.algotrade.coroutine_based_application.product_price.port.out.PollingProductPricePort
 import com.newy.algotrade.coroutine_based_application.product_price.port.out.ProductPricePort
@@ -15,8 +16,9 @@ open class PollingProductPriceWithHttpApi(
     private val loader: ProductPricePort,
     delayMillis: Long,
     @ForTesting coroutineContext: CoroutineContext = Dispatchers.IO,
+    pollingCallback: PollingCallback<ProductPriceKey, List<ProductPrice>>,
 ) : PollingProductPricePort,
-    PollingJob<ProductPriceKey, List<ProductPrice>>(delayMillis, coroutineContext) {
+    PollingJob<ProductPriceKey, List<ProductPrice>>(delayMillis, coroutineContext, pollingCallback) {
     override suspend fun eachProcess(key: ProductPriceKey): List<ProductPrice> {
         return loader.fetchProductPrices(
             GetProductPriceHttpParam(

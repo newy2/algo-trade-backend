@@ -30,12 +30,8 @@ class PollingProductPriceTestHelper(
     loader: ProductPricePort,
     delayMillis: Long,
     coroutineContext: CoroutineContext,
-    callback: PollingCallback<ProductPriceKey, List<ProductPrice>>
-) : PollingProductPriceWithHttpApi(loader, delayMillis, coroutineContext) {
-    init {
-        setCallback(callback)
-    }
-
+    pollingCallback: PollingCallback<ProductPriceKey, List<ProductPrice>>
+) : PollingProductPriceWithHttpApi(loader, delayMillis, coroutineContext, pollingCallback) {
     override fun endTime(): OffsetDateTime {
         return OffsetDateTime.parse("2024-05-09T00:00+09:00")
     }

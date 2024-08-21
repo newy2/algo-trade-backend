@@ -1,5 +1,6 @@
 package com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system
 
+import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
 import com.newy.algotrade.coroutine_based_application.common.web.by_bit.ByBitWebSocket
 import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketClient
 import com.newy.algotrade.coroutine_based_application.product_price.port.out.PollingProductPricePort
@@ -18,8 +19,9 @@ class PollingProductPriceWithByBitWebSocket(
     private val productType: ProductType,
     jsonConverter: JsonConverter,
     @ForTesting coroutineContext: CoroutineContext = Dispatchers.IO,
+    pollingCallback: PollingCallback<ProductPriceKey, List<ProductPrice>>,
 ) : PollingProductPricePort,
-    ByBitWebSocket<ProductPriceKey, List<ProductPrice>>(client, jsonConverter, coroutineContext) {
+    ByBitWebSocket<ProductPriceKey, List<ProductPrice>>(client, jsonConverter, coroutineContext, pollingCallback) {
     override fun topic(key: ProductPriceKey): String {
         val interval = if (key.interval.toDays() >= 1) "D" else key.interval.toMinutes().toString()
         return "kline.$interval.${key.productCode}"

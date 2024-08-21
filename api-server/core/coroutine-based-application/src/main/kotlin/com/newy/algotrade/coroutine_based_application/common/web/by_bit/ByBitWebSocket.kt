@@ -13,7 +13,7 @@ abstract class ByBitWebSocket<K, V>(
     private val client: WebSocketClient,
     protected val jsonConverter: JsonConverter,
     private val coroutineContext: CoroutineContext,
-    override var callback: PollingCallback<K, V>? = null,
+    private val pollingCallback: PollingCallback<K, V>,
 ) : Polling<K, V> {
     private val subscribes = mutableSetOf<K>()
 
@@ -84,7 +84,7 @@ abstract class ByBitWebSocket<K, V>(
         override fun onMessage(message: String) {
             CoroutineScope(coroutineContext).launch {
                 parsingJson(message)?.let { (key, value) ->
-                    onNextTick(key, value)
+                    pollingCallback(Pair(key, value))
                 }
             }
         }
