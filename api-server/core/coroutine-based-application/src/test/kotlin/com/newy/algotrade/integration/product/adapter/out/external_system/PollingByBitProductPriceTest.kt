@@ -5,6 +5,7 @@ import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCa
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchByBitProductPrice
 import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.PollingFetchProductPriceJob
 import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.PollingProductPriceWithHttpApi
 import com.newy.algotrade.coroutine_based_application.product_price.port.out.ProductPricePort
 import com.newy.algotrade.domain.chart.Candle
@@ -31,15 +32,26 @@ class PollingProductPriceTestHelper(
     delayMillis: Long,
     coroutineContext: CoroutineContext,
     pollingCallback: PollingCallback<ProductPriceKey, List<ProductPrice>>
-) : PollingProductPriceWithHttpApi(loader, delayMillis, coroutineContext, pollingCallback) {
-    override fun endTime(): OffsetDateTime {
-        return OffsetDateTime.parse("2024-05-09T00:00+09:00")
-    }
+) : PollingProductPriceWithHttpApi(
+    loader = loader,
+    delayMillis = delayMillis,
+    coroutineContext = coroutineContext,
+    pollingCallback = pollingCallback,
+    delegate = object : PollingFetchProductPriceJob(
+        loader = loader,
+        delayMillis = delayMillis,
+        coroutineContext = coroutineContext,
+        pollingCallback = pollingCallback,
+    ) {
+        override fun endTime(): OffsetDateTime {
+            return OffsetDateTime.parse("2024-05-09T00:00+09:00")
+        }
 
-    override fun limit(): Int {
-        return 2
+        override fun limit(): Int {
+            return 2
+        }
     }
-}
+)
 
 class PollingByBitProductPriceTest {
     private val client = DefaultHttpApiClient(

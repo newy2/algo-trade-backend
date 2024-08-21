@@ -37,12 +37,12 @@ open class BaseByBitProductPriceWebSocketTest {
         callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit = {}
     ) =
         PollingProductPriceWithByBitWebSocket(
+            productType = ProductType.SPOT,
             client = DefaultWebSocketClient(
                 OkHttpClient(),
                 "http://localhost:$port",
                 coroutineContext,
             ),
-            productType = ProductType.SPOT,
             jsonConverter = JsonConverterByJackson(jacksonObjectMapper()),
             coroutineContext = coroutineContext,
             pollingCallback = callback,

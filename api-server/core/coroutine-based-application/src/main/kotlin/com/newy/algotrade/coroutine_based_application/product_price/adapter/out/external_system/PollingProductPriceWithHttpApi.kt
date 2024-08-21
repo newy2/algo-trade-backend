@@ -13,12 +13,32 @@ import java.time.OffsetDateTime
 import kotlin.coroutines.CoroutineContext
 
 open class PollingProductPriceWithHttpApi(
+    loader: ProductPricePort,
+    delayMillis: Long,
+    @ForTesting coroutineContext: CoroutineContext = Dispatchers.IO,
+    pollingCallback: PollingCallback<ProductPriceKey, List<ProductPrice>>,
+    private val delegate: PollingFetchProductPriceJob = PollingFetchProductPriceJob(
+        loader = loader,
+        delayMillis = delayMillis,
+        coroutineContext = coroutineContext,
+        pollingCallback = pollingCallback,
+    )
+) : PollingProductPricePort {
+    override suspend fun start() = delegate.start()
+
+    override fun cancel() = delegate.cancel()
+
+    override fun unSubscribe(key: ProductPriceKey) = delegate.unSubscribe(key)
+
+    override fun subscribe(key: ProductPriceKey) = delegate.subscribe(key)
+}
+
+open class PollingFetchProductPriceJob(
     private val loader: ProductPricePort,
     delayMillis: Long,
     @ForTesting coroutineContext: CoroutineContext = Dispatchers.IO,
     pollingCallback: PollingCallback<ProductPriceKey, List<ProductPrice>>,
-) : PollingProductPricePort,
-    PollingJob<ProductPriceKey, List<ProductPrice>>(delayMillis, coroutineContext, pollingCallback) {
+) : PollingJob<ProductPriceKey, List<ProductPrice>>(delayMillis, coroutineContext, pollingCallback) {
     override suspend fun eachProcess(key: ProductPriceKey): List<ProductPrice> {
         return loader.fetchProductPrices(
             GetProductPriceHttpParam(

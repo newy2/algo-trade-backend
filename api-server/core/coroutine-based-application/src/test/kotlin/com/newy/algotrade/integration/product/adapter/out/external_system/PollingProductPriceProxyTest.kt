@@ -2,10 +2,10 @@ package com.newy.algotrade.integration.product.adapter.out.external_system
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.auth.adpter.out.external_system.LsSecAccessTokenHttpApi
-import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
 import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.*
+import com.newy.algotrade.coroutine_based_application.product_price.port.out.PollingProductPricePort
 import com.newy.algotrade.domain.auth.PrivateApiInfo
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -31,7 +31,7 @@ import kotlin.test.assertTrue
 private fun newClient(
     coroutineContext: CoroutineContext,
     callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit = {}
-): Polling<ProductPriceKey, List<ProductPrice>> {
+): PollingProductPricePort {
     val loadProductPriceProxy = DefaultHttpApiClient(
         OkHttpClient(),
         TestEnv.LsSec.url,
@@ -60,12 +60,12 @@ private fun newClient(
                 pollingCallback = callback,
             ),
             PollingProductPriceProxy.Key(Market.BY_BIT, ProductType.SPOT) to PollingProductPriceWithByBitWebSocket(
+                productType = ProductType.SPOT,
                 client = DefaultWebSocketClient(
                     OkHttpClient(),
                     TestEnv.ByBit.socketUrl,
                     coroutineContext,
                 ),
-                productType = ProductType.SPOT,
                 jsonConverter = JsonConverterByJackson(jacksonObjectMapper()),
                 coroutineContext = coroutineContext,
                 pollingCallback = callback,
