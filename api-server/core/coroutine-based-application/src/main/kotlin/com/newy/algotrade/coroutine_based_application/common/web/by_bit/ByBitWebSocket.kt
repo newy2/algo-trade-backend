@@ -14,32 +14,16 @@ abstract class ByBitWebSocket<K, V>(
     protected val jsonConverter: JsonConverter,
     private val coroutineContext: CoroutineContext,
     override var callback: PollingCallback<K, V>? = null,
-) : Polling<K, V>, WebSocketClientListener() {
+) : Polling<K, V> {
     private val subscribes = mutableSetOf<K>()
 
     init {
-        client.setListener(this)
+        client.setListener(ByBitWebSocketClientListener())
         client.setPingInfo(ByBitWebSocketPing())
     }
 
     abstract suspend fun parsingJson(message: String): Pair<K, V>?
     abstract fun topic(key: K): String
-
-    override fun onOpen() {
-        sendSubscribeMessage()
-    }
-
-    override fun onRestart() {
-        sendSubscribeMessage()
-    }
-
-    override fun onMessage(json: String) {
-        CoroutineScope(coroutineContext).launch {
-            parsingJson(json)?.let { (key, value) ->
-                onNextTick(key, value)
-            }
-        }
-    }
 
     override suspend fun start() {
         client.start()
@@ -86,5 +70,23 @@ abstract class ByBitWebSocket<K, V>(
                 )
             )
         )
+    }
+
+    private inner class ByBitWebSocketClientListener : WebSocketClientListener() {
+        override fun onOpen() {
+            sendSubscribeMessage()
+        }
+
+        override fun onRestart() {
+            sendSubscribeMessage()
+        }
+
+        override fun onMessage(message: String) {
+            CoroutineScope(coroutineContext).launch {
+                parsingJson(message)?.let { (key, value) ->
+                    onNextTick(key, value)
+                }
+            }
+        }
     }
 }

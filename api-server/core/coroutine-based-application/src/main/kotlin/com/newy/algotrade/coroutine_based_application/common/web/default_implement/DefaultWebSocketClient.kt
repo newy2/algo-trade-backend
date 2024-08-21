@@ -4,13 +4,10 @@ import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocke
 import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketClientListener
 import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketPing
 import com.newy.algotrade.domain.common.annotation.ForTesting
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.cancelChildren
+import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.ticker
-import kotlinx.coroutines.launch
 import okhttp3.*
 import kotlin.coroutines.CoroutineContext
 
@@ -48,6 +45,7 @@ open class DefaultWebSocketClient(
         coroutineContext.cancelChildren()
     }
 
+    @OptIn(ObsoleteCoroutinesApi::class)
     private fun setPingTicker() {
         pingTicker = ticker(pingInfo.intervalMillis, context = coroutineContext)
         CoroutineScope(coroutineContext).launch {
