@@ -3,7 +3,7 @@ package com.newy.algotrade.integration.product.adapter.out.external_system
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchByBitProductPrice
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchProductPriceProxyAdapter
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
@@ -19,7 +19,7 @@ import java.time.OffsetDateTime
 import kotlin.test.assertEquals
 
 class FetchByBitProductPriceTest {
-    private val client = FetchProductPriceProxy(
+    private val client = FetchProductPriceProxyAdapter(
         mapOf(
             Market.BY_BIT to FetchByBitProductPrice(
                 DefaultHttpApiClient(

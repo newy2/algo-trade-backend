@@ -32,40 +32,41 @@ private fun newClient(
     coroutineContext: CoroutineContext,
     callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit = {}
 ): PollingProductPricePort {
-    val loadProductPriceProxy = DefaultHttpApiClient(
+    val lsSecHttpApiClient = DefaultHttpApiClient(
         OkHttpClient(),
         TestEnv.LsSec.url,
         JsonConverterByJackson(jacksonObjectMapper())
-    ).let {
-        FetchProductPriceProxy(
-            mapOf(
-                Market.LS_SEC to FetchLsSecProductPrice(
-                    it,
-                    LsSecAccessTokenHttpApi(it),
-                    PrivateApiInfo(
+    )
+    val byBitWebSocketClient = DefaultWebSocketClient(
+        OkHttpClient(),
+        TestEnv.ByBit.socketUrl,
+        coroutineContext,
+    )
+
+    return PollingProductPriceProxyAdapter(
+        mapOf(
+            PollingProductPriceProxyAdapter.Key(
+                Market.LS_SEC,
+                ProductType.SPOT,
+            ) to PollingProductPriceWithHttpClient(
+                loader = FetchLsSecProductPrice(
+                    client = lsSecHttpApiClient,
+                    accessTokenLoader = LsSecAccessTokenHttpApi(lsSecHttpApiClient),
+                    masterUserInfo = PrivateApiInfo(
                         key = TestEnv.LsSec.apiKey,
                         secret = TestEnv.LsSec.apiSecret,
-                    )
-                )
-            )
-        )
-    }
-
-    return PollingProductPriceProxy(
-        mapOf(
-            PollingProductPriceProxy.Key(Market.LS_SEC, ProductType.SPOT) to PollingProductPriceWithHttpApi(
-                loader = loadProductPriceProxy,
+                    ),
+                ),
                 delayMillis = 1000,
                 coroutineContext = coroutineContext,
                 pollingCallback = callback,
             ),
-            PollingProductPriceProxy.Key(Market.BY_BIT, ProductType.SPOT) to PollingProductPriceWithByBitWebSocket(
+            PollingProductPriceProxyAdapter.Key(
+                Market.BY_BIT,
+                ProductType.SPOT,
+            ) to PollingProductPriceWithByBitWebSocket(
                 productType = ProductType.SPOT,
-                client = DefaultWebSocketClient(
-                    OkHttpClient(),
-                    TestEnv.ByBit.socketUrl,
-                    coroutineContext,
-                ),
+                client = byBitWebSocketClient,
                 jsonConverter = JsonConverterByJackson(jacksonObjectMapper()),
                 coroutineContext = coroutineContext,
                 pollingCallback = callback,

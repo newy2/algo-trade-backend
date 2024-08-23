@@ -14,7 +14,7 @@ abstract class ByBitWebSocket<K, V>(
     protected val jsonConverter: JsonConverter,
     private val coroutineContext: CoroutineContext,
     private val pollingCallback: PollingCallback<K, V>,
-) : Polling<K, V> {
+) : Polling<K> {
     private val subscribes = mutableSetOf<K>()
 
     init {

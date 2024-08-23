@@ -9,7 +9,7 @@ import com.newy.algotrade.coroutine_based_application.back_testing.service.SetBa
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchByBitProductPrice
 import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchLsSecProductPrice
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchProductPriceProxyAdapter
 import com.newy.algotrade.domain.auth.PrivateApiInfo
 import com.newy.algotrade.domain.back_testing.BackTestingDataKey
 import com.newy.algotrade.domain.back_testing.BackTestingFileManager
@@ -42,7 +42,7 @@ private fun byBitHttpApiClient() =
     )
 
 private fun loadProductPriceProxy() =
-    FetchProductPriceProxy(
+    FetchProductPriceProxyAdapter(
         mapOf(
             Market.LS_SEC to FetchLsSecProductPrice(
                 lsSecHttpApiClient(),

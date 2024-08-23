@@ -1,13 +1,13 @@
 package com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system
 
+import com.newy.algotrade.coroutine_based_application.common.coroutine.Polling
 import com.newy.algotrade.coroutine_based_application.product_price.port.out.PollingProductPricePort
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.product_price.ProductPriceKey
 
-@Suppress("INAPPLICABLE_JVM_NAME")
-open class PollingProductPriceProxy(
-    private val components: Map<Key, PollingProductPricePort>,
+open class PollingProductPriceProxyAdapter(
+    private val components: Map<Key, Polling<ProductPriceKey>>,
 ) : PollingProductPricePort {
     override suspend fun start() {
         components.forEach { (_, polling) -> polling.start() }

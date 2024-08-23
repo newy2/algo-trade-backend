@@ -1,9 +1,9 @@
 package com.newy.algotrade.web_flux.product_price.adapter.out.external_system
 
 import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.PollingProductPriceProxy
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.PollingProductPriceProxyAdapter
 import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.PollingProductPriceWithByBitWebSocket
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.PollingProductPriceWithHttpApi
+import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.PollingProductPriceWithHttpClient
 import com.newy.algotrade.coroutine_based_application.product_price.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.coroutine_based_application.product_price.port.out.ProductPricePort
 import com.newy.algotrade.domain.common.consts.GlobalEnv
@@ -20,9 +20,9 @@ class SpringPollingProductPriceProxyAdapter(
     jsonConverter: JsonConverter,
     onReceivePollingPricePort: OnReceivePollingPricePort,
     globalEnv: GlobalEnv,
-) : PollingProductPriceProxy(
+) : PollingProductPriceProxyAdapter(
     mapOf(
-        Key(Market.LS_SEC, ProductType.SPOT) to PollingProductPriceWithHttpApi(
+        Key(Market.LS_SEC, ProductType.SPOT) to PollingProductPriceWithHttpClient(
             loader = getProductPricePort,
             delayMillis = 1000,
             pollingCallback = { (productPriceKey, productPriceList) ->

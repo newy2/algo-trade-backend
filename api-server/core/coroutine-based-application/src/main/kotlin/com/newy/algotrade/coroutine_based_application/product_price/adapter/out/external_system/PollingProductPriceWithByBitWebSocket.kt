@@ -3,7 +3,6 @@ package com.newy.algotrade.coroutine_based_application.product_price.adapter.out
 import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
 import com.newy.algotrade.coroutine_based_application.common.web.by_bit.ByBitWebSocket
 import com.newy.algotrade.coroutine_based_application.common.web.socket.WebSocketClient
-import com.newy.algotrade.coroutine_based_application.product_price.port.out.PollingProductPricePort
 import com.newy.algotrade.domain.common.annotation.ForTesting
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
@@ -15,29 +14,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlin.coroutines.CoroutineContext
 
 class PollingProductPriceWithByBitWebSocket(
-    productType: ProductType,
-    client: WebSocketClient,
-    jsonConverter: JsonConverter,
-    @ForTesting coroutineContext: CoroutineContext = Dispatchers.IO,
-    pollingCallback: PollingCallback<ProductPriceKey, List<ProductPrice>>,
-    private val delegate: ByBitProductPriceWebSocket = ByBitProductPriceWebSocket(
-        productType = productType,
-        client = client,
-        jsonConverter = jsonConverter,
-        coroutineContext = coroutineContext,
-        pollingCallback = pollingCallback
-    )
-) : PollingProductPricePort {
-    override suspend fun start() = delegate.start()
-
-    override fun cancel() = delegate.cancel()
-
-    override fun unSubscribe(key: ProductPriceKey) = delegate.unSubscribe(key)
-
-    override fun subscribe(key: ProductPriceKey) = delegate.subscribe(key)
-}
-
-class ByBitProductPriceWebSocket(
     private val productType: ProductType,
     client: WebSocketClient,
     jsonConverter: JsonConverter,

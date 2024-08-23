@@ -1,4 +1,4 @@
-package com.newy.algotrade.unit.product_price.adapter.out.web
+package com.newy.algotrade.unit.product_price.adapter.out.external_system
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.coroutine_based_application.common.web.by_bit.ByBitWebSocketPing
@@ -35,18 +35,17 @@ open class BaseByBitProductPriceWebSocketTest {
     protected fun newClient(
         coroutineContext: CoroutineContext,
         callback: suspend (Pair<ProductPriceKey, List<ProductPrice>>) -> Unit = {}
-    ) =
-        PollingProductPriceWithByBitWebSocket(
-            productType = ProductType.SPOT,
-            client = DefaultWebSocketClient(
-                OkHttpClient(),
-                "http://localhost:$port",
-                coroutineContext,
-            ),
-            jsonConverter = JsonConverterByJackson(jacksonObjectMapper()),
-            coroutineContext = coroutineContext,
-            pollingCallback = callback,
-        )
+    ) = PollingProductPriceWithByBitWebSocket(
+        productType = ProductType.SPOT,
+        client = DefaultWebSocketClient(
+            OkHttpClient(),
+            "http://localhost:$port",
+            coroutineContext,
+        ),
+        jsonConverter = JsonConverterByJackson(jacksonObjectMapper()),
+        coroutineContext = coroutineContext,
+        pollingCallback = callback,
+    )
 }
 
 class ByBitProductPriceWebSocketSendMessageTest : BaseByBitProductPriceWebSocketTest() {

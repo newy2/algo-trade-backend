@@ -10,7 +10,7 @@ abstract class PollingJob<K, V>(
     private val delayMillis: Long,
     private val coroutineContext: CoroutineContext,
     private val pollingCallback: PollingCallback<K, V>
-) : Polling<K, V> {
+) : Polling<K> {
     private lateinit var nextTick: ReceiveChannel<Unit>
     private val nextJob = Channel<K>()
     private val jobRequesters: MutableMap<K, Job> = mutableMapOf()
