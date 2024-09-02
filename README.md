@@ -59,8 +59,9 @@
 
 아래의 기술 블로그 포스트로 설명을 대체한다.
 
-- [TDD로 추상화 로직 설계하기](https://newy.tistory.com/entry/TDD%EB%A1%9C-%EC%B6%94%EC%83%81%ED%99%94-%EB%A1%9C%EC%A7%81-%EC%84%A4%EA%B3%84%ED%95%98%EA%B8%B0)
-- [TDD 예제(점진적으로 설계하기)](https://newy.tistory.com/entry/post-1)
+- 새로 배운
+  내용: [TDD로 추상화 로직 설계하기](https://newy.tistory.com/entry/TDD%EB%A1%9C-%EC%B6%94%EC%83%81%ED%99%94-%EB%A1%9C%EC%A7%81-%EC%84%A4%EA%B3%84%ED%95%98%EA%B8%B0)
+- 기존에 알고 있던 내용: [TDD 예제(점진적으로 설계하기)](https://newy.tistory.com/entry/post-1)
 
 ### 생각할 점
 
