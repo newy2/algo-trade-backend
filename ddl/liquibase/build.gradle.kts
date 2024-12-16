@@ -29,6 +29,23 @@ fun getDatabaseArguments(): Map<String, String> {
     )[getSystemProperty("X_DBMS_NAME")] ?: emptyMap()
 }
 
+fun getSchemaArguments(): Map<String, String> {
+    return mapOf(
+        "local" to mapOf(
+            "liquibaseSchemaName" to "liquibase",
+            "defaultSchemaName" to "algo_trade",
+        ),
+        "test" to mapOf(
+            "liquibaseSchemaName" to "test_liquibase",
+            "defaultSchemaName" to "test_algo_trade",
+        ),
+        "prod" to mapOf(
+            "liquibaseSchemaName" to "prod_liquibase",
+            "defaultSchemaName" to "prod_algo_trade",
+        ),
+    )[getSystemProperty("X_APP_ENV")] ?: emptyMap()
+}
+
 fun getSystemProperty(name: String): String {
     /***
      * gradlew 의 -D 옵션을 사용하면 System.property 로 등록이 되고,
@@ -46,11 +63,9 @@ liquibase {
         val baseArguments = mapOf(
             "searchPath" to "ddl/liquibase",
             "changelogFile" to "master_change_log.xml",
-            "liquibaseSchemaName" to "liquibase",
-            "defaultSchemaName" to "algo_trade",
         )
 
-        this.arguments = baseArguments + getDatabaseArguments()
+        this.arguments = baseArguments + getDatabaseArguments() + getSchemaArguments()
     }
     this.runList = "main"
 }
@@ -61,13 +76,17 @@ tasks.named("update").configure {
 
 task<RunSQL>("createSchema") {
     val dbArguments = getDatabaseArguments()
+    val schemaArguments = getSchemaArguments()
 
     config {
         username = dbArguments["username"]
         password = dbArguments["password"]
         url = dbArguments["url"]
         driverClassName = dbArguments["driver"]
-        scriptFile = "create_schema.sql"
+        script = """
+            CREATE SCHEMA IF NOT EXISTS ${schemaArguments["liquibaseSchemaName"]};
+            CREATE SCHEMA IF NOT EXISTS ${schemaArguments["defaultSchemaName"]};
+        """.trimIndent()
     }
 }
 
