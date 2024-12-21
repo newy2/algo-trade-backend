@@ -1,15 +1,14 @@
 package com.newy.algotrade.integration.product.adapter.out.external_system
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.auth.adpter.out.external_system.LsSecAccessTokenHttpApi
-import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchLsSecProductPrice
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchProductPriceProxyAdapter
+import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.domain.auth.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.product_price.GetProductPriceHttpParam
+import com.newy.algotrade.product_price.adapter.out.external_system.FetchLsSecProductPrice
+import com.newy.algotrade.product_price.adapter.out.external_system.FetchProductPriceProxyAdapter
 import helpers.BaseDisabledTest
 import helpers.TestEnv
 import helpers.productPriceKey
@@ -27,7 +26,7 @@ class FetchLsSecProductPriceTest : BaseDisabledTest {
         TestEnv.LsSec.url,
         JsonConverterByJackson(jacksonObjectMapper())
     )
-    private val accessTokenLoader = LsSecAccessTokenHttpApi(client)
+    private val accessTokenLoader = com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi(client)
     private val api = FetchProductPriceProxyAdapter(
         mapOf(
             Market.LS_SEC to FetchLsSecProductPrice(

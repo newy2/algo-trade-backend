@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.notification.port.`in`.model
 
-import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SendNotificationCommand
+import com.newy.algotrade.notification.port.`in`.model.SendNotificationCommand
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

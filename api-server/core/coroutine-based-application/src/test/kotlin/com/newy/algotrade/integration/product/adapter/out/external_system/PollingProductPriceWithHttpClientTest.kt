@@ -1,20 +1,19 @@
 package com.newy.algotrade.integration.product.adapter.out.external_system
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.auth.adpter.out.external_system.LsSecAccessTokenHttpApi
-import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingCallback
-import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchByBitProductPrice
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchLsSecProductPrice
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchProductPriceProxyAdapter
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.PollingProductPriceWithHttpClient
-import com.newy.algotrade.coroutine_based_application.product_price.port.out.ProductPricePort
+import com.newy.algotrade.common.coroutine.PollingCallback
+import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.domain.auth.PrivateApiInfo
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.product_price.ProductPriceKey
+import com.newy.algotrade.product_price.adapter.out.external_system.FetchByBitProductPrice
+import com.newy.algotrade.product_price.adapter.out.external_system.FetchLsSecProductPrice
+import com.newy.algotrade.product_price.adapter.out.external_system.FetchProductPriceProxyAdapter
+import com.newy.algotrade.product_price.adapter.out.external_system.PollingProductPriceWithHttpClient
+import com.newy.algotrade.product_price.port.out.ProductPricePort
 import helpers.BaseDisabledTest
 import helpers.TestEnv
 import helpers.productPriceKey
@@ -135,7 +134,7 @@ class PollingLsSecProductPriceTest : BaseDisabledTest {
         TestEnv.LsSec.url,
         JsonConverterByJackson(jacksonObjectMapper())
     )
-    private val accessTokenLoader = LsSecAccessTokenHttpApi(client)
+    private val accessTokenLoader = com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi(client)
     private val api = FetchProductPriceProxyAdapter(
         mapOf(
             Market.LS_SEC to FetchLsSecProductPrice(

@@ -1,10 +1,10 @@
 package com.newy.algotrade.unit.market_account.adapter.`in`.web
 
-import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.domain.common.consts.GlobalEnv
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.market_account.MarketAccount
 import com.newy.algotrade.domain.market_account.MarketServer
+import com.newy.algotrade.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.web_flux.market_account.adapter.`in`.web.SetMarketAccountController
 import com.newy.algotrade.web_flux.market_account.adapter.`in`.web.model.SetMarketAccountRequest
 import helpers.TestEnv

@@ -1,17 +1,16 @@
 package com.newy.algotrade.integration.product.adapter.out.external_system
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.auth.adpter.out.external_system.LsSecAccessTokenHttpApi
-import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultWebSocketClient
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.*
-import com.newy.algotrade.coroutine_based_application.product_price.port.out.PollingProductPricePort
+import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
+import com.newy.algotrade.common.web.default_implement.DefaultWebSocketClient
 import com.newy.algotrade.domain.auth.PrivateApiInfo
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.extension.ProductPrice
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.product_price.ProductPriceKey
+import com.newy.algotrade.product_price.adapter.out.external_system.*
+import com.newy.algotrade.product_price.port.out.PollingProductPricePort
 import helpers.BaseDisabledTest
 import helpers.TestEnv
 import helpers.productPriceKey
@@ -51,7 +50,9 @@ private fun newClient(
             ) to PollingProductPriceWithHttpClient(
                 loader = FetchLsSecProductPrice(
                     client = lsSecHttpApiClient,
-                    accessTokenLoader = LsSecAccessTokenHttpApi(lsSecHttpApiClient),
+                    accessTokenLoader = com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi(
+                        lsSecHttpApiClient
+                    ),
                     masterUserInfo = PrivateApiInfo(
                         key = TestEnv.LsSec.apiKey,
                         secret = TestEnv.LsSec.apiSecret,

@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.common.coroutine
 
-import com.newy.algotrade.coroutine_based_application.common.coroutine.PollingJob
+import com.newy.algotrade.common.coroutine.PollingJob
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -1,7 +1,7 @@
 package com.newy.algotrade.web_flux.config
 
-import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiClient
+import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
+import com.newy.algotrade.common.web.http.HttpApiClient
 import com.newy.algotrade.domain.common.consts.GlobalEnv
 import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.mapper.JsonConverter

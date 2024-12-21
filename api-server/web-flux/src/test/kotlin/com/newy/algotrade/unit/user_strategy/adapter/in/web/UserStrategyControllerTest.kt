@@ -1,9 +1,9 @@
 package com.newy.algotrade.unit.user_strategy.adapter.`in`.web
 
-import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model.SetUserStrategyCommand
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
+import com.newy.algotrade.user_strategy.port.`in`.model.SetUserStrategyCommand
 import com.newy.algotrade.web_flux.user_strategy.adapter.`in`.web.SetUserStrategyController
 import com.newy.algotrade.web_flux.user_strategy.adapter.`in`.web.model.SetUserStrategyRequest
 import kotlinx.coroutines.runBlocking

@@ -1,11 +1,11 @@
 package com.newy.algotrade.unit.user_strategy.port.`in`.model
 
-import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.model.SetUserStrategyCommand
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.user_strategy.SetUserStrategy
 import com.newy.algotrade.domain.user_strategy.SetUserStrategyKey
+import com.newy.algotrade.user_strategy.port.`in`.model.SetUserStrategyCommand
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

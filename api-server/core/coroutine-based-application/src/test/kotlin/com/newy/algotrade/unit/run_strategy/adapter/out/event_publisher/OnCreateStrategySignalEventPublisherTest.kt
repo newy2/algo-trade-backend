@@ -1,11 +1,11 @@
 package com.newy.algotrade.unit.run_strategy.adapter.out.event_publisher
 
-import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
-import com.newy.algotrade.coroutine_based_application.common.event.CreateStrategySignalEvent
-import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.event_publisher.OnCreateStrategySignalEventPublisher
+import com.newy.algotrade.common.coroutine.EventBus
+import com.newy.algotrade.common.event.CreateStrategySignalEvent
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import com.newy.algotrade.run_strategy.adapter.out.event_publisher.OnCreateStrategySignalEventPublisher
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest

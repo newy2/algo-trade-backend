@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.back_testing.adapter.`in`.internal_system
 
-import com.newy.algotrade.coroutine_based_application.back_testing.adapter.`in`.internal_system.OnReceivePollingPriceController
+import com.newy.algotrade.back_testing.adapter.`in`.internal_system.OnReceivePollingPriceController
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType

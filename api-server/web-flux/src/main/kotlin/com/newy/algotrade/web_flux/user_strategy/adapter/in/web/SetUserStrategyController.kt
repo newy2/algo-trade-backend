@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.user_strategy.adapter.`in`.web
 
-import com.newy.algotrade.coroutine_based_application.user_strategy.port.`in`.SetUserStrategyUseCase
+import com.newy.algotrade.user_strategy.port.`in`.SetUserStrategyUseCase
 import com.newy.algotrade.web_flux.user_strategy.adapter.`in`.web.model.SetUserStrategyRequest
 import com.newy.algotrade.web_flux.user_strategy.adapter.`in`.web.model.SetUserStrategyResponse
 import org.springframework.http.HttpStatus

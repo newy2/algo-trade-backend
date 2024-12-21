@@ -1,13 +1,13 @@
 package com.newy.algotrade.unit.notification.service
 
-import com.newy.algotrade.coroutine_based_application.notification.port.`in`.model.SetNotificationAppCommand
-import com.newy.algotrade.coroutine_based_application.notification.port.out.ExistsHasNotificationAppPort
-import com.newy.algotrade.coroutine_based_application.notification.port.out.NotificationAppPort
-import com.newy.algotrade.coroutine_based_application.notification.port.out.SaveNotificationAppPort
-import com.newy.algotrade.coroutine_based_application.notification.service.NotificationAppCommandService
 import com.newy.algotrade.domain.common.consts.NotificationAppType
 import com.newy.algotrade.domain.common.exception.DuplicateDataException
 import com.newy.algotrade.domain.notification.NotificationApp
+import com.newy.algotrade.notification.port.`in`.model.SetNotificationAppCommand
+import com.newy.algotrade.notification.port.out.ExistsHasNotificationAppPort
+import com.newy.algotrade.notification.port.out.NotificationAppPort
+import com.newy.algotrade.notification.port.out.SaveNotificationAppPort
+import com.newy.algotrade.notification.service.NotificationAppCommandService
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue

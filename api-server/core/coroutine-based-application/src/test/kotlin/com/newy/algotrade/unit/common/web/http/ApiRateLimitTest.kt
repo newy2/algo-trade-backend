@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.common.web.http
 
-import com.newy.algotrade.coroutine_based_application.common.web.http.HttpApiRateLimit
+import com.newy.algotrade.common.web.http.HttpApiRateLimit
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch

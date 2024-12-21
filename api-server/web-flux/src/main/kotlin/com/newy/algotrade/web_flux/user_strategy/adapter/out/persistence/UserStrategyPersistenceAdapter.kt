@@ -1,8 +1,8 @@
 package com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence
 
-import com.newy.algotrade.coroutine_based_application.user_strategy.port.out.UserStrategyPort
 import com.newy.algotrade.domain.user_strategy.SetUserStrategy
 import com.newy.algotrade.domain.user_strategy.SetUserStrategyKey
+import com.newy.algotrade.user_strategy.port.out.UserStrategyPort
 import com.newy.algotrade.web_flux.strategy.adapter.out.persistence.repository.StrategyRepository
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.UserStrategyR2dbcEntity
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.UserStrategyRepository

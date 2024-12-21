@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.common.coroutine
 
-import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
+import com.newy.algotrade.common.coroutine.EventBus
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runTest

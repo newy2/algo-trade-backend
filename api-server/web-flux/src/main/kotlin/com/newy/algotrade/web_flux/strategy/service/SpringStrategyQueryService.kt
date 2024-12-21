@@ -1,7 +1,7 @@
 package com.newy.algotrade.web_flux.strategy.service
 
-import com.newy.algotrade.coroutine_based_application.strategy.port.out.StrategyPort
-import com.newy.algotrade.coroutine_based_application.strategy.service.StrategyQueryService
+import com.newy.algotrade.strategy.port.out.StrategyPort
+import com.newy.algotrade.strategy.service.StrategyQueryService
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 

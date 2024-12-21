@@ -1,8 +1,8 @@
 package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
-import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.SetMarketAccountUseCase
-import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.domain.common.consts.Market
+import com.newy.algotrade.market_account.port.`in`.SetMarketAccountUseCase
+import com.newy.algotrade.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.FindMarketPersistenceAdapter
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.MarketRepositoryForStrategy
 import helpers.BaseDbTest

@@ -1,8 +1,7 @@
 package com.newy.algotrade.integration.auth.adapter.out
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.auth.adpter.out.external_system.LsSecAccessTokenHttpApi
-import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
+import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.domain.auth.PrivateApiInfo
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import helpers.BaseDisabledTest
@@ -17,7 +16,7 @@ class LsSecGetAccessTokenTest : BaseDisabledTest {
     @DisabledIf("hasNotLsSecApiInfo")
     @Test
     fun `엑세스 토큰 발급하기`() = runBlocking {
-        val api = LsSecAccessTokenHttpApi(
+        val api = com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi(
             DefaultHttpApiClient(
                 OkHttpClient(),
                 TestEnv.LsSec.url,

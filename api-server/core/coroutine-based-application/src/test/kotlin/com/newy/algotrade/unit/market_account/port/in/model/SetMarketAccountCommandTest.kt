@@ -1,9 +1,9 @@
 package com.newy.algotrade.unit.market_account.port.`in`.model
 
-import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.market_account.MarketAccount
 import com.newy.algotrade.domain.market_account.MarketServer
+import com.newy.algotrade.market_account.port.`in`.model.SetMarketAccountCommand
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

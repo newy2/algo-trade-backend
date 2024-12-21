@@ -1,8 +1,8 @@
 package com.newy.algotrade.unit.product_price.adapter.out.event_publisher
 
-import com.newy.algotrade.coroutine_based_application.common.coroutine.EventBus
-import com.newy.algotrade.coroutine_based_application.common.event.ReceivePollingPriceEvent
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.event_publisher.OnReceivePollingPriceEventPublisher
+import com.newy.algotrade.common.coroutine.EventBus
+import com.newy.algotrade.common.event.ReceivePollingPriceEvent
+import com.newy.algotrade.product_price.adapter.out.event_publisher.OnReceivePollingPriceEventPublisher
 import helpers.productPrice
 import helpers.productPriceKey
 import kotlinx.coroutines.cancelChildren

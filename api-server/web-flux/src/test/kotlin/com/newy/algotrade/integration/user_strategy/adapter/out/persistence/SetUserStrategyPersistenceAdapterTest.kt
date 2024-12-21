@@ -1,7 +1,5 @@
 package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
-import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.SetMarketAccountUseCase
-import com.newy.algotrade.coroutine_based_application.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.order.OrderType
 import com.newy.algotrade.domain.common.consts.Market
@@ -9,6 +7,8 @@ import com.newy.algotrade.domain.common.consts.ProductCategory
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.user_strategy.SetUserStrategy
 import com.newy.algotrade.domain.user_strategy.SetUserStrategyKey
+import com.newy.algotrade.market_account.port.`in`.SetMarketAccountUseCase
+import com.newy.algotrade.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.web_flux.strategy.adapter.out.persistence.repository.StrategyR2dbcEntity
 import com.newy.algotrade.web_flux.strategy.adapter.out.persistence.repository.StrategyRepository
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.UserStrategyPersistenceAdapter

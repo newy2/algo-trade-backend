@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.user_strategy.service
 
-import com.newy.algotrade.coroutine_based_application.user_strategy.service.UserStrategyProductQueryService
+import com.newy.algotrade.user_strategy.service.UserStrategyProductQueryService
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

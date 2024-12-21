@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.common.consts
 
-import com.newy.algotrade.coroutine_based_application.common.consts.ByBitHttpApiInfo
-import com.newy.algotrade.coroutine_based_application.common.consts.LsSecHttpApiInfo
+import com.newy.algotrade.common.consts.ByBitHttpApiInfo
+import com.newy.algotrade.common.consts.LsSecHttpApiInfo
 import com.newy.algotrade.domain.common.consts.LsSecTrCode
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals

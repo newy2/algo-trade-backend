@@ -1,11 +1,5 @@
 package com.newy.algotrade.unit.run_strategy.service
 
-import com.newy.algotrade.coroutine_based_application.product_price.port.`in`.GetCandlesQuery
-import com.newy.algotrade.coroutine_based_application.product_price.port.out.*
-import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategySignalHistoryStoreAdapter
-import com.newy.algotrade.coroutine_based_application.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
-import com.newy.algotrade.coroutine_based_application.run_strategy.port.out.*
-import com.newy.algotrade.coroutine_based_application.run_strategy.service.RunStrategyCommandService
 import com.newy.algotrade.domain.chart.Candle
 import com.newy.algotrade.domain.chart.Candles
 import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
@@ -16,6 +10,12 @@ import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
 import com.newy.algotrade.domain.product_price.ProductPriceKey
 import com.newy.algotrade.domain.run_strategy.RunStrategyResult
 import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
+import com.newy.algotrade.product_price.port.`in`.GetCandlesQuery
+import com.newy.algotrade.product_price.port.out.*
+import com.newy.algotrade.run_strategy.adapter.out.volatile_storage.InMemoryStrategySignalHistoryStoreAdapter
+import com.newy.algotrade.run_strategy.adapter.out.volatile_storage.InMemoryStrategyStoreAdapter
+import com.newy.algotrade.run_strategy.port.out.*
+import com.newy.algotrade.run_strategy.service.RunStrategyCommandService
 import helpers.BooleanRule
 import helpers.productPrice
 import helpers.productPriceKey

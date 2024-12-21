@@ -1,18 +1,17 @@
 package com.newy.algotrade.integration.back_testing.service
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.coroutine_based_application.auth.adpter.out.external_system.LsSecAccessTokenHttpApi
-import com.newy.algotrade.coroutine_based_application.back_testing.service.CreateBackTestingDataService
-import com.newy.algotrade.coroutine_based_application.common.web.default_implement.DefaultHttpApiClient
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchByBitProductPrice
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchLsSecProductPrice
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.external_system.FetchProductPriceProxyAdapter
+import com.newy.algotrade.back_testing.service.CreateBackTestingDataService
+import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.domain.auth.PrivateApiInfo
 import com.newy.algotrade.domain.back_testing.BackTestingDataKey
 import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.domain.common.consts.ProductType
 import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.domain.product_price.ProductPriceKey
+import com.newy.algotrade.product_price.adapter.out.external_system.FetchByBitProductPrice
+import com.newy.algotrade.product_price.adapter.out.external_system.FetchLsSecProductPrice
+import com.newy.algotrade.product_price.adapter.out.external_system.FetchProductPriceProxyAdapter
 import helpers.BaseDisabledTest
 import helpers.TestEnv
 import kotlinx.coroutines.test.runTest
@@ -46,7 +45,7 @@ private fun loadProductPriceProxy() =
         mapOf(
             Market.LS_SEC to FetchLsSecProductPrice(
                 lsSecHttpApiClient(),
-                LsSecAccessTokenHttpApi(lsSecHttpApiClient()),
+                com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi(lsSecHttpApiClient()),
                 PrivateApiInfo(
                     key = TestEnv.LsSec.apiKey,
                     secret = TestEnv.LsSec.apiSecret,

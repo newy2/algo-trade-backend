@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.product_price.service
 
-import com.newy.algotrade.coroutine_based_application.product_price.adapter.out.volatile_storage.InMemoryCandlesStoreAdapter
-import com.newy.algotrade.coroutine_based_application.product_price.service.CandlesQueryService
+import com.newy.algotrade.product_price.adapter.out.volatile_storage.InMemoryCandlesStoreAdapter
+import com.newy.algotrade.product_price.service.CandlesQueryService
 import helpers.productPrice
 import helpers.productPriceKey
 import org.junit.jupiter.api.Test

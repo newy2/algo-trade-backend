@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.notification.adapter.`in`.web
 
-import com.newy.algotrade.coroutine_based_application.notification.port.`in`.SetNotificationAppUseCase
+import com.newy.algotrade.notification.port.`in`.SetNotificationAppUseCase
 import com.newy.algotrade.web_flux.common.annotation.WebAdapter
 import com.newy.algotrade.web_flux.common.web.BooleanResponse
 import com.newy.algotrade.web_flux.notification.adapter.`in`.web.model.SetNotificationAppRequest
