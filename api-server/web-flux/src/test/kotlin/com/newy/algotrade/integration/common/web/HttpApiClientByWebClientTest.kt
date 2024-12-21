@@ -3,7 +3,7 @@ package com.newy.algotrade.integration.common.web
 import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
-import com.newy.algotrade.common.web.HttpApiClientByWebClient
+import com.newy.algotrade.common.spring.web.HttpApiClientByWebClient
 import com.newy.algotrade.common.web.http.FormData
 import com.newy.algotrade.common.web.http.HttpApiClient
 import com.newy.algotrade.common.web.http.get

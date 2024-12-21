@@ -1,4 +1,4 @@
-package com.newy.algotrade.common.annotation
+package com.newy.algotrade.common.spring.annotation
 
 import org.springframework.stereotype.Component
 

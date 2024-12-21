@@ -1,4 +1,4 @@
-package com.newy.algotrade.common.error
+package com.newy.algotrade.common.spring.error
 
 import com.newy.algotrade.common.domain.exception.DuplicateDataException
 import com.newy.algotrade.common.domain.exception.NotFoundRowException

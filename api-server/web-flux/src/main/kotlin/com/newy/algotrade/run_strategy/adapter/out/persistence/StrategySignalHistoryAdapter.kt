@@ -3,8 +3,8 @@ package com.newy.algotrade.run_strategy.adapter.out.persistence
 import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.chart.domain.strategy.StrategySignal
 import com.newy.algotrade.chart.domain.strategy.StrategySignalHistory
-import com.newy.algotrade.common.annotation.PersistenceAdapter
 import com.newy.algotrade.common.domain.exception.NotFoundRowException
+import com.newy.algotrade.common.spring.annotation.PersistenceAdapter
 import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.run_strategy.adapter.out.persistence.repository.ProductRepositoryForRunStrategy
 import com.newy.algotrade.run_strategy.adapter.out.persistence.repository.StrategyRepositoryForRunStrategy

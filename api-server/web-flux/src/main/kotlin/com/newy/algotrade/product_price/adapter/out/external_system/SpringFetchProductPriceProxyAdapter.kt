@@ -1,9 +1,9 @@
 package com.newy.algotrade.product_price.adapter.out.external_system
 
 import com.newy.algotrade.auth.domain.PrivateApiInfo
-import com.newy.algotrade.common.annotation.ExternalSystemAdapter
 import com.newy.algotrade.common.domain.consts.GlobalEnv
 import com.newy.algotrade.common.domain.consts.Market
+import com.newy.algotrade.common.spring.annotation.ExternalSystemAdapter
 import com.newy.algotrade.common.web.http.HttpApiClient
 import org.springframework.beans.factory.annotation.Qualifier
 

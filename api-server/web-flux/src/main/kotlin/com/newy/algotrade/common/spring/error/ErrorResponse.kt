@@ -1,4 +1,4 @@
-package com.newy.algotrade.common.error
+package com.newy.algotrade.common.spring.error
 
 data class ErrorResponse(
     val message: String,

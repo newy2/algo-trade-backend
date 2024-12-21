@@ -1,7 +1,7 @@
 package com.newy.algotrade.notification.adapter.out.persistence
 
-import com.newy.algotrade.common.annotation.PersistenceAdapter
 import com.newy.algotrade.common.domain.consts.SendNotificationLogStatus
+import com.newy.algotrade.common.spring.annotation.PersistenceAdapter
 import com.newy.algotrade.notification.adapter.out.persistence.repository.SendNotificationLogR2dbcEntity
 import com.newy.algotrade.notification.adapter.out.persistence.repository.SendNotificationLogRepository
 import com.newy.algotrade.notification.domain.SendNotificationLog

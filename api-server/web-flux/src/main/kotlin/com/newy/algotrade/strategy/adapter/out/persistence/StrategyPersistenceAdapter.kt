@@ -1,6 +1,6 @@
 package com.newy.algotrade.strategy.adapter.out.persistence
 
-import com.newy.algotrade.common.annotation.PersistenceAdapter
+import com.newy.algotrade.common.spring.annotation.PersistenceAdapter
 import com.newy.algotrade.strategy.adapter.out.persistence.repository.StrategyRepository
 import com.newy.algotrade.strategy.domain.Strategy
 import com.newy.algotrade.strategy.port.out.StrategyPort
