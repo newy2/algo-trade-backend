@@ -1,7 +1,7 @@
 package com.newy.algotrade.common.consts
 
+import com.newy.algotrade.common.domain.consts.LsSecTrCode
 import com.newy.algotrade.common.web.http.HttpApiRateLimit
-import com.newy.algotrade.domain.common.consts.LsSecTrCode
 
 object ByBitHttpApiInfo {
     data class Result(val path: String, val apiRateLimit: HttpApiRateLimit)

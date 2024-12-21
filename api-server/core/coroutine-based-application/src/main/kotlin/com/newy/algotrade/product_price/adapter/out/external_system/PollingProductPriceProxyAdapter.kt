@@ -1,9 +1,9 @@
 package com.newy.algotrade.product_price.adapter.out.external_system
 
 import com.newy.algotrade.common.coroutine.Polling
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.product_price.ProductPriceKey
+import com.newy.algotrade.common.domain.consts.Market
+import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.product_price.port.out.PollingProductPricePort
 
 open class PollingProductPriceProxyAdapter(

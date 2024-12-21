@@ -1,9 +1,9 @@
 package com.newy.algotrade.web_flux.product_price.adapter.out.external_system
 
+import com.newy.algotrade.auth.domain.PrivateApiInfo
+import com.newy.algotrade.common.domain.consts.GlobalEnv
+import com.newy.algotrade.common.domain.consts.Market
 import com.newy.algotrade.common.web.http.HttpApiClient
-import com.newy.algotrade.domain.auth.PrivateApiInfo
-import com.newy.algotrade.domain.common.consts.GlobalEnv
-import com.newy.algotrade.domain.common.consts.Market
 import com.newy.algotrade.product_price.adapter.out.external_system.FetchByBitProductPrice
 import com.newy.algotrade.product_price.adapter.out.external_system.FetchLsSecProductPrice
 import com.newy.algotrade.product_price.adapter.out.external_system.FetchProductPriceProxyAdapter

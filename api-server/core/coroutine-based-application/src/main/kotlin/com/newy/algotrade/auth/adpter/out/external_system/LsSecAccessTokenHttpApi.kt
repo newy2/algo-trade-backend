@@ -1,11 +1,11 @@
 package com.newy.algotrade.auth.adpter.out.external_system
 
+import com.newy.algotrade.auth.domain.PrivateApiInfo
+import com.newy.algotrade.auth.domain.jackson.LsSecAccessTokenHttpResponse
 import com.newy.algotrade.auth.port.out.AccessTokenPort
 import com.newy.algotrade.common.web.http.FormData
 import com.newy.algotrade.common.web.http.HttpApiClient
 import com.newy.algotrade.common.web.http.post
-import com.newy.algotrade.domain.auth.PrivateApiInfo
-import com.newy.algotrade.domain.auth.jackson.LsSecAccessTokenHttpResponse
 
 class LsSecAccessTokenHttpApi(
     private val client: HttpApiClient,

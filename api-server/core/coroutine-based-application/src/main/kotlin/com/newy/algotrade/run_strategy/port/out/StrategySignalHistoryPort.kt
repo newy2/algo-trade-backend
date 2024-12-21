@@ -1,8 +1,8 @@
 package com.newy.algotrade.run_strategy.port.out
 
-import com.newy.algotrade.domain.chart.strategy.StrategySignal
-import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
-import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
+import com.newy.algotrade.chart.domain.strategy.StrategySignal
+import com.newy.algotrade.chart.domain.strategy.StrategySignalHistory
+import com.newy.algotrade.run_strategy.domain.StrategySignalHistoryKey
 
 interface StrategySignalHistoryPort :
     FindStrategySignalHistoryPort,

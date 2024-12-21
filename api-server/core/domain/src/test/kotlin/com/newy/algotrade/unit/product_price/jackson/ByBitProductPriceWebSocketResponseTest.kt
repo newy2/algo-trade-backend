@@ -1,13 +1,13 @@
 package com.newy.algotrade.unit.product_price.jackson
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
-import com.newy.algotrade.domain.common.mapper.toObject
-import com.newy.algotrade.domain.product_price.ProductPriceKey
-import com.newy.algotrade.domain.product_price.jackson.ByBitProductPriceWebSocketResponse
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.common.domain.consts.Market
+import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
+import com.newy.algotrade.common.domain.mapper.toObject
+import com.newy.algotrade.product_price.domain.ProductPriceKey
+import com.newy.algotrade.product_price.domain.jackson.ByBitProductPriceWebSocketResponse
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import kotlin.test.assertEquals

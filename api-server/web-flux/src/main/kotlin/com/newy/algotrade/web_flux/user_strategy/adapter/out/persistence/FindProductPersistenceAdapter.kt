@@ -1,7 +1,7 @@
 package com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence
 
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.user_strategy.Product
+import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.user_strategy.domain.Product
 import com.newy.algotrade.user_strategy.port.out.ProductPort
 import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.ProductRepository
 import kotlinx.coroutines.flow.map

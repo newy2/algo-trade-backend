@@ -1,7 +1,7 @@
 package com.newy.algotrade.web_flux.common.error
 
-import com.newy.algotrade.domain.common.exception.DuplicateDataException
-import com.newy.algotrade.domain.common.exception.NotFoundRowException
+import com.newy.algotrade.common.domain.exception.DuplicateDataException
+import com.newy.algotrade.common.domain.exception.NotFoundRowException
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

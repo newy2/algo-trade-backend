@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.product_price.adapter.`in`.internal_system
 
-import com.newy.algotrade.domain.user_strategy.UserStrategyKey
 import com.newy.algotrade.product_price.adapter.`in`.internal_system.InitController
+import com.newy.algotrade.user_strategy.domain.UserStrategyKey
 import helpers.productPriceKey
 import helpers.userStrategyKey
 import kotlinx.coroutines.test.runTest

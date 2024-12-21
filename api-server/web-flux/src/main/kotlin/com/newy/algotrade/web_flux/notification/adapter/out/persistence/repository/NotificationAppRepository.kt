@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.notification.adapter.out.persistence.repository
 
-import com.newy.algotrade.domain.notification.NotificationApp
+import com.newy.algotrade.notification.domain.NotificationApp
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table

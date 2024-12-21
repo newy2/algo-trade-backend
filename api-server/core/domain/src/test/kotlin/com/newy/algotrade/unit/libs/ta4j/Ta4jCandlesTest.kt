@@ -1,9 +1,9 @@
 package com.newy.algotrade.unit.libs.ta4j
 
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.Candles
-import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
-import com.newy.algotrade.domain.chart.libs.ta4j.Ta4jCandles
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.chart.domain.Candles
+import com.newy.algotrade.chart.domain.DEFAULT_CHART_FACTORY
+import com.newy.algotrade.chart.domain.ta4j.Ta4jCandles
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.config
 
-import com.newy.algotrade.domain.common.consts.GlobalEnv
+import com.newy.algotrade.common.domain.consts.GlobalEnv
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.toList

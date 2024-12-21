@@ -1,12 +1,12 @@
 package com.newy.algotrade.user_strategy.port.`in`.model
 
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.ProductCategory
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.common.helper.SelfValidating
-import com.newy.algotrade.domain.common.libs.validation.NotBlankElements
-import com.newy.algotrade.domain.user_strategy.SetUserStrategy
-import com.newy.algotrade.domain.user_strategy.SetUserStrategyKey
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.common.domain.consts.ProductCategory
+import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.domain.helper.SelfValidating
+import com.newy.algotrade.common.domain.libs.validation.NotBlankElements
+import com.newy.algotrade.user_strategy.domain.SetUserStrategy
+import com.newy.algotrade.user_strategy.domain.SetUserStrategyKey
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 

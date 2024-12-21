@@ -1,9 +1,9 @@
 package com.newy.algotrade.back_testing.service
 
+import com.newy.algotrade.back_testing.domain.BackTestingDataKey
 import com.newy.algotrade.back_testing.port.`in`.SetBackTestingDataUseCase
 import com.newy.algotrade.back_testing.port.out.SaveBackTestingDataPort
-import com.newy.algotrade.domain.back_testing.BackTestingDataKey
-import com.newy.algotrade.domain.common.extension.ProductPrice
+import com.newy.algotrade.common.domain.extension.ProductPrice
 
 class SetBackTestingDataService(
     private val backTestingDataPort: SaveBackTestingDataPort

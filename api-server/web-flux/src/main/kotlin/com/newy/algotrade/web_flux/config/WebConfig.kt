@@ -1,10 +1,10 @@
 package com.newy.algotrade.web_flux.config
 
+import com.newy.algotrade.common.domain.consts.GlobalEnv
+import com.newy.algotrade.common.domain.consts.NotificationAppType
+import com.newy.algotrade.common.domain.mapper.JsonConverter
 import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.common.web.http.HttpApiClient
-import com.newy.algotrade.domain.common.consts.GlobalEnv
-import com.newy.algotrade.domain.common.consts.NotificationAppType
-import com.newy.algotrade.domain.common.mapper.JsonConverter
 import okhttp3.OkHttpClient
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

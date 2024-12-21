@@ -1,11 +1,11 @@
 package com.newy.algotrade.run_strategy.service
 
-import com.newy.algotrade.domain.chart.order.OrderType
-import com.newy.algotrade.domain.chart.strategy.StrategySignal
-import com.newy.algotrade.domain.product_price.ProductPriceKey
-import com.newy.algotrade.domain.run_strategy.RunStrategyResult
-import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
+import com.newy.algotrade.chart.domain.order.OrderType
+import com.newy.algotrade.chart.domain.strategy.StrategySignal
+import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.product_price.port.`in`.GetCandlesQuery
+import com.newy.algotrade.run_strategy.domain.RunStrategyResult
+import com.newy.algotrade.run_strategy.domain.StrategySignalHistoryKey
 import com.newy.algotrade.run_strategy.port.`in`.RunStrategyUseCase
 import com.newy.algotrade.run_strategy.port.out.*
 

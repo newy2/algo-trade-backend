@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.strategy.adapter.out.persistence
 
-import com.newy.algotrade.domain.strategy.Strategy
+import com.newy.algotrade.strategy.domain.Strategy
 import com.newy.algotrade.strategy.port.out.StrategyPort
 import com.newy.algotrade.web_flux.common.annotation.PersistenceAdapter
 import com.newy.algotrade.web_flux.strategy.adapter.out.persistence.repository.StrategyRepository

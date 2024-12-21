@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.common.helper
 
-import com.newy.algotrade.domain.common.helper.SimpleCsvParser
-import com.newy.algotrade.domain.common.helper.SimpleCsvWriter
+import com.newy.algotrade.common.domain.helper.SimpleCsvParser
+import com.newy.algotrade.common.domain.helper.SimpleCsvWriter
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach

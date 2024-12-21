@@ -1,6 +1,6 @@
 package com.newy.algotrade.notification.port.out
 
-import com.newy.algotrade.domain.notification.SendNotificationLog
+import com.newy.algotrade.notification.domain.SendNotificationLog
 
 interface SendNotificationLogPort :
     FindSendNotificationLogPort,

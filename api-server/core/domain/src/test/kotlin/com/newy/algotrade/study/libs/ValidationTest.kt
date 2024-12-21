@@ -1,6 +1,6 @@
 package com.newy.algotrade.study.libs
 
-import com.newy.algotrade.domain.common.libs.validation.NotBlankElements
+import com.newy.algotrade.common.domain.libs.validation.NotBlankElements
 import jakarta.validation.*
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
@@ -77,7 +77,7 @@ class ValidateTest {
 
 class CustomValidateAnnotationTest {
     private val validator = Validation.buildDefaultValidatorFactory().validator
-    
+
     @Test
     fun `리스트 element 검증`() {
         class TestDto(

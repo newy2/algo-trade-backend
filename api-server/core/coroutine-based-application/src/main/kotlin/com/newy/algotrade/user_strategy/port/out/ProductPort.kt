@@ -1,7 +1,7 @@
 package com.newy.algotrade.user_strategy.port.out
 
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.user_strategy.Product
+import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.user_strategy.domain.Product
 
 interface ProductPort
     : FindProductPort

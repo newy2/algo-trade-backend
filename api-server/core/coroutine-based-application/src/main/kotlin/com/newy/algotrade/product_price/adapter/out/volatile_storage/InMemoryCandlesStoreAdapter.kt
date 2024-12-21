@@ -1,9 +1,9 @@
 package com.newy.algotrade.product_price.adapter.out.volatile_storage
 
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.Candles
-import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
-import com.newy.algotrade.domain.product_price.ProductPriceKey
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.chart.domain.Candles
+import com.newy.algotrade.chart.domain.DEFAULT_CHART_FACTORY
+import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.product_price.port.out.CandlesPort
 
 open class InMemoryCandlesStoreAdapter : CandlesPort {

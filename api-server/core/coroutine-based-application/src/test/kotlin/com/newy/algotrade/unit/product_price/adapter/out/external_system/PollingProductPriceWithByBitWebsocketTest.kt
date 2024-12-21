@@ -1,15 +1,15 @@
 package com.newy.algotrade.unit.product_price.adapter.out.external_system
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.common.domain.consts.Market
+import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.domain.extension.ProductPrice
+import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
 import com.newy.algotrade.common.web.by_bit.ByBitWebSocketPing
 import com.newy.algotrade.common.web.default_implement.DefaultWebSocketClient
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
-import com.newy.algotrade.domain.product_price.ProductPriceKey
 import com.newy.algotrade.product_price.adapter.out.external_system.PollingProductPriceWithByBitWebSocket
+import com.newy.algotrade.product_price.domain.ProductPriceKey
 import helpers.TestServerPort
 import helpers.productPriceKey
 import kotlinx.coroutines.*

@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.run_strategy.adapter.out.persistence.repository
 
-import com.newy.algotrade.domain.chart.order.OrderType
+import com.newy.algotrade.chart.domain.order.OrderType
 import org.springframework.data.annotation.Id
 import org.springframework.data.r2dbc.repository.Query
 import org.springframework.data.relational.core.mapping.Table

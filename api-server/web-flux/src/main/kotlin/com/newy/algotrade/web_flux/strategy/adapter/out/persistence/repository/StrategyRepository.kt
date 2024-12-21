@@ -1,7 +1,7 @@
 package com.newy.algotrade.web_flux.strategy.adapter.out.persistence.repository
 
-import com.newy.algotrade.domain.chart.order.OrderType
-import com.newy.algotrade.domain.strategy.Strategy
+import com.newy.algotrade.chart.domain.order.OrderType
+import com.newy.algotrade.strategy.domain.Strategy
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table

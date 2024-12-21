@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.notification.adapter.out.persistence
 
-import com.newy.algotrade.domain.notification.NotificationApp
+import com.newy.algotrade.notification.domain.NotificationApp
 import com.newy.algotrade.notification.port.out.NotificationAppPort
 import com.newy.algotrade.web_flux.common.annotation.PersistenceAdapter
 import com.newy.algotrade.web_flux.notification.adapter.out.persistence.repository.NotificationAppR2dbcEntity

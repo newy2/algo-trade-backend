@@ -1,8 +1,8 @@
 package com.newy.algotrade.common.web.default_implement
 
+import com.newy.algotrade.common.domain.mapper.JsonConverter
 import com.newy.algotrade.common.web.http.FormData
 import com.newy.algotrade.common.web.http.HttpApiClient
-import com.newy.algotrade.domain.common.mapper.JsonConverter
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.*

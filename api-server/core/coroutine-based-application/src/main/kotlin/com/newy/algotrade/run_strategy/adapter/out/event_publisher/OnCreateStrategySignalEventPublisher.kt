@@ -1,8 +1,8 @@
 package com.newy.algotrade.run_strategy.adapter.out.event_publisher
 
+import com.newy.algotrade.chart.domain.strategy.StrategySignal
 import com.newy.algotrade.common.coroutine.EventBus
 import com.newy.algotrade.common.event.CreateStrategySignalEvent
-import com.newy.algotrade.domain.chart.strategy.StrategySignal
 import com.newy.algotrade.run_strategy.port.out.OnCreatedStrategySignalPort
 
 open class OnCreateStrategySignalEventPublisher(

@@ -1,11 +1,11 @@
 package com.newy.algotrade.unit.product_price.jackson
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.LsSecTrCode
-import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
-import com.newy.algotrade.domain.common.mapper.toObject
-import com.newy.algotrade.domain.product_price.jackson.LsSecProductPriceHttpResponse
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.common.domain.consts.LsSecTrCode
+import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
+import com.newy.algotrade.common.domain.mapper.toObject
+import com.newy.algotrade.product_price.domain.jackson.LsSecProductPriceHttpResponse
 import org.junit.jupiter.api.Test
 import java.time.Duration
 import java.time.OffsetDateTime

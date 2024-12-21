@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.common.consts
 
-import com.newy.algotrade.domain.common.consts.GlobalEnv
+import com.newy.algotrade.common.domain.consts.GlobalEnv
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals

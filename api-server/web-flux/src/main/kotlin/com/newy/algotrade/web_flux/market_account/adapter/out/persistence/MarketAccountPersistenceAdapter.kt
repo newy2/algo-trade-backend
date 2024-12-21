@@ -1,7 +1,7 @@
 package com.newy.algotrade.web_flux.market_account.adapter.out.persistence
 
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.market_account.MarketAccount
+import com.newy.algotrade.common.domain.consts.Market
+import com.newy.algotrade.market_account.domain.MarketAccount
 import com.newy.algotrade.market_account.port.out.MarketAccountPort
 import com.newy.algotrade.web_flux.market_account.adapter.out.persistence.repository.MarketAccountR2dbcEntity
 import com.newy.algotrade.web_flux.market_account.adapter.out.persistence.repository.MarketAccountRepository

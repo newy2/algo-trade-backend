@@ -1,13 +1,13 @@
 package com.newy.algotrade.unit.back_testing.adapter.`in`.web
 
 import com.newy.algotrade.back_testing.adapter.`in`.web.RunBackTestingController
-import com.newy.algotrade.domain.back_testing.BackTestingDataKey
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.order.OrderType
-import com.newy.algotrade.domain.chart.strategy.StrategySignal
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.product_price.ProductPriceKey
+import com.newy.algotrade.back_testing.domain.BackTestingDataKey
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.chart.domain.order.OrderType
+import com.newy.algotrade.chart.domain.strategy.StrategySignal
+import com.newy.algotrade.common.domain.consts.Market
+import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.product_price.domain.ProductPriceKey
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import java.time.Duration

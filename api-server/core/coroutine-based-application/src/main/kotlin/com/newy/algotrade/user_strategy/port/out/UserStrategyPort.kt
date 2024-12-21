@@ -1,7 +1,7 @@
 package com.newy.algotrade.user_strategy.port.out
 
-import com.newy.algotrade.domain.user_strategy.SetUserStrategy
-import com.newy.algotrade.domain.user_strategy.SetUserStrategyKey
+import com.newy.algotrade.user_strategy.domain.SetUserStrategy
+import com.newy.algotrade.user_strategy.domain.SetUserStrategyKey
 
 interface UserStrategyPort :
     SaveUserStrategyPort,

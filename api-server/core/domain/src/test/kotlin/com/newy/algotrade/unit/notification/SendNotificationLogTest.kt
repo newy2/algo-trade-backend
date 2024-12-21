@@ -1,11 +1,11 @@
 package com.newy.algotrade.unit.notification
 
-import com.newy.algotrade.domain.common.consts.NotificationAppType
-import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
-import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus.*
-import com.newy.algotrade.domain.common.consts.SlackNotificationRequestMessageFormat
-import com.newy.algotrade.domain.common.exception.PreconditionError
-import com.newy.algotrade.domain.notification.SendNotificationLog
+import com.newy.algotrade.common.domain.consts.NotificationAppType
+import com.newy.algotrade.common.domain.consts.SendNotificationLogStatus
+import com.newy.algotrade.common.domain.consts.SendNotificationLogStatus.*
+import com.newy.algotrade.common.domain.consts.SlackNotificationRequestMessageFormat
+import com.newy.algotrade.common.domain.exception.PreconditionError
+import com.newy.algotrade.notification.domain.SendNotificationLog
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

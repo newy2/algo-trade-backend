@@ -1,10 +1,10 @@
 package com.newy.algotrade.web_flux.product_price.adapter.out.external_system
 
+import com.newy.algotrade.common.domain.consts.GlobalEnv
+import com.newy.algotrade.common.domain.consts.Market
+import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.domain.mapper.JsonConverter
 import com.newy.algotrade.common.web.default_implement.DefaultWebSocketClient
-import com.newy.algotrade.domain.common.consts.GlobalEnv
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.common.mapper.JsonConverter
 import com.newy.algotrade.product_price.adapter.out.external_system.PollingProductPriceProxyAdapter
 import com.newy.algotrade.product_price.adapter.out.external_system.PollingProductPriceWithByBitWebSocket
 import com.newy.algotrade.product_price.adapter.out.external_system.PollingProductPriceWithHttpClient

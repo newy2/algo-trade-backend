@@ -1,9 +1,9 @@
 package com.newy.algotrade.web_flux.user_strategy.adapter.`in`.web.model
 
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.ProductCategory
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.common.helper.SelfValidating
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.common.domain.consts.ProductCategory
+import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.domain.helper.SelfValidating
 import com.newy.algotrade.user_strategy.port.`in`.model.SetUserStrategyCommand
 import jakarta.validation.constraints.Pattern
 

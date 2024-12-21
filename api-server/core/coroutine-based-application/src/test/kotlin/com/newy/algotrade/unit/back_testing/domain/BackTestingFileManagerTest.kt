@@ -1,9 +1,9 @@
 package com.newy.algotrade.unit.back_testing.domain
 
-import com.newy.algotrade.domain.back_testing.BackTestingDataKey
-import com.newy.algotrade.domain.back_testing.BackTestingFileManager
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.ProductType
+import com.newy.algotrade.back_testing.domain.BackTestingDataKey
+import com.newy.algotrade.back_testing.domain.BackTestingFileManager
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.common.domain.consts.ProductType
 import helpers.productPriceKey
 import org.junit.AfterClass
 import org.junit.jupiter.api.Assertions.assertFalse

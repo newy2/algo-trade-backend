@@ -1,8 +1,8 @@
 package com.newy.algotrade.product_price.service
 
-import com.newy.algotrade.domain.chart.DEFAULT_CANDLE_SIZE
-import com.newy.algotrade.domain.product_price.GetProductPriceHttpParam
-import com.newy.algotrade.domain.product_price.ProductPriceKey
+import com.newy.algotrade.chart.domain.DEFAULT_CANDLE_SIZE
+import com.newy.algotrade.product_price.domain.GetProductPriceHttpParam
+import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.product_price.port.`in`.ProductPriceQuery
 import com.newy.algotrade.product_price.port.out.ProductPricePort
 import com.newy.algotrade.product_price.port.out.SubscribablePollingProductPricePort

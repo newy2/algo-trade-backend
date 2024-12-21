@@ -1,12 +1,11 @@
 package com.newy.algotrade.run_strategy.adapter.out.volatile_storage
 
-import com.newy.algotrade.domain.chart.strategy.StrategySignal
-import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
-import com.newy.algotrade.domain.common.annotation.ForTesting
-import com.newy.algotrade.domain.run_strategy.StrategySignalHistoryKey
+import com.newy.algotrade.chart.domain.strategy.StrategySignal
+import com.newy.algotrade.chart.domain.strategy.StrategySignalHistory
+import com.newy.algotrade.run_strategy.domain.StrategySignalHistoryKey
 import com.newy.algotrade.run_strategy.port.out.StrategySignalHistoryPort
 
-@ForTesting
+@com.newy.algotrade.common.domain.annotation.ForTesting
 open class InMemoryStrategySignalHistoryStoreAdapter : StrategySignalHistoryPort {
     private val historyMap = mutableMapOf<StrategySignalHistoryKey, StrategySignalHistory>()
 

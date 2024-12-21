@@ -1,6 +1,6 @@
 package helpers
 
-import com.newy.algotrade.domain.chart.indicator.Indicator
+import com.newy.algotrade.chart.domain.indicator.Indicator
 import java.math.BigDecimal
 
 class FixedDecimalIndicator(

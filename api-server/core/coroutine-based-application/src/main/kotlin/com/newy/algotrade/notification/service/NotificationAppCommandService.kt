@@ -1,6 +1,6 @@
 package com.newy.algotrade.notification.service
 
-import com.newy.algotrade.domain.common.exception.DuplicateDataException
+import com.newy.algotrade.common.domain.exception.DuplicateDataException
 import com.newy.algotrade.notification.port.`in`.NotificationAppUseCase
 import com.newy.algotrade.notification.port.`in`.model.SetNotificationAppCommand
 import com.newy.algotrade.notification.port.out.ExistsHasNotificationAppPort

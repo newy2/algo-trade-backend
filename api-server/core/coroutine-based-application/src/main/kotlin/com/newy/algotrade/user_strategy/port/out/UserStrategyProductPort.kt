@@ -1,6 +1,6 @@
 package com.newy.algotrade.user_strategy.port.out
 
-import com.newy.algotrade.domain.user_strategy.UserStrategyKey
+import com.newy.algotrade.user_strategy.domain.UserStrategyKey
 
 interface UserStrategyProductPort :
     SaveAllUserStrategyProductPort,

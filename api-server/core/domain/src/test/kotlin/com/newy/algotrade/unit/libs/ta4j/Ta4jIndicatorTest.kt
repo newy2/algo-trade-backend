@@ -1,9 +1,12 @@
 package com.newy.algotrade.unit.libs.ta4j
 
-import com.newy.algotrade.domain.chart.*
-import com.newy.algotrade.domain.chart.indicator.ClosePriceIndicator
-import com.newy.algotrade.domain.chart.indicator.ConstDecimalIndicator
-import com.newy.algotrade.domain.chart.indicator.OpenPriceIndicator
+import com.newy.algotrade.chart.*
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.chart.domain.Candles
+import com.newy.algotrade.chart.domain.DEFAULT_CHART_FACTORY
+import com.newy.algotrade.chart.domain.indicator.ClosePriceIndicator
+import com.newy.algotrade.chart.domain.indicator.ConstDecimalIndicator
+import com.newy.algotrade.chart.domain.indicator.OpenPriceIndicator
 import com.newy.algotrade.study.libs.ta4j.TEST_TARGET_BAR_EXPECTED_VALUES
 import com.newy.algotrade.study.libs.ta4j.byBitKlineList
 import org.junit.jupiter.api.Assertions.assertEquals

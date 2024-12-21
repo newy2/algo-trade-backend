@@ -1,8 +1,8 @@
 package com.newy.algotrade.integration.notification.adapter.out.persistence
 
-import com.newy.algotrade.domain.common.consts.NotificationAppType
-import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
-import com.newy.algotrade.domain.notification.SendNotificationLog
+import com.newy.algotrade.common.domain.consts.NotificationAppType
+import com.newy.algotrade.common.domain.consts.SendNotificationLogStatus
+import com.newy.algotrade.notification.domain.SendNotificationLog
 import com.newy.algotrade.web_flux.notification.adapter.out.persistence.SendNotificationLogAdapter
 import com.newy.algotrade.web_flux.notification.adapter.out.persistence.repository.NotificationAppR2dbcEntity
 import com.newy.algotrade.web_flux.notification.adapter.out.persistence.repository.NotificationAppRepository

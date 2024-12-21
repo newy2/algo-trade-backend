@@ -1,10 +1,10 @@
 package com.newy.algotrade.unit.back_testing.domain
 
-import com.newy.algotrade.domain.back_testing.StringReporter
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.order.OrderType
-import com.newy.algotrade.domain.chart.strategy.StrategySignal
-import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
+import com.newy.algotrade.back_testing.domain.StringReporter
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.chart.domain.order.OrderType
+import com.newy.algotrade.chart.domain.strategy.StrategySignal
+import com.newy.algotrade.chart.domain.strategy.StrategySignalHistory
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName

@@ -1,7 +1,7 @@
 package com.newy.algotrade.product_price.port.`in`
 
-import com.newy.algotrade.domain.common.extension.ProductPrice
-import com.newy.algotrade.domain.product_price.ProductPriceKey
+import com.newy.algotrade.common.domain.extension.ProductPrice
+import com.newy.algotrade.product_price.domain.ProductPriceKey
 
 interface ProductPriceQuery :
     GetInitProductPriceQuery,

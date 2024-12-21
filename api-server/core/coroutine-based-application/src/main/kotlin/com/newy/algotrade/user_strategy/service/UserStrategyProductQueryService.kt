@@ -1,6 +1,6 @@
 package com.newy.algotrade.user_strategy.service
 
-import com.newy.algotrade.domain.user_strategy.UserStrategyKey
+import com.newy.algotrade.user_strategy.domain.UserStrategyKey
 import com.newy.algotrade.user_strategy.port.`in`.UserStrategyProductQuery
 import com.newy.algotrade.user_strategy.port.out.FindAllUserStrategyProductPort
 import com.newy.algotrade.user_strategy.port.out.FindUserStrategyProductPort

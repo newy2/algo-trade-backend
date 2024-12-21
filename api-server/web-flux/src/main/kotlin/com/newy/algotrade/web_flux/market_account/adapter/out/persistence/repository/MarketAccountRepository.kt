@@ -1,7 +1,7 @@
 package com.newy.algotrade.web_flux.market_account.adapter.out.persistence.repository
 
-import com.newy.algotrade.domain.market_account.MarketAccount
-import com.newy.algotrade.domain.market_account.MarketServer
+import com.newy.algotrade.market_account.domain.MarketAccount
+import com.newy.algotrade.market_account.domain.MarketServer
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table

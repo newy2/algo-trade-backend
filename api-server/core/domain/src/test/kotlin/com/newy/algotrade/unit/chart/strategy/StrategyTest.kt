@@ -1,8 +1,8 @@
 package com.newy.algotrade.unit.chart.strategy
 
-import com.newy.algotrade.domain.chart.order.OrderType
-import com.newy.algotrade.domain.chart.strategy.Strategy
-import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
+import com.newy.algotrade.chart.domain.order.OrderType
+import com.newy.algotrade.chart.domain.strategy.Strategy
+import com.newy.algotrade.chart.domain.strategy.StrategySignalHistory
 import helpers.BooleanRule
 import helpers.createOrderSignal
 import org.junit.jupiter.api.Assertions.assertEquals

@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.common.helper
 
-import com.newy.algotrade.domain.common.helper.SelfValidating
+import com.newy.algotrade.common.domain.helper.SelfValidating
 import jakarta.validation.ConstraintViolationException
 import jakarta.validation.constraints.NotBlank
 import org.junit.jupiter.api.Test

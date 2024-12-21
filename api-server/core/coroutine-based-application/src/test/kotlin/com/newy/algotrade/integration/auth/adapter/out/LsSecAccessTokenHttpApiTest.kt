@@ -1,9 +1,9 @@
 package com.newy.algotrade.integration.auth.adapter.out
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.newy.algotrade.auth.domain.PrivateApiInfo
+import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
 import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
-import com.newy.algotrade.domain.auth.PrivateApiInfo
-import com.newy.algotrade.domain.common.mapper.JsonConverterByJackson
 import helpers.BaseDisabledTest
 import helpers.TestEnv
 import kotlinx.coroutines.runBlocking

@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.common.error
 
-import com.newy.algotrade.domain.common.exception.DuplicateDataException
-import com.newy.algotrade.domain.common.exception.NotFoundRowException
+import com.newy.algotrade.common.domain.exception.DuplicateDataException
+import com.newy.algotrade.common.domain.exception.NotFoundRowException
 import com.newy.algotrade.web_flux.common.error.ErrorResponse
 import com.newy.algotrade.web_flux.common.error.FieldError
 import com.newy.algotrade.web_flux.common.error.GlobalExceptionHandler

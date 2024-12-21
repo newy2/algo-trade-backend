@@ -1,6 +1,6 @@
 package com.newy.algotrade.run_strategy.port.`in`
 
-import com.newy.algotrade.domain.user_strategy.UserStrategyKey
+import com.newy.algotrade.user_strategy.domain.UserStrategyKey
 
 interface RunnableStrategyUseCase :
     SetRunnableStrategyUseCase,

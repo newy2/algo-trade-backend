@@ -1,8 +1,8 @@
 package com.newy.algotrade.unit.chart.strategy
 
-import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
-import com.newy.algotrade.domain.chart.strategy.Strategy
-import com.newy.algotrade.domain.chart.strategy.custom.BuyTripleRSIStrategy
+import com.newy.algotrade.chart.domain.DEFAULT_CHART_FACTORY
+import com.newy.algotrade.chart.domain.strategy.Strategy
+import com.newy.algotrade.chart.domain.strategy.custom.BuyTripleRSIStrategy
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertTrue

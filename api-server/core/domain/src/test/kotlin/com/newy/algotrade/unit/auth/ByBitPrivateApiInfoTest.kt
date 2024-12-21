@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.auth
 
-import com.newy.algotrade.domain.auth.ByBitPrivateApiInfo
+import com.newy.algotrade.auth.domain.ByBitPrivateApiInfo
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 

@@ -1,8 +1,8 @@
 package helpers
 
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.order.OrderType
-import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.chart.domain.order.OrderType
+import com.newy.algotrade.chart.domain.strategy.StrategySignal
 import java.time.Duration
 import java.time.OffsetDateTime
 

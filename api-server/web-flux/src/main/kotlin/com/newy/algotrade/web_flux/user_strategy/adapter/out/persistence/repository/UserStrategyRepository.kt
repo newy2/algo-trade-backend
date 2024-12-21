@@ -1,6 +1,6 @@
 package com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository
 
-import com.newy.algotrade.domain.user_strategy.SetUserStrategy
+import com.newy.algotrade.user_strategy.domain.SetUserStrategy
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table

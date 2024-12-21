@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.chart
 
-import com.newy.algotrade.domain.chart.Candle
+import com.newy.algotrade.chart.domain.Candle
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertDoesNotThrow

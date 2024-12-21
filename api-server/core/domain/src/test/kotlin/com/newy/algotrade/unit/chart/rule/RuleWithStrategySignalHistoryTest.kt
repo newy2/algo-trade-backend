@@ -1,15 +1,15 @@
 package com.newy.algotrade.unit.chart.rule
 
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.Candles
-import com.newy.algotrade.domain.chart.DEFAULT_CHART_FACTORY
-import com.newy.algotrade.domain.chart.Rule
-import com.newy.algotrade.domain.chart.indicator.ClosePriceIndicator
-import com.newy.algotrade.domain.chart.order.OrderType
-import com.newy.algotrade.domain.chart.rule.StopGainRule
-import com.newy.algotrade.domain.chart.rule.StopLossRule
-import com.newy.algotrade.domain.chart.strategy.StrategySignal
-import com.newy.algotrade.domain.chart.strategy.StrategySignalHistory
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.chart.domain.Candles
+import com.newy.algotrade.chart.domain.DEFAULT_CHART_FACTORY
+import com.newy.algotrade.chart.domain.Rule
+import com.newy.algotrade.chart.domain.indicator.ClosePriceIndicator
+import com.newy.algotrade.chart.domain.order.OrderType
+import com.newy.algotrade.chart.domain.rule.StopGainRule
+import com.newy.algotrade.chart.domain.rule.StopLossRule
+import com.newy.algotrade.chart.domain.strategy.StrategySignal
+import com.newy.algotrade.chart.domain.strategy.StrategySignalHistory
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

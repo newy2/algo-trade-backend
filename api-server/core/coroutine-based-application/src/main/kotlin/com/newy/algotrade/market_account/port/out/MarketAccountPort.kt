@@ -1,8 +1,8 @@
 package com.newy.algotrade.market_account.port.out
 
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.market_account.MarketAccount
-import com.newy.algotrade.domain.market_account.MarketServer
+import com.newy.algotrade.common.domain.consts.Market
+import com.newy.algotrade.market_account.domain.MarketAccount
+import com.newy.algotrade.market_account.domain.MarketServer
 
 interface MarketAccountPort :
     ExistsMarketAccountPort,

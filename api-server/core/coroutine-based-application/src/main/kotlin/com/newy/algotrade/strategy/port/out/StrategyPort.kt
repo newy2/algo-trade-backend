@@ -1,6 +1,6 @@
 package com.newy.algotrade.strategy.port.out
 
-import com.newy.algotrade.domain.strategy.Strategy
+import com.newy.algotrade.strategy.domain.Strategy
 
 interface StrategyPort :
     FindAllStrategiesPort,

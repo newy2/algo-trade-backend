@@ -1,8 +1,8 @@
 package com.newy.algotrade.web_flux.run_strategy.adapter.out.persistence.repository
 
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.chart.order.OrderType
-import com.newy.algotrade.domain.chart.strategy.StrategySignal
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.chart.domain.order.OrderType
+import com.newy.algotrade.chart.domain.strategy.StrategySignal
 import kotlinx.coroutines.flow.Flow
 import org.springframework.data.annotation.Id
 import org.springframework.data.domain.Limit

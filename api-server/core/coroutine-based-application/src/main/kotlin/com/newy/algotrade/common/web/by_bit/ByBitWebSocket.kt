@@ -2,9 +2,9 @@ package com.newy.algotrade.common.web.by_bit
 
 import com.newy.algotrade.common.coroutine.Polling
 import com.newy.algotrade.common.coroutine.PollingCallback
+import com.newy.algotrade.common.domain.mapper.JsonConverter
 import com.newy.algotrade.common.web.socket.WebSocketClient
 import com.newy.algotrade.common.web.socket.WebSocketClientListener
-import com.newy.algotrade.domain.common.mapper.JsonConverter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import kotlin.coroutines.CoroutineContext

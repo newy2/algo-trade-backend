@@ -1,16 +1,16 @@
 package com.newy.algotrade.unit.notification.service
 
 import com.newy.algotrade.common.coroutine.EventBus
+import com.newy.algotrade.common.domain.consts.NotificationAppType
+import com.newy.algotrade.common.domain.consts.NotificationRequestMessageFormat
+import com.newy.algotrade.common.domain.consts.SendNotificationLogStatus
+import com.newy.algotrade.common.domain.consts.SendNotificationLogStatus.*
+import com.newy.algotrade.common.domain.consts.SlackNotificationRequestMessageFormat
+import com.newy.algotrade.common.domain.exception.NotFoundRowException
+import com.newy.algotrade.common.domain.exception.PreconditionError
 import com.newy.algotrade.common.event.SendNotificationEvent
 import com.newy.algotrade.common.web.http.HttpApiClient
-import com.newy.algotrade.domain.common.consts.NotificationAppType
-import com.newy.algotrade.domain.common.consts.NotificationRequestMessageFormat
-import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus
-import com.newy.algotrade.domain.common.consts.SendNotificationLogStatus.*
-import com.newy.algotrade.domain.common.consts.SlackNotificationRequestMessageFormat
-import com.newy.algotrade.domain.common.exception.NotFoundRowException
-import com.newy.algotrade.domain.common.exception.PreconditionError
-import com.newy.algotrade.domain.notification.SendNotificationLog
+import com.newy.algotrade.notification.domain.SendNotificationLog
 import com.newy.algotrade.notification.port.`in`.model.SendNotificationCommand
 import com.newy.algotrade.notification.port.out.FindSendNotificationLogPort
 import com.newy.algotrade.notification.port.out.SaveRequestedStatusSendNotificationLogPort

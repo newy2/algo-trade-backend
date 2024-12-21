@@ -1,10 +1,10 @@
 package helpers
 
-import com.newy.algotrade.domain.chart.Candle
-import com.newy.algotrade.domain.common.consts.Market
-import com.newy.algotrade.domain.common.consts.ProductType
-import com.newy.algotrade.domain.product_price.ProductPriceKey
-import com.newy.algotrade.domain.user_strategy.UserStrategyKey
+import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.common.domain.consts.Market
+import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.product_price.domain.ProductPriceKey
+import com.newy.algotrade.user_strategy.domain.UserStrategyKey
 import java.time.Duration
 import java.time.OffsetDateTime
 

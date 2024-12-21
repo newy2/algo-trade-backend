@@ -1,8 +1,8 @@
 package com.newy.algotrade.notification.port.`in`.model
 
-import com.newy.algotrade.domain.common.consts.NotificationAppType
-import com.newy.algotrade.domain.common.helper.SelfValidating
-import com.newy.algotrade.domain.notification.NotificationApp
+import com.newy.algotrade.common.domain.consts.NotificationAppType
+import com.newy.algotrade.common.domain.helper.SelfValidating
+import com.newy.algotrade.notification.domain.NotificationApp
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
 
