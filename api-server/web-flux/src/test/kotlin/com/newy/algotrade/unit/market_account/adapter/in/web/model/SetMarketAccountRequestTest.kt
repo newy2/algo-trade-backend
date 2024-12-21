@@ -4,7 +4,7 @@ import com.newy.algotrade.common.domain.consts.GlobalEnv
 import com.newy.algotrade.common.domain.consts.Market
 import com.newy.algotrade.market_account.adapter.`in`.web.model.SetMarketAccountRequest
 import com.newy.algotrade.market_account.port.`in`.model.SetMarketAccountCommand
-import helpers.TestEnv
+import helpers.spring.TestEnv
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

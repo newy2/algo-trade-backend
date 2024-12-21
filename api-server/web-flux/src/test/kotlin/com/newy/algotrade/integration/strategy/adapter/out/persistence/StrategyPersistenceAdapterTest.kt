@@ -4,7 +4,7 @@ import com.newy.algotrade.chart.domain.order.OrderType
 import com.newy.algotrade.strategy.adapter.out.persistence.StrategyPersistenceAdapter
 import com.newy.algotrade.strategy.adapter.out.persistence.repository.StrategyR2dbcEntity
 import com.newy.algotrade.strategy.adapter.out.persistence.repository.StrategyRepository
-import helpers.BaseDbTest
+import helpers.spring.BaseDbTest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*

@@ -7,7 +7,7 @@ import com.newy.algotrade.notification.adapter.out.persistence.repository.Notifi
 import com.newy.algotrade.notification.adapter.out.persistence.repository.NotificationAppRepository
 import com.newy.algotrade.notification.adapter.out.persistence.repository.SendNotificationLogRepository
 import com.newy.algotrade.notification.domain.SendNotificationLog
-import helpers.BaseDbTest
+import helpers.spring.BaseDbTest
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*

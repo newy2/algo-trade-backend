@@ -7,7 +7,7 @@ import com.newy.algotrade.market_account.adapter.`in`.web.model.SetMarketAccount
 import com.newy.algotrade.market_account.domain.MarketAccount
 import com.newy.algotrade.market_account.domain.MarketServer
 import com.newy.algotrade.market_account.port.`in`.model.SetMarketAccountCommand
-import helpers.TestEnv
+import helpers.spring.TestEnv
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

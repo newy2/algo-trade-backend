@@ -1,6 +1,6 @@
 package com.newy.algotrade.study.spring
 
-import helpers.TestServerPort
+import helpers.spring.TestServerPort
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

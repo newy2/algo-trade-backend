@@ -4,7 +4,7 @@ import com.newy.algotrade.common.domain.consts.GlobalEnv
 import com.newy.algotrade.common.domain.consts.NotificationAppType
 import com.newy.algotrade.notification.adapter.`in`.web.model.SetNotificationAppRequest
 import com.newy.algotrade.notification.port.`in`.model.SetNotificationAppCommand
-import helpers.TestEnv
+import helpers.spring.TestEnv
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

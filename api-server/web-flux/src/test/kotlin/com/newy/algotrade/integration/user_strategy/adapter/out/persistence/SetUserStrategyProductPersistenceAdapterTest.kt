@@ -11,7 +11,7 @@ import com.newy.algotrade.strategy.adapter.out.persistence.repository.StrategyR2
 import com.newy.algotrade.strategy.adapter.out.persistence.repository.StrategyRepository
 import com.newy.algotrade.user_strategy.adapter.out.persistence.UserStrategyProductPersistenceAdapter
 import com.newy.algotrade.user_strategy.adapter.out.persistence.repository.*
-import helpers.BaseDbTest
+import helpers.spring.BaseDbTest
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.toList

@@ -2,14 +2,8 @@ plugins {
     id("kotlin-conventions")
 }
 
-tasks.test {
-    // 테스트 JVM 에게 옵션 전달하기
-    systemProperties.putAll(System.getProperties().toMap() as Map<String, String>)
-}
-
 dependencies {
-    api(project(":api-server:core:domain"))
-    api("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
 
     testImplementation(kotlin("test"))

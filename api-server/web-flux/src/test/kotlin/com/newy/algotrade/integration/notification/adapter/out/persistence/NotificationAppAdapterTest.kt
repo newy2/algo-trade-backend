@@ -3,7 +3,7 @@ package com.newy.algotrade.integration.notification.adapter.out.persistence
 import com.newy.algotrade.common.domain.consts.NotificationAppType
 import com.newy.algotrade.notification.adapter.out.persistence.NotificationAppAdapter
 import com.newy.algotrade.notification.domain.NotificationApp
-import helpers.BaseDbTest
+import helpers.spring.BaseDbTest
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test

@@ -18,7 +18,7 @@ import com.newy.algotrade.strategy.adapter.out.persistence.repository.StrategyR2
 import com.newy.algotrade.strategy.adapter.out.persistence.repository.StrategyRepository
 import com.newy.algotrade.user_strategy.port.`in`.UserStrategyUseCase
 import com.newy.algotrade.user_strategy.port.`in`.model.SetUserStrategyCommand
-import helpers.BaseDbTest
+import helpers.spring.BaseDbTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.DisplayName

@@ -1,5 +1,6 @@
 plugins {
     id("spring-conventions")
+    id("coroutine-conventions")
 }
 
 tasks.test {
@@ -8,7 +9,7 @@ tasks.test {
 }
 
 dependencies {
-    implementation(project(":api-server:core:coroutine-based-application"))
+    implementation(project(":api-server:core:domain"))
     implementation("org.springframework.boot:spring-boot-starter-webflux")
     implementation("org.springframework.boot:spring-boot-starter-data-r2dbc")
     implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")

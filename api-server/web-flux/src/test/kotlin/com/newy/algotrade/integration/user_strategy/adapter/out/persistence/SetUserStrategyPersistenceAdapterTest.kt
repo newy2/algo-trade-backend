@@ -14,7 +14,7 @@ import com.newy.algotrade.user_strategy.adapter.out.persistence.repository.UserS
 import com.newy.algotrade.user_strategy.adapter.out.persistence.repository.UserStrategyRepository
 import com.newy.algotrade.user_strategy.domain.SetUserStrategy
 import com.newy.algotrade.user_strategy.domain.SetUserStrategyKey
-import helpers.BaseDbTest
+import helpers.spring.BaseDbTest
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

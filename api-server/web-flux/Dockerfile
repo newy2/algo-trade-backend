@@ -3,7 +3,6 @@ WORKDIR /app
 
 # Gradle 설정 파일 복사
 COPY settings.gradle.kts gradle.properties /app/
-COPY api-server/core/coroutine-based-application/build.gradle.kts /app/api-server/core/coroutine-based-application/
 COPY api-server/core/domain/build.gradle.kts /app/api-server/core/domain/
 COPY api-server/web-flux/build.gradle.kts /app/api-server/web-flux/
 COPY buildSrc/src /app/buildSrc/src

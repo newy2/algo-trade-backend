@@ -5,7 +5,7 @@ import com.newy.algotrade.common.domain.consts.NotificationAppType
 import com.newy.algotrade.notification.adapter.`in`.web.SetNotificationAppController
 import com.newy.algotrade.notification.adapter.`in`.web.model.SetNotificationAppRequest
 import com.newy.algotrade.notification.port.`in`.model.SetNotificationAppCommand
-import helpers.TestEnv
+import helpers.spring.TestEnv
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

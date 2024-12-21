@@ -6,7 +6,7 @@ import com.newy.algotrade.market_account.adapter.out.persistence.repository.Mark
 import com.newy.algotrade.market_account.adapter.out.persistence.repository.MarketServerRepository
 import com.newy.algotrade.market_account.domain.MarketAccount
 import com.newy.algotrade.market_account.domain.MarketServer
-import helpers.BaseDbTest
+import helpers.spring.BaseDbTest
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.*

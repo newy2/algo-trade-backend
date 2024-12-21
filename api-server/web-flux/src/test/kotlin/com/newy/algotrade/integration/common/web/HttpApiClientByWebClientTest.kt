@@ -8,7 +8,7 @@ import com.newy.algotrade.common.web.http.FormData
 import com.newy.algotrade.common.web.http.HttpApiClient
 import com.newy.algotrade.common.web.http.get
 import com.newy.algotrade.common.web.http.post
-import helpers.TestServerPort
+import helpers.spring.TestServerPort
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

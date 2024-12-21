@@ -1,4 +1,4 @@
-package com.newy.algotrade.study.kotlin.coroutine
+package com.newy.algotrade.study.coroutine
 
 import kotlinx.coroutines.cancelChildren
 import kotlinx.coroutines.delay

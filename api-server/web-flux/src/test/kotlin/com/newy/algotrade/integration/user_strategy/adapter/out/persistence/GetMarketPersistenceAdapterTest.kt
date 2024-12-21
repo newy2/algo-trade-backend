@@ -5,7 +5,7 @@ import com.newy.algotrade.market_account.port.`in`.SetMarketAccountUseCase
 import com.newy.algotrade.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.user_strategy.adapter.out.persistence.FindMarketPersistenceAdapter
 import com.newy.algotrade.user_strategy.adapter.out.persistence.repository.MarketRepositoryForStrategy
-import helpers.BaseDbTest
+import helpers.spring.BaseDbTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

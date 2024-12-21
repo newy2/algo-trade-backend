@@ -4,7 +4,7 @@ import com.newy.algotrade.common.domain.consts.ProductType
 import com.newy.algotrade.user_strategy.adapter.out.persistence.FindProductPersistenceAdapter
 import com.newy.algotrade.user_strategy.adapter.out.persistence.repository.MarketRepositoryForStrategy
 import com.newy.algotrade.user_strategy.adapter.out.persistence.repository.ProductRepository
-import helpers.BaseDbTest
+import helpers.spring.BaseDbTest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions.*

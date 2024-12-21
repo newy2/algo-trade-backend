@@ -1,4 +1,4 @@
-package helpers
+package helpers.spring
 
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeAll
