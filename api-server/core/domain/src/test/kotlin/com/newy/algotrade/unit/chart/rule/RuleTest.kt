@@ -2,7 +2,6 @@ package com.newy.algotrade.unit.chart.rule
 
 import com.newy.algotrade.chart.domain.indicator.ConstDecimalIndicator
 import com.newy.algotrade.chart.domain.rule.*
-import com.newy.algotrade.chart.rule.*
 import helpers.BooleanArrayRule
 import helpers.BooleanRule
 import helpers.FixedDecimalIndicator
