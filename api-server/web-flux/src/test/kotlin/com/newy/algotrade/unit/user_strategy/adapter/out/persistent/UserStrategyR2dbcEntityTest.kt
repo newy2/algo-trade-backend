@@ -3,9 +3,9 @@ package com.newy.algotrade.unit.user_strategy.adapter.out.persistent
 import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.common.domain.consts.ProductCategory
 import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.user_strategy.adapter.out.persistence.repository.UserStrategyR2dbcEntity
 import com.newy.algotrade.user_strategy.domain.SetUserStrategy
 import com.newy.algotrade.user_strategy.domain.SetUserStrategyKey
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.UserStrategyR2dbcEntity
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 

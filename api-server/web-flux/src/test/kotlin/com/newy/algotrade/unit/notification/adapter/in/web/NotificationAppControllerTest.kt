@@ -2,9 +2,9 @@ package com.newy.algotrade.unit.notification.adapter.`in`.web
 
 import com.newy.algotrade.common.domain.consts.GlobalEnv
 import com.newy.algotrade.common.domain.consts.NotificationAppType
+import com.newy.algotrade.notification.adapter.`in`.web.SetNotificationAppController
+import com.newy.algotrade.notification.adapter.`in`.web.model.SetNotificationAppRequest
 import com.newy.algotrade.notification.port.`in`.model.SetNotificationAppCommand
-import com.newy.algotrade.web_flux.notification.adapter.`in`.web.SetNotificationAppController
-import com.newy.algotrade.web_flux.notification.adapter.`in`.web.model.SetNotificationAppRequest
 import helpers.TestEnv
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions

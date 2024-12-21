@@ -3,8 +3,8 @@ package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 import com.newy.algotrade.common.domain.consts.Market
 import com.newy.algotrade.market_account.port.`in`.SetMarketAccountUseCase
 import com.newy.algotrade.market_account.port.`in`.model.SetMarketAccountCommand
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.FindMarketPersistenceAdapter
-import com.newy.algotrade.web_flux.user_strategy.adapter.out.persistence.repository.MarketRepositoryForStrategy
+import com.newy.algotrade.user_strategy.adapter.out.persistence.FindMarketPersistenceAdapter
+import com.newy.algotrade.user_strategy.adapter.out.persistence.repository.MarketRepositoryForStrategy
 import helpers.BaseDbTest
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test

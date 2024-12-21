@@ -3,9 +3,9 @@ package com.newy.algotrade.unit.user_strategy.adapter.`in`.web
 import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.common.domain.consts.ProductCategory
 import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.user_strategy.adapter.`in`.web.SetUserStrategyController
+import com.newy.algotrade.user_strategy.adapter.`in`.web.model.SetUserStrategyRequest
 import com.newy.algotrade.user_strategy.port.`in`.model.SetUserStrategyCommand
-import com.newy.algotrade.web_flux.user_strategy.adapter.`in`.web.SetUserStrategyController
-import com.newy.algotrade.web_flux.user_strategy.adapter.`in`.web.model.SetUserStrategyRequest
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test

@@ -1,9 +1,9 @@
 package com.newy.algotrade.integration.strategy.adapter.out.persistence
 
 import com.newy.algotrade.chart.domain.order.OrderType
-import com.newy.algotrade.web_flux.strategy.adapter.out.persistence.StrategyPersistenceAdapter
-import com.newy.algotrade.web_flux.strategy.adapter.out.persistence.repository.StrategyR2dbcEntity
-import com.newy.algotrade.web_flux.strategy.adapter.out.persistence.repository.StrategyRepository
+import com.newy.algotrade.strategy.adapter.out.persistence.StrategyPersistenceAdapter
+import com.newy.algotrade.strategy.adapter.out.persistence.repository.StrategyR2dbcEntity
+import com.newy.algotrade.strategy.adapter.out.persistence.repository.StrategyRepository
 import helpers.BaseDbTest
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
