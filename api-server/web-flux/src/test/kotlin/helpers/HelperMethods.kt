@@ -1,6 +1,8 @@
 package helpers
 
 import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.chart.domain.order.OrderType
+import com.newy.algotrade.chart.domain.strategy.StrategySignal
 import com.newy.algotrade.common.domain.consts.Market
 import com.newy.algotrade.common.domain.consts.ProductType
 import com.newy.algotrade.product_price.domain.ProductPriceKey
@@ -37,6 +39,13 @@ fun productPrice(
         amount.toBigDecimal(),
         amount.toBigDecimal(),
         0.toBigDecimal(),
+    )
+
+fun createOrderSignal(tradeType: OrderType) =
+    StrategySignal(
+        tradeType,
+        Candle.TimeRange(Duration.ofMinutes(1), OffsetDateTime.now()),
+        1000.0.toBigDecimal()
     )
 
 fun getSystemProperty(name: String): String =

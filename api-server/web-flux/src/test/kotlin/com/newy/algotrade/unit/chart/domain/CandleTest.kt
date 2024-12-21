@@ -1,4 +1,4 @@
-package com.newy.algotrade.unit.chart
+package com.newy.algotrade.unit.chart.domain
 
 import com.newy.algotrade.chart.domain.Candle
 import org.junit.jupiter.api.Assertions.assertNotEquals

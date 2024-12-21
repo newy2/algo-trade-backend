@@ -3,7 +3,6 @@ WORKDIR /app
 
 # Gradle 설정 파일 복사
 COPY settings.gradle.kts gradle.properties /app/
-COPY api-server/core/domain/build.gradle.kts /app/api-server/core/domain/
 COPY api-server/web-flux/build.gradle.kts /app/api-server/web-flux/
 COPY buildSrc/src /app/buildSrc/src
 COPY buildSrc/build.gradle.kts /app/buildSrc
@@ -12,7 +11,6 @@ COPY buildSrc/build.gradle.kts /app/buildSrc
 RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
 
 # 소스 코드 복사 (변경 가능성 높음)
-COPY api-server/core /app/api-server/core
 COPY api-server/web-flux /app/api-server/web-flux
 
 # web-flux 모듈 빌드

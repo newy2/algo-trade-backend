@@ -1,4 +1,4 @@
-package com.newy.algotrade.unit.auth.jackson
+package com.newy.algotrade.unit.auth.domain
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.auth.domain.jackson.LsSecAccessTokenHttpResponse

@@ -1,4 +1,4 @@
-package com.newy.algotrade.unit.product_price.jackson
+package com.newy.algotrade.unit.product_price.domain.jackson
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.chart.domain.Candle

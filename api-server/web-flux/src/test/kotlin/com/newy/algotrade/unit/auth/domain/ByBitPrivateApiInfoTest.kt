@@ -1,4 +1,4 @@
-package com.newy.algotrade.unit.auth
+package com.newy.algotrade.unit.auth.domain
 
 import com.newy.algotrade.auth.domain.ByBitPrivateApiInfo
 import org.junit.jupiter.api.Test

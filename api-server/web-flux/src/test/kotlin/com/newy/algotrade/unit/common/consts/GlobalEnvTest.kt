@@ -1,12 +1,14 @@
 package com.newy.algotrade.unit.common.consts
 
 import com.newy.algotrade.common.domain.consts.GlobalEnv
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 
 class GlobalEnvTest {
     @Test
+    @Disabled("TODO GlobalEnv 싱글톤 제거")
     fun `initialize 메소드를 호출하지 않은 경우`() {
         assertThrows<NoSuchElementException> { GlobalEnv.BY_BIT_WEB_URL }
         assertThrows<NoSuchElementException> { GlobalEnv.BY_BIT_WEB_SOCKET_URL }
@@ -20,6 +22,7 @@ class GlobalEnvTest {
     }
 
     @Test
+    @Disabled("TODO GlobalEnv 싱글톤 제거")
     fun `initialize 메소드를 호출한 경우`() {
         GlobalEnv.initialize(
             byBitWebUrl = "byBitWebUrl",

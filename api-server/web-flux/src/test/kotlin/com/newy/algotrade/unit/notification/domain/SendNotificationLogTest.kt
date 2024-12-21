@@ -1,4 +1,4 @@
-package com.newy.algotrade.unit.notification
+package com.newy.algotrade.unit.notification.domain
 
 import com.newy.algotrade.common.domain.consts.NotificationAppType
 import com.newy.algotrade.common.domain.consts.SendNotificationLogStatus
