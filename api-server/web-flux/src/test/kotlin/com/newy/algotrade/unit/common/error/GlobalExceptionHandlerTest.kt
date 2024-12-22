@@ -2,9 +2,9 @@ package com.newy.algotrade.unit.common.error
 
 import com.newy.algotrade.common.exception.DuplicateDataException
 import com.newy.algotrade.common.exception.NotFoundRowException
-import com.newy.algotrade.common.spring.error.ErrorResponse
-import com.newy.algotrade.common.spring.error.FieldError
-import com.newy.algotrade.common.spring.error.GlobalExceptionHandler
+import com.newy.algotrade.spring.error.ErrorResponse
+import com.newy.algotrade.spring.error.FieldError
+import com.newy.algotrade.spring.error.GlobalExceptionHandler
 import jakarta.validation.ConstraintViolation
 import jakarta.validation.ConstraintViolationException
 import jakarta.validation.Path
