@@ -2,7 +2,7 @@
 
 package com.newy.algotrade.common.spring.web
 
-import com.newy.algotrade.common.domain.mapper.JsonConverter
+import com.newy.algotrade.common.mapper.JsonConverter
 import com.newy.algotrade.common.web.http.FormData
 import com.newy.algotrade.common.web.http.HttpApiClient
 import kotlinx.coroutines.reactive.awaitSingle

@@ -1,4 +1,4 @@
-package com.newy.algotrade.common.domain.mapper
+package com.newy.algotrade.common.mapper
 
 import com.fasterxml.jackson.databind.InjectableValues
 import com.fasterxml.jackson.databind.ObjectMapper

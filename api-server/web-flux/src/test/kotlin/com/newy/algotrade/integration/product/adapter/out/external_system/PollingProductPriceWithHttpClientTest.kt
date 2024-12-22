@@ -6,8 +6,8 @@ import com.newy.algotrade.auth.domain.PrivateApiInfo
 import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.common.consts.Market
 import com.newy.algotrade.common.coroutine.PollingCallback
-import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
 import com.newy.algotrade.common.extension.ProductPrice
+import com.newy.algotrade.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.product_price.adapter.out.external_system.FetchByBitProductPrice
 import com.newy.algotrade.product_price.adapter.out.external_system.FetchLsSecProductPrice

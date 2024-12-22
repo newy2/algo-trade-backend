@@ -3,7 +3,7 @@ package com.newy.algotrade.integration.auth.adapter.out
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi
 import com.newy.algotrade.auth.domain.PrivateApiInfo
-import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
+import com.newy.algotrade.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
 import helpers.BaseDisabledTest
 import helpers.TestEnv

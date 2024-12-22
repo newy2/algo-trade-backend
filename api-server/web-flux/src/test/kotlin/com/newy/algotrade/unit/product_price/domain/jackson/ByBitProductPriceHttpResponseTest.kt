@@ -2,8 +2,8 @@ package com.newy.algotrade.unit.product_price.domain.jackson
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.chart.domain.Candle
-import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
-import com.newy.algotrade.common.domain.mapper.toObject
+import com.newy.algotrade.common.mapper.JsonConverterByJackson
+import com.newy.algotrade.common.mapper.toObject
 import com.newy.algotrade.product_price.domain.jackson.ByBitProductPriceHttpResponse
 import org.junit.jupiter.api.Test
 import java.time.Instant

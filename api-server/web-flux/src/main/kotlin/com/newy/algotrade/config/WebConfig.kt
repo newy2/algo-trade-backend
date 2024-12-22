@@ -2,7 +2,7 @@ package com.newy.algotrade.config
 
 import com.newy.algotrade.common.consts.GlobalEnv
 import com.newy.algotrade.common.consts.NotificationAppType
-import com.newy.algotrade.common.domain.mapper.JsonConverter
+import com.newy.algotrade.common.mapper.JsonConverter
 import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.common.web.http.HttpApiClient
 import okhttp3.OkHttpClient

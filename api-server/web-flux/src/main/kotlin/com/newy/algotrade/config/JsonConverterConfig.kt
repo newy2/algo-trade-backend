@@ -2,8 +2,8 @@ package com.newy.algotrade.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
-import com.newy.algotrade.common.domain.mapper.JsonConverter
-import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
+import com.newy.algotrade.common.mapper.JsonConverter
+import com.newy.algotrade.common.mapper.JsonConverterByJackson
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 

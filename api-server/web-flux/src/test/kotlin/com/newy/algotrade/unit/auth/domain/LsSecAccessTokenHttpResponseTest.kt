@@ -2,8 +2,8 @@ package com.newy.algotrade.unit.auth.domain
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.auth.domain.jackson.LsSecAccessTokenHttpResponse
-import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
-import com.newy.algotrade.common.domain.mapper.toObject
+import com.newy.algotrade.common.mapper.JsonConverterByJackson
+import com.newy.algotrade.common.mapper.toObject
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
