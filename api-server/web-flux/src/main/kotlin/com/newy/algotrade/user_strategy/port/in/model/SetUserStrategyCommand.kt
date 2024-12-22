@@ -3,8 +3,8 @@ package com.newy.algotrade.user_strategy.port.`in`.model
 import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.common.consts.ProductCategory
 import com.newy.algotrade.common.consts.ProductType
-import com.newy.algotrade.common.domain.libs.validation.NotBlankElements
 import com.newy.algotrade.common.helper.SelfValidating
+import com.newy.algotrade.common.libs.validation.NotBlankElements
 import com.newy.algotrade.user_strategy.domain.SetUserStrategy
 import com.newy.algotrade.user_strategy.domain.SetUserStrategyKey
 import jakarta.validation.constraints.Min

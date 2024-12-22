@@ -1,4 +1,4 @@
-package com.newy.algotrade.common.domain.libs.validation
+package com.newy.algotrade.common.libs.validation
 
 import jakarta.validation.Constraint
 import jakarta.validation.ConstraintValidator

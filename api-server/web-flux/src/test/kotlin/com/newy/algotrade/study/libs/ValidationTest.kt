@@ -1,6 +1,6 @@
 package com.newy.algotrade.study.libs
 
-import com.newy.algotrade.common.domain.libs.validation.NotBlankElements
+import com.newy.algotrade.common.libs.validation.NotBlankElements
 import jakarta.validation.*
 import jakarta.validation.constraints.Min
 import jakarta.validation.constraints.NotBlank
