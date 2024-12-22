@@ -18,7 +18,7 @@ open class EventBus<T> {
     }
 
     fun addListener(
-        @com.newy.algotrade.common.domain.annotation.ForTesting coroutineContext: CoroutineContext = Dispatchers.IO,
+        @ForTesting coroutineContext: CoroutineContext = Dispatchers.IO,
         callback: suspend (T) -> Unit
     ) = CoroutineScope(coroutineContext).launch {
         events.asSharedFlow().collect(callback)

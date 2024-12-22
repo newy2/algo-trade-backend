@@ -14,7 +14,7 @@ import kotlin.coroutines.CoroutineContext
 open class DefaultWebSocketClient(
     val client: OkHttpClient,
     private val url: String,
-    @com.newy.algotrade.common.domain.annotation.ForTesting private val coroutineContext: CoroutineContext = Dispatchers.IO,
+    @ForTesting private val coroutineContext: CoroutineContext = Dispatchers.IO,
     pingInfo: WebSocketPing = WebSocketPing(20 * 1000, ""),
     listener: WebSocketClientListener = WebSocketClientListener(),
 ) : WebSocketClient(pingInfo, listener) {

@@ -1,5 +1,6 @@
 package com.newy.algotrade.product_price.adapter.out.external_system
 
+import com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi
 import com.newy.algotrade.auth.domain.PrivateApiInfo
 import com.newy.algotrade.common.domain.consts.GlobalEnv
 import com.newy.algotrade.common.domain.consts.Market
@@ -16,7 +17,7 @@ class SpringFetchProductPriceProxyAdapter(
     mapOf(
         Market.LS_SEC to FetchLsSecProductPrice(
             lsSecHttpApiClient,
-            com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi(lsSecHttpApiClient),
+            LsSecAccessTokenHttpApi(lsSecHttpApiClient),
             PrivateApiInfo(
                 key = globalEnv.LS_SEC_API_KEY,
                 secret = globalEnv.LS_SEC_API_SECRET,

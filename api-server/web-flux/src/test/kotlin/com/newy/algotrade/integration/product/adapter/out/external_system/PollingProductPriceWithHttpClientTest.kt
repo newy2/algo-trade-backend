@@ -1,6 +1,7 @@
 package com.newy.algotrade.integration.product.adapter.out.external_system
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi
 import com.newy.algotrade.auth.domain.PrivateApiInfo
 import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.common.coroutine.PollingCallback
@@ -134,7 +135,7 @@ class PollingLsSecProductPriceTest : BaseDisabledTest {
         TestEnv.LsSec.url,
         JsonConverterByJackson(jacksonObjectMapper())
     )
-    private val accessTokenLoader = com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi(client)
+    private val accessTokenLoader = LsSecAccessTokenHttpApi(client)
     private val api = FetchProductPriceProxyAdapter(
         mapOf(
             Market.LS_SEC to FetchLsSecProductPrice(

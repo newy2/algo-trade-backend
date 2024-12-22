@@ -1,6 +1,7 @@
 package com.newy.algotrade.product_price.adapter.out.external_system
 
 import com.newy.algotrade.common.coroutine.PollingCallback
+import com.newy.algotrade.common.domain.annotation.ForTesting
 import com.newy.algotrade.common.domain.consts.ProductType
 import com.newy.algotrade.common.domain.extension.ProductPrice
 import com.newy.algotrade.common.domain.mapper.JsonConverter
@@ -16,7 +17,7 @@ class PollingProductPriceWithByBitWebSocket(
     private val productType: ProductType,
     client: WebSocketClient,
     jsonConverter: JsonConverter,
-    @com.newy.algotrade.common.domain.annotation.ForTesting coroutineContext: CoroutineContext = Dispatchers.IO,
+    @ForTesting coroutineContext: CoroutineContext = Dispatchers.IO,
     pollingCallback: PollingCallback<ProductPriceKey, List<ProductPrice>>,
 ) : ByBitWebSocket<ProductPriceKey, List<ProductPrice>>(client, jsonConverter, coroutineContext, pollingCallback) {
     override suspend fun parsingJson(message: String): Pair<ProductPriceKey, List<ProductPrice>>? {

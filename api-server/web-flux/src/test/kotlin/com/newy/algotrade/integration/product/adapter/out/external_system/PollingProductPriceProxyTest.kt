@@ -1,6 +1,7 @@
 package com.newy.algotrade.integration.product.adapter.out.external_system
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi
 import com.newy.algotrade.auth.domain.PrivateApiInfo
 import com.newy.algotrade.common.domain.consts.Market
 import com.newy.algotrade.common.domain.consts.ProductType
@@ -50,7 +51,7 @@ private fun newClient(
             ) to PollingProductPriceWithHttpClient(
                 loader = FetchLsSecProductPrice(
                     client = lsSecHttpApiClient,
-                    accessTokenLoader = com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi(
+                    accessTokenLoader = LsSecAccessTokenHttpApi(
                         lsSecHttpApiClient
                     ),
                     masterUserInfo = PrivateApiInfo(

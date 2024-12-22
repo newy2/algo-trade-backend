@@ -1,6 +1,7 @@
 package com.newy.algotrade.integration.back_testing.adapter.out.web
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi
 import com.newy.algotrade.auth.domain.PrivateApiInfo
 import com.newy.algotrade.back_testing.adapter.`in`.web.CreateBackTestingDataController
 import com.newy.algotrade.back_testing.adapter.out.persistence.BackTestingDataFileStorageAdapter
@@ -45,7 +46,7 @@ private fun loadProductPriceProxy() =
         mapOf(
             Market.LS_SEC to FetchLsSecProductPrice(
                 lsSecHttpApiClient(),
-                com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi(lsSecHttpApiClient()),
+                LsSecAccessTokenHttpApi(lsSecHttpApiClient()),
                 PrivateApiInfo(
                     key = TestEnv.LsSec.apiKey,
                     secret = TestEnv.LsSec.apiSecret,
