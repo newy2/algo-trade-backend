@@ -1,7 +1,7 @@
 package com.newy.algotrade.study.kotlin
 
-import com.newy.algotrade.common.domain.consts.Market
-import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.consts.Market
+import com.newy.algotrade.common.consts.ProductType
 import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.unit.common.helper.RESOURCE_CONTENT
 import com.newy.algotrade.unit.common.helper.RESOURCE_PATH

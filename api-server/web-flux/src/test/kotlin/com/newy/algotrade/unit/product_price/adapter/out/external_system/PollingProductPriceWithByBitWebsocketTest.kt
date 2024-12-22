@@ -2,8 +2,8 @@ package com.newy.algotrade.unit.product_price.adapter.out.external_system
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.chart.domain.Candle
-import com.newy.algotrade.common.domain.consts.Market
-import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.consts.Market
+import com.newy.algotrade.common.consts.ProductType
 import com.newy.algotrade.common.domain.extension.ProductPrice
 import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
 import com.newy.algotrade.common.web.by_bit.ByBitWebSocketPing

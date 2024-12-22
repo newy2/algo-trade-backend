@@ -1,8 +1,8 @@
 package com.newy.algotrade.user_strategy.adapter.out.persistence.repository
 
 import com.newy.algotrade.chart.domain.Candle
-import com.newy.algotrade.common.domain.consts.Market
-import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.consts.Market
+import com.newy.algotrade.common.consts.ProductType
 import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.user_strategy.domain.UserStrategyKey
 import io.r2dbc.spi.Row

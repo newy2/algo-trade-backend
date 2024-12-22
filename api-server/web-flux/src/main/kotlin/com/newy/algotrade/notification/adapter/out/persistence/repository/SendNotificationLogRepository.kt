@@ -1,7 +1,7 @@
 package com.newy.algotrade.notification.adapter.out.persistence.repository
 
-import com.newy.algotrade.common.domain.consts.NotificationAppType
-import com.newy.algotrade.common.domain.consts.SendNotificationLogStatus
+import com.newy.algotrade.common.consts.NotificationAppType
+import com.newy.algotrade.common.consts.SendNotificationLogStatus
 import com.newy.algotrade.notification.domain.SendNotificationLog
 import io.r2dbc.spi.Row
 import org.springframework.core.convert.converter.Converter

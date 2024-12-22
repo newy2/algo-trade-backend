@@ -1,4 +1,4 @@
-package com.newy.algotrade.common.domain.consts
+package com.newy.algotrade.common.consts
 
 enum class LsSecTrCode(val code: String) {
     GET_PRODUCT_PRICE_BY_DAY("t8410"),

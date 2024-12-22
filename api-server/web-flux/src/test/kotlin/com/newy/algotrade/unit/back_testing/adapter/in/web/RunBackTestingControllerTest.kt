@@ -5,8 +5,8 @@ import com.newy.algotrade.back_testing.domain.BackTestingDataKey
 import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.chart.domain.order.OrderType
 import com.newy.algotrade.chart.domain.strategy.StrategySignal
-import com.newy.algotrade.common.domain.consts.Market
-import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.consts.Market
+import com.newy.algotrade.common.consts.ProductType
 import com.newy.algotrade.product_price.domain.ProductPriceKey
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test

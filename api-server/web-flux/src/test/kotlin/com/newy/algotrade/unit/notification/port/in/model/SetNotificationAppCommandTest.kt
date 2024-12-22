@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.notification.port.`in`.model
 
-import com.newy.algotrade.common.domain.consts.NotificationAppType
+import com.newy.algotrade.common.consts.NotificationAppType
 import com.newy.algotrade.notification.domain.NotificationApp
 import com.newy.algotrade.notification.port.`in`.model.SetNotificationAppCommand
 import jakarta.validation.ConstraintViolationException

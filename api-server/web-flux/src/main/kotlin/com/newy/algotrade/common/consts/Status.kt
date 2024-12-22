@@ -1,4 +1,4 @@
-package com.newy.algotrade.common.domain.consts
+package com.newy.algotrade.common.consts
 
 enum class SendNotificationLogStatus(displayName: String) {
     REQUESTED("요청완료"),

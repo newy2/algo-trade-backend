@@ -1,6 +1,6 @@
 package com.newy.algotrade.config
 
-import com.newy.algotrade.common.domain.consts.GlobalEnv
+import com.newy.algotrade.common.consts.GlobalEnv
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.toList

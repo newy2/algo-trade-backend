@@ -1,4 +1,4 @@
-package com.newy.algotrade.common.domain.consts
+package com.newy.algotrade.common.consts
 
 object GlobalEnv {
     private val envVariables: MutableMap<String, Any> = mutableMapOf()

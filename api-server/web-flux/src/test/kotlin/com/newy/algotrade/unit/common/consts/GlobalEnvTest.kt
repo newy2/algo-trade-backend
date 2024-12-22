@@ -1,6 +1,6 @@
 package com.newy.algotrade.unit.common.consts
 
-import com.newy.algotrade.common.domain.consts.GlobalEnv
+import com.newy.algotrade.common.consts.GlobalEnv
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows

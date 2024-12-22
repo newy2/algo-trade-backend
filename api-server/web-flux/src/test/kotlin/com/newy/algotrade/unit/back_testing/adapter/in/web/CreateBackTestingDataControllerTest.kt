@@ -4,8 +4,8 @@ import com.newy.algotrade.back_testing.adapter.`in`.web.CreateBackTestingDataCon
 import com.newy.algotrade.back_testing.domain.BackTestingDataKey
 import com.newy.algotrade.back_testing.port.`in`.CreateBackTestingDataUseCase
 import com.newy.algotrade.back_testing.port.`in`.SetBackTestingDataUseCase
-import com.newy.algotrade.common.domain.consts.Market
-import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.consts.Market
+import com.newy.algotrade.common.consts.ProductType
 import com.newy.algotrade.common.domain.extension.ProductPrice
 import com.newy.algotrade.product_price.domain.ProductPriceKey
 import kotlinx.coroutines.test.runTest

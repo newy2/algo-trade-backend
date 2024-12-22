@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.notification.adapter.`in`.web.model
 
-import com.newy.algotrade.common.domain.consts.GlobalEnv
-import com.newy.algotrade.common.domain.consts.NotificationAppType
+import com.newy.algotrade.common.consts.GlobalEnv
+import com.newy.algotrade.common.consts.NotificationAppType
 import com.newy.algotrade.notification.adapter.`in`.web.model.SetNotificationAppRequest
 import com.newy.algotrade.notification.port.`in`.model.SetNotificationAppCommand
 import helpers.spring.TestEnv

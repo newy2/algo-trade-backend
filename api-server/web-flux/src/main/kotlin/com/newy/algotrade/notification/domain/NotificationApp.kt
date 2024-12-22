@@ -1,6 +1,6 @@
 package com.newy.algotrade.notification.domain
 
-import com.newy.algotrade.common.domain.consts.NotificationAppType
+import com.newy.algotrade.common.consts.NotificationAppType
 
 data class NotificationApp(
     val id: Long = 0,

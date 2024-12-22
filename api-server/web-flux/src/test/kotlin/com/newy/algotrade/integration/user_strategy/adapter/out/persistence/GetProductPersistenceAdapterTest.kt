@@ -1,6 +1,6 @@
 package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
-import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.consts.ProductType
 import com.newy.algotrade.user_strategy.adapter.out.persistence.FindProductPersistenceAdapter
 import com.newy.algotrade.user_strategy.adapter.out.persistence.repository.MarketRepositoryForStrategy
 import com.newy.algotrade.user_strategy.adapter.out.persistence.repository.ProductRepository

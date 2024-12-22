@@ -1,6 +1,6 @@
 package com.newy.algotrade.integration.market_account.adapter.out.persistence
 
-import com.newy.algotrade.common.domain.consts.Market
+import com.newy.algotrade.common.consts.Market
 import com.newy.algotrade.market_account.adapter.out.persistence.MarketAccountPersistenceAdapter
 import com.newy.algotrade.market_account.adapter.out.persistence.repository.MarketAccountRepository
 import com.newy.algotrade.market_account.adapter.out.persistence.repository.MarketServerRepository

@@ -1,9 +1,9 @@
 package com.newy.algotrade.notification.domain
 
-import com.newy.algotrade.common.domain.consts.NotificationAppType
-import com.newy.algotrade.common.domain.consts.NotificationRequestMessageFormat
-import com.newy.algotrade.common.domain.consts.SendNotificationLogStatus
-import com.newy.algotrade.common.domain.consts.SendNotificationLogStatus.*
+import com.newy.algotrade.common.consts.NotificationAppType
+import com.newy.algotrade.common.consts.NotificationRequestMessageFormat
+import com.newy.algotrade.common.consts.SendNotificationLogStatus
+import com.newy.algotrade.common.consts.SendNotificationLogStatus.*
 import com.newy.algotrade.common.domain.exception.PreconditionError
 
 data class SendNotificationLog(

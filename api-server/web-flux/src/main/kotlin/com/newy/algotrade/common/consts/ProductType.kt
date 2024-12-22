@@ -1,4 +1,4 @@
-package com.newy.algotrade.common.domain.consts
+package com.newy.algotrade.common.consts
 
 enum class ProductType(val displayName: String) {
     SPOT("현물"),

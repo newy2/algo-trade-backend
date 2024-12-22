@@ -9,8 +9,8 @@ import com.newy.algotrade.back_testing.domain.BackTestingDataKey
 import com.newy.algotrade.back_testing.domain.BackTestingFileManager
 import com.newy.algotrade.back_testing.service.CreateBackTestingDataService
 import com.newy.algotrade.back_testing.service.SetBackTestingDataService
-import com.newy.algotrade.common.domain.consts.Market
-import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.consts.Market
+import com.newy.algotrade.common.consts.ProductType
 import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
 import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.product_price.adapter.out.external_system.FetchByBitProductPrice

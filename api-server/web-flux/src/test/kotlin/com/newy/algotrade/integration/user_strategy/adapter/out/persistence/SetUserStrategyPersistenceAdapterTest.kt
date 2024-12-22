@@ -2,9 +2,9 @@ package com.newy.algotrade.integration.user_strategy.adapter.out.persistence
 
 import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.chart.domain.order.OrderType
-import com.newy.algotrade.common.domain.consts.Market
-import com.newy.algotrade.common.domain.consts.ProductCategory
-import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.consts.Market
+import com.newy.algotrade.common.consts.ProductCategory
+import com.newy.algotrade.common.consts.ProductType
 import com.newy.algotrade.market_account.port.`in`.SetMarketAccountUseCase
 import com.newy.algotrade.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.strategy.adapter.out.persistence.repository.StrategyR2dbcEntity

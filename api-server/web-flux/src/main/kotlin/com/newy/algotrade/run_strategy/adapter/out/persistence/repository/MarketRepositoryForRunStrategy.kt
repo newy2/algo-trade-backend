@@ -1,6 +1,6 @@
 package com.newy.algotrade.run_strategy.adapter.out.persistence.repository
 
-import com.newy.algotrade.common.domain.consts.Market
+import com.newy.algotrade.common.consts.Market
 import org.springframework.data.annotation.Id
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository

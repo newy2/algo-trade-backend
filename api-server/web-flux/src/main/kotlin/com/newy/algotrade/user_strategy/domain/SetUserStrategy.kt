@@ -1,8 +1,8 @@
 package com.newy.algotrade.user_strategy.domain
 
 import com.newy.algotrade.chart.domain.Candle
-import com.newy.algotrade.common.domain.consts.ProductCategory
-import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.consts.ProductCategory
+import com.newy.algotrade.common.consts.ProductType
 
 data class SetUserStrategy(
     val setUserStrategyKey: SetUserStrategyKey,

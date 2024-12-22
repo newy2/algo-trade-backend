@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.market_account.adapter.`in`.web
 
-import com.newy.algotrade.common.domain.consts.GlobalEnv
-import com.newy.algotrade.common.domain.consts.Market
+import com.newy.algotrade.common.consts.GlobalEnv
+import com.newy.algotrade.common.consts.Market
 import com.newy.algotrade.market_account.adapter.`in`.web.SetMarketAccountController
 import com.newy.algotrade.market_account.adapter.`in`.web.model.SetMarketAccountRequest
 import com.newy.algotrade.market_account.domain.MarketAccount

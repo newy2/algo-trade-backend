@@ -4,8 +4,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpApi
 import com.newy.algotrade.auth.domain.PrivateApiInfo
 import com.newy.algotrade.chart.domain.Candle
+import com.newy.algotrade.common.consts.Market
 import com.newy.algotrade.common.coroutine.PollingCallback
-import com.newy.algotrade.common.domain.consts.Market
 import com.newy.algotrade.common.domain.extension.ProductPrice
 import com.newy.algotrade.common.domain.mapper.JsonConverterByJackson
 import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient

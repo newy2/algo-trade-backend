@@ -1,8 +1,8 @@
 package com.newy.algotrade.unit.user_strategy.adapter.`in`.web.model
 
 import com.newy.algotrade.chart.domain.Candle
-import com.newy.algotrade.common.domain.consts.ProductCategory
-import com.newy.algotrade.common.domain.consts.ProductType
+import com.newy.algotrade.common.consts.ProductCategory
+import com.newy.algotrade.common.consts.ProductType
 import com.newy.algotrade.user_strategy.adapter.`in`.web.model.SetUserStrategyRequest
 import jakarta.validation.ConstraintViolationException
 import org.junit.jupiter.api.Test

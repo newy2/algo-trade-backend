@@ -1,6 +1,5 @@
 package com.newy.algotrade.common.consts
 
-import com.newy.algotrade.common.domain.consts.LsSecTrCode
 import com.newy.algotrade.common.web.http.HttpApiRateLimit
 
 object ByBitHttpApiInfo {
