@@ -4,8 +4,8 @@ import com.newy.algotrade.auth.adpter.out.external_system.LsSecAccessTokenHttpAp
 import com.newy.algotrade.auth.domain.PrivateApiInfo
 import com.newy.algotrade.common.consts.GlobalEnv
 import com.newy.algotrade.common.consts.Market
-import com.newy.algotrade.common.spring.annotation.ExternalSystemAdapter
 import com.newy.algotrade.common.web.http.HttpApiClient
+import com.newy.algotrade.spring.annotation.ExternalSystemAdapter
 import org.springframework.beans.factory.annotation.Qualifier
 
 @ExternalSystemAdapter

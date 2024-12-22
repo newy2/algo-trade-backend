@@ -1,9 +1,9 @@
 package com.newy.algotrade.notification.adapter.`in`.web
 
-import com.newy.algotrade.common.spring.annotation.WebAdapter
 import com.newy.algotrade.common.spring.web.BooleanResponse
 import com.newy.algotrade.notification.adapter.`in`.web.model.SetNotificationAppRequest
 import com.newy.algotrade.notification.port.`in`.SetNotificationAppUseCase
+import com.newy.algotrade.spring.annotation.WebAdapter
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping

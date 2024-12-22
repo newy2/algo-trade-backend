@@ -4,10 +4,10 @@ import com.newy.algotrade.common.consts.GlobalEnv
 import com.newy.algotrade.common.consts.Market
 import com.newy.algotrade.common.consts.ProductType
 import com.newy.algotrade.common.mapper.JsonConverter
-import com.newy.algotrade.common.spring.annotation.ExternalSystemAdapter
 import com.newy.algotrade.common.web.default_implement.DefaultWebSocketClient
 import com.newy.algotrade.product_price.port.out.OnReceivePollingPricePort
 import com.newy.algotrade.product_price.port.out.ProductPricePort
+import com.newy.algotrade.spring.annotation.ExternalSystemAdapter
 import okhttp3.OkHttpClient
 
 @ExternalSystemAdapter

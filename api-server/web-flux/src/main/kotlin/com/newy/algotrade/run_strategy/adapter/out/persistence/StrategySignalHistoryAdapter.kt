@@ -4,7 +4,6 @@ import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.chart.domain.strategy.StrategySignal
 import com.newy.algotrade.chart.domain.strategy.StrategySignalHistory
 import com.newy.algotrade.common.exception.NotFoundRowException
-import com.newy.algotrade.common.spring.annotation.PersistenceAdapter
 import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.run_strategy.adapter.out.persistence.repository.ProductRepositoryForRunStrategy
 import com.newy.algotrade.run_strategy.adapter.out.persistence.repository.StrategyRepositoryForRunStrategy
@@ -12,6 +11,7 @@ import com.newy.algotrade.run_strategy.adapter.out.persistence.repository.Strate
 import com.newy.algotrade.run_strategy.adapter.out.persistence.repository.StrategySignalRepository
 import com.newy.algotrade.run_strategy.domain.StrategySignalHistoryKey
 import com.newy.algotrade.run_strategy.port.out.StrategySignalHistoryPort
+import com.newy.algotrade.spring.annotation.PersistenceAdapter
 import kotlinx.coroutines.flow.toList
 import org.springframework.data.domain.Limit
 
