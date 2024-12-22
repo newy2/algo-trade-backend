@@ -3,7 +3,7 @@ package com.newy.algotrade.product_price.adapter.out.external_system
 import com.newy.algotrade.common.annotation.ForTesting
 import com.newy.algotrade.common.coroutine.PollingCallback
 import com.newy.algotrade.common.coroutine.PollingJob
-import com.newy.algotrade.common.domain.extension.ProductPrice
+import com.newy.algotrade.common.extension.ProductPrice
 import com.newy.algotrade.product_price.domain.GetProductPriceHttpParam
 import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.product_price.port.out.ProductPricePort

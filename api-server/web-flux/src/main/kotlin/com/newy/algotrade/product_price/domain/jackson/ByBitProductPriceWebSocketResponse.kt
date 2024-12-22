@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.JsonNode
 import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.common.consts.Market
 import com.newy.algotrade.common.consts.ProductType
-import com.newy.algotrade.common.domain.extension.ProductPrice
+import com.newy.algotrade.common.extension.ProductPrice
 import com.newy.algotrade.product_price.domain.ProductPriceKey
 import java.time.Duration
 

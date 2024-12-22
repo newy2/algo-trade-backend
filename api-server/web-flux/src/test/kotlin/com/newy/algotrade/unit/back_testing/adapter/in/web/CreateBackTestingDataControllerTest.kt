@@ -6,7 +6,7 @@ import com.newy.algotrade.back_testing.port.`in`.CreateBackTestingDataUseCase
 import com.newy.algotrade.back_testing.port.`in`.SetBackTestingDataUseCase
 import com.newy.algotrade.common.consts.Market
 import com.newy.algotrade.common.consts.ProductType
-import com.newy.algotrade.common.domain.extension.ProductPrice
+import com.newy.algotrade.common.extension.ProductPrice
 import com.newy.algotrade.product_price.domain.ProductPriceKey
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Assertions.assertEquals

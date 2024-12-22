@@ -1,4 +1,4 @@
-package com.newy.algotrade.common.domain.extension
+package com.newy.algotrade.common.extension
 
 import java.math.BigDecimal
 

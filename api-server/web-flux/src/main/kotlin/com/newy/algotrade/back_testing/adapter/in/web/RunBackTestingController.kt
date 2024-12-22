@@ -7,7 +7,7 @@ import com.newy.algotrade.back_testing.domain.BackTestingDataKey
 import com.newy.algotrade.back_testing.domain.BackTestingFileManager
 import com.newy.algotrade.chart.domain.strategy.StrategySignalHistory
 import com.newy.algotrade.chart.domain.strategy.TrafficLight
-import com.newy.algotrade.common.domain.extension.ProductPrice
+import com.newy.algotrade.common.extension.ProductPrice
 import com.newy.algotrade.product_price.adapter.out.volatile_storage.InMemoryCandlesStoreAdapter
 import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.product_price.port.`in`.ProductPriceQuery

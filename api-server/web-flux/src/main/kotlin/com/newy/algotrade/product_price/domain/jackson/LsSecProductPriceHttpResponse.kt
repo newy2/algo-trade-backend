@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer
 import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.common.consts.LsSecTrCode
-import com.newy.algotrade.common.domain.extension.ProductPrice
+import com.newy.algotrade.common.extension.ProductPrice
 import java.time.Duration
 import java.time.OffsetDateTime
 import java.time.ZoneOffset

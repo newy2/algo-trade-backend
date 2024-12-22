@@ -1,7 +1,7 @@
 package com.newy.algotrade.product_price.adapter.out.external_system
 
 import com.newy.algotrade.common.consts.ByBitHttpApiInfo
-import com.newy.algotrade.common.domain.extension.ProductPrice
+import com.newy.algotrade.common.extension.ProductPrice
 import com.newy.algotrade.common.web.http.HttpApiClient
 import com.newy.algotrade.common.web.http.get
 import com.newy.algotrade.product_price.domain.GetProductPriceHttpParam

@@ -3,7 +3,7 @@ package com.newy.algotrade.product_price.adapter.out.external_system
 import com.newy.algotrade.auth.domain.PrivateApiInfo
 import com.newy.algotrade.auth.port.out.FindAccessTokenPort
 import com.newy.algotrade.common.consts.LsSecHttpApiInfo
-import com.newy.algotrade.common.domain.extension.ProductPrice
+import com.newy.algotrade.common.extension.ProductPrice
 import com.newy.algotrade.common.web.http.HttpApiClient
 import com.newy.algotrade.common.web.http.post
 import com.newy.algotrade.product_price.domain.GetProductPriceHttpParam

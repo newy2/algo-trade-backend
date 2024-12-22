@@ -2,7 +2,7 @@ package com.newy.algotrade.back_testing.adapter.out.persistence
 
 import com.newy.algotrade.back_testing.domain.BackTestingDataKey
 import com.newy.algotrade.back_testing.port.out.FindBackTestingDataPort
-import com.newy.algotrade.common.domain.extension.ProductPrice
+import com.newy.algotrade.common.extension.ProductPrice
 import com.newy.algotrade.product_price.domain.GetProductPriceHttpParam
 import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.product_price.port.out.OnReceivePollingPricePort

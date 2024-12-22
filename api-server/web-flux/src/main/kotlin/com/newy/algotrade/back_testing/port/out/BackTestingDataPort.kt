@@ -1,7 +1,7 @@
 package com.newy.algotrade.back_testing.port.out
 
 import com.newy.algotrade.back_testing.domain.BackTestingDataKey
-import com.newy.algotrade.common.domain.extension.ProductPrice
+import com.newy.algotrade.common.extension.ProductPrice
 
 interface BackTestingDataPort :
     FindBackTestingDataPort,

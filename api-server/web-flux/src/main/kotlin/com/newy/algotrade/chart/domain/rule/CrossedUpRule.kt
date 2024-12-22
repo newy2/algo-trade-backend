@@ -4,7 +4,7 @@ import com.newy.algotrade.chart.domain.Rule
 import com.newy.algotrade.chart.domain.indicator.ConstDecimalIndicator
 import com.newy.algotrade.chart.domain.indicator.Indicator
 import com.newy.algotrade.chart.domain.strategy.StrategySignalHistory
-import com.newy.algotrade.common.domain.extension.compare
+import com.newy.algotrade.common.extension.compare
 
 open class CrossedUpRule(private val upper: Indicator, private val lower: Indicator) : Rule {
     constructor(upper: Indicator, threshold: Number) : this(upper, ConstDecimalIndicator(threshold))

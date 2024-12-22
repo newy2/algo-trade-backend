@@ -1,7 +1,7 @@
 package com.newy.algotrade.product_price.service
 
 import com.newy.algotrade.chart.domain.Candles
-import com.newy.algotrade.common.domain.extension.ProductPrice
+import com.newy.algotrade.common.extension.ProductPrice
 import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.product_price.port.`in`.CandlesUseCase
 import com.newy.algotrade.product_price.port.`in`.ProductPriceQuery
