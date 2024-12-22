@@ -1,4 +1,4 @@
-package com.newy.algotrade.config
+package com.newy.algotrade.spring.config
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper

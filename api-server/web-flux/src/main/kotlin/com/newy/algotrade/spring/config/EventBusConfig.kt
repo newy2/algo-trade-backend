@@ -1,4 +1,4 @@
-package com.newy.algotrade.config
+package com.newy.algotrade.spring.config
 
 import com.newy.algotrade.common.coroutine.EventBus
 import com.newy.algotrade.common.event.CreateStrategySignalEvent

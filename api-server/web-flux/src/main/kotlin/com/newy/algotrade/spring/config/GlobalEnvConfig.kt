@@ -1,4 +1,4 @@
-package com.newy.algotrade.config
+package com.newy.algotrade.spring.config
 
 import com.newy.algotrade.common.consts.GlobalEnv
 import kotlinx.coroutines.async

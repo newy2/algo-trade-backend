@@ -1,4 +1,4 @@
-package com.newy.algotrade.config
+package com.newy.algotrade.spring.config
 
 import com.newy.algotrade.notification.adapter.out.persistence.repository.SendNotificationLogReadingConverter
 import com.newy.algotrade.user_strategy.adapter.out.persistence.repository.UserStrategyKeyReadingConverter
