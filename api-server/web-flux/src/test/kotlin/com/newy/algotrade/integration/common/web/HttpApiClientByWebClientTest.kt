@@ -3,11 +3,11 @@ package com.newy.algotrade.integration.common.web
 import com.fasterxml.jackson.annotation.JacksonInject
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.common.mapper.JsonConverterByJackson
-import com.newy.algotrade.common.spring.web.HttpApiClientByWebClient
 import com.newy.algotrade.common.web.http.FormData
 import com.newy.algotrade.common.web.http.HttpApiClient
 import com.newy.algotrade.common.web.http.get
 import com.newy.algotrade.common.web.http.post
+import com.newy.algotrade.spring.web.HttpApiClientByWebClient
 import helpers.spring.TestServerPort
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.MockResponse

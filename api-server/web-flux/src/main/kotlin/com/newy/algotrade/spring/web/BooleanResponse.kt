@@ -1,4 +1,4 @@
-package com.newy.algotrade.common.spring.web
+package com.newy.algotrade.spring.web
 
 data class BooleanResponse(
     val result: Boolean

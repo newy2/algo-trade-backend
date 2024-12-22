@@ -1,6 +1,6 @@
 @file:Suppress("UNCHECKED_CAST")
 
-package com.newy.algotrade.common.spring.web
+package com.newy.algotrade.spring.web
 
 import com.newy.algotrade.common.mapper.JsonConverter
 import com.newy.algotrade.common.web.http.FormData
