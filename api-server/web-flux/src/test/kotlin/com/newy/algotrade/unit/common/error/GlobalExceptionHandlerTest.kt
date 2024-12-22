@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.common.error
 
-import com.newy.algotrade.common.domain.exception.DuplicateDataException
-import com.newy.algotrade.common.domain.exception.NotFoundRowException
+import com.newy.algotrade.common.exception.DuplicateDataException
+import com.newy.algotrade.common.exception.NotFoundRowException
 import com.newy.algotrade.common.spring.error.ErrorResponse
 import com.newy.algotrade.common.spring.error.FieldError
 import com.newy.algotrade.common.spring.error.GlobalExceptionHandler

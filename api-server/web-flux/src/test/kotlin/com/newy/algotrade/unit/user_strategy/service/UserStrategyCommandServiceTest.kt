@@ -4,8 +4,8 @@ import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.common.consts.ProductCategory
 import com.newy.algotrade.common.consts.ProductType
 import com.newy.algotrade.common.coroutine.EventBus
-import com.newy.algotrade.common.domain.exception.NotFoundRowException
 import com.newy.algotrade.common.event.CreateUserStrategyEvent
+import com.newy.algotrade.common.exception.NotFoundRowException
 import com.newy.algotrade.strategy.port.`in`.HasStrategyQuery
 import com.newy.algotrade.user_strategy.domain.Product
 import com.newy.algotrade.user_strategy.domain.SetUserStrategy

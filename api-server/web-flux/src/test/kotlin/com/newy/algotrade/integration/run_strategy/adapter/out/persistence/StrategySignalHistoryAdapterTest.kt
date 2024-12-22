@@ -6,7 +6,7 @@ import com.newy.algotrade.chart.domain.strategy.StrategySignal
 import com.newy.algotrade.common.consts.Market
 import com.newy.algotrade.common.consts.ProductCategory
 import com.newy.algotrade.common.consts.ProductType
-import com.newy.algotrade.common.domain.exception.NotFoundRowException
+import com.newy.algotrade.common.exception.NotFoundRowException
 import com.newy.algotrade.market_account.port.`in`.SetMarketAccountUseCase
 import com.newy.algotrade.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.product_price.domain.ProductPriceKey

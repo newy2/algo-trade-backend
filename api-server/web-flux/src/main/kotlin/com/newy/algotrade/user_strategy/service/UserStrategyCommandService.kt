@@ -1,8 +1,8 @@
 package com.newy.algotrade.user_strategy.service
 
 import com.newy.algotrade.common.coroutine.EventBus
-import com.newy.algotrade.common.domain.exception.NotFoundRowException
 import com.newy.algotrade.common.event.CreateUserStrategyEvent
+import com.newy.algotrade.common.exception.NotFoundRowException
 import com.newy.algotrade.strategy.port.`in`.HasStrategyQuery
 import com.newy.algotrade.user_strategy.port.`in`.UserStrategyUseCase
 import com.newy.algotrade.user_strategy.port.`in`.model.SetUserStrategyCommand

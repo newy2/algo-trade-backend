@@ -1,8 +1,8 @@
 package com.newy.algotrade.unit.strategy.service
 
 import com.newy.algotrade.chart.domain.order.OrderType
-import com.newy.algotrade.common.domain.exception.InitializedError
-import com.newy.algotrade.common.domain.exception.NotFoundRowException
+import com.newy.algotrade.common.exception.InitializedError
+import com.newy.algotrade.common.exception.NotFoundRowException
 import com.newy.algotrade.strategy.domain.Strategy
 import com.newy.algotrade.strategy.port.out.ExistsStrategyPort
 import com.newy.algotrade.strategy.port.out.FindAllStrategiesPort

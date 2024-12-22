@@ -4,7 +4,7 @@ import com.newy.algotrade.common.consts.NotificationAppType
 import com.newy.algotrade.common.consts.NotificationRequestMessageFormat
 import com.newy.algotrade.common.consts.SendNotificationLogStatus
 import com.newy.algotrade.common.consts.SendNotificationLogStatus.*
-import com.newy.algotrade.common.domain.exception.PreconditionError
+import com.newy.algotrade.common.exception.PreconditionError
 
 data class SendNotificationLog(
     val sendNotificationLogId: Long,

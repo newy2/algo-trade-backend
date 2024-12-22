@@ -1,3 +1,3 @@
-package com.newy.algotrade.common.domain.exception
+package com.newy.algotrade.common.exception
 
 open class ServerError(message: String) : RuntimeException(message)

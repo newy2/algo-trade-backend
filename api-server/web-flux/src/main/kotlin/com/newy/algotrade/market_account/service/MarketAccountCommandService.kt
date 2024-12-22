@@ -1,7 +1,7 @@
 package com.newy.algotrade.market_account.service
 
-import com.newy.algotrade.common.domain.exception.DuplicateDataException
-import com.newy.algotrade.common.domain.exception.NotFoundRowException
+import com.newy.algotrade.common.exception.DuplicateDataException
+import com.newy.algotrade.common.exception.NotFoundRowException
 import com.newy.algotrade.market_account.port.`in`.MarketAccountUseCase
 import com.newy.algotrade.market_account.port.`in`.model.SetMarketAccountCommand
 import com.newy.algotrade.market_account.port.out.ExistsMarketAccountPort

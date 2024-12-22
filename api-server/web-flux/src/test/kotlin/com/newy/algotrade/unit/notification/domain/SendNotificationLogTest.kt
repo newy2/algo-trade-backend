@@ -4,7 +4,7 @@ import com.newy.algotrade.common.consts.NotificationAppType
 import com.newy.algotrade.common.consts.SendNotificationLogStatus
 import com.newy.algotrade.common.consts.SendNotificationLogStatus.*
 import com.newy.algotrade.common.consts.SlackNotificationRequestMessageFormat
-import com.newy.algotrade.common.domain.exception.PreconditionError
+import com.newy.algotrade.common.exception.PreconditionError
 import com.newy.algotrade.notification.domain.SendNotificationLog
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
