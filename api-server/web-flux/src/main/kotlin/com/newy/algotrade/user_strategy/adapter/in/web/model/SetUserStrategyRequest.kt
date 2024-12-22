@@ -3,7 +3,7 @@ package com.newy.algotrade.user_strategy.adapter.`in`.web.model
 import com.newy.algotrade.chart.domain.Candle
 import com.newy.algotrade.common.consts.ProductCategory
 import com.newy.algotrade.common.consts.ProductType
-import com.newy.algotrade.common.domain.helper.SelfValidating
+import com.newy.algotrade.common.helper.SelfValidating
 import com.newy.algotrade.user_strategy.port.`in`.model.SetUserStrategyCommand
 import jakarta.validation.constraints.Pattern
 

@@ -1,4 +1,4 @@
-package com.newy.algotrade.common.domain.helper
+package com.newy.algotrade.common.helper
 
 import jakarta.validation.ConstraintViolationException
 import jakarta.validation.Validation

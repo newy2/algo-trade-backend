@@ -1,7 +1,7 @@
 package com.newy.algotrade.market_account.port.`in`.model
 
 import com.newy.algotrade.common.consts.Market
-import com.newy.algotrade.common.domain.helper.SelfValidating
+import com.newy.algotrade.common.helper.SelfValidating
 import com.newy.algotrade.market_account.domain.MarketAccount
 import com.newy.algotrade.market_account.domain.MarketServer
 import jakarta.validation.constraints.Min
