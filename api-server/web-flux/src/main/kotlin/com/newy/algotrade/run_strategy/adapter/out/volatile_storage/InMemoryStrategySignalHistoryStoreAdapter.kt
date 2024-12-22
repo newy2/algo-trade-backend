@@ -2,7 +2,7 @@ package com.newy.algotrade.run_strategy.adapter.out.volatile_storage
 
 import com.newy.algotrade.chart.domain.strategy.StrategySignal
 import com.newy.algotrade.chart.domain.strategy.StrategySignalHistory
-import com.newy.algotrade.common.domain.annotation.ForTesting
+import com.newy.algotrade.common.annotation.ForTesting
 import com.newy.algotrade.run_strategy.domain.StrategySignalHistoryKey
 import com.newy.algotrade.run_strategy.port.out.StrategySignalHistoryPort
 

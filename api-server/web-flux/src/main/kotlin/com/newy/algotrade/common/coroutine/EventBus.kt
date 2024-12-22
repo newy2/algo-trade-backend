@@ -1,6 +1,6 @@
 package com.newy.algotrade.common.coroutine
 
-import com.newy.algotrade.common.domain.annotation.ForTesting
+import com.newy.algotrade.common.annotation.ForTesting
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow

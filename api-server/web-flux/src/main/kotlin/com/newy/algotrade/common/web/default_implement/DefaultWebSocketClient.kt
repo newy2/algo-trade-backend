@@ -1,6 +1,6 @@
 package com.newy.algotrade.common.web.default_implement
 
-import com.newy.algotrade.common.domain.annotation.ForTesting
+import com.newy.algotrade.common.annotation.ForTesting
 import com.newy.algotrade.common.web.socket.WebSocketClient
 import com.newy.algotrade.common.web.socket.WebSocketClientListener
 import com.newy.algotrade.common.web.socket.WebSocketPing
