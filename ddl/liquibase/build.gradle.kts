@@ -74,6 +74,11 @@ tasks.named("update").configure {
     dependsOn("createSchema")
 }
 
+// gradle 버전 마이그레이션 버그 픽스(v7 -> v8)
+tasks.named("processResources").configure {
+    dependsOn("compileJava", "compileKotlin")
+}
+
 task<RunSQL>("createSchema") {
     val dbArguments = getDatabaseArguments()
     val schemaArguments = getSchemaArguments()
