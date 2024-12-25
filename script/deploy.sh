@@ -46,9 +46,14 @@ if (( INSTANCE_COUNT > 1 )); then
   exit 1
 fi
 
-# 이미지 빌드
+# 이미지 빌드 (TODO Spring Security 구현 시, X_ADMIN_IP 제거)
 IMAGE_NAME="$APP_ENV"-webflux-server
-docker build -t $IMAGE_NAME -f api-server/web-flux/Dockerfile --platform linux/amd64 .
+docker build \
+  --build-arg X_ADMIN_IP=$(curl -s ifconfig.me) \
+  -t $IMAGE_NAME \
+  -f api-server/web-flux/Dockerfile \
+  --platform linux/amd64 \
+  .
 
 # 이미지 푸시
 aws ecr get-login-password | docker login --username AWS --password-stdin $ECR_URL

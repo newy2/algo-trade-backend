@@ -27,5 +27,9 @@ ENV X_DB_SCHEMA ""
 ENV X_DB_USERNAME ""
 ENV X_DB_PASSWORD ""
 
+# TODO Spring Security 적용시, X_ADMIN_IP 제거할 것
+ARG X_ADMIN_IP
+ENV X_ADMIN_IP $X_ADMIN_IP
+
 USER nobody
 ENTRYPOINT ["java", "-jar", "/app.jar"]
