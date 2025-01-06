@@ -110,7 +110,6 @@ task<RunSQL>("createSchema") {
 //    )
 //}
 
-
 dependencies {
     implementation("org.liquibase:liquibase-core:4.27.0")
     implementation("org.liquibase:liquibase-gradle-plugin:2.2.1")
