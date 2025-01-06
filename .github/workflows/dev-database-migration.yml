@@ -13,4 +13,4 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Run deploy.sh
-        run: APP_ENV=test LS_SEC_API_KEY=PSoIcwFAq4OaCpZf0RMwomEZptpwWaVvQ4za LS_SEC_API_SECRET=92jc8Tm2KNDBga2rl1PJhIdshhuIQ4mF ./update_rds_schema.sh
+        run: APP_ENV=test LS_SEC_API_KEY=PSoIcwFAq4OaCpZf0RMwomEZptpwWaVvQ4za LS_SEC_API_SECRET=92jc8Tm2KNDBga2rl1PJhIdshhuIQ4mF script/update_rds_schema.sh
