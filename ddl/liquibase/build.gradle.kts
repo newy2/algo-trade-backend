@@ -1,15 +1,19 @@
+plugins {
+    kotlin("jvm") version "2.1.0"
+    id("org.liquibase.gradle") version "2.2.1"
+    id("com.nocwriter.runsql") version "1.0.3"
+}
+
+repositories {
+    gradlePluginPortal()
+}
+
 sourceSets {
     main {
         resources {
             srcDirs("./")
         }
     }
-}
-
-plugins {
-    id("kotlin-conventions")
-    id("org.liquibase.gradle") version "2.2.1"
-    id("com.nocwriter.runsql") version "1.0.3"
 }
 
 fun getDatabaseArguments(): Map<String, String> {

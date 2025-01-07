@@ -4,8 +4,8 @@ WORKDIR /app
 # Gradle 설정 파일 복사
 COPY settings.gradle.kts gradle.properties /app/
 COPY api-server/web-flux/build.gradle.kts /app/api-server/web-flux/
-COPY buildSrc/src /app/buildSrc/src
-COPY buildSrc/build.gradle.kts /app/buildSrc
+#COPY buildSrc/src /app/buildSrc/src
+#COPY buildSrc/build.gradle.kts /app/buildSrc
 
 # 의존성 캐시 빌드
 RUN gradle build -x test --parallel --continue > /dev/null 2>&1 || true
