@@ -1,4 +1,4 @@
-package com.newy.algotrade.integration.spring.filter
+package com.newy.algotrade.study.spring.filter
 
 import com.newy.algotrade.spring.annotation.AdminOnly
 import org.springframework.beans.factory.annotation.Autowired
