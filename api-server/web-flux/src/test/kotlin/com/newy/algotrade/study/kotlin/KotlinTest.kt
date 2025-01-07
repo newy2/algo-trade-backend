@@ -1,8 +1,5 @@
 package com.newy.algotrade.study.kotlin
 
-import com.newy.algotrade.common.consts.Market
-import com.newy.algotrade.common.consts.ProductType
-import com.newy.algotrade.product_price.domain.ProductPriceKey
 import com.newy.algotrade.unit.common.helper.RESOURCE_CONTENT
 import com.newy.algotrade.unit.common.helper.RESOURCE_PATH
 import org.junit.jupiter.api.*
@@ -243,36 +240,5 @@ class ListTest {
                 val last = it.lastOrNull()
             }
         }
-    }
-}
-
-class ReflectionTest {
-    @Test
-    fun `클래스 이름으로 객체 생성하기`() {
-        val packageName = "com.newy.algotrade.product_price.domain"
-        val className = "ProductPriceKey"
-
-        val clazz = Class.forName("$packageName.$className")
-        val constructor = clazz.getConstructor(
-            Market::class.java,
-            ProductType::class.java,
-            String::class.java,
-            Duration::class.java,
-        )
-
-        assertEquals(
-            ProductPriceKey(
-                market = Market.BY_BIT,
-                productType = ProductType.SPOT,
-                productCode = "BTCUSDT",
-                interval = Duration.ofMinutes(1),
-            ),
-            constructor.newInstance(
-                Market.BY_BIT,
-                ProductType.SPOT,
-                "BTCUSDT",
-                Duration.ofMinutes(1),
-            )
-        )
     }
 }
