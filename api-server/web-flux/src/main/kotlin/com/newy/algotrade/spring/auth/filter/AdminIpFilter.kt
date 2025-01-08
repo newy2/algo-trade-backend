@@ -1,6 +1,6 @@
-package com.newy.algotrade.spring.filter
+package com.newy.algotrade.spring.auth.filter
 
-import com.newy.algotrade.spring.annotation.AdminOnly
+import com.newy.algotrade.spring.auth.annotation.AdminOnly
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
@@ -17,19 +17,28 @@ class AdminIpFilter(
     private val handlerMapping: RequestMappingHandlerMapping
 ) : WebFilter {
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
-        if (isAdminOnlyHandler(exchange) && !isAdminIp(exchange)) {
+        if (!isAdminOnlyHandler(exchange)) {
+            return chain.filter(exchange)
+        }
+
+        if (!isAdminIp(exchange)) {
             return responseAccessDenied(exchange)
         }
 
+        exchange.attributes["loginUserId"] = 1
         return chain.filter(exchange)
     }
 
-    private fun isAdminOnlyHandler(exchange: ServerWebExchange) =
-        getHandlerMethod(exchange).method.getAnnotation(AdminOnly::class.java) != null
+    private fun isAdminOnlyHandler(exchange: ServerWebExchange): Boolean = getHandlerMethod(exchange).let {
+        val hasMethodAnnotation = it.method.getAnnotation(AdminOnly::class.java) != null
+        val hasClassAnnotation = it.beanType.getAnnotation(AdminOnly::class.java) != null
+
+        return hasMethodAnnotation || hasClassAnnotation
+    }
 
     private fun getHandlerMethod(exchange: ServerWebExchange) =
         handlerMapping.getHandler(exchange).toFuture().getNow(null) as HandlerMethod
-    
+
     private fun isAdminIp(exchange: ServerWebExchange) =
         arrayOf(getClientIp(exchange), getClientHostName(exchange)).contains(adminIp)
 
@@ -55,4 +64,3 @@ class AdminIpFilter(
         }
     }
 }
-
