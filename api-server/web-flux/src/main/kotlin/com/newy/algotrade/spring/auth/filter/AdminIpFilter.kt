@@ -17,15 +17,15 @@ class AdminIpFilter(
     private val handlerMapping: RequestMappingHandlerMapping
 ) : WebFilter {
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
-        if (!isAdminOnlyHandler(exchange)) {
-            return chain.filter(exchange)
-        }
-
-        if (!isAdminIp(exchange)) {
+        val isAdminIp = this.isAdminIp(exchange)
+        if (isAdminOnlyHandler(exchange) && !isAdminIp) {
             return responseAccessDenied(exchange)
         }
 
-        exchange.attributes["loginUserId"] = 1
+        if (isAdminIp) {
+            exchange.attributes["loginUserId"] = 1
+        }
+
         return chain.filter(exchange)
     }
 

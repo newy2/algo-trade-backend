@@ -128,16 +128,16 @@ class AccessAdminUserController {
 }
 
 @WebFluxTest(controllers = [AccessAdminUserController::class])
-@DisplayName("@AdminOnly 애너테이션을 사용한 경우, @AdminUser 로 어드민 정보를 조회할 수 있다")
+@DisplayName("@AdminUser 로 어드민 사용자 여부를 조회하기")
 class AdminUserControllerTest : BaseAdminIpFilterTest() {
     @Test
-    fun `어드민 ID 확인`() {
+    fun `public api 접속`() {
         arrayOf(
             Triple(adminUserIp, HttpStatus.OK, "Admin ID: 1"),
-            Triple(guestUserId, HttpStatus.FORBIDDEN, "Access denied (Admin access required)"),
+            Triple(guestUserId, HttpStatus.OK, "Admin ID: -1"), // 게스트 사용자는 -1 로 표시
         ).forEach { (requestIp, responseStatus, responseBody) ->
             assertApiResult(
-                path = "/private/v3",
+                path = "/public/v3",
                 requestIp = requestIp,
                 responseStatus = responseStatus,
                 responseBody = responseBody,
@@ -146,13 +146,13 @@ class AdminUserControllerTest : BaseAdminIpFilterTest() {
     }
 
     @Test
-    fun `@AdminOnly 를 사용한 경우에만 @AdminUser 를 사용할 수 있다`() {
+    fun `private api 접속`() {
         arrayOf(
-            Triple(adminUserIp, HttpStatus.OK, "Admin ID: -1"),
-            Triple(guestUserId, HttpStatus.OK, "Admin ID: -1"),
+            Triple(adminUserIp, HttpStatus.OK, "Admin ID: 1"),
+            Triple(guestUserId, HttpStatus.FORBIDDEN, "Access denied (Admin access required)"),
         ).forEach { (requestIp, responseStatus, responseBody) ->
             assertApiResult(
-                path = "/public/v3",
+                path = "/private/v3",
                 requestIp = requestIp,
                 responseStatus = responseStatus,
                 responseBody = responseBody,
