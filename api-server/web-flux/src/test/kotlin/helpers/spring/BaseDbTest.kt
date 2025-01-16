@@ -18,7 +18,7 @@ import org.testcontainers.utility.DockerImageName
 
 @Testcontainers
 @DataR2dbcTest
-@ContextConfiguration(classes = [TestConfig::class])
+@ContextConfiguration(classes = [TestDbConfig::class])
 open class BaseDbTest {
     @Autowired
     private lateinit var reactiveTransactionManager: ReactiveTransactionManager
