@@ -1,6 +1,7 @@
 package com.newy.algotrade.study.spring.r2dbc
 
-import helpers.spring.BaseDbTest
+import com.newy.algotrade.spring.hook.useTransactionHook
+import helpers.spring.BaseDataR2dbcTest
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DisplayName
@@ -19,7 +20,7 @@ class TestService(
     private val outPort: TestOutPort,
 ) {
     suspend fun run() {
-        transactionHook(onAfterCommit = {
+        useTransactionHook(onAfterCommit = {
             outPort.run()
         })
         log += "service "
@@ -33,7 +34,7 @@ fun interface TestOutPort {
 @DisplayName("Output Port 가 Service 의 Transaction onAfterCommit hook 에서 실행되는지 확인하는 방법")
 class TransactionAfterCommitHookCaptureTest(
     @Autowired private val reactiveTransactionManager: ReactiveTransactionManager,
-) : BaseDbTest() {
+) : BaseDataR2dbcTest() {
     @BeforeEach
     fun setUp() {
         log = ""
@@ -46,7 +47,7 @@ class TransactionAfterCommitHookCaptureTest(
         })
 
         TransactionalOperator.create(reactiveTransactionManager).executeAndAwait {
-            transactionHook(
+            useTransactionHook(
                 onAfterCommit = { log += "onAfterCommit " }
             )
             service.run()

@@ -1,10 +1,9 @@
 package com.newy.algotrade.study.spring.r2dbc
 
-import helpers.spring.BaseDbTest
+import com.newy.algotrade.spring.hook.useTransactionHook
+import helpers.spring.BaseDataR2dbcTest
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.reactive.awaitSingle
-import kotlinx.coroutines.reactor.mono
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.*
@@ -17,36 +16,11 @@ import org.springframework.stereotype.Repository
 import org.springframework.test.util.AssertionErrors.assertFalse
 import org.springframework.transaction.annotation.Transactional
 import org.springframework.transaction.reactive.TransactionSynchronization
-import org.springframework.transaction.reactive.TransactionSynchronizationManager
-import reactor.core.publisher.Mono
 import kotlin.test.Test
 
 var isCalledAfterCommit: Boolean = false
 var afterCompletionStatus: Int = -1
 
-suspend fun transactionHook(
-    onBeforeCommit: suspend (Boolean) -> Unit = {},
-    onAfterCommit: suspend () -> Unit = {},
-    onAfterCompletion: suspend (Int) -> Unit = {}
-) = TransactionSynchronizationManager
-    .forCurrentTransaction()
-    .awaitSingle()
-    .registerSynchronization(object : TransactionSynchronization {
-        override fun beforeCommit(readOnly: Boolean): Mono<Void> = mono {
-            onBeforeCommit(readOnly)
-            return@mono null
-        }
-
-        override fun afterCommit(): Mono<Void> = mono {
-            onAfterCommit()
-            return@mono null
-        }
-
-        override fun afterCompletion(status: Int): Mono<Void> = mono {
-            onAfterCompletion(status)
-            return@mono null
-        }
-    })
 
 @Transactional
 @Component
@@ -54,7 +28,7 @@ class TransactionTestService(
     private val userRepository: TestUserRepository,
 ) {
     private suspend fun setTransactionHook() {
-        transactionHook(
+        useTransactionHook(
             onAfterCommit = { isCalledAfterCommit = true },
             onAfterCompletion = { status -> afterCompletionStatus = status }
         )
@@ -107,7 +81,7 @@ data class TestUserR2dbcEntity(
 @DisplayName("Transaction hook 메서드 테스트")
 class TransactionHookMethodTest(
     @Autowired private val service: TransactionTestService,
-) : BaseDbTest() {
+) : BaseDataR2dbcTest() {
     var userId: Long = 0
 
     @BeforeEach
