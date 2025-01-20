@@ -23,12 +23,10 @@ open class BaseDataR2dbcTest : RdbTestContainer() {
     @Autowired
     private lateinit var reactiveTransactionManager: ReactiveTransactionManager
 
-    protected fun runTransactional(block: suspend () -> Unit) {
-        return runBlocking {
-            TransactionalOperator.create(reactiveTransactionManager).executeAndAwait {
-                it.setRollbackOnly()
-                block()
-            }
+    protected fun runTransactional(block: suspend () -> Unit) = runBlocking {
+        TransactionalOperator.create(reactiveTransactionManager).executeAndAwait {
+            it.setRollbackOnly()
+            block()
         }
     }
 }

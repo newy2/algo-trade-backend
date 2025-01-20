@@ -40,7 +40,7 @@ open class RdbTestContainer {
 private enum class DbmsType {
     POSTGRESQL {
         override fun getJdbcDatabaseContainer(): JdbcDatabaseContainer<*> =
-            PostgreSQLContainer(DockerImageName.parse("postgres:13.3"))
+            PostgreSQLContainer(DockerImageName.parse("postgres:16"))
 
     },
     MYSQL {
