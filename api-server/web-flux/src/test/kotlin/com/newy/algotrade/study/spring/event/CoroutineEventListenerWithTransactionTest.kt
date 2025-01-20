@@ -35,7 +35,7 @@ class ApplicationEventTestService(
         return repository.findById(userId)!!
     }
 
-    suspend fun changeUser(userId: Long, autoTradeYn: Char) {
+    suspend fun changeUser(userId: Long, autoTradeYn: String) {
         repository.save(repository.findById(userId)!!.copy(autoTradeYn = autoTradeYn))
     }
 
@@ -50,7 +50,7 @@ class ApplicationEventTestListener(
 ) {
     @Transactional
     suspend fun changeUser(userId: Long) {
-        service.changeUser(userId, 'Y')
+        service.changeUser(userId, "Y")
     }
 
     @EventListener
@@ -70,14 +70,14 @@ class AsyncApplicationEventWithTransactionTest(
         val userId = service.insertUser()
         service.findUser(userId).let { beforeUser ->
             assertEquals("user10@test.com", beforeUser.email)
-            assertEquals('N', beforeUser.autoTradeYn)
+            assertEquals("N", beforeUser.autoTradeYn)
         }
 
         delay(200) // wait for async listener
 
         service.findUser(userId).let { afterUser ->
             assertEquals("user10@test.com", afterUser.email)
-            assertEquals('Y', afterUser.autoTradeYn)
+            assertEquals("Y", afterUser.autoTradeYn)
         }
 
         service.deleteUser(userId)

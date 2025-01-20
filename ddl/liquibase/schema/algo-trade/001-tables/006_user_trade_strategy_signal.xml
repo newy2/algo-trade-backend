@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
@@ -48,7 +48,7 @@
             <column name="price" type="NUMERIC" remarks="상품 가격">
                 <constraints nullable="false"/>
             </column>
-            <column name="candle_begin_time" type="DATETIME" remarks="candle 시작시간">
+            <column name="candle_begin_time" type="${dateTimeType}" remarks="candle 시작시간">
                 <constraints nullable="false"/>
             </column>
             <column name="candle_interval" type="VARCHAR2(3)" remarks="candle 간격">
@@ -56,7 +56,7 @@
             </column>
 
             <!-- 생성/변경 일시 -->
-            <column name="created_at" type="DATETIME" remarks="생성일시" defaultValueDate="now()">
+            <column name="created_at" type="${dateTimeType}" remarks="생성일시" defaultValueDate="${defaultDateTimeValue}">
                 <constraints nullable="false"/>
             </column>
         </createTable>

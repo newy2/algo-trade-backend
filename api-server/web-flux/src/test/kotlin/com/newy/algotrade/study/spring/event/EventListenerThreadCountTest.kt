@@ -2,6 +2,7 @@ package com.newy.algotrade.study.spring.event
 
 import helpers.spring.BaseSpringBootTest
 import kotlinx.coroutines.*
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.ApplicationEventPublisher
@@ -47,26 +48,23 @@ class CoroutineEventListener {
     }
 }
 
-class AsyncEventListenerTest(
+class EventListenerThreadCountTest(
     @Autowired private val eventPublisher: ApplicationEventPublisher,
 ) : BaseSpringBootTest() {
+    @Order(1)
     @Test
-    fun `@Async 기반 비동기 이벤트 리스너는 추가 쓰레드를 사용한다`() = runBlocking {
+    fun `코루틴 기반 비동기 이벤트 리스너는 쓰레드 변화량이 없다`() = runBlocking {
         val initialThreadCount = Thread.activeCount()
         repeat(5) {
-            eventPublisher.publishEvent(AsyncThreadCountTestEvent("Event $it"))
+            eventPublisher.publishEvent(CoroutineThreadCountTestEvent("Event $it"))
             delay(20)
         }
         val finalThreadCount = Thread.activeCount()
 
-        assertNotEquals(finalThreadCount, initialThreadCount)
-        assertTrue(finalThreadCount > initialThreadCount)
+        assertEquals(finalThreadCount, initialThreadCount)
     }
-}
 
-class SyncEventListenerTest(
-    @Autowired private val eventPublisher: ApplicationEventPublisher,
-) : BaseSpringBootTest() {
+    @Order(2)
     @Test
     fun `동기 이벤트 리스너는 쓰레드 변화량이 없다`() = runBlocking {
         val initialThreadCount = Thread.activeCount()
@@ -78,20 +76,18 @@ class SyncEventListenerTest(
 
         assertEquals(finalThreadCount, initialThreadCount)
     }
-}
 
-class CoroutineEventListenerTest(
-    @Autowired private val eventPublisher: ApplicationEventPublisher,
-) : BaseSpringBootTest() {
+    @Order(3)
     @Test
-    fun `코루틴 기반 비동기 이벤트 리스너는 쓰레드 변화량이 없다`() = runBlocking {
+    fun `@Async 기반 비동기 이벤트 리스너는 추가 쓰레드를 사용한다`() = runBlocking {
         val initialThreadCount = Thread.activeCount()
         repeat(5) {
-            eventPublisher.publishEvent(CoroutineThreadCountTestEvent("Event $it"))
+            eventPublisher.publishEvent(AsyncThreadCountTestEvent("Event $it"))
             delay(20)
         }
         val finalThreadCount = Thread.activeCount()
 
-        assertEquals(finalThreadCount, initialThreadCount)
+        assertNotEquals(finalThreadCount, initialThreadCount)
+        assertTrue(finalThreadCount > initialThreadCount)
     }
 }

@@ -38,15 +38,15 @@
             <column name="verify_yn" type="CHAR(1)" remarks="알링앱 URL 검증여부" defaultValue="N">
                 <constraints nullable="false"/>
             </column>
-            <column name="expired_at" type="DATETIME" remarks="만료일시">
+            <column name="expired_at" type="${dateTimeType}" remarks="만료일시">
                 <constraints nullable="false"/>
             </column>
 
             <!-- 생성/변경 일시 -->
-            <column name="created_at" type="DATETIME" remarks="생성일시" defaultValueDate="now()">
+            <column name="created_at" type="${dateTimeType}" remarks="생성일시" defaultValueDate="${defaultDateTimeValue}">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_at" type="DATETIME" remarks="변경일시" defaultValueDate="now()">
+            <column name="updated_at" type="${dateTimeType}" remarks="변경일시" defaultValueDate="${defaultDateTimeValue}">
                 <constraints nullable="false"/>
             </column>
         </createTable>

@@ -43,10 +43,10 @@
             </column>
 
             <!-- 생성/변경 일시 -->
-            <column name="created_at" type="DATETIME" remarks="생성일시" defaultValueDate="now()">
+            <column name="created_at" type="${dateTimeType}" remarks="생성일시" defaultValueDate="${defaultDateTimeValue}">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_at" type="DATETIME" remarks="변경일시" defaultValueDate="now()">
+            <column name="updated_at" type="${dateTimeType}" remarks="변경일시" defaultValueDate="${defaultDateTimeValue}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
