@@ -79,7 +79,7 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 
 테스트 코드에서 `useTransactionHook` 을 사용하는 Service 로직을 아래와 같은 순서로 검증한다.
 
-1. 테스트 코드에서 `TransactionalOperator` 으로 부모 Transaction 을 열고,
+1. 테스트 코드에서 `TransactionalOperator` 으로 부모 Transaction 을 오픈한다.
 2. 메서드 호출 순서를 문자열 log 로 기록한다.
 3. 문자열 log 를 비교하여, 부모 Transaction 커밋 이후에 해당 로직이 호출됐는지 확인한다.
 
