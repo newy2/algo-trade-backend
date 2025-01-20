@@ -64,63 +64,15 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 
 ## Transactional 테스트
 
-Spring Data R2DBC 에서는 테스트 메서드에 @Transactional(테스트 종료 시, 롤벡 처리되는 헬퍼 애너테이션) 을 지원하지 않는다.
+Spring Data R2DBC 에서는 테스트 메서드에서 `@Transactional`(테스트 종료 시, 롤벡 처리되는 헬퍼 애너테이션) 을 지원하지 않는다.
 
-아래와 같이 롤벡 전용 TransactionalOperator 제공 헬퍼 메서드를 사용하여 transactional 테스트를 작성한다.
+아래와 같이 `runTransactional` 핼퍼 메서드에서 롤백 전용 `TransactionalOperator` 제공하여 `@Transactional` 테스트를 지원한다.
 
-```kotlin
-// runTransactional 제공 코드
-open class BaseDataR2dbcTest : RdbTestContainer() {
-    @Autowired
-    private lateinit var reactiveTransactionManager: ReactiveTransactionManager
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L22-L32
 
-    protected fun runTransactional(block: suspend () -> Unit) = runBlocking {
-        TransactionalOperator.create(reactiveTransactionManager).executeAndAwait {
-            it.setRollbackOnly()
-            block()
-        }
-    }
-}
-```
+아래와 같이 `runTransactional` 메서드를 사용하면 테스트 종료시, 자동으로 롤백 처리된다.
 
-```kotlin
-// runTransactional 사용 코드
-@ContextConfiguration(classes = [AuditingR2dbcConfig::class])
-class AuditingTest(
-    @Autowired private val repository: UserRepositoryForAuditingTest
-) : BaseDataR2dbcTest() {
-    @Test
-    fun `createdAt 과 updatedAt 을 null 값으로 저장하면 현재시간으로 저장된다`() = runTransactional {
-        val now = LocalDateTime.now()
-        val savedUser = repository.save(initUser)
-
-        assertEquals("N", savedUser.autoTradeYn)
-        assertEquals(0, diffSeconds(now, savedUser.createdAt))
-        assertEquals(0, diffSeconds(now, savedUser.updatedAt))
-    }
-}
-
-@Configuration
-@EnableR2dbcAuditing
-class AuditingR2dbcConfig
-
-@Table("users")
-data class UserForAuditingTest(
-    @Id val id: Long = 0,
-    val email: String,
-    val autoTradeYn: String = "N",
-    @CreatedDate val createdAt: LocalDateTime? = null,
-    @LastModifiedDate val updatedAt: LocalDateTime? = null,
-)
-
-interface UserRepositoryForAuditingTest : CoroutineCrudRepository<UserForAuditingTest, Long>
-
-```
-
-참고 코드:
-
-- BaseDataR2dbcTest
-- [AuditingTest.kt](api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt)
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L35-L53
 
 ## Transaction hook 테스트
 
