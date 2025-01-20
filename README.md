@@ -90,6 +90,32 @@ Service 컴포넌트는 `유닛 테스트`에서도 사용하기 때문에 `forC
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/kotlin/com/newy/algotrade/spring/hook/TransactionHook.kt#L9-L34
 
+## IP 주소 기반 인증처리
+
+해당 프로젝트는 다중 사용자를 지원하는 서비스가 아닌, 1인 사용자를 위한 서비스이다.  
+추후 `Spring Security` 를 사용한 인증 로직을 구현할 예정이지만, 임시로 `WebFilter` 를 확장한 `AdminIpFilter` 를 구현해서, 사이트에 접속한 `IP 주소` 기반으로 사용자 인증
+로직을 대체한다.
+
+Controller 컴포넌트에서 `@AdminOnly` 애너테이션으로 관리자만 호출할 수 있는 API 를 구분한다.  
+`@AdminOnly` 애너테이션의 사용법은 아래와 같다.
+
+https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10af0ae6aa13/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/auth/filter/AdminIpFilterTest.kt#L18-L64
+
+Controller 컴포넌트 메서드의 파라미터에 `@AdminUser` 애너테이션으로 사용자의 권한을 확인한다.  
+`@AdminUser` 애너테이션의 사용법은 아래와 같다.
+
+https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10af0ae6aa13/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/auth/filter/AdminIpFilterTest.kt#L116-L162
+
+`AdminIpFilter` 구현 코드는 아래와 같다.
+
+https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10af0ae6aa13/api-server/web-flux/src/main/kotlin/com/newy/algotrade/spring/auth/filter/AdminIpFilter.kt#L14-L66
+
+`@AdminUser` 애너테이션을 사용한 데이터 바인딩은 `HandlerMethodArgumentResolver`를 확장해서 구현한다.
+
+https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10af0ae6aa13/api-server/web-flux/src/main/kotlin/com/newy/algotrade/spring/auth/resolver/AdminUserArgumentResolver.kt#L11-L23
+
+https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10af0ae6aa13/api-server/web-flux/src/main/kotlin/com/newy/algotrade/spring/auth/config/ArgumentResolverConfig.kt#L8-L14
+
 ## Spring Data R2DBC 에서 SSL 을 사용하여 RDS(PostgreSQL 16) 에 연결하기
 
 RDS(PostgreSQL 16)은 기본적으로 SSL 모드가 켜져 있다.  
