@@ -93,8 +93,8 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 ## IP 주소 기반 인증처리
 
 해당 프로젝트는 다중 사용자를 지원하는 서비스가 아닌, 1인 사용자를 위한 서비스이다.  
-추후 `Spring Security` 를 사용한 인증 로직을 구현할 예정이지만, 임시로 `WebFilter` 를 확장한 `AdminIpFilter` 를 구현해서,      
-사이트에 접속한 `IP 주소` 기반으로 사용자 인증 로직을 대체한다.
+추후 `Spring Security` 를 사용한 인증 로직을 구현할 예정이지만, 임시로 `WebFilter` 를 확장한 `AdminIpFilter` 를 구현해서, 사이트에 접속한 `IP 주소` 기반으로 사용자 인증
+로직을 대체한다.
 
 Controller 컴포넌트에서 `@AdminOnly` 애너테이션으로 관리자만 호출할 수 있는 API 를 구분한다.  
 `@AdminOnly` 애너테이션의 사용법은 아래와 같다.
@@ -110,7 +110,7 @@ https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10a
 
 https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10af0ae6aa13/api-server/web-flux/src/main/kotlin/com/newy/algotrade/spring/auth/filter/AdminIpFilter.kt#L14-L66
 
-`@AdminUser` 의 구현코드는 `HandlerMethodArgumentResolver`를 확장해서 제공한다.
+`@AdminUser` 애너테이션을 사용한 데이터 바인딩은 `HandlerMethodArgumentResolver`를 확장해서 구현한다.
 
 https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10af0ae6aa13/api-server/web-flux/src/main/kotlin/com/newy/algotrade/spring/auth/resolver/AdminUserArgumentResolver.kt#L11-L23
 
