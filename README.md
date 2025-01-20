@@ -47,75 +47,15 @@ TestContainer 는 아래와 같이 `RdbTestContainer` 클래스에서 전역적(
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/RdbTestContainer.kt#L12-L38
 
-```kotlin
-// 테스트 컨테이너 설정 코드
-@Testcontainers
-open class RdbTestContainer {
-    companion object {
-        private val dbmsType = DbmsType.valueOf(getSystemProperty("X_DBMS_NAME").uppercase())
-        private val databaseContainer: JdbcDatabaseContainer<*> = dbmsType.getJdbcDatabaseContainer()
+아래와 같이 테스트의 설정 파일에서 Liquibase 의 ChangeLog 파일 경로를 설정한다.
 
-        @JvmStatic
-        @DynamicPropertySource
-        fun properties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.r2dbc.url") { "r2dbc:${dbmsUrl()}" }
-            registry.add("spring.r2dbc.username", databaseContainer::getUsername)
-            registry.add("spring.r2dbc.password", databaseContainer::getPassword)
-            registry.add("spring.liquibase.url") { "jdbc:${dbmsUrl()}" }
-            registry.add("spring.liquibase.user", databaseContainer::getUsername)
-            registry.add("spring.liquibase.password", databaseContainer::getPassword)
-        }
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/resources/application.properties#L2
 
-        private fun dbmsUrl(): String =
-            dbmsType.getDbmsJdbcUrl(databaseContainer)
+DB 테스트 코드는 `BaseDataR2dbcTest` 클래스를 상속해서 작성한다.
 
-        @JvmStatic
-        @BeforeAll
-        internal fun setUp() {
-            databaseContainer.start()
-        }
-    }
-}
-```
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L12-L32
 
-아래와 같은 테스트 설정 파일로, 테스트 실행 시 Liquibase 로 테이블을 생성한다.
-
-```properties
-# 테스트 설정 파일 (liquibase 설정)
-spring.liquibase.change-log=classpath:/master_change_log.xml
-```
-
-DB 테스트는 BaseDataR2dbcTest 를 상속해서 진행한다.
-
-```kotlin
-@DataR2dbcTest
-@ComponentScan(
-    basePackages = ["com.newy.algotrade"],
-    excludeFilters = [
-        ComponentScan.Filter(
-            type = FilterType.REGEX,
-            pattern = ["com.newy.algotrade.spring.auth.*"]
-        )
-    ]
-)
-open class BaseDataR2dbcTest : RdbTestContainer() {
-    @Autowired
-    private lateinit var reactiveTransactionManager: ReactiveTransactionManager
-
-    protected fun runTransactional(block: suspend () -> Unit) = runBlocking {
-        TransactionalOperator.create(reactiveTransactionManager).executeAndAwait {
-            it.setRollbackOnly()
-            block()
-        }
-    }
-}
-```
-
-참고 파일:
-
-- RdbTestContainer
-- BaseDataR2dbcTest
-- application.properties
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L20-L116
 
 ## 운영 환경 별 Liquibase Schema 생성 로직 추가 (local, test, production)
 
