@@ -106,8 +106,11 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 
 ## 운영 환경 별(local, test, production) RDBMS 의 Schema 생성 로직 추가
 
-해당 프로젝트는 1개의 RDS 인스턴스에 `테스트 서버용 스키마(test_algo_trade)`와 `프로덕션 서버용 스키마(algo_trade)`를 분리해서 사용한다.    
-아래와 같이 `com.nocwriter.runsql` gradle 플러그인을 사용하여, 운영 환경 별로 RDBMS 의 Schema 를 다르게 생성한다.
+해당 프로젝트는 1개의 RDS 인스턴스를 사용한다.(AWS 프리티어 계정 사용)  
+1개의 RDS 인스턴스에 `테스트 서버용 DB`와 `프로덕션 서버용 DB`를 다른 Schema 로 분리해서 사용한다.
+
+아래와 같이 Liquibase 에서 `com.nocwriter.runsql` gradle 플러그인을 사용하여,   
+운영 환경 별로 다른 Schema 를 먼저 생성하고, Liquibase 의 ChangeLog 로 테이블을 생성한다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/ddl/liquibase/build.gradle.kts#L86-L100
 
