@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
@@ -43,10 +43,10 @@
             </column>
 
             <!-- 생성/변경 일시 -->
-            <column name="created_at" type="DATETIME" remarks="생성일시" defaultValueDate="now()">
+            <column name="created_at" type="${dateTimeType}" remarks="생성일시" defaultValueDate="${defaultDateTimeValue}">
                 <constraints nullable="false"/>
             </column>
-            <column name="updated_at" type="DATETIME" remarks="변경일시" defaultValueDate="now()">
+            <column name="updated_at" type="${dateTimeType}" remarks="변경일시" defaultValueDate="${defaultDateTimeValue}">
                 <constraints nullable="false"/>
             </column>
         </createTable>
@@ -56,5 +56,28 @@
             ALTER TABLE ${currentTable}
                 ADD CONSTRAINT ${currentTable}__verify_yn_check CHECK (verify_yn IN ('Y', 'N'));
         </sql>
+    </changeSet>
+
+    <changeSet author="newy" id="2">
+        <addColumn tableName="${currentTable}">
+            <column name="use_yn" type="CHAR(1)" remarks="알림앱 사용여부" defaultValue="Y">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+
+        <sql>
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__use_yn_check CHECK (use_yn IN ('Y', 'N'));
+        </sql>
+    </changeSet>
+
+    <changeSet author="newy" id="3">
+        <sql>
+            ALTER TABLE ${currentTable} DROP CONSTRAINT ${currentTable}__verify_yn_check;
+        </sql>
+
+        <dropColumn tableName="${currentTable}">
+            <column name="verify_yn"/>
+        </dropColumn>
     </changeSet>
 </databaseChangeLog>

@@ -2,7 +2,7 @@ package helpers
 
 object TestServerPort {
     @Volatile
-    private var port = 9200
+    private var port = 9500
 
     fun nextValue() = port++
 }

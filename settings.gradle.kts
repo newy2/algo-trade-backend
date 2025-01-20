@@ -1,7 +1,5 @@
-rootProject.name = "algo-trade"
+rootProject.name = "algo-trade-backend"
 include(
     "api-server:web-flux",
-    "api-server:core:domain",
-    "api-server:core:coroutine-based-application",
     "ddl:liquibase"
 )
