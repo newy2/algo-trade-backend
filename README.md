@@ -94,11 +94,10 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 ## Spring Data R2DBC 에서 SSL 을 사용하여 RDS(PostgreSQL 16) 에 연결하기
 
 RDS(PostgreSQL 16)은 기본적으로 SSL 모드가 켜져있다.  
-Spring Data R2DBC 에서 SSL 을 사용하여 RDS 에 연결하기 위해서, 아래와 같은 URL 을 사용하고,
+Spring Data R2DBC 에서 SSL 을 사용하여 RDS 에 연결하기 위해서,  
+아래와 같은 URL 과 AWS 에서 제공하는 공개키를 사용한다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/resources/application.properties#L7-L8
-
-아래와 같은 AWS 에서 제공하는 공개키를 사용한다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/resources/aws/rds/ssl/ap-northeast-2-bundle.pem#L1-L17
 
@@ -107,23 +106,23 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 - https://stackoverflow.com/questions/76899023/rds-while-connection-error-no-pg-hba-conf-entry-for-host#answer-78269214
 - https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Concepts.General.SSL.html
 
-## MySQL CHAR(1) 컬럼 타입이 Kotlin 의 Char 타입으로 매핑되지 않는 현상
+## MySQL 의 CHAR(1) 타입이 Kotlin 의 Char 타입으로 매핑되지 않는 현상
 
 PostgreSQL 의 CHAR(1) 타입은 Kotlin 의 Char 타입으로 매핑할 수 있지만,  
 MySQL 의 CHAR(1) 타입은 Kotlin 의 Char 타입으로 매핑할 수 없다. (`io.asyncer:r2dbc-mysql` 드라이버 사용)
 
-해당 프로젝트에서는 DBMS의 CHAR(1) 타입을 Kotlin 의 String 타입으로 매핑해서 사용한다.
+해당 프로젝트에서는 RDBMS의 `CHAR(1)` 타입을 Kotlin 의 `String` 타입으로 매핑해서 사용한다.
 
 매핑 에러 테스트 코드는 아래와 같다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/MySqlDataTypeTest.kt#L41-L70
 
-## MySQL DATETIME 컬럼 타입을 LocalDate 타입으로 매핑 시, Fractional Seconds(분수 초)가 나오지 않는 현상
+## MySQL 의 DATETIME 타입을 Kotlin 의 LocalDateTime 타입으로 매핑 시, Fractional Seconds(분수 초)가 나오지 않는 현상
 
-PostgreSQL 의 TIMESTAMPE 타입을 LocalDate 타입으로 매핑하면 분수초까지 나오지만,  
-MySQL 의 DATETIME 타입을 LocalDate 타입으로 매핑하면 분수초가 0으로 나오는 현상이 발생했다. (초 단위로 반올림 됨)
+PostgreSQL 의 TIMESTAMPE 타입을 LocalDateTime 타입으로 매핑하면 분수초까지 나오지만,  
+MySQL 의 DATETIME 타입을 LocalDateTime 타입으로 매핑하면 분수초가 0으로 나오는 현상이 발생했다. (초 단위로 반올림 됨)
 
-Liquibase 에서 전역 property 로 날짜 타입과 기본값을 선언하고, 해당 property 를 사용해서 DBMS 에 맞는 테이블을 생성한다.
+Liquibase 에서 `전역 property` 로 날짜 타입과 기본값을 선언하고, 해당 property 를 사용해서 RDBMS 에 맞는 테이블을 생성한다.
 
 전역 property 를 선언하는 코드는 아래와 같다.
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/ddl/liquibase/master_change_log.xml#L8-L11
