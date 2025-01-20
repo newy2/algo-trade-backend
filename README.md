@@ -79,13 +79,13 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 해당 프로젝트에서는 구현 편의상 Service 컴포넌트에 `@Transactional` 애너테이션을 붙여서 사용한다.  
 아래와 같이 DB 트렌젝션 커밋 이후에 실행해야 하는 로직(예: 이벤트 전송, 외부 API 호출 등)은 `useTransactionHook` 메서드를 사용해서 호출한다.
 
-https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/kotlin/com/newy/algotrade/notification_app/service/SendNotificationAppVerifyCodeCommandService.kt#L15-L47
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/kotlin/com/newy/algotrade/notification_app/service/SendNotificationAppVerifyCodeCommandService.kt#L31-L43
 
 `useTransactionHook` 사용 여부는 테스트 코드에서 `TransactionalOperator` 으로 부모 Transaction 을 열고,  
 부모 Transaction 커밋 이후에 해당 로직이 호출됐는지 log 데이터에 기록 한다.  
 그리고, log 데이터로 `useTransactionHook` 의 사용 여부를 확인한다.
 
-https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/integration/notification_app/service/SendNotificationAppVerifyCodeCommandServiceTest.kt#L27-L58
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/integration/notification_app/service/SendNotificationAppVerifyCodeCommandServiceTest.kt#L30-L57
 
 `useTransactionHook` 구현 코드는 아래와 같다.  
 Service 컴포넌트는 `유닛 테스트`에서도 사용하기 때문에 `forCurrentTransaction` 를 가져오는 로직에 대한 예외처리를 추가한다.
