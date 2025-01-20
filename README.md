@@ -72,7 +72,7 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 
 아래와 같이 `runTransactional` 메서드를 사용한다.
 
-https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L35-L53
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L45-L53
 
 ## Transaction hook 테스트
 
@@ -94,17 +94,13 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 ## Spring Data R2DBC 에서 SSL 을 사용하여 RDS(PostgreSQL 16) 에 연결하기
 
 RDS(PostgreSQL 16)은 기본적으로 SSL 모드가 켜져있다.  
-Spring Data R2DBC 에서 SSL 을 사용하여 RDS 에 연결하기 위해서, AWS 에서 제공하는 공개키와 아래와 같은 URL 형식으로 설정한다.
+Spring Data R2DBC 에서 SSL 을 사용하여 RDS 에 연결하기 위해서, 아래와 같은 URL 을 사용하고,
 
-```
-# application.properties 파일 (RDS 접속 URL 설정하는 부분)
-spring.r2dbc.url=r2dbc:postgresql://${X_DB_URL}?sslmode=require&sslrootcert=classpath:aws/rds/ssl/ap-northeast-2-bundle.pem
-```
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/resources/application.properties#L7-L8
 
-참고 파일:
+아래와 같은 AWS 에서 제공하는 공개키를 사용한다.
 
-- api-server/web-flux/src/main/resources/application.properties
-- api-server/web-flux/src/main/resources/aws/rds/ssl/ap-northeast-2buldle.pem
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/resources/aws/rds/ssl/ap-northeast-2-bundle.pem#L1-L17
 
 참고 URL:
 
@@ -120,53 +116,7 @@ MySQL 의 CHAR(1) 타입은 Kotlin 의 Char 타입으로 매핑할 수 없다. (
 
 매핑 에러 테스트 코드는 아래와 같다.
 
-```kotlin
-@Repository
-interface UserRepositoryForCharTypeTest : CoroutineCrudRepository<UserR2dbcEntityForCharTypeTest, Long>
-
-@Table("users")
-data class UserR2dbcEntityForCharTypeTest(
-    @Id val id: Long = 0,
-    val email: String,
-    val autoTradeYn: Char = 'N'
-)
-
-class MySqlDataTypeTest(
-    @Autowired private val charTypeRepository: UserRepositoryForCharTypeTest,
-) : BaseDataR2dbcTest() {
-    @Test
-    fun `MySql 은 CHAR(1) 타입을 Kotlin 의 Char 타입으로 변환하지 못한다`() = runTransactional {
-        val dbName = getSystemProperty("X_DBMS_NAME")
-        when (dbName) {
-            "postgresql" -> {
-                assertDoesNotThrow {
-                    charTypeRepository.save(
-                        UserR2dbcEntityForCharTypeTest(
-                            email = "test@test.com",
-                        )
-                    )
-                }
-            }
-            "mysql" -> {
-                val error = assertThrows<java.lang.IllegalArgumentException> {
-                    charTypeRepository.save(
-                        UserR2dbcEntityForCharTypeTest(
-                            email = "test@test.com",
-                        )
-                    )
-                }
-                assertEquals("Cannot encode class java.lang.Character", error.message)
-            }
-            else -> {
-                fail("지원하지 않는 DB 입니다")
-            }
-        }
-    }
-}
-```
-
-참고 파일:
-- 
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/MySqlDataTypeTest.kt#L41-L70
 
 ## MySQL DATETIME 컬럼 타입을 LocalDate 타입으로 매핑 시, Fractional Seconds(분수 초)가 나오지 않는 현상
 
@@ -176,51 +126,10 @@ MySQL 의 DATETIME 타입을 LocalDate 타입으로 매핑하면 분수초가 0�
 Liquibase 에서 전역 property 로 날짜 타입과 기본값을 선언하고, 해당 property 를 사용해서 DBMS 에 맞는 테이블을 생성한다.
 
 전역 property 를 선언하는 코드는 아래와 같다.
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
->
-    <!-- Liquibase 전역 property 설정하는 로직 -->
-    <property name="dateTimeType" value="DATETIME" global="true" dbms="postgresql"/>
-    <property name="defaultDateTimeValue" value="NOW()" global="true" dbms="postgresql"/>
-    <property name="dateTimeType" value="DATETIME(6)" global="true" dbms="mysql"/>
-    <property name="defaultDateTimeValue" value="NOW(6)" global="true" dbms="mysql"/>
-
-    <includeAll path="schema/algo-trade" context="algo_trade"/>
-</databaseChangeLog>
-```
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/ddl/liquibase/master_change_log.xml#L8-L11
 
 전역 property 를 사용하는 코드는 아래와 같다.
-
-```xml
-<?xml version="1.0" encoding="UTF-8"?>
-<databaseChangeLog
-        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
->
-    <property name="currentTable" value="market" global="false"/>
-    <property name="currentTableComment" value="거래소" global="false"/>
-
-    <changeSet author="newy" id="1">
-        <createTable tableName="${currentTable}" remarks="${currentTableComment}">
-            <!-- 전역 property 사용하는 로직 -->
-            <column name="created_at" type="${dateTimeType}" remarks="생성일시" defaultValueDate="${defaultDateTimeValue}">
-                <constraints nullable="false"/>
-            </column>
-            <column name="updated_at" type="${dateTimeType}" remarks="변경일시" defaultValueDate="${defaultDateTimeValue}">
-                <constraints nullable="false"/>
-            </column>
-        </createTable>
-    </changeSet>
-</databaseChangeLog>
-```
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/ddl/liquibase/schema/algo-trade/001-tables/001_market.xml#L38-L44
 
 참고 URL:
 
