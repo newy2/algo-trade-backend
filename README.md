@@ -42,16 +42,17 @@
 
 ## TestContainer 와 Liquibase 를 사용한 DB 테스트 환경 구성
 
-TestContainer 는 아래와 같이 `RdbTestContainer` 클래스에서 전역적(companion object)으로 설정한다.   
+아래와 같이 `RdbTestContainer` 클래스에서 TestContainer 를 전역적(companion object)으로 설정해서 사용한다.   
 시스템 프로퍼티(`X_DBMS_NAME`)로 RDBMS 를 변경할 수 있다 (Postgresql, MySQL 지원)
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/RdbTestContainer.kt#L12-L38
 
-DB 테스트 코드는 `BaseDataR2dbcTest` 클래스를 상속해서 작성한다.
+DB 를 사용하는 테스트 코드는 `BaseDataR2dbcTest` 클래스를 상속해서 작성한다.
 
-https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L12-L32
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L22-L32
 
-https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L20-L116
+아래는 DB 를 사용하는 테스트 코드 예시이다.
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L35-L53
 
 ## 운영 환경 별(local, test, production) RDBMS 의 Schema 생성 로직 추가
 
