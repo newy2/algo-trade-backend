@@ -47,43 +47,20 @@ TestContainer 는 아래와 같이 `RdbTestContainer` 클래스에서 전역적(
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/RdbTestContainer.kt#L12-L38
 
-아래와 같이 테스트의 설정 파일에서 Liquibase 의 ChangeLog 파일 경로를 설정한다.
-
-https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/resources/application.properties#L2
-
 DB 테스트 코드는 `BaseDataR2dbcTest` 클래스를 상속해서 작성한다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L12-L32
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L20-L116
 
-## 운영 환경 별 Liquibase Schema 생성 로직 추가 (local, test, production)
+## 운영 환경 별(local, test, production) RDBMS 의 Schema 생성 로직 추가
 
-AWS 프리티어 계정에서 RDS 는 1개의 인스턴스만 무료로 사용할 수 있다.  
-해당 프로젝트는 1개의 RDS 인스턴스에 테스트 서버용 스키마(test_algo_trade)와 프로덕션 서버용 스키마(algo_trade)를 분리해서 사용한다.    
-이를 위해, `com.nocwriter.runsql` gradle 플러그인을 사용하여 각 배포 환경에 맞는 스키마를 생성한다.
+해당 프로젝트는 1개의 RDS 인스턴스에 `테스트 서버용 스키마(test_algo_trade)`와 `프로덕션 서버용 스키마(algo_trade)`를 분리해서 사용한다.    
+아래와 같이 `com.nocwriter.runsql` gradle 플러그인을 사용하여, 운영 환경 별로 RDBMS 의 Schema 를 다르게 생성한다.
 
-```kotlin
-task<RunSQL>("createSchema") {
-    val dbArguments = getDatabaseArguments()
-    val schemaArguments = getSchemaArguments()
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/ddl/liquibase/build.gradle.kts#L86-L100
 
-    config {
-        username = dbArguments["username"]
-        password = dbArguments["password"]
-        url = dbArguments["url"]
-        driverClassName = dbArguments["driver"]
-        script = """
-            CREATE SCHEMA IF NOT EXISTS ${schemaArguments["liquibaseSchemaName"]};
-            CREATE SCHEMA IF NOT EXISTS ${schemaArguments["defaultSchemaName"]};
-        """.trimIndent()
-    }
-}
-```
-
-참고 파일:
-
-- build.gradle.kts
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/ddl/liquibase/build.gradle.kts#L36-L51
 
 ## Transactional 테스트
 
