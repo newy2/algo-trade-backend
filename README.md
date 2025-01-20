@@ -66,112 +66,31 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 
 Spring Data R2DBC 에서는 테스트 메서드에서 `@Transactional`(테스트 종료 시, 롤벡 처리되는 헬퍼 애너테이션) 을 지원하지 않는다.
 
-아래와 같이 `runTransactional` 핼퍼 메서드에서 롤백 전용 `TransactionalOperator` 제공하여 `@Transactional` 테스트를 지원한다.
+아래와 같이 `runTransactional` 핼퍼 메서드 제공하여, 테스트 코드 종료 시, 자동으로 롤백 처리를 하도록 한다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L22-L32
 
-아래와 같이 `runTransactional` 메서드를 사용하면 테스트 종료시, 자동으로 롤백 처리된다.
+아래와 같이 `runTransactional` 메서드를 사용한다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L35-L53
 
 ## Transaction hook 테스트
 
-해당 프로젝트에서는 구현 편의상 Service 컴포넌트에 @Transactional 애너테이션을 붙여서 사용한다.  
+해당 프로젝트에서는 구현 편의상 Service 컴포넌트에 `@Transactional` 애너테이션을 붙여서 사용한다.  
 아래와 같이 DB 트렌젝션 커밋 이후에 실행해야 하는 로직(예: 이벤트 전송, 외부 API 호출 등)은 `useTransactionHook` 메서드를 사용해서 호출한다.
 
-```kotlin
-// userTractionalHook 사용코드
-@Service
-@Transactional
-class SendNotificationAppVerifyCodeCommandService(...) : SendNotificationAppVerifyCodeInPort {
-    override suspend fun sendVerifyCode(command: SendNotificationAppVerifyCodeCommand): String {
-        ...
-        saveNotificationAppOutPort.save(newNotificationApp)
-        useTransactionHook(
-            onAfterCommit = {
-                sendNotificationMessageOutPort.send(
-                    SendNotificationMessageEvent(
-                        userId = command.userId,
-                        message = "인증코드: ${newNotificationApp.verifyCode}"
-                    )
-                )
-            }
-        )
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/kotlin/com/newy/algotrade/notification_app/service/SendNotificationAppVerifyCodeCommandService.kt#L15-L47
 
-        return newNotificationApp.verifyCode
-    }
-}
-```
+`useTransactionHook` 사용 여부는 테스트 코드에서 `TransactionalOperator` 으로 부모 Transaction 을 열고,  
+부모 Transaction 커밋 이후에 해당 로직이 호출됐는지 log 데이터에 기록 한다.  
+그리고, log 데이터로 `useTransactionHook` 의 사용 여부를 확인한다.
 
-테스트 코드에서 `TransactionalOperator` 를 생성하고, 로그 생성 순서로 `useTransactionHook` 사용 여부를 확인한다.
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/integration/notification_app/service/SendNotificationAppVerifyCodeCommandServiceTest.kt#L27-L58
 
-```kotlin
-// userTractionalHook 사용 여부 확인용 테스트 코드
-class SendNotificationAppVerifyCodeCommandServiceTest(
-    @Autowired private val transactionManager: ReactiveTransactionManager,
-) : BaseDataR2dbcTest() {
-    @Test
-    fun `onAfterCommit 이후에 sendNotificationMessageOutPort 가 호출된다`() = runTest {
-        var log = ""
-        val mockSendNotificationMessageOutPort = SendNotificationMessageOutPort {
-            log += "sendNotificationMessage "
-        }
-        val service = SendNotificationAppVerifyCodeCommandService(
-            findNotificationAppOutPort = NullFindNotificationAppOutPort(),
-            saveNotificationAppOutPort = NullSaveNotificationAppOutPort(),
-            sendNotificationMessageOutPort = mockSendNotificationMessageOutPort,
-        )
+`useTransactionHook` 구현 코드는 아래와 같다.  
+Service 컴포넌트는 `유닛 테스트`에서도 사용하기 때문에 `forCurrentTransaction` 를 가져오는 로직에 대한 예외처리를 추가한다.
 
-        TransactionalOperator.create(transactionManager).executeAndAwait {
-            useTransactionHook(
-                onAfterCommit = { log += "onAfterCommit " }
-            )
-
-            service.sendVerifyCode(
-                command = SendNotificationAppVerifyCodeCommand(
-                    userId = 1,
-                    webhookType = "SLACK",
-                    webhookUrl = "https://hooks.slack.com/services/1111",
-                )
-            )
-        }
-
-        assertEquals("onAfterCommit sendNotificationMessage ", log)
-    }
-}
-```
-
-useTransactionHook 구현 코드는 아래와 같다. Service 컴포넌트는 `유닛 테스트`에서도 사용하기 때문에 `유닛 테스트`에 대한 예외처리 로직도 구현했다.
-
-```kotlin
-// useTransactionHook 구현 코드
-suspend fun useTransactionHook(
-    onAfterCommit: suspend () -> Unit = {},
-    onAfterCompletion: suspend (Int) -> Unit = {}
-) {
-    TransactionSynchronizationManager
-        .forCurrentTransaction()
-        .onErrorResume {
-            // 유닛 테스트 예외 처리 로직
-            mono {
-                onAfterCommit()
-                onAfterCompletion(TransactionSynchronization.STATUS_UNKNOWN)
-            }.then(Mono.empty())
-        }
-        .awaitSingleOrNull()
-        ?.registerSynchronization(object : TransactionSynchronization {
-            override fun afterCommit(): Mono<Void> = mono {
-                onAfterCommit()
-                return@mono null
-            }
-
-            override fun afterCompletion(status: Int): Mono<Void> = mono {
-                onAfterCompletion(status)
-                return@mono null
-            }
-        })
-}
-```
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/kotlin/com/newy/algotrade/spring/hook/TransactionHook.kt#L9-L34
 
 ## Spring Data R2DBC 에서 SSL 을 사용하여 RDS(PostgreSQL 16) 에 연결하기
 
