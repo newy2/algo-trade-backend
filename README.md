@@ -38,101 +38,111 @@
 
 ---
 
-# 프로젝트 회고
+# 문제 해결
 
-## 핵사고날 아키텍처
+## TestContainer 와 Liquibase 를 사용한 RDB 테스트 환경 구성
 
-### 적용한 이유
+아래와 같이 `RdbTestContainer` 클래스에서 TestContainer 를 전역적(companion object)으로 설정해서 사용한다.   
+시스템 프로퍼티(`X_DBMS_NAME`)로 RDBMS 를 변경할 수 있다. (Postgresql, MySQL 지원)
 
-이 프로젝트는 Spring Boot WebFlux 학습을 위해서 시작했지만, 실제 운영은 다른 프레임워크(Ktor, Android 앱 등)로 구현할 예정이다.  
-핵심 비즈니스 로직 재사용 가능성을 확인하기 위해서 핵사고날 아키텍처를 선택했다.
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/RdbTestContainer.kt#L12-L38
 
-### 배운 점
+RDB 를 사용하는 테스트 코드는 `BaseDataR2dbcTest` 클래스를 상속해서 작성한다.  
+(`BaseDataR2dbcTest` 는 `RdbTestContainer` 를 상속한다)
 
-아래의 기술 블로그 포스트로 설명을 대체한다.
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L22-L32
 
-- [이펙티브 헥사고날 아키텍처](https://newy.tistory.com/entry/%EC%9D%B4%ED%8E%99%ED%8B%B0%EB%B8%8C-%ED%97%A5%EC%82%AC%EA%B3%A0%EB%82%A0-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98)
+아래는 RDB 를 사용하는 테스트 코드 예시이다.
 
-## TDD
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L35-L53
 
-### 배운 점
+## RDB 테스트 코드에서 자동 롤백 기능 사용하기
 
-아래의 기술 블로그 포스트로 설명을 대체한다.
+Spring Data R2DBC 에서는 테스트 메서드에 `@Transactional` 애너테이션을 사용한 자동 롤백 기능을 지원하지 않는다.  
+해당 프로젝트에서는 `BaseDataR2dbcTest#runTransactional` 메서드로 자동 롤백 기능을 사용한다.
 
-- 새로 배운
-  내용: [TDD로 추상화 로직 설계하기](https://newy.tistory.com/entry/TDD%EB%A1%9C-%EC%B6%94%EC%83%81%ED%99%94-%EB%A1%9C%EC%A7%81-%EC%84%A4%EA%B3%84%ED%95%98%EA%B8%B0)
-- 기존에 알고 있던 내용: [TDD 예제(점진적으로 설계하기)](https://newy.tistory.com/entry/post-1)
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L22-L32
 
-### 생각할 점
+`BaseDataR2dbcTest#runTransactional` 를 사용하는 테스트 코드는 아래와 같다.
 
-#### 정형화된 구현이 예상되는 컴포넌트에 대한 TDD
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L45-L53
 
-인커밍/아웃고잉 어댑터는 인터페이스와 구현 코드가 단순하고, 어느 정도 정형화된 구현 패턴이 있다.  
-이런 컴포넌트는 TLD(Test Last Development)를 적용해도 큰 문제가 되지 않는 거 같다.
+## Service 컴포넌트에서 트렌젝션 커밋 이후에 로직 실행하기 (Transaction hook 테스트)
 
-유스케이스는 반반인 거 같다.  
-비즈니스 로직이 적은 유스케이스는 TLD가 효과적이고, 비즈니스 로직이 많은 유스케이스는 TDD가 효과적인 거 같다.
+해당 프로젝트에서는 구현 편의상 Service 컴포넌트에 `@Transactional` 애너테이션을 붙여서 사용한다.  
+`@Transactional` 애너테이션을 사용하면 Service 로직을 전부 실행한 이후에 DB 트렌젝션을 커밋한다.
 
-## 자동화 테스트
+아래와 같이 `useTransactionHook` 메서드를 사용하면 DB 변경과 직접적인 관련이 없는 로직(예: 이벤트 전송 등)을  
+DB 트랜젝션 커밋 이후에 호출할 수 있다.
 
-### 장점
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/kotlin/com/newy/algotrade/notification_app/service/SendNotificationAppVerifyCodeCommandService.kt#L22-L46
 
-#### 리팩토링 안정감
+테스트 코드에서 `useTransactionHook` 을 사용하는 Service 로직을 아래와 같은 순서로 검증한다.
 
-이 프로젝트는 실험 목적이 강해서, 크거나 작은 단위의 리팩토링을 자주 진행했다.  
-테스트 코드 덕분에 (알고 있는 케이스에 한해서) 기능이 예상대로 작동한다는 것을 확인할 수 있었고, 리팩토링을 자신 있게 진행할 수 있었다.
+1. 테스트 코드에서 `TransactionalOperator` 으로 부모 Transaction 을 열고,
+2. 메서드 호출 순서를 문자열 log 로 기록한다.
+3. 문자열 log 를 비교하여, 부모 Transaction 커밋 이후에 해당 로직이 호출됐는지 확인한다.
 
-#### 학습 테스트
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/integration/notification_app/service/SendNotificationAppVerifyCodeCommandServiceTest.kt#L42-L56
 
-학습 테스트 덕분에 오픈소스(ta4j)에 컨트리뷰션한 경험이 있다. ([Pull Request](https://github.com/ta4j/ta4j/pull/1138))
+`useTransactionHook` 구현 코드는 아래와 같다.  
+Service 컴포넌트는 `유닛 테스트`에서도 사용하기 때문에 `forCurrentTransaction` 에 대한 예외 처리 로직을 추가한다.
 
-이번 프로젝트에서 사용한 프로그래밍 언어, 라이브러리, 프레임워크는 모두 처음 사용한 기술들이다.  
-프로젝트에서 사용할 프로그래밍 언어와 라이브러리 기능에 대한 사용법을 테스트 코드로 작성하면서 공부했다.  
-학습 테스트의 목적은 (1) 프로그래밍 언어와 라이브러리 사용법에 대한 학습과 (2) 버전 업그레이드를 쉽게 하기 위해서이다.
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/kotlin/com/newy/algotrade/spring/hook/TransactionHook.kt#L9-L34
 
-### 생각할 점
+## Spring Data R2DBC 에서 SSL 을 사용하여 RDS(PostgreSQL 16) 에 연결하기
 
-#### 세부 구현 사항에 의존하는 테스트
+RDS(PostgreSQL 16)은 기본적으로 SSL 모드가 켜져 있다.  
+Spring Data R2DBC 에서 SSL 을 사용하여 RDS 에 연결하기 위해서, 아래와 같은 URL 과 AWS 에서 제공하는 공개키를 사용한다.
 
-로직의 세부 구현을 확인하는 테스트 코드가 있으면, 리팩토링할 때 테스트 코드도 같이 수정해야 하는 단점이 있다. 예를 들어, 메서드 호출 순서를 확인하는 테스트이다.  
-어쩔 수 없는 상황이 아니면, 로직의 세부 구현보다 최종 결괏값을 확인하는 테스트를 작성하는 것이 좋은 거 같다.
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/resources/application.properties#L7-L8
 
-#### 테스트 실행 머신 성능에 의존적인 테스트
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/resources/aws/rds/ssl/ap-northeast-2-bundle.pem#L1-L17
 
-테스트 실행 환경에 따라 테스트가 종종 실패하는 경우가 있다. 대표적으로 아래와 같은 테스트이다.
+참고 URL:
 
-- 코루틴 간의 통신을 확인하는 테스트
-- mock server와 통신을 확인하는 테스트
+- https://stackoverflow.com/questions/76899023/rds-while-connection-error-no-pg-hba-conf-entry-for-host#answer-78269214
+- https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Concepts.General.SSL.html
 
-실패하는 원인은 테스트 코드에서 `delay` 함수를 사용하기 때문이다.  
-`delay` 함수를 사용하지 않고, 통신 여부를 확인하는 flag 같은 걸 도입해서 실험해 볼 예정이다.
+## 운영 환경별(테스트, 프로덕션, 로컬) RDBMS 의 Schema 생성 로직 추가
 
----
+해당 프로젝트는 1개의 RDS 인스턴스를 사용한다. (AWS 프리티어 계정 사용)  
+1개의 RDS 인스턴스에 `테스트 서버용 DB`와 `프로덕션 서버용 DB`를 다른 Schema 로 분리해서 사용한다.
 
-# 용어 정리
+아래와 같이 Liquibase 에서 `com.nocwriter.runsql` gradle 플러그인을 사용하여,   
+운영 환경에 맞는 Schema 를 먼저 생성하고, Liquibase 의 ChangeLog 로 테이블을 생성한다.
 
-해당 문서에서는 아래와 같이 `Bold`처리한 용어를 사용한다
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/ddl/liquibase/build.gradle.kts#L86-L100
 
-![이미지 출처: https://tech.kakaobank.com/posts/2311-hexagonal-architecture-in-messaging-hub/](./document/image/hexagonal-architecture.png)  
-이미지 출처: https://tech.kakaobank.com/posts/2311-hexagonal-architecture-in-messaging-hub/
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/ddl/liquibase/build.gradle.kts#L36-L51
 
-- `인커밍 어댑터` (Driving Adapter)
-    - 유스케이스를 호출하는 컴포넌트
-    - 외부 요청을 받아서 유스케이스에게 작업을 위임하고, 작업 결과 값을 요청자에게 전달한다
-- `아웃고잉 어댑터` (Driven Adapter)
-    - 유스케이스가 호출하는 컴포넌트
-    - 유스케이스 작업에 필요한 데이터를 조회하거나, 유스케이스가 요청하는 데이터 저장한다
-    - 주로, DB 통신, 외부 API 호출같이 외부 프로세스와 통신하는 로직을 구현한다
-- `애플리케이션 코어 계층` (Application Core)
-    - `유스케이스` (Use Case)
-        - 계층형 아키텍처에서 Service로 불리는 컴포넌트
-        - 인커밍/아웃고잉 어댑터의 데이터를 조합해서, 도메인 객체에 비즈니스 로직 처리를 요청한다
-        - 종종, 도메인 객체가 필요하지 않을 수도 있다
-    - `도메인 엔티티` (Entity)
-        - 유스케이스가 요청한 비즈니스 로직을 처리한다
-    - `인커밍 포트` (Input Port)
-    - `아웃고잉 포트` (Output Port)
-        - 유스케이스가 인커밍/아웃고잉 어댑터와 통신하기 위해 사용하는 Interface 이다
+## MySQL 의 CHAR(1) 타입이 Kotlin 의 Char 타입으로 매핑되지 않는 현상
+
+PostgreSQL 의 CHAR(1) 타입은 Kotlin 의 Char 타입으로 매핑할 수 있지만,  
+MySQL 의 CHAR(1) 타입은 Kotlin 의 Char 타입으로 매핑할 수 없다. (`io.asyncer:r2dbc-mysql` 드라이버 사용)
+
+해당 프로젝트에서는 RDBMS의 `CHAR(1)` 타입을 Kotlin 의 `String` 타입으로 매핑해서 사용한다.
+
+매핑 에러 테스트 코드는 아래와 같다.
+
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/MySqlDataTypeTest.kt#L41-L70
+
+## MySQL 의 DATETIME 타입을 Kotlin 의 LocalDateTime 타입으로 매핑 시, Fractional Seconds(분수 초)가 나오지 않는 현상
+
+PostgreSQL 의 TIMESTAMPE 타입을 LocalDateTime 타입으로 매핑하면 분수 초까지 나오지만,  
+MySQL 의 DATETIME 타입을 LocalDateTime 타입으로 매핑하면 분수 초가 0으로 나오는 현상이 발생했다. (초 단위로 반올림됨)
+
+Liquibase 에서 `전역 property` 로 날짜 타입과 기본값을 선언하고, 해당 property 를 사용해서 RDBMS 에 맞는 테이블을 생성한다.
+
+전역 property 를 선언하는 코드는 아래와 같다.
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/ddl/liquibase/master_change_log.xml#L8-L11
+
+전역 property 를 사용하는 코드는 아래와 같다.
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/ddl/liquibase/schema/algo-trade/001-tables/001_market.xml#L38-L44
+
+참고 URL:
+
+- https://dev.mysql.com/doc/refman/8.4/en/fractional-seconds.html
 
 ---
 
@@ -140,18 +150,10 @@
 
 <img src="document/image/folder-structure/project.png" width="300">
 
-1. `api-server/core/coroutine-based-application`
-    - 비동기 로직에 특화된 비즈니스 로직을 구현한 모듈이다
-    - Spring WebFlux, Ktor, Android 앱과 같이 코루틴을 지원하는 프로젝트에서 사용하기 위해 분리했다
-    - 유스케이스, 코루틴 기반 라이브러리(HTTP 통신, 이벤트 버스 등), 메모리 저장소 등의 구현을 담당한다
-2. `api-server/core/domain`
-    - 동기/비동기 로직에 공통된 비즈니스 로직을 구현한 모듈이다
-    - Spring WebMVC 같은 동기 기반 프로젝트에서도 사용하기 위해 분리했다
-    - 주가 데이터를 사용한 지표 계산, 주문 진입/진출 알고리즘 계산, JSON 변환 등의 로직을 담당한다
-3. `api-server/webflux`
+1. `api-server/webflux`
     - SpringBoot WebFlux 를 사용한 웹 애플리케이션 모듈이다
     - 웹 애플리케이션 조립과 영속성 어댑터 구현을 담당한다
-4. `ddl/liquibase`
+2. `ddl/liquibase`
     - 개발/테스트/운영용 RDB 스키마를 관리하기 위한 모듈이다
     - [Liquibase](https://www.liquibase.com/) 를 사용해서 구현했고, 환경 변수(X_DBMS_NAME)로 `postgresql`과 `mysql`을 선택할 수 있게 구현했다
 
@@ -185,7 +187,7 @@
 ./gradlew test
 ```
 
-# coroutine-based-application, webflux 모듈 패키지 설명
+# webflux 모듈 패키지 설명
 
 <img src="document/image/folder-structure/webflux.png">
 
@@ -206,156 +208,6 @@
     - `port.in.model`: 인커밍 포트 입력 모델 구현(입력 데이터 유효성 검증 담당)
     - `port.out`: 아웃고잉 포트 선언
     - `service`: 유스케이스 구현
-
----
-
-# 코딩 컨벤션
-
-## 인커밍 포트
-
-### 인터페이스 이름
-
-데이터 변경하는 인커밍 포트는 접미사 `UseCase`를 사용하고, 그 외는 접미사 `Query`를 사용한다.
-
-```kotlin
-// 쓰기 전용 인커밍 포트
-interface CandlesUseCase :
-    SetCandlesUseCase,
-    AddCandlesUseCase,
-    RemoveCandlesUseCase
-
-// 읽기 전용 인커밍 포트
-interface CandlesQuery :
-    GetCandlesQuery
-```
-
-### 인커밍 포트 모델 이름
-
-접미사 `Command`를 사용한다. SelfValidating을 상속받아서, 입력 데이터 유횻값을 검증한다.
-
-```kotlin
-data class SetMarketAccountCommand(...) : SelfValidating() {
-    init {
-        validate()
-    }
-}
-```
-
-## 유스케이스
-
-### 클래스 이름
-
-- `coroutine-based-application 모듈`: 인커밍 포트 이름에 접미사 `Service`를 사용한다. (인커밍 포트 이름이 `UseCase` 인 경우, 유스케이스 이름은 `Command` 로
-  변경해서 사용한다)
-
-    ```kotlin
-    // UseCase 인커밍 포트를 구현하는 경우 (UseCase를 Command로 변경해서 사용한다)
-    class MarketAccountCommandService : MarketAccountUseCase {
-        ...
-    }
-  
-    // Query 인커밍 포트를 구현하는 경우
-    open class StrategyQueryService : StrategyQuery {
-        ...
-    }
-    ```
-
-- `web-flux 모듈`: 접두사 `Spring` 과 유스케이스 이름을 사용한다.
-
-    ```kotlin
-    @Service
-    @Transactional
-    open class SpringMarketAccountCommandService(...) : MarketAccountCommandService(marketAccountPort) {
-        ...
-    }
-    ```
-
-## 아웃고잉 포트
-
-### 인터페이스 이름
-
-접미사 `Port`를 사용한다. `개별 Port Interface`의 이름은 아래에서 설명하는 [메서드 이름](#메서드-이름)를 참고해서 짓는다.
-
-```kotlin
-interface MarketAccountPort :
-    ExistsMarketAccountPort,
-    FindMarketServerPort,
-    SaveMarketAccountPort
-```
-
-### 메서드 이름
-
-메서드 이름은 아웃고잉 어댑터에서 사용하는 라이브러리의 메서드 이름과 비슷하게 짓는다.  
-영속성 아웃고잉 포트는 `findXxx`, `deleteXxx`, `saveXxx`, `existsXxx` 같은 이름을 사용하고,  
-외부 시스템 아웃고잉 포트(HTTP API 통신)는 `fetchXxx` 같은 이름을 사용한다.
-
-```kotlin
-// 영속성 아웃고잉 포트
-fun interface ExistsMarketAccountPort {
-    suspend fun existsMarketAccount(domainEntity: MarketAccount): Boolean
-}
-
-// 외부 시스템 아웃고잉 포트
-fun interface FetchProductPricesPort {
-    suspend fun fetchProductPrices(param: GetProductPriceHttpParam): List<ProductPrice>
-}
-```
-
-#### 메서드 이름 짓는 규칙을 정한 이유
-
-`인커밍 포트의 메서드 이름`과 `아웃고잉 포트의 메서드 이름`이 같아지는 현상을 방지하기 위해서,  
-아웃고잉 포트의 메서드 이름을 짓는 패턴을 변경했다.
-
-```kotlin
-// AS-IS (인커밍 포트와 아웃고잉 포트의 메서드 이름이 같다)
-open class StrategyQueryService(
-    private val strategyPort: HasStrategyPort
-) : StrategyQuery {
-    // 인커밍 포트의 메서드 이름이 'hasStrategy' 이고 
-    override suspend fun hasStrategy(className: String): Boolean {
-        // 아웃고잉 포트의 메서드 이름도 'hasStrategy' 이다.
-        return strategyPort.hasStrategy(className)
-    }
-
-}
-
-// TO-BE (인커밍 포트와 아웃고잉 포트의 메서드 이름이 다르다)
-open class StrategyQueryService(
-    private val strategyPort: ExistsStrategyPort
-) : StrategyQuery {
-    // 인커밍 포트의 메서드 이름이 'hasStrategy' 이고
-    override suspend fun hasStrategy(className: String): Boolean {
-        // 아웃고잉 포트의 메서드 이름은 'existsStrategy' 이다.
-        return strategyPort.existsStrategy(className)
-    }
-
-}
-```
-
-## 아웃고잉 어댑터
-
-### 클래스 이름
-
-- 영속성 어댑터: 접미사 `PersistenceAdapter` 를 사용한다.
-- 이벤트 발행 어댑터: 접미사 `EventPublisher` 를 사용한다.
-- 인메모리 저장소 어댑터: 접미사 `StoreAdapter` 를 사용한다.
-
-```kotlin
-// 영속성 어댑터
-class MarketAccountPersistenceAdapter : MarketAccountPort {
-    ...
-}
-
-// 이벤트 발행 어댑터
-open class OnReceivePollingPriceEventPublisher : OnReceivePollingPricePort {
-    ...
-}
-
-// 인메모리 저장소 어댑터
-class InMemoryCandlesStoreAdapter : CandlesPort {
-    ...
-}
-```
 
 ---
 
