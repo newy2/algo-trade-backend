@@ -40,26 +40,26 @@
 
 # 문제 해결
 
-## TestContainer 와 Liquibase 를 사용한 DB 테스트 환경 구성
+## TestContainer 와 Liquibase 를 사용한 RDB 테스트 환경 구성
 
 아래와 같이 `RdbTestContainer` 클래스에서 TestContainer 를 전역적(companion object)으로 설정해서 사용한다.   
-시스템 프로퍼티(`X_DBMS_NAME`)로 RDBMS 를 변경할 수 있다 (Postgresql, MySQL 지원)
+시스템 프로퍼티(`X_DBMS_NAME`)로 RDBMS 를 변경할 수 있다. (Postgresql, MySQL 지원)
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/RdbTestContainer.kt#L12-L38
 
-DB 를 사용하는 테스트 코드는 `BaseDataR2dbcTest` 클래스를 상속해서 작성한다.  
+RDB 를 사용하는 테스트 코드는 `BaseDataR2dbcTest` 클래스를 상속해서 작성한다.  
 (`BaseDataR2dbcTest` 는 `RdbTestContainer` 를 상속한다)
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L22-L32
 
-아래는 DB 를 사용하는 테스트 코드 예시이다.
+아래는 RDB 를 사용하는 테스트 코드 예시이다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L35-L53
 
-## Transactional 테스트
+## RDB 테스트 코드에서 자동 롤백 기능 사용하기
 
-Spring Data R2DBC 에서는 테스트 메서드에 `@Transactional` 애너테이션을 사용해도 자동 롤백을 지원하지 않는다.  
-`BaseDataR2dbcTest#runTransactional` 메서드를 구현해서, 테스트 코드의 자동 롤백 기능을 제공한다.
+Spring Data R2DBC 에서는 테스트 메서드에 `@Transactional` 애너테이션을 사용한 자동 롤백 기능을 지원하지 않는다.  
+해당 프로젝트에서는 `BaseDataR2dbcTest#runTransactional` 메서드로 자동 롤백 기능을 사용한다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L22-L32
 
@@ -67,7 +67,7 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L45-L53
 
-## Transaction hook 테스트
+## Service 컴포넌트에서 트렌젝션 커밋 이후에 로직 실행하기 (Transaction hook 테스트)
 
 해당 프로젝트에서는 구현 편의상 Service 컴포넌트에 `@Transactional` 애너테이션을 붙여서 사용한다.  
 `@Transactional` 애너테이션을 사용하면 Service 로직을 전부 실행한 이후에 DB 트렌젝션을 커밋한다.
@@ -92,7 +92,7 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 
 ## Spring Data R2DBC 에서 SSL 을 사용하여 RDS(PostgreSQL 16) 에 연결하기
 
-RDS(PostgreSQL 16)은 기본적으로 SSL 모드가 켜져있다.  
+RDS(PostgreSQL 16)은 기본적으로 SSL 모드가 켜져 있다.  
 Spring Data R2DBC 에서 SSL 을 사용하여 RDS 에 연결하기 위해서, 아래와 같은 URL 과 AWS 에서 제공하는 공개키를 사용한다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/resources/application.properties#L7-L8
@@ -104,13 +104,13 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 - https://stackoverflow.com/questions/76899023/rds-while-connection-error-no-pg-hba-conf-entry-for-host#answer-78269214
 - https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Concepts.General.SSL.html
 
-## 운영 환경 별(local, test, production) RDBMS 의 Schema 생성 로직 추가
+## 운영 환경별(테스트, 프로덕션, 로컬) RDBMS 의 Schema 생성 로직 추가
 
-해당 프로젝트는 1개의 RDS 인스턴스를 사용한다.(AWS 프리티어 계정 사용)  
+해당 프로젝트는 1개의 RDS 인스턴스를 사용한다. (AWS 프리티어 계정 사용)  
 1개의 RDS 인스턴스에 `테스트 서버용 DB`와 `프로덕션 서버용 DB`를 다른 Schema 로 분리해서 사용한다.
 
 아래와 같이 Liquibase 에서 `com.nocwriter.runsql` gradle 플러그인을 사용하여,   
-운영 환경 별로 다른 Schema 를 먼저 생성하고, Liquibase 의 ChangeLog 로 테이블을 생성한다.
+운영 환경에 맞는 Schema 를 먼저 생성하고, Liquibase 의 ChangeLog 로 테이블을 생성한다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/ddl/liquibase/build.gradle.kts#L86-L100
 
@@ -129,8 +129,8 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 
 ## MySQL 의 DATETIME 타입을 Kotlin 의 LocalDateTime 타입으로 매핑 시, Fractional Seconds(분수 초)가 나오지 않는 현상
 
-PostgreSQL 의 TIMESTAMPE 타입을 LocalDateTime 타입으로 매핑하면 분수초까지 나오지만,  
-MySQL 의 DATETIME 타입을 LocalDateTime 타입으로 매핑하면 분수초가 0으로 나오는 현상이 발생했다. (초 단위로 반올림 됨)
+PostgreSQL 의 TIMESTAMPE 타입을 LocalDateTime 타입으로 매핑하면 분수 초까지 나오지만,  
+MySQL 의 DATETIME 타입을 LocalDateTime 타입으로 매핑하면 분수 초가 0으로 나오는 현상이 발생했다. (초 단위로 반올림됨)
 
 Liquibase 에서 `전역 property` 로 날짜 타입과 기본값을 선언하고, 해당 property 를 사용해서 RDBMS 에 맞는 테이블을 생성한다.
 
