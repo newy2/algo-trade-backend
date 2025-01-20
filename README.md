@@ -77,7 +77,7 @@ DB 트랜젝션 커밋 이후에 호출할 수 있다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/kotlin/com/newy/algotrade/notification_app/service/SendNotificationAppVerifyCodeCommandService.kt#L22-L46
 
-`useTransactionHook` 을 사용하는 Service 로직은 테스트 코드에서 아래와 같은 순서로 검증한다.
+테스트 코드에서 `useTransactionHook` 을 사용하는 Service 로직을 아래와 같은 순서로 검증한다.
 
 1. 테스트 코드에서 `TransactionalOperator` 으로 부모 Transaction 을 열고,
 2. 메서드 호출 순서를 문자열 log 로 기록한다.
