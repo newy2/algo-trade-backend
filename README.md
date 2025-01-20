@@ -38,74 +38,406 @@
 
 ---
 
-# 프로젝트 회고
+# 문제 해결
 
-## 핵사고날 아키텍처
+## TestContainer 와 Liquibase 를 사용한 DB 테스트 환경 구성
 
-### 적용한 이유
+TestContainer 는 아래와 같이 `RdbTestContainer` 클래스에서 전역적(companion object)으로 설정한다.   
+시스템 프로퍼티(`X_DBMS_NAME`)로 RDBMS 를 변경할 수 있다 (Postgresql, MySQL 지원)
 
-이 프로젝트는 Spring Boot WebFlux 학습을 위해서 시작했지만, 실제 운영은 다른 프레임워크(Ktor, Android 앱 등)로 구현할 예정이다.  
-핵심 비즈니스 로직 재사용 가능성을 확인하기 위해서 핵사고날 아키텍처를 선택했다.
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/RdbTestContainer.kt#L12-L38
 
-### 배운 점
+```kotlin
+// 테스트 컨테이너 설정 코드
+@Testcontainers
+open class RdbTestContainer {
+    companion object {
+        private val dbmsType = DbmsType.valueOf(getSystemProperty("X_DBMS_NAME").uppercase())
+        private val databaseContainer: JdbcDatabaseContainer<*> = dbmsType.getJdbcDatabaseContainer()
 
-아래의 기술 블로그 포스트로 설명을 대체한다.
+        @JvmStatic
+        @DynamicPropertySource
+        fun properties(registry: DynamicPropertyRegistry) {
+            registry.add("spring.r2dbc.url") { "r2dbc:${dbmsUrl()}" }
+            registry.add("spring.r2dbc.username", databaseContainer::getUsername)
+            registry.add("spring.r2dbc.password", databaseContainer::getPassword)
+            registry.add("spring.liquibase.url") { "jdbc:${dbmsUrl()}" }
+            registry.add("spring.liquibase.user", databaseContainer::getUsername)
+            registry.add("spring.liquibase.password", databaseContainer::getPassword)
+        }
 
-- [이펙티브 헥사고날 아키텍처](https://newy.tistory.com/entry/%EC%9D%B4%ED%8E%99%ED%8B%B0%EB%B8%8C-%ED%97%A5%EC%82%AC%EA%B3%A0%EB%82%A0-%EC%95%84%ED%82%A4%ED%85%8D%EC%B2%98)
+        private fun dbmsUrl(): String =
+            dbmsType.getDbmsJdbcUrl(databaseContainer)
 
-## TDD
+        @JvmStatic
+        @BeforeAll
+        internal fun setUp() {
+            databaseContainer.start()
+        }
+    }
+}
+```
 
-### 배운 점
+아래와 같은 테스트 설정 파일로, 테스트 실행 시 Liquibase 로 테이블을 생성한다.
 
-아래의 기술 블로그 포스트로 설명을 대체한다.
+```properties
+# 테스트 설정 파일 (liquibase 설정)
+spring.liquibase.change-log=classpath:/master_change_log.xml
+```
 
-- 새로 배운
-  내용: [TDD로 추상화 로직 설계하기](https://newy.tistory.com/entry/TDD%EB%A1%9C-%EC%B6%94%EC%83%81%ED%99%94-%EB%A1%9C%EC%A7%81-%EC%84%A4%EA%B3%84%ED%95%98%EA%B8%B0)
-- 기존에 알고 있던 내용: [TDD 예제(점진적으로 설계하기)](https://newy.tistory.com/entry/post-1)
+DB 테스트는 BaseDataR2dbcTest 를 상속해서 진행한다.
 
-### 생각할 점
+```kotlin
+@DataR2dbcTest
+@ComponentScan(
+    basePackages = ["com.newy.algotrade"],
+    excludeFilters = [
+        ComponentScan.Filter(
+            type = FilterType.REGEX,
+            pattern = ["com.newy.algotrade.spring.auth.*"]
+        )
+    ]
+)
+open class BaseDataR2dbcTest : RdbTestContainer() {
+    @Autowired
+    private lateinit var reactiveTransactionManager: ReactiveTransactionManager
 
-#### 정형화된 구현이 예상되는 컴포넌트에 대한 TDD
+    protected fun runTransactional(block: suspend () -> Unit) = runBlocking {
+        TransactionalOperator.create(reactiveTransactionManager).executeAndAwait {
+            it.setRollbackOnly()
+            block()
+        }
+    }
+}
+```
 
-인커밍/아웃고잉 어댑터는 인터페이스와 구현 코드가 단순하고, 어느 정도 정형화된 구현 패턴이 있다.  
-이런 컴포넌트는 TLD(Test Last Development)를 적용해도 큰 문제가 되지 않는 거 같다.
+참고 파일:
 
-유스케이스는 반반인 거 같다.  
-비즈니스 로직이 적은 유스케이스는 TLD가 효과적이고, 비즈니스 로직이 많은 유스케이스는 TDD가 효과적인 거 같다.
+- RdbTestContainer
+- BaseDataR2dbcTest
+- application.properties
 
-## 자동화 테스트
+## 운영 환경 별 Liquibase Schema 생성 로직 추가 (local, test, production)
 
-### 장점
+AWS 프리티어 계정에서 RDS 는 1개의 인스턴스만 무료로 사용할 수 있다.  
+해당 프로젝트는 1개의 RDS 인스턴스에 테스트 서버용 스키마(test_algo_trade)와 프로덕션 서버용 스키마(algo_trade)를 분리해서 사용한다.    
+이를 위해, `com.nocwriter.runsql` gradle 플러그인을 사용하여 각 배포 환경에 맞는 스키마를 생성한다.
 
-#### 리팩토링 안정감
+```kotlin
+task<RunSQL>("createSchema") {
+    val dbArguments = getDatabaseArguments()
+    val schemaArguments = getSchemaArguments()
 
-이 프로젝트는 실험 목적이 강해서, 크거나 작은 단위의 리팩토링을 자주 진행했다.  
-테스트 코드 덕분에 (알고 있는 케이스에 한해서) 기능이 예상대로 작동한다는 것을 확인할 수 있었고, 리팩토링을 자신 있게 진행할 수 있었다.
+    config {
+        username = dbArguments["username"]
+        password = dbArguments["password"]
+        url = dbArguments["url"]
+        driverClassName = dbArguments["driver"]
+        script = """
+            CREATE SCHEMA IF NOT EXISTS ${schemaArguments["liquibaseSchemaName"]};
+            CREATE SCHEMA IF NOT EXISTS ${schemaArguments["defaultSchemaName"]};
+        """.trimIndent()
+    }
+}
+```
 
-#### 학습 테스트
+참고 파일:
 
-학습 테스트 덕분에 오픈소스(ta4j)에 컨트리뷰션한 경험이 있다. ([Pull Request](https://github.com/ta4j/ta4j/pull/1138))
+- build.gradle.kts
 
-이번 프로젝트에서 사용한 프로그래밍 언어, 라이브러리, 프레임워크는 모두 처음 사용한 기술들이다.  
-프로젝트에서 사용할 프로그래밍 언어와 라이브러리 기능에 대한 사용법을 테스트 코드로 작성하면서 공부했다.  
-학습 테스트의 목적은 (1) 프로그래밍 언어와 라이브러리 사용법에 대한 학습과 (2) 버전 업그레이드를 쉽게 하기 위해서이다.
+## Transactional 테스트
 
-### 생각할 점
+Spring Data R2DBC 에서는 테스트 메서드에 @Transactional(테스트 종료 시, 롤벡 처리되는 헬퍼 애너테이션) 을 지원하지 않는다.
 
-#### 세부 구현 사항에 의존하는 테스트
+아래와 같이 롤벡 전용 TransactionalOperator 제공 헬퍼 메서드를 사용하여 transactional 테스트를 작성한다.
 
-로직의 세부 구현을 확인하는 테스트 코드가 있으면, 리팩토링할 때 테스트 코드도 같이 수정해야 하는 단점이 있다. 예를 들어, 메서드 호출 순서를 확인하는 테스트이다.  
-어쩔 수 없는 상황이 아니면, 로직의 세부 구현보다 최종 결괏값을 확인하는 테스트를 작성하는 것이 좋은 거 같다.
+```kotlin
+// runTransactional 제공 코드
+open class BaseDataR2dbcTest : RdbTestContainer() {
+    @Autowired
+    private lateinit var reactiveTransactionManager: ReactiveTransactionManager
 
-#### 테스트 실행 머신 성능에 의존적인 테스트
+    protected fun runTransactional(block: suspend () -> Unit) = runBlocking {
+        TransactionalOperator.create(reactiveTransactionManager).executeAndAwait {
+            it.setRollbackOnly()
+            block()
+        }
+    }
+}
+```
 
-테스트 실행 환경에 따라 테스트가 종종 실패하는 경우가 있다. 대표적으로 아래와 같은 테스트이다.
+```kotlin
+// runTransactional 사용 코드
+@ContextConfiguration(classes = [AuditingR2dbcConfig::class])
+class AuditingTest(
+    @Autowired private val repository: UserRepositoryForAuditingTest
+) : BaseDataR2dbcTest() {
+    @Test
+    fun `createdAt 과 updatedAt 을 null 값으로 저장하면 현재시간으로 저장된다`() = runTransactional {
+        val now = LocalDateTime.now()
+        val savedUser = repository.save(initUser)
 
-- 코루틴 간의 통신을 확인하는 테스트
-- mock server와 통신을 확인하는 테스트
+        assertEquals("N", savedUser.autoTradeYn)
+        assertEquals(0, diffSeconds(now, savedUser.createdAt))
+        assertEquals(0, diffSeconds(now, savedUser.updatedAt))
+    }
+}
 
-실패하는 원인은 테스트 코드에서 `delay` 함수를 사용하기 때문이다.  
-`delay` 함수를 사용하지 않고, 통신 여부를 확인하는 flag 같은 걸 도입해서 실험해 볼 예정이다.
+@Configuration
+@EnableR2dbcAuditing
+class AuditingR2dbcConfig
+
+@Table("users")
+data class UserForAuditingTest(
+    @Id val id: Long = 0,
+    val email: String,
+    val autoTradeYn: String = "N",
+    @CreatedDate val createdAt: LocalDateTime? = null,
+    @LastModifiedDate val updatedAt: LocalDateTime? = null,
+)
+
+interface UserRepositoryForAuditingTest : CoroutineCrudRepository<UserForAuditingTest, Long>
+
+```
+
+참고 코드:
+
+- BaseDataR2dbcTest
+- [AuditingTest.kt](api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt)
+
+## Transaction hook 테스트
+
+해당 프로젝트에서는 구현 편의상 Service 컴포넌트에 @Transactional 애너테이션을 붙여서 사용한다.  
+아래와 같이 DB 트렌젝션 커밋 이후에 실행해야 하는 로직(예: 이벤트 전송, 외부 API 호출 등)은 `useTransactionHook` 메서드를 사용해서 호출한다.
+
+```kotlin
+// userTractionalHook 사용코드
+@Service
+@Transactional
+class SendNotificationAppVerifyCodeCommandService(...) : SendNotificationAppVerifyCodeInPort {
+    override suspend fun sendVerifyCode(command: SendNotificationAppVerifyCodeCommand): String {
+        ...
+        saveNotificationAppOutPort.save(newNotificationApp)
+        useTransactionHook(
+            onAfterCommit = {
+                sendNotificationMessageOutPort.send(
+                    SendNotificationMessageEvent(
+                        userId = command.userId,
+                        message = "인증코드: ${newNotificationApp.verifyCode}"
+                    )
+                )
+            }
+        )
+
+        return newNotificationApp.verifyCode
+    }
+}
+```
+
+테스트 코드에서 `TransactionalOperator` 를 생성하고, 로그 생성 순서로 `useTransactionHook` 사용 여부를 확인한다.
+
+```kotlin
+// userTractionalHook 사용 여부 확인용 테스트 코드
+class SendNotificationAppVerifyCodeCommandServiceTest(
+    @Autowired private val transactionManager: ReactiveTransactionManager,
+) : BaseDataR2dbcTest() {
+    @Test
+    fun `onAfterCommit 이후에 sendNotificationMessageOutPort 가 호출된다`() = runTest {
+        var log = ""
+        val mockSendNotificationMessageOutPort = SendNotificationMessageOutPort {
+            log += "sendNotificationMessage "
+        }
+        val service = SendNotificationAppVerifyCodeCommandService(
+            findNotificationAppOutPort = NullFindNotificationAppOutPort(),
+            saveNotificationAppOutPort = NullSaveNotificationAppOutPort(),
+            sendNotificationMessageOutPort = mockSendNotificationMessageOutPort,
+        )
+
+        TransactionalOperator.create(transactionManager).executeAndAwait {
+            useTransactionHook(
+                onAfterCommit = { log += "onAfterCommit " }
+            )
+
+            service.sendVerifyCode(
+                command = SendNotificationAppVerifyCodeCommand(
+                    userId = 1,
+                    webhookType = "SLACK",
+                    webhookUrl = "https://hooks.slack.com/services/1111",
+                )
+            )
+        }
+
+        assertEquals("onAfterCommit sendNotificationMessage ", log)
+    }
+}
+```
+
+useTransactionHook 구현 코드는 아래와 같다. Service 컴포넌트는 `유닛 테스트`에서도 사용하기 때문에 `유닛 테스트`에 대한 예외처리 로직도 구현했다.
+
+```kotlin
+// useTransactionHook 구현 코드
+suspend fun useTransactionHook(
+    onAfterCommit: suspend () -> Unit = {},
+    onAfterCompletion: suspend (Int) -> Unit = {}
+) {
+    TransactionSynchronizationManager
+        .forCurrentTransaction()
+        .onErrorResume {
+            // 유닛 테스트 예외 처리 로직
+            mono {
+                onAfterCommit()
+                onAfterCompletion(TransactionSynchronization.STATUS_UNKNOWN)
+            }.then(Mono.empty())
+        }
+        .awaitSingleOrNull()
+        ?.registerSynchronization(object : TransactionSynchronization {
+            override fun afterCommit(): Mono<Void> = mono {
+                onAfterCommit()
+                return@mono null
+            }
+
+            override fun afterCompletion(status: Int): Mono<Void> = mono {
+                onAfterCompletion(status)
+                return@mono null
+            }
+        })
+}
+```
+
+## Spring Data R2DBC 에서 SSL 을 사용하여 RDS(PostgreSQL 16) 에 연결하기
+
+RDS(PostgreSQL 16)은 기본적으로 SSL 모드가 켜져있다.  
+Spring Data R2DBC 에서 SSL 을 사용하여 RDS 에 연결하기 위해서, AWS 에서 제공하는 공개키와 아래와 같은 URL 형식으로 설정한다.
+
+```
+# application.properties 파일 (RDS 접속 URL 설정하는 부분)
+spring.r2dbc.url=r2dbc:postgresql://${X_DB_URL}?sslmode=require&sslrootcert=classpath:aws/rds/ssl/ap-northeast-2-bundle.pem
+```
+
+참고 파일:
+
+- api-server/web-flux/src/main/resources/application.properties
+- api-server/web-flux/src/main/resources/aws/rds/ssl/ap-northeast-2buldle.pem
+
+참고 URL:
+
+- https://stackoverflow.com/questions/76899023/rds-while-connection-error-no-pg-hba-conf-entry-for-host#answer-78269214
+- https://docs.aws.amazon.com/AmazonRDS/latest/UserGuide/PostgreSQL.Concepts.General.SSL.html
+
+## MySQL CHAR(1) 컬럼 타입이 Kotlin 의 Char 타입으로 매핑되지 않는 현상
+
+PostgreSQL 의 CHAR(1) 타입은 Kotlin 의 Char 타입으로 매핑할 수 있지만,  
+MySQL 의 CHAR(1) 타입은 Kotlin 의 Char 타입으로 매핑할 수 없다. (`io.asyncer:r2dbc-mysql` 드라이버 사용)
+
+해당 프로젝트에서는 DBMS의 CHAR(1) 타입을 Kotlin 의 String 타입으로 매핑해서 사용한다.
+
+매핑 에러 테스트 코드는 아래와 같다.
+
+```kotlin
+@Repository
+interface UserRepositoryForCharTypeTest : CoroutineCrudRepository<UserR2dbcEntityForCharTypeTest, Long>
+
+@Table("users")
+data class UserR2dbcEntityForCharTypeTest(
+    @Id val id: Long = 0,
+    val email: String,
+    val autoTradeYn: Char = 'N'
+)
+
+class MySqlDataTypeTest(
+    @Autowired private val charTypeRepository: UserRepositoryForCharTypeTest,
+) : BaseDataR2dbcTest() {
+    @Test
+    fun `MySql 은 CHAR(1) 타입을 Kotlin 의 Char 타입으로 변환하지 못한다`() = runTransactional {
+        val dbName = getSystemProperty("X_DBMS_NAME")
+        when (dbName) {
+            "postgresql" -> {
+                assertDoesNotThrow {
+                    charTypeRepository.save(
+                        UserR2dbcEntityForCharTypeTest(
+                            email = "test@test.com",
+                        )
+                    )
+                }
+            }
+            "mysql" -> {
+                val error = assertThrows<java.lang.IllegalArgumentException> {
+                    charTypeRepository.save(
+                        UserR2dbcEntityForCharTypeTest(
+                            email = "test@test.com",
+                        )
+                    )
+                }
+                assertEquals("Cannot encode class java.lang.Character", error.message)
+            }
+            else -> {
+                fail("지원하지 않는 DB 입니다")
+            }
+        }
+    }
+}
+```
+
+참고 파일:
+- 
+
+## MySQL DATETIME 컬럼 타입을 LocalDate 타입으로 매핑 시, Fractional Seconds(분수 초)가 나오지 않는 현상
+
+PostgreSQL 의 TIMESTAMPE 타입을 LocalDate 타입으로 매핑하면 분수초까지 나오지만,  
+MySQL 의 DATETIME 타입을 LocalDate 타입으로 매핑하면 분수초가 0으로 나오는 현상이 발생했다. (초 단위로 반올림 됨)
+
+Liquibase 에서 전역 property 로 날짜 타입과 기본값을 선언하고, 해당 property 를 사용해서 DBMS 에 맞는 테이블을 생성한다.
+
+전역 property 를 선언하는 코드는 아래와 같다.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+    <!-- Liquibase 전역 property 설정하는 로직 -->
+    <property name="dateTimeType" value="DATETIME" global="true" dbms="postgresql"/>
+    <property name="defaultDateTimeValue" value="NOW()" global="true" dbms="postgresql"/>
+    <property name="dateTimeType" value="DATETIME(6)" global="true" dbms="mysql"/>
+    <property name="defaultDateTimeValue" value="NOW(6)" global="true" dbms="mysql"/>
+
+    <includeAll path="schema/algo-trade" context="algo_trade"/>
+</databaseChangeLog>
+```
+
+전역 property 를 사용하는 코드는 아래와 같다.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+    <property name="currentTable" value="market" global="false"/>
+    <property name="currentTableComment" value="거래소" global="false"/>
+
+    <changeSet author="newy" id="1">
+        <createTable tableName="${currentTable}" remarks="${currentTableComment}">
+            <!-- 전역 property 사용하는 로직 -->
+            <column name="created_at" type="${dateTimeType}" remarks="생성일시" defaultValueDate="${defaultDateTimeValue}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="${dateTimeType}" remarks="변경일시" defaultValueDate="${defaultDateTimeValue}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
+```
+
+참고 URL:
+
+- https://dev.mysql.com/doc/refman/8.4/en/fractional-seconds.html
 
 ---
 
