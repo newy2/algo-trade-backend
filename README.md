@@ -58,9 +58,8 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 
 ## Transactional 테스트
 
-Spring Data R2DBC 에서는 테스트 메서드에 `@Transactional` 애너테이션을 사용하도 자동 롤백을 지원하지 않는다.
-
-`BaseDataR2dbcTest` 클래스에서 `runTransactional` 메서드를 구현해서, 테스트 코드에서 자동 롤백 기능을 사용한다.
+Spring Data R2DBC 에서는 테스트 메서드에 `@Transactional` 애너테이션을 사용해도 자동 롤백을 지원하지 않는다.  
+`BaseDataR2dbcTest#runTransactional` 메서드를 구현해서, 테스트 코드의 자동 롤백 기능을 제공한다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L22-L32
 
@@ -71,14 +70,18 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 ## Transaction hook 테스트
 
 해당 프로젝트에서는 구현 편의상 Service 컴포넌트에 `@Transactional` 애너테이션을 붙여서 사용한다.  
-`@Transactional` 애너테이션을 사용하면 Service 로직을 전부 실행한 후에 DB 트렌젝션을 커밋한다.
+`@Transactional` 애너테이션을 사용하면 Service 로직을 전부 실행한 이후에 DB 트렌젝션을 커밋한다.
 
-아래와 같이 `useTransactionHook` 메서드를 사용하면 DB 변경과 직접적인 관련이 없는 로직(예: 이벤트 전송 등)을 DB 트랜젝션 커밋 이후에 호출할 수 있다.
+아래와 같이 `useTransactionHook` 메서드를 사용하면 DB 변경과 직접적인 관련이 없는 로직(예: 이벤트 전송 등)을  
+DB 트랜젝션 커밋 이후에 호출할 수 있다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/kotlin/com/newy/algotrade/notification_app/service/SendNotificationAppVerifyCodeCommandService.kt#L22-L46
 
-Service 컴포넌트 로직에서 `useTransactionHook` 사용 여부는 아래 처럼 확인한다.   
-(테스트 코드에서 `TransactionalOperator` 으로 부모 Transaction 을 열고, 문자열 log 로 호출 순서를 기록하고 확인한다)
+`useTransactionHook` 을 사용하는 Service 로직은 테스트 코드에서 아래와 같은 순서로 검증한다.
+
+1. 테스트 코드에서 `TransactionalOperator` 으로 부모 Transaction 을 열고,
+2. 메서드 호출 순서를 문자열 log 로 기록한다.
+3. 문자열 log 를 비교하여, 부모 Transaction 커밋 이후에 해당 로직이 호출됐는지 확인한다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/integration/notification_app/service/SendNotificationAppVerifyCodeCommandServiceTest.kt#L42-L56
 
