@@ -5,10 +5,10 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
-    <property name="currentTable" value="user_notification_app" global="false"/>
-    <property name="currentTableComment" value="사용자 알림앱" global="false"/>
+    <property name="currentTable" value="user_notification_app_verify_code" global="false"/>
+    <property name="currentTableComment" value="사용자 알림앱 인증코드" global="false"/>
 
-    <property name="referenceTable" value="users" global="false"/>
+    <property name="referenceTable" value="user_notification_app" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
@@ -20,7 +20,7 @@
             <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable}_id" type="BIGINT" remarks="사용자 ID">
+            <column name="${referenceTable}_id" type="BIGINT" remarks="사용자 알림앱 ID">
                 <constraints
                         referencedTableName="${referenceTable}"
                         referencedColumnNames="id"
@@ -32,13 +32,13 @@
             </column>
 
             <!-- 일반 필드 -->
-            <column name="type" type="VARCHAR2(20)" remarks="알림앱 종류">
-                <constraints nullable="false"/>
-            </column>
-            <column name="url" type="VARCHAR2(300)" remarks="알림앱 URL">
+            <column name="verify_code" type="VARCHAR2(5)" remarks="인증코드">
                 <constraints nullable="false"/>
             </column>
             <column name="verify_yn" type="CHAR(1)" remarks="알링앱 URL 검증여부" defaultValue="N">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expired_at" type="DATETIME" remarks="만료일시">
                 <constraints nullable="false"/>
             </column>
 
@@ -56,28 +56,5 @@
             ALTER TABLE ${currentTable}
                 ADD CONSTRAINT ${currentTable}__verify_yn_check CHECK (verify_yn IN ('Y', 'N'));
         </sql>
-    </changeSet>
-
-    <changeSet author="newy" id="2">
-        <addColumn tableName="${currentTable}">
-            <column name="use_yn" type="CHAR(1)" remarks="알림앱 사용여부" defaultValue="Y">
-                <constraints nullable="false"/>
-            </column>
-        </addColumn>
-
-        <sql>
-            ALTER TABLE ${currentTable}
-                ADD CONSTRAINT ${currentTable}__use_yn_check CHECK (use_yn IN ('Y', 'N'));
-        </sql>
-    </changeSet>
-
-    <changeSet author="newy" id="3">
-        <sql>
-            ALTER TABLE ${currentTable} DROP CONSTRAINT ${currentTable}__verify_yn_check;
-        </sql>
-
-        <dropColumn tableName="${currentTable}">
-            <column name="verify_yn"/>
-        </dropColumn>
     </changeSet>
 </databaseChangeLog>
