@@ -64,12 +64,11 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 해당 프로젝트에서는 구현 편의상 Service 컴포넌트에 `@Transactional` 애너테이션을 붙여서 사용한다.  
 `@Transactional` 애너테이션을 사용하면 Service 로직을 전부 실행한 이후에 DB 트렌젝션을 커밋한다.
 
-아래와 같이 `useTransactionHook` 메서드를 사용하면 DB 변경과 직접적인 관련이 없는 로직(예: 이벤트 전송 등)을  
-DB 트랜젝션 커밋 이후에 호출할 수 있다.
+아래와 같이 `useTransactionHook` 메서드를 사용하면 DB 변경과 직접적인 관련이 없는 로직(예: 이벤트 전송 등)을 DB 트랜젝션 커밋 이후에 호출할 수 있다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/kotlin/com/newy/algotrade/notification_app/service/SendNotificationAppVerifyCodeCommandService.kt#L22-L46
 
-테스트 코드에서 `useTransactionHook` 을 사용하는 Service 로직을 아래와 같은 순서로 검증한다.
+`useTransactionHook` 을 사용하는 Service 로직은 아래와 같은 순서로 테스트 한다.
 
 1. 테스트 코드에서 `TransactionalOperator` 으로 부모 Transaction 을 오픈한다.
 2. 메서드 호출 순서를 문자열 log 로 기록한다.
