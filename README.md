@@ -49,7 +49,8 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 
 ## RDB 테스트 코드에서 자동 롤백 기능 사용하기
 
-Spring Data R2DBC 에서는 테스트 메서드에 `@Transactional` 애너테이션을 사용한 자동 롤백 기능을 지원하지 않는다.  
+Spring Data R2DBC 에서는 테스트 메서드에 `@Transactional` 애너테이션을 사용한 자동 롤백 기능을 지원하지
+않는다. ([관련 이슈](https://github.com/spring-projects/spring-framework/issues/24226))  
 해당 프로젝트에서는 `BaseDataR2dbcTest#runTransactional` 메서드로 자동 롤백 기능을 사용한다.  
 (`BaseDataR2dbcTest` 는 `RdbTestContainer` 를 상속한다)
 
@@ -66,7 +67,7 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 
 아래와 같이 `useTransactionHook` 메서드를 사용하면 DB 변경과 직접적인 관련이 없는 로직(예: 이벤트 전송 등)을 DB 트랜젝션 커밋 이후에 호출할 수 있다.
 
-https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/kotlin/com/newy/algotrade/notification_app/service/SendNotificationAppVerifyCodeCommandService.kt#L22-L46
+https://github.com/newy2/algo-trade-backend/blob/8e4b590b3e382fe6a79feef75d1fa24fdb71b2d5/api-server/web-flux/src/main/kotlin/com/newy/algotrade/notification_app/service/SendNotificationAppVerifyCodeCommandService.kt#L20-L39
 
 `useTransactionHook` 을 사용하는 Service 로직은 아래와 같은 순서로 테스트 한다.
 
