@@ -47,19 +47,11 @@
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/RdbTestContainer.kt#L12-L38
 
-RDB 를 사용하는 테스트 코드는 `BaseDataR2dbcTest` 클래스를 상속해서 작성한다.  
-(`BaseDataR2dbcTest` 는 `RdbTestContainer` 를 상속한다)
-
-https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L22-L32
-
-아래는 RDB 를 사용하는 테스트 코드 예시이다.
-
-https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/r2dbc/AuditingTest.kt#L35-L53
-
 ## RDB 테스트 코드에서 자동 롤백 기능 사용하기
 
 Spring Data R2DBC 에서는 테스트 메서드에 `@Transactional` 애너테이션을 사용한 자동 롤백 기능을 지원하지 않는다.  
-해당 프로젝트에서는 `BaseDataR2dbcTest#runTransactional` 메서드로 자동 롤백 기능을 사용한다.
+해당 프로젝트에서는 `BaseDataR2dbcTest#runTransactional` 메서드로 자동 롤백 기능을 사용한다.  
+(`BaseDataR2dbcTest` 는 `RdbTestContainer` 를 상속한다)
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/helpers/spring/BaseDataR2dbcTest.kt#L22-L32
 
@@ -72,12 +64,11 @@ https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a79
 해당 프로젝트에서는 구현 편의상 Service 컴포넌트에 `@Transactional` 애너테이션을 붙여서 사용한다.  
 `@Transactional` 애너테이션을 사용하면 Service 로직을 전부 실행한 이후에 DB 트렌젝션을 커밋한다.
 
-아래와 같이 `useTransactionHook` 메서드를 사용하면 DB 변경과 직접적인 관련이 없는 로직(예: 이벤트 전송 등)을  
-DB 트랜젝션 커밋 이후에 호출할 수 있다.
+아래와 같이 `useTransactionHook` 메서드를 사용하면 DB 변경과 직접적인 관련이 없는 로직(예: 이벤트 전송 등)을 DB 트랜젝션 커밋 이후에 호출할 수 있다.
 
 https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/main/kotlin/com/newy/algotrade/notification_app/service/SendNotificationAppVerifyCodeCommandService.kt#L22-L46
 
-테스트 코드에서 `useTransactionHook` 을 사용하는 Service 로직을 아래와 같은 순서로 검증한다.
+`useTransactionHook` 을 사용하는 Service 로직은 아래와 같은 순서로 테스트 한다.
 
 1. 테스트 코드에서 `TransactionalOperator` 으로 부모 Transaction 을 오픈한다.
 2. 메서드 호출 순서를 문자열 log 로 기록한다.
