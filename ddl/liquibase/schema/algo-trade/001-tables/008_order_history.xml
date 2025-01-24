@@ -9,6 +9,7 @@
     <property name="currentTableComment" value="주문 이력" global="false"/>
 
     <property name="referenceTable" value="orders" global="false"/>
+    <property name="referenceTableId" value="order_id" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
@@ -20,7 +21,7 @@
             <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable}_id" type="BIGINT" remarks="주문 ID">
+            <column name="${referenceTableId}" type="BIGINT" remarks="주문 ID">
                 <constraints
                         referencedTableName="${referenceTable}"
                         referencedColumnNames="id"

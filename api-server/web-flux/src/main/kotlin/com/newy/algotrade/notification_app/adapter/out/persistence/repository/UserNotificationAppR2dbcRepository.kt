@@ -4,7 +4,6 @@ import com.newy.algotrade.notification_app.domain.NotificationApp
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedDate
-import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.stereotype.Repository
@@ -18,7 +17,7 @@ interface UserNotificationAppR2dbcRepository : CoroutineCrudRepository<UserNotif
 @Table("user_notification_app")
 data class UserNotificationAppR2dbcEntity(
     @Id val id: Long = 0,
-    @Column("users_id") val userId: Long = 0,
+    val userId: Long = 0,
     val type: String = "",
     val url: String = "",
     val useYn: String = "Y",

@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <databaseChangeLog
-        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
     <property name="currentTable" value="market_server_account" global="false"/>
 
     <property name="referenceTable1" value="users" global="false"/>
+    <property name="referenceTableId1" value="user_id" global="false"/>
     <property name="referenceTable2" value="market_server" global="false"/>
 
     <property name="X_LS_SEC_API_KEY" value="" global="true"/>
@@ -20,7 +21,7 @@
         </preConditions>
 
         <insert tableName="${currentTable}">
-            <column name="${referenceTable1}_id" valueComputed="(SELECT id FROM users WHERE email = 'admin')"/>
+            <column name="${referenceTableId1}" valueComputed="(SELECT id FROM users WHERE email = 'admin')"/>
             <column name="${referenceTable2}_id" valueComputed="(SELECT ms.id
                                                                FROM   market_server ms
                                                                INNER JOIN market m on m.id = ms.market_id

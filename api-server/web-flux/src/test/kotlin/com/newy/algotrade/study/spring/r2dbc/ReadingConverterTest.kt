@@ -13,7 +13,6 @@ import org.springframework.data.convert.ReadingConverter
 import org.springframework.data.r2dbc.convert.R2dbcCustomConversions
 import org.springframework.data.r2dbc.dialect.DialectResolver
 import org.springframework.data.r2dbc.repository.Query
-import org.springframework.data.relational.core.mapping.Column
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
 import org.springframework.r2dbc.core.DatabaseClient
@@ -54,7 +53,7 @@ interface UserAndUserSnsRepositoryForReadingConverterTest : CoroutineCrudReposit
              , u.email as email
              , us.type as sns_type
         FROM   users u
-        LEFT OUTER JOIN user_sns us on u.id = us.users_id
+        LEFT OUTER JOIN user_sns us on u.id = us.user_id
         WHERE  u.id = :userId
     """
     )
@@ -76,7 +75,7 @@ data class UserForReadingConvertorTest(
 @Table("user_sns")
 data class UserSnsForReadingConvertorTest(
     @Id val id: Long = 0,
-    @Column("users_id") val userId: Long,
+    val userId: Long,
     val type: String,
 )
 

@@ -9,6 +9,7 @@
     <property name="currentTableComment" value="사용자 SNS 로그인 계정" global="false"/>
 
     <property name="referenceTable" value="users" global="false"/>
+    <property name="referenceTableId" value="user_id" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
@@ -20,7 +21,7 @@
             <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable}_id" type="BIGINT" remarks="사용자 ID">
+            <column name="${referenceTableId}" type="BIGINT" remarks="사용자 ID">
                 <constraints
                         referencedTableName="${referenceTable}"
                         referencedColumnNames="id"
@@ -50,7 +51,7 @@
         <!-- 복합 index -->
         <addUniqueConstraint
                 tableName="${currentTable}"
-                columnNames="${referenceTable}_id, type"
+                columnNames="${referenceTableId}, type"
                 constraintName="${currentTable}__${referenceTable}_id_type_uk"
         />
 
