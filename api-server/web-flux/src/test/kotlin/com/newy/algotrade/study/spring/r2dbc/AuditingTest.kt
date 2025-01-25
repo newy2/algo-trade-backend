@@ -5,21 +5,14 @@ import helpers.spring.BaseDataR2dbcTest
 import kotlinx.coroutines.delay
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.context.annotation.Configuration
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.Id
 import org.springframework.data.annotation.LastModifiedDate
-import org.springframework.data.r2dbc.config.EnableR2dbcAuditing
 import org.springframework.data.relational.core.mapping.Table
 import org.springframework.data.repository.kotlin.CoroutineCrudRepository
-import org.springframework.test.context.ContextConfiguration
 import java.time.LocalDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-
-@Configuration
-@EnableR2dbcAuditing
-class AuditingR2dbcConfig
 
 @Table("users")
 data class UserForAuditingTest(
@@ -32,7 +25,6 @@ data class UserForAuditingTest(
 
 interface UserRepositoryForAuditingTest : CoroutineCrudRepository<UserForAuditingTest, Long>
 
-@ContextConfiguration(classes = [AuditingR2dbcConfig::class])
 class AuditingTest(
     @Autowired private val repository: UserRepositoryForAuditingTest
 ) : BaseDataR2dbcTest() {
