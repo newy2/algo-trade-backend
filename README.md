@@ -75,7 +75,7 @@ https://github.com/newy2/algo-trade-backend/blob/8e4b590b3e382fe6a79feef75d1fa24
 2. 메서드 호출 순서를 문자열 log 로 기록한다.
 3. 문자열 log 를 비교하여, 부모 Transaction 커밋 이후에 해당 로직이 호출됐는지 확인한다.
 
-https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/integration/notification_app/service/SendNotificationAppVerifyCodeCommandServiceTest.kt#L42-L56
+https://github.com/newy2/algo-trade-backend/blob/dc1d97db173090985ef716a75364a795136a4e85/api-server/web-flux/src/test/kotlin/com/newy/algotrade/integration/notification_app/service/SendNotificationAppVerifyCodeCommandServiceTest.kt#L30-L56
 
 `useTransactionHook` 구현 코드는 아래와 같다.  
 Service 컴포넌트는 `유닛 테스트`에서도 사용하기 때문에 `forCurrentTransaction` 에 대한 예외 처리 로직을 추가한다.
