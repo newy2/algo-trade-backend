@@ -1,4 +1,4 @@
-package com.newy.algotrade.notification_send.adapter.`in`.internal_system
+package com.newy.algotrade.notification_send.adapter.`in`.event
 
 import com.newy.algotrade.common.event.SendNotificationMessageEvent
 import com.newy.algotrade.notification_send.port.`in`.SendNotificationMessageInPort

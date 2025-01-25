@@ -1,7 +1,7 @@
-package com.newy.algotrade.unit.notification_send.adapter.`in`.internal_system
+package com.newy.algotrade.unit.notification_send.adapter.`in`.event
 
 import com.newy.algotrade.common.event.SendNotificationMessageEvent
-import com.newy.algotrade.notification_send.adapter.`in`.internal_system.SendNotificationMessageEventListener
+import com.newy.algotrade.notification_send.adapter.`in`.event.SendNotificationMessageEventListener
 import com.newy.algotrade.notification_send.port.`in`.model.SendNotificationMessageCommand
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.advanceUntilIdle
