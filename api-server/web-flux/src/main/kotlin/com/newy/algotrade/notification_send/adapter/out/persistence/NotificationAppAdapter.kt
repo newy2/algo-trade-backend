@@ -16,22 +16,35 @@ class NotificationAppAdapter(
     override suspend fun findNotificationApp(
         userId: Long,
         isVerified: Boolean
-    ): NotificationApp? =
+    ): NotificationApp? {
+        val notificationApp = findNotificationApp(userId)
+        if (notificationApp == null) {
+            return null
+        }
+
+        val notificationAppVerifyCode = findNotificationAppVerifyCode(notificationApp.id, isVerified)
+        if (notificationAppVerifyCode == null) {
+            return null
+        }
+
+        return NotificationApp(
+            id = notificationApp.id,
+            webhook = Webhook.from(
+                type = notificationApp.type,
+                url = notificationApp.url,
+            )
+        )
+    }
+
+    private suspend fun findNotificationApp(userId: Long) =
         notificationAppRepository.findByUserIdAndUseYn(
             userId = userId,
             useYn = "Y"
-        )?.let { notificationApp ->
-            notificationVerifyCodeRepository.findByUserNotificationAppIdAndVerifyYn(
-                userNotificationAppId = notificationApp.id,
-                verifyYn = if (isVerified) "Y" else "N"
-            )?.let {
-                NotificationApp(
-                    id = notificationApp.id,
-                    webhook = Webhook.from(
-                        type = notificationApp.type,
-                        url = notificationApp.url,
-                    )
-                )
-            }
-        }
+        )
+
+    private suspend fun findNotificationAppVerifyCode(userNotificationAppId: Long, isVerified: Boolean) =
+        notificationVerifyCodeRepository.findByUserNotificationAppIdAndVerifyYn(
+            userNotificationAppId = userNotificationAppId,
+            verifyYn = if (isVerified) "Y" else "N"
+        )
 }

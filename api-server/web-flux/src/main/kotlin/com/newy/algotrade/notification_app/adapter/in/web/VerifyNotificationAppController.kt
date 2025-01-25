@@ -20,9 +20,11 @@ class VerifyNotificationAppController(
     suspend fun verifyNotificationApp(
         @AdminUser currentUser: LoginUser,
         @RequestBody request: VerifyNotificationAppRequest
-    ) = verifyNotificationAppInPort.verify(request.toInPortModel(currentUser.id)).let { isSuccess ->
-        ResponseEntity.ok().body(
-            VerifyNotificationAppResponse(isSuccess)
+    ): ResponseEntity<VerifyNotificationAppResponse> {
+        val result = verifyNotificationAppInPort.verify(request.toInPortModel(currentUser.id))
+        
+        return ResponseEntity.ok().body(
+            VerifyNotificationAppResponse(result)
         )
     }
 }

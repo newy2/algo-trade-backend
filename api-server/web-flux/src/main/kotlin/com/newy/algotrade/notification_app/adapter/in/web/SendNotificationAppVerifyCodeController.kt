@@ -20,8 +20,10 @@ class SendNotificationAppVerifyCodeController(
     suspend fun sendVerifyCode(
         @AdminUser currentUser: LoginUser,
         @RequestBody request: SendNotificationAppVerifyCodeRequest
-    ) = sendNotificationAppVerifyCodeInPort.sendVerifyCode(request.toInPortModel(currentUser.id)).let { verifyCode ->
-        ResponseEntity.ok().body(
+    ): ResponseEntity<SendNotificationAppVerifyCodeResponse> {
+        val verifyCode = sendNotificationAppVerifyCodeInPort.sendVerifyCode(request.toInPortModel(currentUser.id))
+        
+        return ResponseEntity.ok().body(
             SendNotificationAppVerifyCodeResponse(
                 webhookUrl = request.webhookUrl,
                 verifyCode = verifyCode,
