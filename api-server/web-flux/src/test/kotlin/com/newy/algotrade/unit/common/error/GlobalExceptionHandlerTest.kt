@@ -2,6 +2,7 @@ package com.newy.algotrade.unit.common.error
 
 import com.newy.algotrade.common.exception.DuplicateDataException
 import com.newy.algotrade.common.exception.NotFoundRowException
+import com.newy.algotrade.common.exception.VerificationCodeException
 import com.newy.algotrade.spring.error.ErrorResponse
 import com.newy.algotrade.spring.error.FieldError
 import com.newy.algotrade.spring.error.GlobalExceptionHandler
@@ -35,18 +36,19 @@ class ConstraintViolationExceptionTest {
 
     @Test
     fun `FieldError 가 1개 있는 경우`() {
-        val exception = ConstraintViolationException(setOf(
-            object : FakeConstraintViolation<String>() {
-                override fun getPropertyPath(): Path {
-                    return object : FakePath() {
-                        override fun toString() = "fieldName"
+        val exception = ConstraintViolationException(
+            setOf(
+                object : FakeConstraintViolation<String>() {
+                    override fun getPropertyPath(): Path {
+                        return object : FakePath() {
+                            override fun toString() = "fieldName"
+                        }
                     }
-                }
 
-                override fun getInvalidValue() = "fieldValue"
-                override fun getMessage() = "reason"
-            }
-        ))
+                    override fun getInvalidValue() = "fieldValue"
+                    override fun getMessage() = "reason"
+                }
+            ))
         val result = handler.handleException(exception)
 
         val expected = ResponseEntity
@@ -105,6 +107,20 @@ class NotFoundRowExceptionHandlerTest : ClientErrorHandlerTest() {
         assertErrorMessage(
             "Can not found row",
             handler.handleException(NotFoundRowException()),
+        )
+    }
+}
+
+class VerificationCodeExceptionHandlerTest : ClientErrorHandlerTest() {
+    @Test
+    fun `에러 메세지 테스트`() {
+        assertErrorMessage(
+            "검증 가능 시간을 초과했습니다.",
+            handler.handleException(VerificationCodeException("검증 가능 시간을 초과했습니다.")),
+        )
+        assertErrorMessage(
+            "Verification Error",
+            handler.handleException(VerificationCodeException()),
         )
     }
 }

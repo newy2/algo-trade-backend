@@ -2,6 +2,7 @@ package com.newy.algotrade.spring.error
 
 import com.newy.algotrade.common.exception.DuplicateDataException
 import com.newy.algotrade.common.exception.NotFoundRowException
+import com.newy.algotrade.common.exception.VerificationCodeException
 import jakarta.validation.ConstraintViolationException
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -15,7 +16,8 @@ class GlobalExceptionHandler {
         HttpStatus.BAD_REQUEST.let { httpStatus ->
             ResponseEntity
                 .status(httpStatus)
-                .body(ErrorResponse(
+                .body(
+                    ErrorResponse(
                     message = httpStatus.reasonPhrase,
                     errors = exception.constraintViolations.map {
                         FieldError(
@@ -37,6 +39,10 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(NotFoundRowException::class)
     fun handleException(exception: NotFoundRowException) =
+        defaultClientErrorMessage(exception)
+
+    @ExceptionHandler(VerificationCodeException::class)
+    fun handleException(exception: VerificationCodeException) =
         defaultClientErrorMessage(exception)
 
     private fun defaultClientErrorMessage(exception: Exception) =

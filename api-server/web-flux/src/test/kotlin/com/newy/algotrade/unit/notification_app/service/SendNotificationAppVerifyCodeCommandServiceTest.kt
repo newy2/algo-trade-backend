@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.notification_app.service
 
 import com.newy.algotrade.common.event.SendNotificationMessageEvent
-import com.newy.algotrade.common.exception.InitializedError
+import com.newy.algotrade.common.exception.VerificationCodeException
 import com.newy.algotrade.notification_app.domain.NotificationApp
 import com.newy.algotrade.notification_app.domain.Webhook
 import com.newy.algotrade.notification_app.port.`in`.model.SendNotificationAppVerifyCodeCommand
@@ -27,7 +27,6 @@ class NullSaveNotificationAppOutPort : SaveNotificationAppOutPort {
 class NullSendNotificationAppOutPort : SendNotificationMessageOutPort {
     override suspend fun send(event: SendNotificationMessageEvent) {}
 }
-
 
 @DisplayName("인증코드 요청하기 테스트")
 class FirstTrySendNotificationAppVerifyCodeCommandServiceTest {
@@ -122,7 +121,7 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
             sendNotificationMessageOutPort = NullSendNotificationAppOutPort(),
         )
 
-        val error = assertThrows<InitializedError> {
+        val error = assertThrows<VerificationCodeException> {
             service.sendVerifyCode(command)
         }
         assertEquals("이미 검증 완료된 Webhook 입니다.", error.message)
@@ -144,7 +143,7 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
             sendNotificationMessageOutPort = NullSendNotificationAppOutPort(),
         )
 
-        val error = assertThrows<InitializedError> {
+        val error = assertThrows<VerificationCodeException> {
             service.sendVerifyCode(
                 command.copy(
                     webhookUrl = "https://hooks.slack.com/services/2222"
