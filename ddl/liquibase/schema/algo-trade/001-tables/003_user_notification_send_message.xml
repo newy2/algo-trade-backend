@@ -5,8 +5,8 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
-    <property name="currentTable" value="send_user_notification_log" global="false"/>
-    <property name="currentTableComment" value="사용자 알림 전송 로그" global="false"/>
+    <property name="currentTable" value="user_notification_send_message" global="false"/>
+    <property name="currentTableComment" value="알림 전송 메세지" global="false"/>
 
     <property name="referenceTable" value="user_notification_app" global="false"/>
 
@@ -35,11 +35,11 @@
             <column name="request_message" type="VARCHAR2(500)" remarks="전송 메세지">
                 <constraints nullable="false"/>
             </column>
-            <column name="response_message" type="VARCHAR2(20)" remarks="전송 메세지">
+            <column name="response_message" type="VARCHAR2(200)" remarks="응답 메세지">
                 <constraints nullable="true"/>
             </column>
             <column name="status" type="VARCHAR2(10)"
-                    remarks="상태 (REQUESTED: 요청완료, PROCESSING: 처리중, SUCCEED: 전송완료, FAILED: 전송실패)">
+                    remarks="상태 (SUCCEED: 전송완료, FAILED: 전송실패)">
                 <constraints nullable="false"/>
             </column>
 
@@ -56,15 +56,9 @@
         <sql>
             ALTER TABLE ${currentTable}
                 ADD CONSTRAINT ${currentTable}__status_check CHECK (status IN (
-                                                                               'REQUESTED',
-                                                                               'PROCESSING',
-                                                                               'FAILED',
-                                                                               'SUCCEED'
+                                                                               'SUCCEED',
+                                                                               'FAILED'
                     ));
         </sql>
-    </changeSet>
-
-    <changeSet id="2" author="newy">
-        <dropTable tableName="${currentTable}" />
     </changeSet>
 </databaseChangeLog>
