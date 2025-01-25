@@ -1,0 +1,39 @@
+package com.newy.algotrade.unit.notification_app.port.`in`.model
+
+import com.newy.algotrade.notification_app.port.`in`.model.VerifyNotificationAppCommand
+import jakarta.validation.ConstraintViolationException
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertDoesNotThrow
+import org.junit.jupiter.api.assertThrows
+
+class VerifyNotificationAppCommandTest {
+    private val inPortModel = VerifyNotificationAppCommand(
+        userId = 1,
+        verifyCode = "ABCDE",
+    )
+
+    @Test
+    fun `userId 는 0 이상이어야 한다`() {
+        assertThrows<ConstraintViolationException> { inPortModel.copy(userId = -1) }
+        assertThrows<ConstraintViolationException> { inPortModel.copy(userId = 0) }
+        assertDoesNotThrow {
+            inPortModel.copy(userId = 1)
+            inPortModel.copy(userId = 2)
+        }
+    }
+
+    @Test
+    fun `verifyCode 는 빈 문자열일 수 없다`() {
+        assertThrows<ConstraintViolationException> {
+            inPortModel.copy(verifyCode = "")
+        }
+
+        assertThrows<ConstraintViolationException> {
+            inPortModel.copy(verifyCode = " ")
+        }
+
+        assertDoesNotThrow {
+            inPortModel.copy(verifyCode = "A")
+        }
+    }
+}
