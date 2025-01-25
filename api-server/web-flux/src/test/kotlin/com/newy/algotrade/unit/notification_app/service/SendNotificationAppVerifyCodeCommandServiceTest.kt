@@ -73,6 +73,7 @@ class FirstTrySendNotificationAppVerifyCodeCommandServiceTest {
 
         assertEquals(1, event?.userId)
         assertEquals("인증코드: $verifyCode", event?.message)
+        assertEquals(false, event?.isVerified)
     }
 }
 

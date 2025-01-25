@@ -8,10 +8,10 @@ import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 
 @Configuration
-open class JsonConverterConfig {
+class JsonConverterConfig {
     @Bean
-    open fun objectMapper(): ObjectMapper = jacksonObjectMapper()
+    fun objectMapper(): ObjectMapper = jacksonObjectMapper()
 
     @Bean
-    open fun jsonConverter(objectMapper: ObjectMapper): JsonConverter = JsonConverterByJackson(objectMapper)
+    fun jsonConverter(objectMapper: ObjectMapper): JsonConverter = JsonConverterByJackson(objectMapper)
 }
