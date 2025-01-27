@@ -22,7 +22,7 @@ class DeleteNotificationAppCommandService(
     }
 
     private suspend fun findNotificationApp(command: DeleteNotificationAppCommand): DeletableNotificationApp =
-        findDeletableNotificationAppOutPort.findById(command.userId)
+        findDeletableNotificationAppOutPort.findById(command.notificationAppId)
             ?: throw NotFoundRowException("NotificationApp 을 찾을 수 없습니다. ($command)")
 
 }

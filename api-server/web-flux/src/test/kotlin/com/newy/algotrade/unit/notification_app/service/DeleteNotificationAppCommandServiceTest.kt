@@ -60,18 +60,26 @@ class DeleteNotificationAppCommandServiceTest {
     }
 
     @Test
-    fun `문제가 없는 요청이면 DeleteNotificationAppOutPort 에 notificationAppId 가 전달된다`() = runTest {
-        var notificationAppId: Long? = null
-        val service = newService(
-            deleteNotificationAppOutPort = DeleteNotificationAppOutPort {
-                notificationAppId = it
-            },
-        )
+    fun `문제가 없는 요청이면 FindDeletableNotificationAppOutPort 과 DeleteNotificationAppOutPort 에 notificationAppId 가 전달된다`() =
+        runTest {
+            var findAdapterParameter: Long? = null
+            var deleteAdapterParameter: Long? = null
+            val service = newService(
+                findDeletableNotificationAppOutPort = { parameter ->
+                    defaultFindDeletableNotificationAppAdapter().findById(parameter).also {
+                        findAdapterParameter = parameter
+                    }
+                },
+                deleteNotificationAppOutPort = { parameter ->
+                    deleteAdapterParameter = parameter
+                },
+            )
 
-        service.deleteNotificationApp(command)
+            service.deleteNotificationApp(command)
 
-        assertEquals(command.notificationAppId, notificationAppId)
-    }
+            assertEquals(command.notificationAppId, findAdapterParameter)
+            assertEquals(command.notificationAppId, deleteAdapterParameter)
+        }
 
     private fun newService(
         findDeletableNotificationAppOutPort: FindDeletableNotificationAppOutPort = defaultFindDeletableNotificationAppAdapter(),
