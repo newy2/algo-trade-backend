@@ -12,9 +12,13 @@ import com.newy.algotrade.notification_app.service.SendNotificationAppVerifyCode
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
+import org.springframework.transaction.annotation.Transactional
+import kotlin.reflect.full.functions
+import kotlin.reflect.full.hasAnnotation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
 
 class NullFindNotificationAppOutPort : FindNotificationAppOutPort {
     override suspend fun findByUserId(userId: Long) = null
@@ -154,5 +158,15 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
             "기존 Webhook URL 과 다릅니다. (https://hooks.slack.com/services/1111 != https://hooks.slack.com/services/2222)",
             error.message
         )
+    }
+}
+
+@DisplayName("애너테이션 사용 여부 테스트")
+class SendNotificationAppVerifyCodeCommandServiceAnnotationTest {
+    @Test
+    fun `verify 메서드는 @Transactional 애너테이션을 선언해야 한다`() {
+        val method = SendNotificationAppVerifyCodeCommandService::class.functions.find { it.name == "sendVerifyCode" }!!
+
+        assertTrue(method.hasAnnotation<Transactional>())
     }
 }

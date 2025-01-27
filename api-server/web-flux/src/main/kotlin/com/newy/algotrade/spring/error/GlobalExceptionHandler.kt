@@ -1,6 +1,7 @@
 package com.newy.algotrade.spring.error
 
 import com.newy.algotrade.common.exception.DuplicateDataException
+import com.newy.algotrade.common.exception.ForbiddenException
 import com.newy.algotrade.common.exception.NotFoundRowException
 import com.newy.algotrade.common.exception.VerificationCodeException
 import jakarta.validation.ConstraintViolationException
@@ -18,15 +19,15 @@ class GlobalExceptionHandler {
                 .status(httpStatus)
                 .body(
                     ErrorResponse(
-                    message = httpStatus.reasonPhrase,
-                    errors = exception.constraintViolations.map {
-                        FieldError(
-                            field = it.propertyPath.toString(),
-                            value = it.invalidValue.toString(),
-                            reason = it.message
-                        )
-                    }
-                ))
+                        message = httpStatus.reasonPhrase,
+                        errors = exception.constraintViolations.map {
+                            FieldError(
+                                field = it.propertyPath.toString(),
+                                value = it.invalidValue.toString(),
+                                reason = it.message
+                            )
+                        }
+                    ))
         }
 
     @ExceptionHandler(DuplicateDataException::class)
@@ -43,6 +44,10 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(VerificationCodeException::class)
     fun handleException(exception: VerificationCodeException) =
+        defaultClientErrorMessage(exception)
+
+    @ExceptionHandler(ForbiddenException::class)
+    fun handleException(exception: ForbiddenException) =
         defaultClientErrorMessage(exception)
 
     private fun defaultClientErrorMessage(exception: Exception) =

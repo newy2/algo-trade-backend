@@ -1,6 +1,7 @@
-package com.newy.algotrade.unit.common.error
+package com.newy.algotrade.unit.spring.error
 
 import com.newy.algotrade.common.exception.DuplicateDataException
+import com.newy.algotrade.common.exception.ForbiddenException
 import com.newy.algotrade.common.exception.NotFoundRowException
 import com.newy.algotrade.common.exception.VerificationCodeException
 import com.newy.algotrade.spring.error.ErrorResponse
@@ -10,7 +11,7 @@ import jakarta.validation.ConstraintViolation
 import jakarta.validation.ConstraintViolationException
 import jakarta.validation.Path
 import jakarta.validation.metadata.ConstraintDescriptor
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -31,7 +32,7 @@ class ConstraintViolationExceptionTest {
                     errors = emptyList()
                 )
             )
-        assertEquals(expected, result)
+        Assertions.assertEquals(expected, result)
     }
 
     @Test
@@ -65,7 +66,7 @@ class ConstraintViolationExceptionTest {
                     )
                 )
             )
-        assertEquals(expected, result)
+        Assertions.assertEquals(expected, result)
     }
 }
 
@@ -125,6 +126,20 @@ class VerificationCodeExceptionHandlerTest : ClientErrorHandlerTest() {
     }
 }
 
+class ForbiddenExceptionHandlerTest : ClientErrorHandlerTest() {
+    @Test
+    fun `에러 메세지 테스트`() {
+        assertErrorMessage(
+            "접근 권한이 없습니다.",
+            handler.handleException(ForbiddenException("접근 권한이 없습니다.")),
+        )
+        assertErrorMessage(
+            "Forbidden Exception",
+            handler.handleException(ForbiddenException()),
+        )
+    }
+}
+
 open class ClientErrorHandlerTest {
     protected val handler = GlobalExceptionHandler()
 
@@ -137,7 +152,7 @@ open class ClientErrorHandlerTest {
                     errors = emptyList()
                 )
             )
-        assertEquals(expected, actual)
+        Assertions.assertEquals(expected, actual)
     }
 }
 
