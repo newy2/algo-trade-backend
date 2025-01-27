@@ -17,15 +17,8 @@ class NotificationAppPersistenceAdapter(
     @Autowired private val userNotificationAppVerifyCodeR2dbcRepository: UserNotificationAppVerifyCodeR2dbcRepository,
 ) : FindNotificationAppOutPort, SaveNotificationAppOutPort {
     override suspend fun findByUserId(userId: Long): NotificationApp? {
-        val userNotificationApp = findUserNotificationApp(userId)
-        if (userNotificationApp == null) {
-            return null
-        }
-
-        val userNotificationAppVerifyCode = findUserNotificationAppVerifyCode(userNotificationApp.id)
-        if (userNotificationAppVerifyCode == null) {
-            return null
-        }
+        val userNotificationApp = findUserNotificationApp(userId) ?: return null
+        val userNotificationAppVerifyCode = findUserNotificationAppVerifyCode(userNotificationApp.id) ?: return null
 
         return NotificationApp(
             userId = userNotificationApp.userId,
