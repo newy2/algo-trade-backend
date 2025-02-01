@@ -11,7 +11,7 @@ class RegisterMarketAccountFacadeService(
     override suspend fun registerMarketAccount(command: RegisterMarketAccountCommand) {
         val marketAccount = command.toDomainModel()
 
-        service.checkDuplicateMarketAccount(marketAccount.key)
+        service.checkDuplicateMarketAccount(marketAccount)
         service.validMarketAccount(marketAccount.privateApiInfo)
         service.saveMarketAccount(marketAccount)
     }

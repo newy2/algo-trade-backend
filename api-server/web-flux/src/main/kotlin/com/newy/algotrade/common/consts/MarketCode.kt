@@ -1,6 +1,6 @@
 package com.newy.algotrade.common.consts
 
-enum class Market {
+enum class MarketCode {
     BY_BIT,
     LS_SEC;
 }

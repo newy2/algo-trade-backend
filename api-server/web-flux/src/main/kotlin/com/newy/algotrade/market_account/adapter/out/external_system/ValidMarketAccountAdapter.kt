@@ -1,4 +1,4 @@
-package com.newy.algotrade.market_account.adapter.out.external_system.model
+package com.newy.algotrade.market_account.adapter.out.external_system
 
 import com.newy.algotrade.market_account.domain.MarketAccount
 import com.newy.algotrade.market_account.port.out.ValidMarketAccountOutPort

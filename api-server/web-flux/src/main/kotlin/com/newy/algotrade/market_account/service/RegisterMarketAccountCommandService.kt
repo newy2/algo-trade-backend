@@ -16,9 +16,9 @@ class RegisterMarketAccountCommandService(
     private val saveMarketAccountOutPort: SaveMarketAccountOutPort,
 ) {
     @Transactional(readOnly = true)
-    suspend fun checkDuplicateMarketAccount(key: MarketAccount.Key) {
-        if (existsMarketAccountOutPort.existsMarketAccount(key)) {
-            throw DuplicateDataException("같은 이름의 계정을 등록할 수 없습니다. (displayName: ${key.displayName})")
+    suspend fun checkDuplicateMarketAccount(marketAccount: MarketAccount) {
+        if (existsMarketAccountOutPort.existsMarketAccount(marketAccount)) {
+            throw DuplicateDataException("이름 또는 appKet, appSecret 이 중복되었습니다.")
         }
     }
 

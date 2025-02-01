@@ -1,5 +1,6 @@
 package com.newy.algotrade.unit.market_account.service
 
+import com.newy.algotrade.common.consts.MarketCode
 import com.newy.algotrade.common.exception.DuplicateDataException
 import com.newy.algotrade.common.exception.HttpResponseException
 import com.newy.algotrade.market_account.domain.MarketAccount
@@ -34,7 +35,7 @@ class RegisterMarketAccountFacadeServiceTest {
             service.registerMarketAccount(command)
         }
 
-        assertEquals("같은 이름의 계정을 등록할 수 없습니다. (displayName: 테스트 계정)", error.message)
+        assertEquals("이름 또는 appKet, appSecret 이 중복되었습니다.", error.message)
     }
 
     @Test
@@ -65,12 +66,10 @@ class RegisterMarketAccountFacadeServiceTest {
 
         assertEquals(
             MarketAccount(
-                key = MarketAccount.Key(
-                    userId = command.userId,
-                    displayName = command.displayName,
-                ),
+                userId = command.userId,
+                displayName = command.displayName,
                 privateApiInfo = MarketAccount.PrivateApiInfo(
-                    marketCode = command.marketCode,
+                    marketCode = MarketCode.valueOf(command.marketCode),
                     appKey = command.appKey,
                     appSecret = command.appSecret
                 )
@@ -106,7 +105,7 @@ class RegisterMarketAccountFacadeServiceTest {
     )
 
     private fun defaultExistsMarketAccountAdapter() = object : ExistsMarketAccountOutPort {
-        override suspend fun existsMarketAccount(key: MarketAccount.Key) = false
+        override suspend fun existsMarketAccount(marketAccount: MarketAccount) = false
     }
 
     private fun defaultValidateMarketAccountAdapter() = object : ValidMarketAccountOutPort {

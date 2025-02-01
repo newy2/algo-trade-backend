@@ -1,16 +1,14 @@
 package com.newy.algotrade.market_account.domain
 
+import com.newy.algotrade.common.consts.MarketCode
+
 data class MarketAccount(
-    val key: Key,
+    val userId: Long,
+    val displayName: String,
     val privateApiInfo: PrivateApiInfo,
 ) {
-    data class Key(
-        val userId: Long,
-        val displayName: String,
-    )
-
     data class PrivateApiInfo(
-        val marketCode: String,
+        val marketCode: MarketCode,
         val appKey: String,
         val appSecret: String,
     )

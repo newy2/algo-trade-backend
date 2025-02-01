@@ -8,7 +8,7 @@
     <property name="currentTable" value="user_trade_strategy" global="false"/>
     <property name="currentTableComment" value="사용자 자동매매 전략" global="false"/>
 
-    <property name="referenceTable1" value="market_server_account" global="false"/>
+    <property name="referenceTable1" value="market_account" global="false"/>
     <property name="referenceTable2" value="trade_strategy" global="false"/>
 
     <changeSet author="newy" id="1">
@@ -22,7 +22,7 @@
             <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
                 <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
             </column>
-            <column name="${referenceTable1}_id" type="BIGINT" remarks="거래소 서버계정 ID">
+            <column name="${referenceTable1}_id" type="BIGINT" remarks="거래소 계정 ID">
                 <constraints
                         referencedTableName="${referenceTable1}"
                         referencedColumnNames="id"

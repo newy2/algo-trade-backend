@@ -5,12 +5,12 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
 >
-    <property name="currentTable" value="market_server_account" global="false"/>
-    <property name="currentTableComment" value="거래소 서버 계정" global="false"/>
+    <property name="currentTable" value="market_account" global="false"/>
+    <property name="currentTableComment" value="거래소 계정" global="false"/>
 
     <property name="referenceTable1" value="users" global="false"/>
     <property name="referenceTableId1" value="user_id" global="false"/>
-    <property name="referenceTable2" value="market_server" global="false"/>
+    <property name="referenceTable2" value="market" global="false"/>
 
     <changeSet author="newy" id="1">
         <preConditions onFail="CONTINUE">
@@ -32,7 +32,7 @@
                         nullable="false"
                 />
             </column>
-            <column name="${referenceTable2}_id" type="BIGINT" remarks="거래소 서버 ID">
+            <column name="${referenceTable2}_id" type="BIGINT" remarks="거래소 ID">
                 <constraints
                         referencedTableName="${referenceTable2}"
                         referencedColumnNames="id"
@@ -52,6 +52,9 @@
             <column name="app_secret" type="VARCHAR2(300)" remarks="앱 비밀키">
                 <constraints nullable="false"/>
             </column>
+            <column name="use_yn" type="CHAR(1)" remarks="사용 여부" defaultValue="Y">
+                <constraints nullable="false"/>
+            </column>
             <column name="verify_yn" type="CHAR(1)" remarks="활성화 여부" defaultValue="N">
                 <constraints nullable="false"/>
             </column>
@@ -69,12 +72,15 @@
         <addUniqueConstraint
                 tableName="${currentTable}"
                 columnNames="${referenceTable2}_id, app_key, app_secret"
-                constraintName="${currentTable}__market_server_id_app_key_app_secret_uk"/>
+                constraintName="${currentTable}__${referenceTable2}_id_app_key_app_secret_uk"/>
 
         <!-- pro 모드 대체 로직  -->
         <sql>
             ALTER TABLE ${currentTable}
-                ADD CONSTRAINT ${currentTable}__verify_yn_check CHECK (verify_yn IN ('Y', 'N'))
+                ADD CONSTRAINT ${currentTable}__use_yn_check CHECK (use_yn IN ('Y', 'N'));
+
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__verify_yn_check CHECK (verify_yn IN ('Y', 'N'));
         </sql>
     </changeSet>
 </databaseChangeLog>
