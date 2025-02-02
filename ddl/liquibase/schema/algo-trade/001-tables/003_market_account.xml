@@ -83,4 +83,28 @@
                 ADD CONSTRAINT ${currentTable}__verify_yn_check CHECK (verify_yn IN ('Y', 'N'));
         </sql>
     </changeSet>
+
+    <changeSet id="2" author="newy" dbms="!mysql">
+        <dropUniqueConstraint
+                tableName="${currentTable}"
+                uniqueColumns="${referenceTable2}_id, app_key, app_secret"
+                constraintName="${currentTable}__${referenceTable2}_id_app_key_app_secret_uk"/>
+    </changeSet>
+
+    <changeSet id="3" author="newy" dbms="mysql">
+        <dropForeignKeyConstraint
+                baseTableName="${currentTable}"
+                constraintName="${currentTable}__${referenceTable2}_id_fk"
+        />
+        <dropUniqueConstraint
+                tableName="${currentTable}"
+                uniqueColumns="${referenceTable2}_id, app_key, app_secret"
+                constraintName="${currentTable}__${referenceTable2}_id_app_key_app_secret_uk"/>
+        <addForeignKeyConstraint
+                baseTableName="${currentTable}"
+                baseColumnNames="${referenceTable2}_id"
+                constraintName="${currentTable}__${referenceTable2}_id_fk"
+                referencedTableName="${referenceTable2}"
+                referencedColumnNames="id"/>
+    </changeSet>
 </databaseChangeLog>
