@@ -3,6 +3,7 @@ package com.newy.algotrade.integration.auth.adapter.out
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.newy.algotrade.auth.adpter.out.internal_system.ByBitAccessTokenCalculator
 import com.newy.algotrade.auth.domain.ByBitPrivateApiInfo
+import com.newy.algotrade.auth.domain.PrivateApiInfo
 import com.newy.algotrade.common.mapper.JsonConverterByJackson
 import com.newy.algotrade.common.web.default_implement.DefaultHttpApiClient
 import com.newy.algotrade.common.web.http.get
@@ -29,8 +30,10 @@ class ByBitPrivateApiTest : BaseDisabledTest {
         val now = Instant.now().toEpochMilli()
         val signature = ByBitAccessTokenCalculator().findAccessToken(
             ByBitPrivateApiInfo(
-                key = TestEnv.ByBit.apiKey,
-                secret = TestEnv.ByBit.apiSecret,
+                privateApiInfo = PrivateApiInfo(
+                    key = TestEnv.ByBit.apiKey,
+                    secret = TestEnv.ByBit.apiSecret,
+                ),
                 timestamp = now,
                 data = "category=spot",
                 receiveWindow = 5000,

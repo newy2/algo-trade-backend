@@ -4,5 +4,5 @@ import com.newy.algotrade.auth.domain.ByBitPrivateApiInfo
 import com.newy.algotrade.auth.port.out.AccessTokenPort
 
 class ByBitAccessTokenCalculator : AccessTokenPort<ByBitPrivateApiInfo> {
-    override suspend fun findAccessToken(info: ByBitPrivateApiInfo) = info.accessToken()
+    override suspend fun findAccessToken(info: ByBitPrivateApiInfo) = info.getAccessToken()
 }
