@@ -28,7 +28,7 @@ class SendNotificationAppVerifyCodeCommandTest {
     }
 
     @Test
-    fun `webhookType 은 SLACK 만 지원한다`() {
+    fun `webhookType 은 'SLACK' 만 지원한다`() {
         assertThrows<ConstraintViolationException> {
             inPortModel.copy(webhookType = "DISCODE")
         }
