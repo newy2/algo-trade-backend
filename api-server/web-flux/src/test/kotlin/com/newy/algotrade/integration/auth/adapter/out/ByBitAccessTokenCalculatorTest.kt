@@ -31,8 +31,8 @@ class ByBitPrivateApiTest : BaseDisabledTest {
         val signature = ByBitAccessTokenCalculator().findAccessToken(
             ByBitPrivateApiInfo(
                 privateApiInfo = PrivateApiInfo(
-                    key = TestEnv.ByBit.apiKey,
-                    secret = TestEnv.ByBit.apiSecret,
+                    appKey = TestEnv.ByBit.apiKey,
+                    appSecret = TestEnv.ByBit.apiSecret,
                 ),
                 timestamp = now,
                 data = "category=spot",

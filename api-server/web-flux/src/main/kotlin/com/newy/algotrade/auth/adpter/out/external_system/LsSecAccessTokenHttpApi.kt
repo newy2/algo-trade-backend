@@ -17,8 +17,8 @@ class LsSecAccessTokenHttpApi(
             params = mapOf(
                 "grant_type" to "client_credentials",
                 "scope" to "oob",
-                "appkey" to info.key,
-                "appsecretkey" to info.secret,
+                "appkey" to info.appKey,
+                "appsecretkey" to info.appSecret,
             ),
             body = FormData()
         ).let {

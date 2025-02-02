@@ -15,13 +15,13 @@ class ByBitPrivateApiInfo(
     }
 
     private fun getSource(): String =
-        timestamp.toString() + privateApiInfo.key + receiveWindow.toString() + data
+        timestamp.toString() + privateApiInfo.appKey + receiveWindow.toString() + data
 
     fun getAccessToken(): String =
         Mac.getInstance(ALGORITHM).let {
             it.init(
                 SecretKeySpec(
-                    privateApiInfo.secret.toByteArray(),
+                    privateApiInfo.appSecret.toByteArray(),
                     ALGORITHM
                 )
             )
@@ -32,7 +32,7 @@ class ByBitPrivateApiInfo(
     fun getRequestHeaders(): Map<String, String> =
         mapOf(
             "X-BAPI-SIGN" to getAccessToken(),
-            "X-BAPI-API-KEY" to privateApiInfo.key,
+            "X-BAPI-API-KEY" to privateApiInfo.appKey,
             "X-BAPI-TIMESTAMP" to timestamp.toString(),
             "X-BAPI-RECV-WINDOW" to "5000",
         )

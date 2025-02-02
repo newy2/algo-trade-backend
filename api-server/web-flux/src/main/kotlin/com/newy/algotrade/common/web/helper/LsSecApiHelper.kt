@@ -41,8 +41,8 @@ class LsSecApiHelper(
                 params = mapOf(
                     "grant_type" to "client_credentials",
                     "scope" to "oob",
-                    "appkey" to privateApiInfo.key,
-                    "appsecretkey" to privateApiInfo.secret,
+                    "appkey" to privateApiInfo.appKey,
+                    "appsecretkey" to privateApiInfo.appSecret,
                 ),
                 body = FormData()
             ).accessToken

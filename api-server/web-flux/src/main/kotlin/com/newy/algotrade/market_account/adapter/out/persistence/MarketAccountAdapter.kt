@@ -26,7 +26,7 @@ class MarketAccountAdapter(
     }
 
     override suspend fun saveMarketAccount(marketAccount: MarketAccount) {
-        val market = marketRepository.findByCode(marketAccount.privateApiInfo.marketCode.toString())
+        val market = marketRepository.findByCode(marketAccount.marketCode.toString())
         marketAccountRepository.save(
             MarketAccountR2dbcEntity(
                 domainModel = marketAccount,

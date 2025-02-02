@@ -1,5 +1,6 @@
 package com.newy.algotrade.unit.market_account.service
 
+import com.newy.algotrade.auth.domain.PrivateApiInfo
 import com.newy.algotrade.common.consts.MarketCode
 import com.newy.algotrade.common.exception.DuplicateDataException
 import com.newy.algotrade.common.exception.HttpResponseException
@@ -40,7 +41,7 @@ class RegisterMarketAccountFacadeServiceTest {
 
     @Test
     fun `계정정보 조회에 실패한 경우 에러가 발생한다`() = runTest {
-        val validationFailedAdapter = ValidMarketAccountOutPort { false }
+        val validationFailedAdapter = ValidMarketAccountOutPort { _, _ -> false }
         val service = newService(
             validMarketAccountOutPort = validationFailedAdapter,
         )
@@ -68,8 +69,8 @@ class RegisterMarketAccountFacadeServiceTest {
             MarketAccount(
                 userId = command.userId,
                 displayName = command.displayName,
-                privateApiInfo = MarketAccount.PrivateApiInfo(
-                    marketCode = MarketCode.valueOf(command.marketCode),
+                marketCode = MarketCode.valueOf(command.marketCode),
+                privateApiInfo = PrivateApiInfo(
                     appKey = command.appKey,
                     appSecret = command.appSecret
                 )
@@ -83,7 +84,7 @@ class RegisterMarketAccountFacadeServiceTest {
         var log = ""
         val service = newService(
             existsMarketAccountOutPort = { false.also { log += "existsMarketAccount " } },
-            validMarketAccountOutPort = { true.also { log += "validMarketAccount " } },
+            validMarketAccountOutPort = { _, _ -> true.also { log += "validMarketAccount " } },
             saveMarketAccountOutPort = { log += "saveMarketAccount " },
         )
 
@@ -109,7 +110,7 @@ class RegisterMarketAccountFacadeServiceTest {
     }
 
     private fun defaultValidateMarketAccountAdapter() = object : ValidMarketAccountOutPort {
-        override suspend fun validMarketAccount(privateApiInfo: MarketAccount.PrivateApiInfo) = true
+        override suspend fun validMarketAccount(marketCode: MarketCode, privateApiInfo: PrivateApiInfo) = true
     }
 
     private fun defaultSaveMarketAccountAdapter() = object : SaveMarketAccountOutPort {

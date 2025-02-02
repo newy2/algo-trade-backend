@@ -12,7 +12,7 @@ class RegisterMarketAccountFacadeService(
         val marketAccount = command.toDomainModel()
 
         service.checkDuplicateMarketAccount(marketAccount)
-        service.validMarketAccount(marketAccount.privateApiInfo)
+        service.validMarketAccount(marketAccount.marketCode, marketAccount.privateApiInfo)
         service.saveMarketAccount(marketAccount)
     }
 }

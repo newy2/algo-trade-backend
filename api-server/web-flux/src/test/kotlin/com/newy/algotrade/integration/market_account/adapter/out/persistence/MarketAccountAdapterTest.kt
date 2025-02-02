@@ -1,5 +1,6 @@
 package com.newy.algotrade.integration.market_account.adapter.out.persistence
 
+import com.newy.algotrade.auth.domain.PrivateApiInfo
 import com.newy.algotrade.common.consts.MarketCode
 import com.newy.algotrade.market_account.adapter.out.persistence.MarketAccountAdapter
 import com.newy.algotrade.market_account.domain.MarketAccount
@@ -25,8 +26,8 @@ class MarketAccountAdapterTest(
                 MarketAccount(
                     userId = userId,
                     displayName = "test",
-                    privateApiInfo = MarketAccount.PrivateApiInfo(
-                        marketCode = MarketCode.BY_BIT,
+                    marketCode = MarketCode.BY_BIT,
+                    privateApiInfo = PrivateApiInfo(
                         appKey = "ABCD",
                         appSecret = "1234",
                     )
@@ -51,8 +52,8 @@ class MarketAccountAdapterTest(
                 MarketAccount(
                     userId = userId,
                     displayName = duplicateDisplayName,
-                    privateApiInfo = MarketAccount.PrivateApiInfo(
-                        marketCode = MarketCode.BY_BIT,
+                    marketCode = MarketCode.BY_BIT,
+                    privateApiInfo = PrivateApiInfo(
                         appKey = "ABCD",
                         appSecret = "1234",
                     )
@@ -78,8 +79,8 @@ class MarketAccountAdapterTest(
                 MarketAccount(
                     userId = userId,
                     displayName = duplicateDisplayName,
-                    privateApiInfo = MarketAccount.PrivateApiInfo(
-                        marketCode = MarketCode.BY_BIT,
+                    marketCode = MarketCode.BY_BIT,
+                    privateApiInfo = PrivateApiInfo(
                         appKey = "ABCD",
                         appSecret = "1234",
                     )
@@ -107,8 +108,8 @@ class MarketAccountAdapterTest(
                 MarketAccount(
                     userId = userId,
                     displayName = "display name2",
-                    privateApiInfo = MarketAccount.PrivateApiInfo(
-                        marketCode = MarketCode.BY_BIT,
+                    marketCode = MarketCode.BY_BIT,
+                    privateApiInfo = PrivateApiInfo(
                         appKey = duplicateAppKey,
                         appSecret = duplicateAppSecret,
                     )
@@ -137,8 +138,8 @@ class MarketAccountAdapterTest(
                 MarketAccount(
                     userId = userId,
                     displayName = "display name2",
-                    privateApiInfo = MarketAccount.PrivateApiInfo(
-                        marketCode = MarketCode.BY_BIT,
+                    marketCode = MarketCode.BY_BIT,
+                    privateApiInfo = PrivateApiInfo(
                         appKey = duplicateAppKey,
                         appSecret = duplicateAppSecret,
                     )
@@ -153,8 +154,8 @@ class MarketAccountAdapterTest(
         val marketAccount = MarketAccount(
             userId = userId,
             displayName = "display name",
-            privateApiInfo = MarketAccount.PrivateApiInfo(
-                marketCode = MarketCode.BY_BIT,
+            marketCode = MarketCode.BY_BIT,
+            privateApiInfo = PrivateApiInfo(
                 appKey = "ABCD",
                 appSecret = "1234",
             )

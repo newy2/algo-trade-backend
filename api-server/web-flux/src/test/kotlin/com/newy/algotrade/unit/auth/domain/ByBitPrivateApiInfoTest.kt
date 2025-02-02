@@ -11,8 +11,8 @@ class ByBitPrivateHttpGetMethodInfoTest {
     val queryString = "category=spot&symbol=BTCUSDT"
     val privateApiInfo = ByBitPrivateApiInfo(
         privateApiInfo = PrivateApiInfo(
-            key = "api-key",
-            secret = "secret",
+            appKey = "api-key",
+            appSecret = "secret",
         ),
         timestamp = 1658385579423,
         data = queryString,
@@ -46,8 +46,8 @@ class ByBitPrivateHttpPostMethodInfoTest {
     val rawBody = """{"category":"option"}"""
     val privateApiInfo = ByBitPrivateApiInfo(
         privateApiInfo = PrivateApiInfo(
-            key = "api-key",
-            secret = "secret",
+            appKey = "api-key",
+            appSecret = "secret",
         ),
         timestamp = 1658385579423,
         data = rawBody,

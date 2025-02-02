@@ -1,5 +1,7 @@
 package com.newy.algotrade.market_account.service
 
+import com.newy.algotrade.auth.domain.PrivateApiInfo
+import com.newy.algotrade.common.consts.MarketCode
 import com.newy.algotrade.common.exception.DuplicateDataException
 import com.newy.algotrade.common.exception.HttpResponseException
 import com.newy.algotrade.market_account.domain.MarketAccount
@@ -22,8 +24,8 @@ class RegisterMarketAccountCommandService(
         }
     }
 
-    suspend fun validMarketAccount(privateApiInfo: MarketAccount.PrivateApiInfo) {
-        if (!validMarketAccountOutPort.validMarketAccount(privateApiInfo)) {
+    suspend fun validMarketAccount(marketCode: MarketCode, privateApiInfo: PrivateApiInfo) {
+        if (!validMarketAccountOutPort.validMarketAccount(marketCode, privateApiInfo)) {
             throw HttpResponseException("거래소의 계정 정보를 조회할 수 없습니다.")
         }
     }
