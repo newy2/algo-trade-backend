@@ -11,6 +11,7 @@ import com.newy.algotrade.setting.service.GetUserSettingQueryService
 import helpers.spring.TransactionalAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import java.time.LocalDateTime
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -32,6 +33,7 @@ class GetSettingQueryServiceTest {
 
     @Test
     fun `저장된 데이터가 있는 경우`() = runTest {
+        val verifyCodeExpiredAt = LocalDateTime.now().plusMinutes(3)
         val service = newService(
             getMarketAccountsOutPort = {
                 listOf(
@@ -48,8 +50,10 @@ class GetSettingQueryServiceTest {
             getNotificationAppOutPort = {
                 NotificationApp(
                     id = 10,
-                    type = "SLACK",
-                    url = "https://hooks.slack.com/services/1111",
+                    webhookType = "SLACK",
+                    webhookUrl = "https://hooks.slack.com/services/1111",
+                    isVerified = false,
+                    verifyCodeExpiredAt = verifyCodeExpiredAt,
                 )
             }
         )
@@ -68,8 +72,10 @@ class GetSettingQueryServiceTest {
                 ),
                 notificationApp = NotificationApp(
                     id = 10,
-                    type = "SLACK",
-                    url = "https://hooks.slack.com/services/1111",
+                    webhookType = "SLACK",
+                    webhookUrl = "https://hooks.slack.com/services/1111",
+                    isVerified = false,
+                    verifyCodeExpiredAt = verifyCodeExpiredAt,
                 ),
             ),
             service.getUserSetting(query)
