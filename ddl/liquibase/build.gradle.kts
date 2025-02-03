@@ -39,13 +39,13 @@ fun getSchemaArguments(): Map<String, String> {
             "liquibaseSchemaName" to "liquibase",
             "defaultSchemaName" to "algo_trade",
         ),
-        "test" to mapOf(
-            "liquibaseSchemaName" to "test_liquibase",
-            "defaultSchemaName" to "test_algo_trade",
+        "dev" to mapOf(
+            "liquibaseSchemaName" to "dev_liquibase",
+            "defaultSchemaName" to "dev_algo_trade",
         ),
-        "prod" to mapOf(
-            "liquibaseSchemaName" to "prod_liquibase",
-            "defaultSchemaName" to "prod_algo_trade",
+        "prd" to mapOf(
+            "liquibaseSchemaName" to "prd_liquibase",
+            "defaultSchemaName" to "prd_algo_trade",
         ),
     )[getSystemProperty("X_APP_ENV")] ?: emptyMap()
 }
