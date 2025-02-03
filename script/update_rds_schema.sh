@@ -6,8 +6,6 @@ if ! [[ "$APP_ENV" == "test" || "$APP_ENV" == "prod" ]]; then
   echo "APP_ENV 는 'test' 또는 'prod' 으로 입력해주세요. (APP_ENV = '$APP_ENV')" >&2
   exit 1
 fi
-LS_SEC_API_KEY=${LS_SEC_API_KEY:?"LS_SEC_API_KEY 를 입력해주세요."}
-LS_SEC_API_SECRET=${LS_SEC_API_SECRET:?"LS_SEC_API_SECRET 를 입력해주세요."}
 
 # 필수 환경변수 확인
 ACCESS_PORT=3389
@@ -61,9 +59,7 @@ echo "Updating database schema..."
   -DX_DBMS_NAME=postgresql \
   -DX_POSTGRESQL_JDBC_URL=jdbc:postgresql://localhost:$ACCESS_PORT/ \
   -DX_POSTGRESQL_USERNAME=$RDS_USERNAME \
-  -DX_POSTGRESQL_PASSWORD=$RDS_PASSWORD \
-  -DX_LS_SEC_API_KEY=$LS_SEC_API_KEY \
-  -DX_LS_SEC_API_SECRET=$LS_SEC_API_SECRET
+  -DX_POSTGRESQL_PASSWORD=$RDS_PASSWORD
 
 # 터널 닫기
 echo "Closing RDS tunnel..."

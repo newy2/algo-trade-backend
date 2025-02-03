@@ -2,7 +2,6 @@ name: GitHub Actions Demo
 on:
   push:
     branches: [ 'dev' ]
-    paths: [ 'api-server/**' ]
 
 jobs:
   deploy:
@@ -11,5 +10,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Run deploy.sh
+      - name: Update RDS Schema
+        run: APP_ENV=test script/update_rds_schema.sh
+
+      - name: Deploy Backend Server
         run: APP_ENV=test script/deploy.sh
