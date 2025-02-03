@@ -8,7 +8,8 @@ if ! [[ "$APP_ENV" == "dev" || "$APP_ENV" == "prd" ]]; then
 fi
 
 # 필수 환경변수 확인
-ACCESS_PORT=3389
+LOCAL_PORT=3390
+REMOTE_PORT=3389
 EICE_ID=$(aws ssm get-parameter --name "/vpc/eice/rds-connect/id" --query "Parameter.Value" --output text)
 if [[ -z $EICE_ID ]]; then echo "EICE_ID 을 찾을 수 없습니다." >&2; exit 1; fi
 
@@ -29,8 +30,8 @@ echo "Opening RDS tunnel..."
 aws ec2-instance-connect open-tunnel \
   --instance-connect-endpoint-id $EICE_ID \
   --private-ip-address $RDS_PRIVATE_IP \
-  --local-port $ACCESS_PORT \
-  --remote-port $ACCESS_PORT &>/dev/null &
+  --local-port $LOCAL_PORT \
+  --remote-port $REMOTE_PORT &>/dev/null &
 
 TUNNEL_PID=$!
 echo "Tunnel opened with PID $TUNNEL_PID"
