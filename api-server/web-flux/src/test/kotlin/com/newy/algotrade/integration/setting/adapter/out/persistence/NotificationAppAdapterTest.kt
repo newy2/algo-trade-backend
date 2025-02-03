@@ -17,7 +17,7 @@ class NotificationAppAdapterTest(
     @Autowired private val databaseClient: DatabaseClient,
 ) : BaseDataR2dbcTest() {
     @Test
-    fun `저장되지 않은 NotificationApp 을 조회하는 경우`() = runTransactional {
+    fun `저장하지 않은 NotificationApp 을 조회하는 경우`() = runTransactional {
         val userId = insertUserByEmail("user1@test.com")
 
         assertNull(adapter.getNotificationApp(userId))
