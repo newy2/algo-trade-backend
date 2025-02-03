@@ -26,6 +26,7 @@ ENV X_DB_URL ""
 ENV X_DB_SCHEMA ""
 ENV X_DB_USERNAME ""
 ENV X_DB_PASSWORD ""
+ENV spring_profiles_active ""
 
 # TODO Spring Security 적용시, X_ADMIN_IP 제거할 것
 ARG X_ADMIN_IP
