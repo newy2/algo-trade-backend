@@ -11,7 +11,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Update RDS Schema
-        run: APP_ENV=test script/update_rds_schema.sh
+        run: APP_ENV=dev script/update_rds_schema.sh
 
       - name: Deploy Backend Server
-        run: APP_ENV=test script/deploy.sh
+        run: APP_ENV=dev script/deploy.sh
