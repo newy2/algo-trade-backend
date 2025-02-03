@@ -20,7 +20,7 @@ class RegisterMarketAccountCommandService(
     @Transactional(readOnly = true)
     suspend fun checkDuplicateMarketAccount(marketAccount: MarketAccount) {
         if (existsMarketAccountOutPort.existsMarketAccount(marketAccount)) {
-            throw DuplicateDataException("이름 또는 appKet, appSecret 이 중복되었습니다.")
+            throw DuplicateDataException("이름 또는 appKey, appSecret 이 중복되었습니다.")
         }
     }
 

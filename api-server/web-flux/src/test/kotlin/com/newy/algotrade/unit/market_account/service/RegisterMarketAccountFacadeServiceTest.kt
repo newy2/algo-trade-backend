@@ -36,7 +36,7 @@ class RegisterMarketAccountFacadeServiceTest {
             service.registerMarketAccount(command)
         }
 
-        assertEquals("이름 또는 appKet, appSecret 이 중복되었습니다.", error.message)
+        assertEquals("이름 또는 appKey, appSecret 이 중복되었습니다.", error.message)
     }
 
     @Test
