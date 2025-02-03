@@ -8,11 +8,13 @@ import com.newy.algotrade.notification_send.port.`in`.SaveMessageInPort
 import com.newy.algotrade.notification_send.port.`in`.SendMessageInPort
 import com.newy.algotrade.notification_send.port.`in`.model.SendNotificationMessageCommand
 import com.newy.algotrade.notification_send.service.SendNotificationMessageFacadeService
+import helpers.spring.TransactionalAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 @DisplayName("SendNotificationMessageFacadeService 메서드 호출 순서 확인 테스트")
 class SendNotificationMessageFacadeServiceCallStackTest : BaseSendNotificationMessageFacadeServiceTest() {
@@ -91,6 +93,14 @@ class SendNotificationMessageFacadeServiceParameterTest : BaseSendNotificationMe
 
         assertNotNull(sendMessageInPortReturnValue)
         assertEquals(sendMessageInPortReturnValue, saveMessageInPortParameterValue)
+    }
+}
+
+class SendNotificationMessageFacadeServiceTransactionalAnnotationTest :
+    TransactionalAnnotationTestHelper(clazz = SendNotificationMessageFacadeService::class) {
+    @Test
+    fun `@Transactional 애너테이션 사용 여부 테스트`() {
+        assertTrue(hasNotTransactional(methodName = "sendNotificationMessage"))
     }
 }
 

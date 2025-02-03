@@ -10,11 +10,13 @@ import com.newy.algotrade.notification_send.port.out.FindNotificationAppOutPort
 import com.newy.algotrade.notification_send.port.out.SaveNotificationSendMessageOutPort
 import com.newy.algotrade.notification_send.port.out.SendNotificationMessageOutPort
 import com.newy.algotrade.notification_send.service.SendNotificationMessageCommandService
+import helpers.spring.TransactionalAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 @DisplayName("SendNotificationMessageCommandService 테스트")
 class HappyPathSendNotificationMessageCommandServiceTest {
@@ -124,6 +126,15 @@ class SendNotificationMessageCommandServiceExceptionTest {
     }
 }
 
+class SendNotificationMessageCommandServiceTransactionalAnnotationTest :
+    TransactionalAnnotationTestHelper(clazz = SendNotificationMessageCommandService::class) {
+    @Test
+    fun `@Transactional 애너테이션 사용 여부 테스트`() {
+        assertTrue(hasReadOnlyTransactional(methodName = "getMessage"))
+        assertTrue(hasNotTransactional(methodName = "sendMessage"))
+        assertTrue(hasWritableTransactional(methodName = "saveMessage"))
+    }
+}
 
 val FAKE_NOTIFICATION_APP = NotificationApp(
     id = 1,

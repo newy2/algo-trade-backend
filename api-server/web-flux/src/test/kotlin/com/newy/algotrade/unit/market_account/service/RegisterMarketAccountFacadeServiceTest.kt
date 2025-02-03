@@ -11,10 +11,12 @@ import com.newy.algotrade.market_account.port.out.SaveMarketAccountOutPort
 import com.newy.algotrade.market_account.port.out.ValidMarketAccountOutPort
 import com.newy.algotrade.market_account.service.RegisterMarketAccountCommandService
 import com.newy.algotrade.market_account.service.RegisterMarketAccountFacadeService
+import helpers.spring.TransactionalAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 
 class RegisterMarketAccountFacadeServiceTest {
     private val command = RegisterMarketAccountCommand(
@@ -115,5 +117,23 @@ class RegisterMarketAccountFacadeServiceTest {
 
     private fun defaultSaveMarketAccountAdapter() = object : SaveMarketAccountOutPort {
         override suspend fun saveMarketAccount(marketAccount: MarketAccount) {}
+    }
+}
+
+class RegisterMarketAccountFacadeServiceTransactionalAnnotationTest :
+    TransactionalAnnotationTestHelper(clazz = RegisterMarketAccountFacadeService::class) {
+    @Test
+    fun `@Transactional 애너테이션 사용 여부 테스트`() {
+        assertTrue(hasNotTransactional(methodName = "registerMarketAccount"))
+    }
+}
+
+class RegisterMarketAccountCommandServiceTransactionalAnnotationTest :
+    TransactionalAnnotationTestHelper(clazz = RegisterMarketAccountCommandService::class) {
+    @Test
+    fun `@Transactional 애너테이션 사용 여부 테스트`() {
+        assertTrue(hasReadOnlyTransactional(methodName = "checkDuplicateMarketAccount"))
+        assertTrue(hasNotTransactional(methodName = "validMarketAccount"))
+        assertTrue(hasWritableTransactional(methodName = "saveMarketAccount"))
     }
 }

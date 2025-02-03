@@ -85,9 +85,10 @@ class GetSettingQueryServiceTest {
     )
 }
 
-class TransactionalAnnotationTest : TransactionalAnnotationTestHelper(clazz = GetUserSettingQueryService::class) {
+class GetUserSettingQueryServiceTransactionalAnnotationTest :
+    TransactionalAnnotationTestHelper(clazz = GetUserSettingQueryService::class) {
     @Test
     fun `@Transactional 사용여부 테스트`() {
-        assertTrue(hasReadableTransaction(methodName = "getUserSetting"))
+        assertTrue(hasReadOnlyTransactional(methodName = "getUserSetting"))
     }
 }

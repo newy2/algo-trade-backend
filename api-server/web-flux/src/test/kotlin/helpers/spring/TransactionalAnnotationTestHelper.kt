@@ -6,15 +6,15 @@ import kotlin.reflect.full.findAnnotation
 import kotlin.reflect.full.functions
 
 open class TransactionalAnnotationTestHelper(private val clazz: KClass<*>) {
-    fun hasReadableTransaction(methodName: String): Boolean {
+    fun hasReadOnlyTransactional(methodName: String): Boolean {
         return getTransactionalAnnotation(methodName)!!.readOnly == true
     }
 
-    fun hasWritableTransaction(methodName: String): Boolean {
+    fun hasWritableTransactional(methodName: String): Boolean {
         return getTransactionalAnnotation(methodName)!!.readOnly == false
     }
 
-    fun hasNotTransaction(methodName: String): Boolean {
+    fun hasNotTransactional(methodName: String): Boolean {
         return getTransactionalAnnotation(methodName) == null
     }
 

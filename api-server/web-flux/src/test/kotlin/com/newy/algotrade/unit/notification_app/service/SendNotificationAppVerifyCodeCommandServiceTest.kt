@@ -9,12 +9,10 @@ import com.newy.algotrade.notification_app.port.out.FindNotificationAppOutPort
 import com.newy.algotrade.notification_app.port.out.SaveNotificationAppOutPort
 import com.newy.algotrade.notification_app.port.out.SendNotificationMessageOutPort
 import com.newy.algotrade.notification_app.service.SendNotificationAppVerifyCodeCommandService
+import helpers.spring.TransactionalAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
-import org.springframework.transaction.annotation.Transactional
-import kotlin.reflect.full.functions
-import kotlin.reflect.full.hasAnnotation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -161,12 +159,10 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
     }
 }
 
-@DisplayName("애너테이션 사용 여부 테스트")
-class SendNotificationAppVerifyCodeCommandServiceAnnotationTest {
+class SendNotificationAppVerifyCodeCommandServiceTransactionalAnnotationTest :
+    TransactionalAnnotationTestHelper(clazz = SendNotificationAppVerifyCodeCommandService::class) {
     @Test
-    fun `verify 메서드는 @Transactional 애너테이션을 선언해야 한다`() {
-        val method = SendNotificationAppVerifyCodeCommandService::class.functions.find { it.name == "sendVerifyCode" }!!
-
-        assertTrue(method.hasAnnotation<Transactional>())
+    fun `@Transactional 애너테이션 사용 여부 테스트`() {
+        assertTrue(hasWritableTransactional(methodName = "sendVerifyCode"))
     }
 }
