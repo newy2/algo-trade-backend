@@ -22,8 +22,11 @@ class AdminIpFilter(
             return responseAccessDenied(exchange)
         }
 
+        exchange.attributes["loginUserId"] = 1
         if (isAdminIp) {
-            exchange.attributes["loginUserId"] = 1
+            exchange.attributes["loginUserRole"] = "ADMIN"
+        } else {
+            exchange.attributes["loginUserRole"] = "GUEST"
         }
 
         return chain.filter(exchange)

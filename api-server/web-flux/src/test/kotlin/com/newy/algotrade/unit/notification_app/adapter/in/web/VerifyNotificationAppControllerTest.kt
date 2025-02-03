@@ -36,7 +36,7 @@ class VerifyNotificationAppControllerTest {
         )
 
         controller.verifyNotificationApp(
-            currentUser = webRequestModel.loginUser,
+            loginUser = webRequestModel.loginUser,
             request = webRequestModel.request
         )
 
@@ -57,7 +57,7 @@ class VerifyNotificationAppControllerTest {
         )
 
         val response = controller.verifyNotificationApp(
-            currentUser = webRequestModel.loginUser,
+            loginUser = webRequestModel.loginUser,
             request = webRequestModel.request
         )
 

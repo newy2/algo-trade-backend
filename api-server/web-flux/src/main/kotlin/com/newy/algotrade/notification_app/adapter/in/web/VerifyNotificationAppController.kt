@@ -4,7 +4,7 @@ import com.newy.algotrade.notification_app.adapter.`in`.web.model.VerifyNotifica
 import com.newy.algotrade.notification_app.adapter.`in`.web.model.VerifyNotificationAppResponse
 import com.newy.algotrade.notification_app.port.`in`.VerifyNotificationAppInPort
 import com.newy.algotrade.spring.auth.annotation.AdminOnly
-import com.newy.algotrade.spring.auth.annotation.AdminUser
+import com.newy.algotrade.spring.auth.annotation.LoginUserInfo
 import com.newy.algotrade.spring.auth.model.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,11 +18,11 @@ class VerifyNotificationAppController(
     @AdminOnly
     @PostMapping("/setting/notification/verify-code/verify")
     suspend fun verifyNotificationApp(
-        @AdminUser currentUser: LoginUser,
+        @LoginUserInfo loginUser: LoginUser,
         @RequestBody request: VerifyNotificationAppRequest
     ): ResponseEntity<VerifyNotificationAppResponse> {
-        val result = verifyNotificationAppInPort.verify(request.toInPortModel(currentUser.id))
-        
+        val result = verifyNotificationAppInPort.verify(request.toInPortModel(loginUser.id))
+
         return ResponseEntity.ok().body(
             VerifyNotificationAppResponse(result)
         )

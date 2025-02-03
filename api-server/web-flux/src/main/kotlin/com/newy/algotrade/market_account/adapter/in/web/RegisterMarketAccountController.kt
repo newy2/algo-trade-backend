@@ -3,7 +3,7 @@ package com.newy.algotrade.market_account.adapter.`in`.web
 import com.newy.algotrade.market_account.adapter.`in`.web.model.RegisterMarketAccountRequest
 import com.newy.algotrade.market_account.port.`in`.RegisterMarketAccountInPort
 import com.newy.algotrade.spring.auth.annotation.AdminOnly
-import com.newy.algotrade.spring.auth.annotation.AdminUser
+import com.newy.algotrade.spring.auth.annotation.LoginUserInfo
 import com.newy.algotrade.spring.auth.model.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,10 +18,10 @@ class RegisterMarketAccountController(
     @AdminOnly
     @PostMapping("/setting/market-account")
     suspend fun registerMarketAccount(
-        @AdminUser currentUser: LoginUser,
+        @LoginUserInfo loginUser: LoginUser,
         @RequestBody request: RegisterMarketAccountRequest
     ): ResponseEntity<Unit> {
-        registerMarketAccountInPort.registerMarketAccount(request.toInPortModel(currentUser.id))
+        registerMarketAccountInPort.registerMarketAccount(request.toInPortModel(loginUser.id))
         return ResponseEntity.created(URI.create("/setting")).build()
     }
 }

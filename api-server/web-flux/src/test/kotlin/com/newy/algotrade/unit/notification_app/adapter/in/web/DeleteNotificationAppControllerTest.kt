@@ -31,7 +31,7 @@ class DeleteNotificationAppControllerTest {
         )
 
         controller.deleteNotificationApp(
-            currentUser = webRequestModel.loginUser,
+            loginUser = webRequestModel.loginUser,
             notificationAppId = webRequestModel.notificationAppId,
         )
 
@@ -51,7 +51,7 @@ class DeleteNotificationAppControllerTest {
         )
 
         val response = controller.deleteNotificationApp(
-            currentUser = webRequestModel.loginUser,
+            loginUser = webRequestModel.loginUser,
             notificationAppId = webRequestModel.notificationAppId,
         )
 

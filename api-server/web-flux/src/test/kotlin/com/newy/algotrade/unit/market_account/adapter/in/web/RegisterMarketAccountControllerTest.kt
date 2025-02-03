@@ -36,7 +36,7 @@ class RegisterMarketAccountControllerTest {
         }
 
         controller.registerMarketAccount(
-            currentUser = webRequestModel.loginUser,
+            loginUser = webRequestModel.loginUser,
             request = webRequestModel.request
         )
 
@@ -68,7 +68,7 @@ class RegisterMarketAccountControllerTest {
         }
 
         val response = controller.registerMarketAccount(
-            currentUser = webRequestModel.loginUser,
+            loginUser = webRequestModel.loginUser,
             request = webRequestModel.request
         )
 

@@ -36,7 +36,7 @@ class SendNotificationAppVerifyCodeControllerTest {
         }
 
         controller.sendVerifyCode(
-            currentUser = webRequestModel.loginUser,
+            loginUser = webRequestModel.loginUser,
             request = webRequestModel.request
         )
 
@@ -58,7 +58,7 @@ class SendNotificationAppVerifyCodeControllerTest {
         )
 
         val response = controller.sendVerifyCode(
-            currentUser = LoginUser(1),
+            loginUser = LoginUser(1),
             request = SendNotificationAppVerifyCodeRequest(
                 type = "SLACK",
                 webhookUrl = "https://hooks.slack.com/services/1111",
