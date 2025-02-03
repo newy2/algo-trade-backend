@@ -40,14 +40,14 @@ echo "Tunnel opened with PID $TUNNEL_PID"
 echo "Waiting for tunnel to open..."
 for i in {1..30}; do
   echo "Waiting $i"
-  if nc -z localhost $ACCESS_PORT; then
+  if nc -z localhost $LOCAL_PORT; then
     echo "Tunnel is open"
     break
   fi
   sleep 1
 done
 
-if ! nc -z localhost $ACCESS_PORT; then
+if ! nc -z localhost $LOCAL_PORT; then
   echo "Failed to establish tunnel" >&2
   kill $TUNNEL_PID || true
   exit 1
@@ -58,7 +58,7 @@ echo "Updating database schema..."
 ./gradlew :ddl:liquibase:update \
   -DX_APP_ENV=$APP_ENV \
   -DX_DBMS_NAME=postgresql \
-  -DX_POSTGRESQL_JDBC_URL=jdbc:postgresql://localhost:$ACCESS_PORT/ \
+  -DX_POSTGRESQL_JDBC_URL=jdbc:postgresql://localhost:$LOCAL_PORT/ \
   -DX_POSTGRESQL_USERNAME=$RDS_USERNAME \
   -DX_POSTGRESQL_PASSWORD=$RDS_PASSWORD
 
