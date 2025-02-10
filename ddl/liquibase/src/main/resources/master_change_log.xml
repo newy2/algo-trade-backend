@@ -9,6 +9,7 @@
     <property name="defaultDateTimeValue" value="NOW()" global="true" dbms="postgresql"/>
     <property name="dateTimeType" value="DATETIME(6)" global="true" dbms="mysql"/>
     <property name="defaultDateTimeValue" value="NOW(6)" global="true" dbms="mysql"/>
-    
-    <includeAll path="schema/algo-trade" context="algo_trade"/>
+
+    <includeAll path="001-tables" context="algo_trade"/>
+    <includeAll path="002-init-data" context="algo_trade"/>
 </databaseChangeLog>

@@ -8,14 +8,6 @@ repositories {
     gradlePluginPortal()
 }
 
-sourceSets {
-    main {
-        resources {
-            srcDirs("./")
-        }
-    }
-}
-
 fun getDatabaseArguments(): Map<String, String> {
     return mapOf(
         "mysql" to mapOf(
@@ -65,7 +57,7 @@ fun getSystemProperty(name: String): String {
 liquibase {
     activities.register("main") {
         val baseArguments = mapOf(
-            "searchPath" to "ddl/liquibase",
+            "searchPath" to "ddl/liquibase/src/main/resources",
             "changelogFile" to "master_change_log.xml",
         )
 
@@ -76,11 +68,6 @@ liquibase {
 
 tasks.named("update").configure {
     dependsOn("createSchema")
-}
-
-// gradle 버전 마이그레이션 버그 픽스(v7 -> v8)
-tasks.named("processResources").configure {
-    dependsOn("compileJava", "compileKotlin")
 }
 
 task<RunSQL>("createSchema") {
