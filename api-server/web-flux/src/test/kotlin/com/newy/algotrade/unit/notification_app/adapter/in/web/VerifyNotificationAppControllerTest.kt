@@ -4,14 +4,10 @@ import com.newy.algotrade.notification_app.adapter.`in`.web.VerifyNotificationAp
 import com.newy.algotrade.notification_app.adapter.`in`.web.model.VerifyNotificationAppRequest
 import com.newy.algotrade.notification_app.adapter.`in`.web.model.VerifyNotificationAppResponse
 import com.newy.algotrade.notification_app.port.`in`.model.VerifyNotificationAppCommand
-import com.newy.algotrade.spring.auth.annotation.AdminOnly
-import com.newy.algotrade.spring.auth.annotation.AdminUser
 import com.newy.algotrade.spring.auth.model.LoginUser
+import helpers.spring.AdminOnlyAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.DisplayName
 import org.springframework.http.ResponseEntity
-import kotlin.reflect.full.functions
-import kotlin.reflect.full.hasAnnotation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -72,22 +68,11 @@ class VerifyNotificationAppControllerTest {
     }
 }
 
-@DisplayName("Controller 에 인증 관련 애너테이션 사용 여부 확인하기")
-class VerifyNotificationAppControllerAnnotationTest {
-    private val methodName = "verifyNotificationApp"
-
+class VerifyNotificationAppControllerAnnotationTest :
+    AdminOnlyAnnotationTestHelper(clazz = VerifyNotificationAppController::class) {
     @Test
-    fun `sendVerifyCode 메서드는 @AdminOnly 애너테이션을 선언해야 한다`() {
-        val method = VerifyNotificationAppController::class.functions.find { it.name == methodName }!!
-
-        assertTrue(method.hasAnnotation<AdminOnly>())
-    }
-
-    @Test
-    fun `sendVerifyCode 메서드의 currentUser 파라미터는 @AdminUser 애너테이션을 선언해야 한다`() {
-        val method = VerifyNotificationAppController::class.functions.find { it.name == methodName }!!
-        val parameter = method.parameters.find { it.name == "currentUser" }!!
-
-        assertTrue(parameter.hasAnnotation<AdminUser>())
+    fun `@AdminOnly @LoginUser 애너테이션 사용 여부 테스트`() {
+        assertTrue(hasAdminOnly(methodName = "verifyNotificationApp"))
+        assertTrue(hasLoginUserInfo(methodName = "verifyNotificationApp", parameterName = "loginUser"))
     }
 }

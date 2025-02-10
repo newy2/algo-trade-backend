@@ -3,15 +3,11 @@ package com.newy.algotrade.unit.market_account.adapter.`in`.web
 import com.newy.algotrade.market_account.adapter.`in`.web.RegisterMarketAccountController
 import com.newy.algotrade.market_account.adapter.`in`.web.model.RegisterMarketAccountRequest
 import com.newy.algotrade.market_account.port.`in`.model.RegisterMarketAccountCommand
-import com.newy.algotrade.spring.auth.annotation.AdminOnly
-import com.newy.algotrade.spring.auth.annotation.AdminUser
 import com.newy.algotrade.spring.auth.model.LoginUser
+import helpers.spring.AdminOnlyAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
-import org.junit.jupiter.api.DisplayName
 import org.springframework.http.ResponseEntity
 import java.net.URI
-import kotlin.reflect.full.functions
-import kotlin.reflect.full.hasAnnotation
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
@@ -79,20 +75,11 @@ class RegisterMarketAccountControllerTest {
     }
 }
 
-@DisplayName("Controller 에 인증 관련 애너테이션 사용 여부 확인하기")
-class RegisterMarketAccountControllerAnnotationTest {
-    private val methodName = "registerMarketAccount"
-
+class RegisterMarketAccountControllerAnnotationTest :
+    AdminOnlyAnnotationTestHelper(clazz = RegisterMarketAccountController::class) {
     @Test
-    fun `sendVerifyCode 메서드는 @AdminOnly 애너테이션을 선언해야 한다`() {
-        assertTrue(getMethod().hasAnnotation<AdminOnly>())
+    fun `@AdminOnly @LoginUser 애너테이션 사용 여부 테스트`() {
+        assertTrue(hasAdminOnly(methodName = "registerMarketAccount"))
+        assertTrue(hasLoginUserInfo(methodName = "registerMarketAccount", parameterName = "loginUser"))
     }
-
-    @Test
-    fun `sendVerifyCode 메서드의 currentUser 파라미터는 @AdminUser 애너테이션을 선언해야 한다`() {
-        val parameter = getMethod().parameters.find { it.name == "currentUser" }!!
-        assertTrue(parameter.hasAnnotation<AdminUser>())
-    }
-
-    private fun getMethod() = RegisterMarketAccountController::class.functions.find { it.name == methodName }!!
 }
