@@ -29,7 +29,8 @@ class SendNotificationAppVerifyCodeCommandService(
                 sendNotificationMessageOutPort.send(
                     SendNotificationMessageEvent(
                         userId = command.userId,
-                        message = "인증코드: ${newNotificationApp.verifyCode}"
+                        message = "인증코드: ${newNotificationApp.verifyCode}",
+                        isVerified = false,
                     )
                 )
             }

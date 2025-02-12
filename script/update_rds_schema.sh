@@ -2,15 +2,14 @@
 set -e
 
 # 외부 입력 필수 환경변수 확인
-if ! [[ "$APP_ENV" == "test" || "$APP_ENV" == "prod" ]]; then
-  echo "APP_ENV 는 'test' 또는 'prod' 으로 입력해주세요. (APP_ENV = '$APP_ENV')" >&2
+if ! [[ "$APP_ENV" == "dev" || "$APP_ENV" == "prd" ]]; then
+  echo "APP_ENV 는 'dev' 또는 'prd' 으로 입력해주세요. (APP_ENV = '$APP_ENV')" >&2
   exit 1
 fi
-LS_SEC_API_KEY=${LS_SEC_API_KEY:?"LS_SEC_API_KEY 를 입력해주세요."}
-LS_SEC_API_SECRET=${LS_SEC_API_SECRET:?"LS_SEC_API_SECRET 를 입력해주세요."}
 
 # 필수 환경변수 확인
-ACCESS_PORT=3389
+LOCAL_PORT=3390
+REMOTE_PORT=3389
 EICE_ID=$(aws ssm get-parameter --name "/vpc/eice/rds-connect/id" --query "Parameter.Value" --output text)
 if [[ -z $EICE_ID ]]; then echo "EICE_ID 을 찾을 수 없습니다." >&2; exit 1; fi
 
@@ -31,8 +30,8 @@ echo "Opening RDS tunnel..."
 aws ec2-instance-connect open-tunnel \
   --instance-connect-endpoint-id $EICE_ID \
   --private-ip-address $RDS_PRIVATE_IP \
-  --local-port $ACCESS_PORT \
-  --remote-port $ACCESS_PORT &>/dev/null &
+  --local-port $LOCAL_PORT \
+  --remote-port $REMOTE_PORT &>/dev/null &
 
 TUNNEL_PID=$!
 echo "Tunnel opened with PID $TUNNEL_PID"
@@ -41,14 +40,14 @@ echo "Tunnel opened with PID $TUNNEL_PID"
 echo "Waiting for tunnel to open..."
 for i in {1..30}; do
   echo "Waiting $i"
-  if nc -z localhost $ACCESS_PORT; then
+  if nc -z localhost $LOCAL_PORT; then
     echo "Tunnel is open"
     break
   fi
   sleep 1
 done
 
-if ! nc -z localhost $ACCESS_PORT; then
+if ! nc -z localhost $LOCAL_PORT; then
   echo "Failed to establish tunnel" >&2
   kill $TUNNEL_PID || true
   exit 1
@@ -59,11 +58,9 @@ echo "Updating database schema..."
 ./gradlew :ddl:liquibase:update \
   -DX_APP_ENV=$APP_ENV \
   -DX_DBMS_NAME=postgresql \
-  -DX_POSTGRESQL_JDBC_URL=jdbc:postgresql://localhost:$ACCESS_PORT/ \
+  -DX_POSTGRESQL_JDBC_URL=jdbc:postgresql://localhost:$LOCAL_PORT/ \
   -DX_POSTGRESQL_USERNAME=$RDS_USERNAME \
-  -DX_POSTGRESQL_PASSWORD=$RDS_PASSWORD \
-  -DX_LS_SEC_API_KEY=$LS_SEC_API_KEY \
-  -DX_LS_SEC_API_SECRET=$LS_SEC_API_SECRET
+  -DX_POSTGRESQL_PASSWORD=$RDS_PASSWORD
 
 # 터널 닫기
 echo "Closing RDS tunnel..."

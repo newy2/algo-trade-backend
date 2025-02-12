@@ -5,28 +5,35 @@ import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
 class ByBitPrivateApiInfo(
-    key: String,
-    secret: String,
+    val privateApiInfo: PrivateApiInfo,
     val timestamp: Long,
     val data: String,
     val receiveWindow: Int
-) : PrivateApiInfo(key, secret) {
+) {
     companion object {
         private const val ALGORITHM = "HmacSHA256"
     }
 
-    private fun source(): String =
-        timestamp.toString() + key + receiveWindow.toString() + data
+    private fun getSource(): String =
+        timestamp.toString() + privateApiInfo.appKey + receiveWindow.toString() + data
 
-    fun accessToken(): String =
+    fun getAccessToken(): String =
         Mac.getInstance(ALGORITHM).let {
             it.init(
                 SecretKeySpec(
-                    secret.toByteArray(),
+                    privateApiInfo.appSecret.toByteArray(),
                     ALGORITHM
                 )
             )
-            val bytes = it.doFinal(source().toByteArray())
+            val bytes = it.doFinal(getSource().toByteArray())
             HexFormat.of().formatHex(bytes)
         }
+
+    fun getRequestHeaders(): Map<String, String> =
+        mapOf(
+            "X-BAPI-SIGN" to getAccessToken(),
+            "X-BAPI-API-KEY" to privateApiInfo.appKey,
+            "X-BAPI-TIMESTAMP" to timestamp.toString(),
+            "X-BAPI-RECV-WINDOW" to "5000",
+        )
 }

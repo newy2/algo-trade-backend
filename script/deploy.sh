@@ -2,8 +2,8 @@
 set -e
 
 # 필수 환경변수 확인
-if ! [[ "$APP_ENV" == "test" || "$APP_ENV" == "prod" ]]; then
-  echo "APP_ENV 는 'test' 또는 'prod' 으로 입력해주세요. (APP_ENV = '$APP_ENV')"
+if ! [[ "$APP_ENV" == "dev" || "$APP_ENV" == "prd" ]]; then
+  echo "APP_ENV 는 'dev' 또는 'prd' 으로 입력해주세요. (APP_ENV = '$APP_ENV')"
   exit 1
 fi
 

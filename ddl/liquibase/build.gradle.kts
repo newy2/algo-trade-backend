@@ -8,14 +8,6 @@ repositories {
     gradlePluginPortal()
 }
 
-sourceSets {
-    main {
-        resources {
-            srcDirs("./")
-        }
-    }
-}
-
 fun getDatabaseArguments(): Map<String, String> {
     return mapOf(
         "mysql" to mapOf(
@@ -39,13 +31,13 @@ fun getSchemaArguments(): Map<String, String> {
             "liquibaseSchemaName" to "liquibase",
             "defaultSchemaName" to "algo_trade",
         ),
-        "test" to mapOf(
-            "liquibaseSchemaName" to "test_liquibase",
-            "defaultSchemaName" to "test_algo_trade",
+        "dev" to mapOf(
+            "liquibaseSchemaName" to "dev_liquibase",
+            "defaultSchemaName" to "dev_algo_trade",
         ),
-        "prod" to mapOf(
-            "liquibaseSchemaName" to "prod_liquibase",
-            "defaultSchemaName" to "prod_algo_trade",
+        "prd" to mapOf(
+            "liquibaseSchemaName" to "prd_liquibase",
+            "defaultSchemaName" to "prd_algo_trade",
         ),
     )[getSystemProperty("X_APP_ENV")] ?: emptyMap()
 }
@@ -65,7 +57,7 @@ fun getSystemProperty(name: String): String {
 liquibase {
     activities.register("main") {
         val baseArguments = mapOf(
-            "searchPath" to "ddl/liquibase",
+            "searchPath" to "ddl/liquibase/src/main/resources",
             "changelogFile" to "master_change_log.xml",
         )
 
@@ -76,11 +68,6 @@ liquibase {
 
 tasks.named("update").configure {
     dependsOn("createSchema")
-}
-
-// gradle 버전 마이그레이션 버그 픽스(v7 -> v8)
-tasks.named("processResources").configure {
-    dependsOn("compileJava", "compileKotlin")
 }
 
 task<RunSQL>("createSchema") {

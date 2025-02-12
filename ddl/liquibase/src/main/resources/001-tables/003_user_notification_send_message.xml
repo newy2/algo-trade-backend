@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+    <property name="currentTable" value="user_notification_send_message" global="false"/>
+    <property name="currentTableComment" value="알림 전송 메세지" global="false"/>
+
+    <property name="referenceTable" value="user_notification_app" global="false"/>
+
+    <changeSet author="newy" id="1">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="${referenceTable}"/>
+        </preConditions>
+
+        <createTable tableName="${currentTable}" remarks="${currentTableComment}">
+            <!-- PK, FK -->
+            <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
+            </column>
+            <column name="${referenceTable}_id" type="BIGINT" remarks="사용자 알림앱 ID">
+                <constraints
+                        referencedTableName="${referenceTable}"
+                        referencedColumnNames="id"
+                        foreignKeyName="${currentTable}__${referenceTable}_id_fk"
+                        deleteCascade="true"
+                        nullable="false"
+                        unique="false"
+                />
+            </column>
+
+            <!-- 일반 필드 -->
+            <column name="request_message" type="VARCHAR2(500)" remarks="전송 메세지">
+                <constraints nullable="false"/>
+            </column>
+            <column name="response_message" type="VARCHAR2(200)" remarks="응답 메세지">
+                <constraints nullable="true"/>
+            </column>
+            <column name="status" type="VARCHAR2(10)"
+                    remarks="상태 (SUCCEED: 전송완료, FAILED: 전송실패)">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- 생성/변경 일시 -->
+            <column name="created_at" type="${dateTimeType}" remarks="생성일시" defaultValueDate="${defaultDateTimeValue}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="${dateTimeType}" remarks="변경일시" defaultValueDate="${defaultDateTimeValue}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- pro 모드 대체 로직  -->
+        <sql>
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__status_check CHECK (status IN (
+                                                                               'SUCCEED',
+                                                                               'FAILED'
+                    ));
+        </sql>
+    </changeSet>
+</databaseChangeLog>

@@ -27,8 +27,8 @@ class LsSecGetAccessTokenTest : BaseDisabledTest {
 
         val accessToken = api.findAccessToken(
             PrivateApiInfo(
-                key = TestEnv.LsSec.apiKey,
-                secret = TestEnv.LsSec.apiSecret,
+                appKey = TestEnv.LsSec.apiKey,
+                appSecret = TestEnv.LsSec.apiSecret,
             )
         )
 

@@ -4,7 +4,7 @@ import com.newy.algotrade.notification_app.adapter.`in`.web.model.SendNotificati
 import com.newy.algotrade.notification_app.adapter.`in`.web.model.SendNotificationAppVerifyCodeResponse
 import com.newy.algotrade.notification_app.port.`in`.SendNotificationAppVerifyCodeInPort
 import com.newy.algotrade.spring.auth.annotation.AdminOnly
-import com.newy.algotrade.spring.auth.annotation.AdminUser
+import com.newy.algotrade.spring.auth.annotation.LoginUserInfo
 import com.newy.algotrade.spring.auth.model.LoginUser
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,10 +18,12 @@ class SendNotificationAppVerifyCodeController(
     @AdminOnly
     @PostMapping("/setting/notification/verify-code/publish")
     suspend fun sendVerifyCode(
-        @AdminUser currentUser: LoginUser,
+        @LoginUserInfo loginUser: LoginUser,
         @RequestBody request: SendNotificationAppVerifyCodeRequest
-    ) = sendNotificationAppVerifyCodeInPort.sendVerifyCode(request.toInPortModel(currentUser.id)).let { verifyCode ->
-        ResponseEntity.ok().body(
+    ): ResponseEntity<SendNotificationAppVerifyCodeResponse> {
+        val verifyCode = sendNotificationAppVerifyCodeInPort.sendVerifyCode(request.toInPortModel(loginUser.id))
+
+        return ResponseEntity.ok().body(
             SendNotificationAppVerifyCodeResponse(
                 webhookUrl = request.webhookUrl,
                 verifyCode = verifyCode,

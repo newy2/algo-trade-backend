@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+    <property name="currentTable" value="user_trade_strategy" global="false"/>
+    <property name="currentTableComment" value="사용자 자동매매 전략" global="false"/>
+
+    <property name="referenceTable1" value="market_account" global="false"/>
+    <property name="referenceTable2" value="trade_strategy" global="false"/>
+
+    <changeSet author="newy" id="1">
+        <preConditions onFail="CONTINUE">
+            <tableExists tableName="${referenceTable1}"/>
+            <tableExists tableName="${referenceTable2}"/>
+        </preConditions>
+
+        <createTable tableName="${currentTable}" remarks="${currentTableComment}">
+            <!-- PK, FK -->
+            <column name="id" type="BIGINT" remarks="${currentTableComment} ID" autoIncrement="true">
+                <constraints primaryKey="true" primaryKeyName="${currentTable}_pk"/>
+            </column>
+            <column name="${referenceTable1}_id" type="BIGINT" remarks="거래소 계정 ID">
+                <constraints
+                        referencedTableName="${referenceTable1}"
+                        referencedColumnNames="id"
+                        foreignKeyName="${currentTable}__${referenceTable1}_id_fk"
+                        deleteCascade="true"
+                        nullable="false"
+                />
+            </column>
+            <column name="${referenceTable2}_id" type="BIGINT" remarks="자동매매 전략 ID">
+                <constraints
+                        referencedTableName="${referenceTable2}"
+                        referencedColumnNames="id"
+                        foreignKeyName="${currentTable}__${referenceTable2}_id_fk"
+                        deleteCascade="true"
+                        nullable="false"
+                />
+            </column>
+
+            <!-- 일반 필드 -->
+            <column name="product_category" type="VARCHAR2(50)" remarks="상품 카테고리">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_type" type="VARCHAR2(50)" remarks="상품 유형">
+                <constraints nullable="false"/>
+            </column>
+            <!-- TODO time_frame -> candle_interval -->
+            <column name="time_frame" type="VARCHAR2(3)" remarks="candle 차트 기준 시간">
+                <constraints nullable="false"/>
+            </column>
+
+            <!-- 생성/변경 일시 -->
+            <column name="created_at" type="${dateTimeType}" remarks="생성일시" defaultValueDate="${defaultDateTimeValue}">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="${dateTimeType}" remarks="변경일시" defaultValueDate="${defaultDateTimeValue}">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <!-- 복합 index -->
+        <addUniqueConstraint
+                tableName="${currentTable}"
+                columnNames="${referenceTable1}_id, ${referenceTable2}_id, product_type"
+                constraintName="${currentTable}__strategy_id_product_type_uk"
+        />
+
+        <!-- pro 모드 대체 로직  -->
+        <sql>
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__product_category_check CHECK (product_category IN (
+                                                                                                   'USER_PICK',
+                                                                                                   'TOP_TRADING_VALUE'
+                    ));
+
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__product_type_check CHECK (product_type IN (
+                                                                                           'SPOT',
+                                                                                           'SPOT_MARGIN',
+                                                                                           'FUTURE',
+                                                                                           'PERPETUAL_FUTURE'
+                    ));
+
+            ALTER TABLE ${currentTable}
+                ADD CONSTRAINT ${currentTable}__time_frame_check CHECK (time_frame IN (
+                                                                                       'M1',
+                                                                                       'M3',
+                                                                                       'M5',
+                                                                                       'M15',
+                                                                                       'M30',
+                                                                                       'H1',
+                                                                                       'D1'
+                    ));
+        </sql>
+    </changeSet>
+</databaseChangeLog>

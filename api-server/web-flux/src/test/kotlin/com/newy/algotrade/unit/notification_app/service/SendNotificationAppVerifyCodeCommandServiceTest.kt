@@ -1,7 +1,7 @@
 package com.newy.algotrade.unit.notification_app.service
 
 import com.newy.algotrade.common.event.SendNotificationMessageEvent
-import com.newy.algotrade.common.exception.InitializedError
+import com.newy.algotrade.common.exception.VerificationCodeException
 import com.newy.algotrade.notification_app.domain.NotificationApp
 import com.newy.algotrade.notification_app.domain.Webhook
 import com.newy.algotrade.notification_app.port.`in`.model.SendNotificationAppVerifyCodeCommand
@@ -9,12 +9,14 @@ import com.newy.algotrade.notification_app.port.out.FindNotificationAppOutPort
 import com.newy.algotrade.notification_app.port.out.SaveNotificationAppOutPort
 import com.newy.algotrade.notification_app.port.out.SendNotificationMessageOutPort
 import com.newy.algotrade.notification_app.service.SendNotificationAppVerifyCodeCommandService
+import helpers.spring.TransactionalAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
 
 class NullFindNotificationAppOutPort : FindNotificationAppOutPort {
     override suspend fun findByUserId(userId: Long) = null
@@ -27,7 +29,6 @@ class NullSaveNotificationAppOutPort : SaveNotificationAppOutPort {
 class NullSendNotificationAppOutPort : SendNotificationMessageOutPort {
     override suspend fun send(event: SendNotificationMessageEvent) {}
 }
-
 
 @DisplayName("인증코드 요청하기 테스트")
 class FirstTrySendNotificationAppVerifyCodeCommandServiceTest {
@@ -73,6 +74,7 @@ class FirstTrySendNotificationAppVerifyCodeCommandServiceTest {
 
         assertEquals(1, event?.userId)
         assertEquals("인증코드: $verifyCode", event?.message)
+        assertEquals(false, event?.isVerified)
     }
 }
 
@@ -121,7 +123,7 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
             sendNotificationMessageOutPort = NullSendNotificationAppOutPort(),
         )
 
-        val error = assertThrows<InitializedError> {
+        val error = assertThrows<VerificationCodeException> {
             service.sendVerifyCode(command)
         }
         assertEquals("이미 검증 완료된 Webhook 입니다.", error.message)
@@ -143,7 +145,7 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
             sendNotificationMessageOutPort = NullSendNotificationAppOutPort(),
         )
 
-        val error = assertThrows<InitializedError> {
+        val error = assertThrows<VerificationCodeException> {
             service.sendVerifyCode(
                 command.copy(
                     webhookUrl = "https://hooks.slack.com/services/2222"
@@ -154,5 +156,13 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
             "기존 Webhook URL 과 다릅니다. (https://hooks.slack.com/services/1111 != https://hooks.slack.com/services/2222)",
             error.message
         )
+    }
+}
+
+class SendNotificationAppVerifyCodeCommandServiceTransactionalAnnotationTest :
+    TransactionalAnnotationTestHelper(clazz = SendNotificationAppVerifyCodeCommandService::class) {
+    @Test
+    fun `@Transactional 애너테이션 사용 여부 테스트`() {
+        assertTrue(hasWritableTransactional(methodName = "sendVerifyCode"))
     }
 }

@@ -1,7 +1,7 @@
 package com.newy.algotrade.study.spring.auth.filter
 
 import com.newy.algotrade.spring.auth.annotation.AdminOnly
-import com.newy.algotrade.spring.auth.annotation.AdminUser
+import com.newy.algotrade.spring.auth.annotation.LoginUserInfo
 import com.newy.algotrade.spring.auth.model.LoginUser
 import org.junit.jupiter.api.DisplayName
 import org.springframework.beans.factory.annotation.Autowired
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
 import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatusCode
-import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.web.reactive.server.WebTestClient
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RestController
@@ -36,7 +35,7 @@ class MixedControllerTest : BaseAdminIpFilterTest() {
     fun `public api 접속`() {
         arrayOf(
             Triple(adminUserIp, HttpStatus.OK, "Public API response"),
-            Triple(guestUserId, HttpStatus.OK, "Public API response"),
+            Triple(guestUserIp, HttpStatus.OK, "Public API response"),
         ).forEach { (requestIp, responseStatus, responseBody) ->
             assertApiResult(
                 path = "/public/v1",
@@ -51,7 +50,7 @@ class MixedControllerTest : BaseAdminIpFilterTest() {
     fun `private api 접속`() {
         arrayOf(
             Triple(adminUserIp, HttpStatus.OK, "Private API response"),
-            Triple(guestUserId, HttpStatus.FORBIDDEN, "Access denied (Admin access required)"),
+            Triple(guestUserIp, HttpStatus.FORBIDDEN, "Access denied (Admin access required)"),
         ).forEach { (requestIp, responseStatus, responseBody) ->
             assertApiResult(
                 path = "/private/v1",
@@ -85,7 +84,7 @@ class AdminOnlyControllerTest : BaseAdminIpFilterTest() {
     fun `private1 api 접속`() {
         arrayOf(
             Triple(adminUserIp, HttpStatus.OK, "Private1 API response"),
-            Triple(guestUserId, HttpStatus.FORBIDDEN, "Access denied (Admin access required)"),
+            Triple(guestUserIp, HttpStatus.FORBIDDEN, "Access denied (Admin access required)"),
         ).forEach { (requestIp, responseStatus, responseBody) ->
             assertApiResult(
                 path = "/private/v2/first",
@@ -100,7 +99,7 @@ class AdminOnlyControllerTest : BaseAdminIpFilterTest() {
     fun `private2 api 접속`() {
         arrayOf(
             Triple(adminUserIp, HttpStatus.OK, "Private2 API response"),
-            Triple(guestUserId, HttpStatus.FORBIDDEN, "Access denied (Admin access required)"),
+            Triple(guestUserIp, HttpStatus.FORBIDDEN, "Access denied (Admin access required)"),
         ).forEach { (requestIp, responseStatus, responseBody) ->
             assertApiResult(
                 path = "/private/v2/second",
@@ -116,25 +115,25 @@ class AdminOnlyControllerTest : BaseAdminIpFilterTest() {
 @RestController
 class AccessAdminUserController {
     @GetMapping("/public/v3")
-    fun publicApi(@AdminUser loginUser: LoginUser): String {
-        return "Admin ID: ${loginUser.id}"
+    fun publicApi(@LoginUserInfo loginUser: LoginUser): String {
+        return loginUser.toString()
     }
 
     @AdminOnly
     @GetMapping("/private/v3")
-    fun privateApi(@AdminUser loginUser: LoginUser): String {
-        return "Admin ID: ${loginUser.id}"
+    fun privateApi(@LoginUserInfo loginUser: LoginUser): String {
+        return loginUser.toString()
     }
 }
 
 @WebFluxTest(controllers = [AccessAdminUserController::class])
-@DisplayName("@AdminUser 로 어드민 사용자 여부를 조회하기")
-class AdminUserControllerTest : BaseAdminIpFilterTest() {
+@DisplayName("@LoginUserInfo 로 어드민 사용자 여부를 조회하기")
+class LoginUserControllerTest : BaseAdminIpFilterTest() {
     @Test
     fun `public api 접속`() {
         arrayOf(
-            Triple(adminUserIp, HttpStatus.OK, "Admin ID: 1"),
-            Triple(guestUserId, HttpStatus.OK, "Admin ID: -1"), // 게스트 사용자는 -1 로 표시
+            Triple(adminUserIp, HttpStatus.OK, "LoginUser(id=1, role=ADMIN)"),
+            Triple(guestUserIp, HttpStatus.OK, "LoginUser(id=1, role=GUEST)"),
         ).forEach { (requestIp, responseStatus, responseBody) ->
             assertApiResult(
                 path = "/public/v3",
@@ -148,8 +147,8 @@ class AdminUserControllerTest : BaseAdminIpFilterTest() {
     @Test
     fun `private api 접속`() {
         arrayOf(
-            Triple(adminUserIp, HttpStatus.OK, "Admin ID: 1"),
-            Triple(guestUserId, HttpStatus.FORBIDDEN, "Access denied (Admin access required)"),
+            Triple(adminUserIp, HttpStatus.OK, "LoginUser(id=1, role=ADMIN)"),
+            Triple(guestUserIp, HttpStatus.FORBIDDEN, "Access denied (Admin access required)"),
         ).forEach { (requestIp, responseStatus, responseBody) ->
             assertApiResult(
                 path = "/private/v3",
@@ -161,10 +160,9 @@ class AdminUserControllerTest : BaseAdminIpFilterTest() {
     }
 }
 
-@ActiveProfiles("test")
 @WebFluxTest
 open class BaseAdminIpFilterTest {
-    protected val guestUserId: String = "232.176.138.178"
+    protected val guestUserIp: String = "232.176.138.178"
 
     @Value("\${app.admin.ip}")
     protected lateinit var adminUserIp: String

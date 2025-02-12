@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd"
+>
+    <property name="dateTimeType" value="DATETIME" global="true" dbms="postgresql"/>
+    <property name="defaultDateTimeValue" value="NOW()" global="true" dbms="postgresql"/>
+    <property name="dateTimeType" value="DATETIME(6)" global="true" dbms="mysql"/>
+    <property name="defaultDateTimeValue" value="NOW(6)" global="true" dbms="mysql"/>
+
+    <includeAll path="001-tables" context="algo_trade"/>
+    <includeAll path="002-init-data" context="algo_trade"/>
+</databaseChangeLog>

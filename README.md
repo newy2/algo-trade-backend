@@ -93,8 +93,8 @@ Controller 컴포넌트에서 `@AdminOnly` 애너테이션으로 관리자만 �
 
 https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10af0ae6aa13/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/auth/filter/AdminIpFilterTest.kt#L18-L64
 
-Controller 컴포넌트 메서드의 파라미터에 `@AdminUser` 애너테이션으로 사용자의 권한을 확인한다.  
-`@AdminUser` 애너테이션의 사용법은 아래와 같다.
+Controller 컴포넌트 메서드의 파라미터에 `@LoginUserInfo` 애너테이션으로 사용자의 권한을 확인한다.  
+`@LoginUserInfo` 애너테이션의 사용법은 아래와 같다.
 
 https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10af0ae6aa13/api-server/web-flux/src/test/kotlin/com/newy/algotrade/study/spring/auth/filter/AdminIpFilterTest.kt#L116-L162
 
@@ -102,7 +102,7 @@ https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10a
 
 https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10af0ae6aa13/api-server/web-flux/src/main/kotlin/com/newy/algotrade/spring/auth/filter/AdminIpFilter.kt#L14-L66
 
-`@AdminUser` 애너테이션을 사용한 데이터 바인딩은 `HandlerMethodArgumentResolver`를 확장해서 구현한다.
+`@LoginUserInfo` 애너테이션을 사용한 데이터 바인딩은 `HandlerMethodArgumentResolver`를 확장해서 구현한다.
 
 https://github.com/newy2/algo-trade-backend/blob/837426862b97209ad4acabe9a26d10af0ae6aa13/api-server/web-flux/src/main/kotlin/com/newy/algotrade/spring/auth/resolver/AdminUserArgumentResolver.kt#L11-L23
 
