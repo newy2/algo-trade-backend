@@ -76,4 +76,14 @@
                     ));
         </sql>
     </changeSet>
+
+    <changeSet author="newy" id="2">
+        <modifyDataType tableName="${currentTable}" columnName="code" newDataType="VARCHAR2(256)"/>
+
+        <renameColumn tableName="${currentTable}" oldColumnName="name_ko" newColumnName="name"/>
+        <modifyDataType tableName="${currentTable}" columnName="name" newDataType="VARCHAR2(256)"/>
+        <setColumnRemarks tableName="${currentTable}" columnName="name" remarks="상품명"/>
+
+        <dropColumn tableName="${currentTable}" columnName="name_en"/>
+    </changeSet>
 </databaseChangeLog>
