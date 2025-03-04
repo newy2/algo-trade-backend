@@ -18,5 +18,5 @@ class JsonConverterConfig {
             .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
 
     @Bean
-    fun jsonConverter(objectMapper: ObjectMapper): JsonConverter = JsonConverterByJackson(objectMapper)
+    fun jsonConverter(objectMapper: ObjectMapper = objectMapper()): JsonConverter = JsonConverterByJackson(objectMapper)
 }

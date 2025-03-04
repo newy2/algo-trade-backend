@@ -12,6 +12,7 @@ class RegisterProductsFacadeService(
     val setRegisterProductsInPort: SetRegisterProductsInPort,
 ) : RegisterProductsInPort {
     override suspend fun registerProducts(userId: Long): RegisterProductResult {
-        return setRegisterProductsInPort.setProducts(getRegisterProductsInPort.getProducts(userId))
+        val fetchedProducts = getRegisterProductsInPort.getProducts(userId)
+        return setRegisterProductsInPort.setProducts(fetchedProducts)
     }
 }
