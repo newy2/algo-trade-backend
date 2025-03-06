@@ -22,14 +22,14 @@ class ApiHelperConfig(
         jsonConverter: JsonConverter,
     ) = ApiHelperFactory(
         cache = mapOf(
-            MarketCode.BY_BIT to ByBitApiHelper(
+            MarketCode.BY_BIT to ByBitApiHelper.getInstance(
                 DefaultHttpApiClient(
                     client = okHttpClient,
                     host = byBitWebServerHost,
                     jsonConverter = jsonConverter,
                 )
             ),
-            MarketCode.LS_SEC to LsSecApiHelper(
+            MarketCode.LS_SEC to LsSecApiHelper.getInstance(
                 DefaultHttpApiClient(
                     client = okHttpClient,
                     host = lsSecWebServerHost,

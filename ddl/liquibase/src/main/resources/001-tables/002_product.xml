@@ -76,4 +76,48 @@
                     ));
         </sql>
     </changeSet>
+
+    <changeSet author="newy" id="2">
+        <modifyDataType tableName="${currentTable}" columnName="code" newDataType="VARCHAR2(256)"/>
+
+        <renameColumn
+                tableName="${currentTable}"
+                oldColumnName="name_ko"
+                newColumnName="name"
+                columnDataType="VARCHAR2(256)"/>
+        <modifyDataType tableName="${currentTable}" columnName="name" newDataType="VARCHAR2(256)"/>
+        <setColumnRemarks tableName="${currentTable}" columnName="name" remarks="상품명" columnDataType="VARCHAR2(256)"/>
+
+        <dropColumn tableName="${currentTable}" columnName="name_en"/>
+    </changeSet>
+    <changeSet author="newy" id="3">
+        <createIndex tableName="${currentTable}" indexName="${currentTable}__use_yn_index">
+            <column name="use_yn"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="4" author="newy" dbms="!mysql">
+        <dropUniqueConstraint
+                tableName="${currentTable}"
+                constraintName="${currentTable}__${referenceTable}_id_type_code_uk"
+        />
+    </changeSet>
+
+    <changeSet id="5" author="newy" dbms="mysql">
+        <dropForeignKeyConstraint
+                baseTableName="${currentTable}"
+                constraintName="${currentTable}__${referenceTable}_id_fk"
+        />
+        <dropUniqueConstraint
+                tableName="${currentTable}"
+                constraintName="${currentTable}__${referenceTable}_id_type_code_uk"
+        />
+        <addForeignKeyConstraint
+                baseTableName="${currentTable}"
+                baseColumnNames="${referenceTable}_id"
+                constraintName="${currentTable}__${referenceTable}_id_fk"
+                referencedTableName="${referenceTable}"
+                referencedColumnNames="id"/>
+    </changeSet>
+
 </databaseChangeLog>

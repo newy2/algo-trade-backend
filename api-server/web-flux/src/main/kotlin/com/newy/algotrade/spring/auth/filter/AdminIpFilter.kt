@@ -2,6 +2,7 @@ package com.newy.algotrade.spring.auth.filter
 
 import com.newy.algotrade.spring.auth.annotation.AdminOnly
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Component
 import org.springframework.web.method.HandlerMethod
@@ -17,6 +18,11 @@ class AdminIpFilter(
     private val handlerMapping: RequestMappingHandlerMapping
 ) : WebFilter {
     override fun filter(exchange: ServerWebExchange, chain: WebFilterChain): Mono<Void> {
+        // TODO OPTIONS 메소드에 대한 테스트 코드 추가할 것
+        if (exchange.request.method == HttpMethod.OPTIONS) {
+            return chain.filter(exchange)
+        }
+
         val isAdminIp = this.isAdminIp(exchange)
         if (isAdminOnlyHandler(exchange) && !isAdminIp) {
             return responseAccessDenied(exchange)
