@@ -53,7 +53,7 @@ class ByBitApiHelper private constructor(
         }
     }
 
-    override suspend fun getProducts(privateApiInfo: PrivateApiInfo, productType: ProductType): RegisterProducts {
+    override suspend fun getProducts(privateApiInfo: PrivateApiInfo?, productType: ProductType): RegisterProducts {
         awaitRateLimit(GET_INSTRUMENTS_INFO)
 
         val response = client.get<ByBitProductHttpResponse>(

@@ -13,5 +13,5 @@ abstract class ApiHelper {
     }
 
     abstract suspend fun isValidPrivateApiInfo(privateApiInfo: PrivateApiInfo): Boolean
-    abstract suspend fun getProducts(privateApiInfo: PrivateApiInfo, productType: ProductType): RegisterProducts
+    abstract suspend fun getProducts(privateApiInfo: PrivateApiInfo?, productType: ProductType): RegisterProducts
 }

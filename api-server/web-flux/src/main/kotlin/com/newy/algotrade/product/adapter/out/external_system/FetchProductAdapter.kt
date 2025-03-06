@@ -18,7 +18,7 @@ class FetchProductAdapter(
         privateApiInfos: Map<MarketCode, PrivateApiInfo>
     ): RegisterProducts {
         return factory.getInstance(marketCode).getProducts(
-            privateApiInfo = privateApiInfos.getValue(marketCode),
+            privateApiInfo = privateApiInfos[marketCode],
             productType = productType,
         )
     }

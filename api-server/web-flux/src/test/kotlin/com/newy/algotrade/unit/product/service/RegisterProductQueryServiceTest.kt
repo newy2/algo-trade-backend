@@ -11,6 +11,7 @@ import com.newy.algotrade.product.service.RegisterProductQueryService
 import helpers.spring.TransactionalAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -72,8 +73,26 @@ class RegisterProductQueryServiceTest {
         )
     }
 
+
+    @Test
+    fun `LS 증권 의 APP_KEY, APP_SECRET 은 필수로 있어야 한다`() = runTest {
+        val service = newService(
+            findPrivateApiInfoOutPort = { emptyMap<MarketCode, PrivateApiInfo>() }
+        )
+
+        val error = assertThrows<IllegalArgumentException> {
+            service.getProducts(userId)
+        }
+        assertEquals("LS_SEC 계정 정보를 찾을 수 없습니다.", error.message)
+    }
+
+
     private fun newService(
-        findPrivateApiInfoOutPort: FindPrivateApiInfoOutPort = FindPrivateApiInfoOutPort { emptyMap<MarketCode, PrivateApiInfo>() },
+        findPrivateApiInfoOutPort: FindPrivateApiInfoOutPort = FindPrivateApiInfoOutPort {
+            mapOf<MarketCode, PrivateApiInfo>(
+                MarketCode.LS_SEC to PrivateApiInfo(appKey = "APP_KEY", appSecret = "APP_SECRET")
+            )
+        },
         fetchProductsOutPort: FetchProductsOutPort = FetchProductsOutPort { _, _, _ -> RegisterProducts() },
     ) = RegisterProductQueryService(
         findPrivateApiInfoOutPort = findPrivateApiInfoOutPort,

@@ -84,14 +84,14 @@ class LsSecApiHelper private constructor(
         return response.isSuccess()
     }
 
-    override suspend fun getProducts(privateApiInfo: PrivateApiInfo, productType: ProductType): RegisterProducts {
+    override suspend fun getProducts(privateApiInfo: PrivateApiInfo?, productType: ProductType): RegisterProducts {
         val trCode = ETC.TR_CODE.GET_PRODUCTS
         awaitRateLimit(trCode)
 
         val response = client.post<LsSecProductHttpResponse>(
             path = ETC.PATH,
             headers = getPrivateApiHeaders(
-                privateApiInfo = privateApiInfo,
+                privateApiInfo = privateApiInfo!!,
                 trCode = trCode,
             ),
             body = mapOf(

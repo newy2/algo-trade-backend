@@ -18,6 +18,9 @@ class RegisterProductQueryService(
 ) : GetRegisterProductsInPort {
     override suspend fun getProducts(userId: Long): RegisterProducts = coroutineScope {
         val privateApiInfoMap = findPrivateApiInfoOutPort.findPrivateApiInfos(userId)
+        if (privateApiInfoMap[MarketCode.LS_SEC] == null) {
+            throw IllegalArgumentException("LS_SEC 계정 정보를 찾을 수 없습니다.")
+        }
 
         return@coroutineScope listOf(
             async {
