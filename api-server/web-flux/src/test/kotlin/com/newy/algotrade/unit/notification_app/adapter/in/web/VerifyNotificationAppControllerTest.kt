@@ -5,7 +5,8 @@ import com.newy.algotrade.notification_app.adapter.`in`.web.model.VerifyNotifica
 import com.newy.algotrade.notification_app.adapter.`in`.web.model.VerifyNotificationAppResponse
 import com.newy.algotrade.notification_app.port.`in`.model.VerifyNotificationAppCommand
 import com.newy.algotrade.spring.auth.model.LoginUser
-import helpers.spring.AdminOnlyAnnotationTestHelper
+import helpers.spring.ClassAnnotationTestHelper
+import helpers.spring.MethodAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.springframework.http.ResponseEntity
 import kotlin.test.Test
@@ -22,15 +23,12 @@ class VerifyNotificationAppControllerTest {
 
     @Test
     fun `Controller 는 WebRequest 모델을 InPort 모델로 변환해야 한다`() = runTest {
-        lateinit var inPortModel: VerifyNotificationAppCommand
-        val controller = VerifyNotificationAppController(
-            verifyNotificationAppInPort = { command ->
-                true.also {
-                    inPortModel = command
-                }
+        var inPortModel: VerifyNotificationAppCommand? = null
+        val controller = VerifyNotificationAppController { command ->
+            true.also {
+                inPortModel = command
             }
-        )
-
+        }
         controller.verifyNotificationApp(
             loginUser = webRequestModel.loginUser,
             request = webRequestModel.request
@@ -46,12 +44,8 @@ class VerifyNotificationAppControllerTest {
     }
 
     @Test
-    fun `요청이 성공하면 isSuccess 를 응답한다`() = runTest {
-        val responseValue = true
-        val controller = VerifyNotificationAppController(
-            verifyNotificationAppInPort = { responseValue }
-        )
-
+    fun `요청이 성공하면 200 상태를 응답한다`() = runTest {
+        val controller = VerifyNotificationAppController { true }
         val response = controller.verifyNotificationApp(
             loginUser = webRequestModel.loginUser,
             request = webRequestModel.request
@@ -68,11 +62,19 @@ class VerifyNotificationAppControllerTest {
     }
 }
 
-class VerifyNotificationAppControllerAnnotationTest :
-    AdminOnlyAnnotationTestHelper(clazz = VerifyNotificationAppController::class) {
+class VerifyNotificationAppControllerAnnotationTest {
     @Test
-    fun `@AdminOnly @LoginUser 애너테이션 사용 여부 테스트`() {
-        assertTrue(hasAdminOnly(methodName = "verifyNotificationApp"))
-        assertTrue(hasLoginUserInfo(methodName = "verifyNotificationApp", parameterName = "loginUser"))
+    fun `클래스 애너테이션 사용 여부 확인`() {
+        val helper = ClassAnnotationTestHelper(VerifyNotificationAppController::class)
+        assertTrue(helper.hasRestControllerAnnotation())
+    }
+
+    @Test
+    fun `메서드 애너테이션 사용 여부 확인`() {
+        MethodAnnotationTestHelper(VerifyNotificationAppController::verifyNotificationApp).let {
+            assertTrue(it.hasPostMappingAnnotation("/setting/notification/verify-code/verify"))
+            assertTrue(it.hasAdminOnlyAnnotation())
+            assertTrue(it.hasLoginUserInfoAnnotation(parameterName = "loginUser"))
+        }
     }
 }
