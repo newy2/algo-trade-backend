@@ -5,11 +5,10 @@ import com.newy.algotrade.notification_send.adapter.out.persistence.repository.U
 import com.newy.algotrade.notification_send.domain.NotificationSendMessage
 import com.newy.algotrade.notification_send.port.out.SaveNotificationSendMessageOutPort
 import com.newy.algotrade.spring.annotation.PersistenceAdapter
-import org.springframework.beans.factory.annotation.Autowired
 
 @PersistenceAdapter
 class NotificationSendMessageAdapter(
-    @Autowired private val repository: UserNotificationSendMessageR2dbcRepository
+    private val repository: UserNotificationSendMessageR2dbcRepository
 ) : SaveNotificationSendMessageOutPort {
     override suspend fun saveNotificationSendMessage(notificationSendMessage: NotificationSendMessage): Long =
         repository.save(

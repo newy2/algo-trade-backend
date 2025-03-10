@@ -6,12 +6,11 @@ import com.newy.algotrade.notification_send.domain.NotificationApp
 import com.newy.algotrade.notification_send.domain.Webhook
 import com.newy.algotrade.notification_send.port.out.FindNotificationAppOutPort
 import com.newy.algotrade.spring.annotation.PersistenceAdapter
-import org.springframework.beans.factory.annotation.Autowired
 
 @PersistenceAdapter("NotificationAppAdapterForNotificationPackage")
 class NotificationAppAdapter(
-    @Autowired private val notificationAppRepository: UserNotificationAppR2dbcRepository,
-    @Autowired private val notificationVerifyCodeRepository: UserNotificationAppVerifyCodeR2dbcRepository,
+    private val notificationAppRepository: UserNotificationAppR2dbcRepository,
+    private val notificationVerifyCodeRepository: UserNotificationAppVerifyCodeR2dbcRepository,
 ) : FindNotificationAppOutPort {
     override suspend fun findNotificationApp(
         userId: Long,
