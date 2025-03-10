@@ -9,6 +9,7 @@ import com.newy.algotrade.notification_app.port.out.FindNotificationAppOutPort
 import com.newy.algotrade.notification_app.port.out.SaveNotificationAppOutPort
 import com.newy.algotrade.notification_app.port.out.SendNotificationMessageOutPort
 import com.newy.algotrade.notification_app.service.SendNotificationAppVerifyCodeCommandService
+import com.newy.algotrade.notification_app.service.SendNotificationAppVerifyCodeFacadeService
 import helpers.spring.MethodAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DisplayName
@@ -18,8 +19,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
-@DisplayName("인증코드 요청하기 테스트")
-class FirstTrySendNotificationAppVerifyCodeCommandServiceTest {
+@DisplayName("인증코드 처음 요청하기 테스트")
+class FirstTrySendNotificationAppVerifyCodeCommandServiceTest : BaseSendNotificationAppVerifyCodeFacadeServiceTest() {
     private val command = SendNotificationAppVerifyCodeCommand(
         userId = 1,
         webhookType = "SLACK",
@@ -34,11 +35,13 @@ class FirstTrySendNotificationAppVerifyCodeCommandServiceTest {
                 savedVerifyCode = app.verifyCode
             }
         }
-        val service = createService(
-            saveNotificationAppOutPort = captureAdapter,
+        val service = createFacadeService(
+            commandService = createService(
+                saveNotificationAppOutPort = captureAdapter,
+            )
         )
 
-        val verifyCode = service.sendVerifyCode(command)
+        val verifyCode = service.saveAndSendVerifyCode(command)
 
         assertEquals(5, savedVerifyCode?.length)
         assertEquals(verifyCode, savedVerifyCode)
@@ -50,11 +53,13 @@ class FirstTrySendNotificationAppVerifyCodeCommandServiceTest {
         val captureAdapter = SendNotificationMessageOutPort {
             event = it
         }
-        val service = createService(
-            sendNotificationMessageOutPort = captureAdapter,
+        val service = createFacadeService(
+            commandService = createService(
+                sendNotificationMessageOutPort = captureAdapter,
+            ),
         )
 
-        val verifyCode = service.sendVerifyCode(command)
+        val verifyCode = service.saveAndSendVerifyCode(command)
 
         assertEquals(1, event?.userId)
         assertEquals("인증코드: $verifyCode", event?.message)
@@ -63,7 +68,7 @@ class FirstTrySendNotificationAppVerifyCodeCommandServiceTest {
 }
 
 @DisplayName("인증코드 재요청하기 테스트")
-class RetrySendNotificationAppVerifyCodeCommandServiceTest {
+class RetrySendNotificationAppVerifyCodeCommandServiceTest : BaseSendNotificationAppVerifyCodeFacadeServiceTest() {
     private val savedNotificationApp = NotificationApp(
         userId = 1,
         webhook = Webhook(
@@ -83,11 +88,13 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
         val foundSavedAppAdapter = FindNotificationAppOutPort {
             savedNotificationApp.copy(verifyCode = "A1B2C")
         }
-        val service = createService(
-            findNotificationAppOutPort = foundSavedAppAdapter,
+        val service = createFacadeService(
+            commandService = createService(
+                findNotificationAppOutPort = foundSavedAppAdapter,
+            )
         )
 
-        val newVerifyCode = service.sendVerifyCode(command)
+        val newVerifyCode = service.saveAndSendVerifyCode(command)
 
         assertEquals(5, newVerifyCode.length)
         assertNotEquals("A1B2C", newVerifyCode)
@@ -98,12 +105,14 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
         val foundVerifiedAppAdapter = FindNotificationAppOutPort {
             savedNotificationApp.copy(isVerified = true)
         }
-        val service = createService(
-            findNotificationAppOutPort = foundVerifiedAppAdapter,
+        val service = createFacadeService(
+            commandService = createService(
+                findNotificationAppOutPort = foundVerifiedAppAdapter,
+            )
         )
 
         val error = assertThrows<VerificationCodeException> {
-            service.sendVerifyCode(command)
+            service.saveAndSendVerifyCode(command)
         }
         assertEquals("이미 검증 완료된 Webhook 입니다.", error.message)
     }
@@ -118,12 +127,14 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
                 )
             )
         }
-        val service = createService(
-            findNotificationAppOutPort = foundDifferentWebhookAdapter,
+        val service = createFacadeService(
+            commandService = createService(
+                findNotificationAppOutPort = foundDifferentWebhookAdapter,
+            )
         )
 
         val error = assertThrows<VerificationCodeException> {
-            service.sendVerifyCode(
+            service.saveAndSendVerifyCode(
                 command.copy(
                     webhookUrl = "https://hooks.slack.com/services/2222"
                 )
@@ -136,19 +147,29 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
     }
 }
 
-private fun createService(
-    findNotificationAppOutPort: FindNotificationAppOutPort = FindNotificationAppOutPort { null },
-    saveNotificationAppOutPort: SaveNotificationAppOutPort = SaveNotificationAppOutPort { true },
-    sendNotificationMessageOutPort: SendNotificationMessageOutPort = SendNotificationMessageOutPort {},
-) = SendNotificationAppVerifyCodeCommandService(
-    findNotificationAppOutPort,
-    saveNotificationAppOutPort,
-    sendNotificationMessageOutPort,
-)
+open class BaseSendNotificationAppVerifyCodeFacadeServiceTest {
+    protected fun createFacadeService(
+        commandService: SendNotificationAppVerifyCodeCommandService = createService()
+    ) = SendNotificationAppVerifyCodeFacadeService(commandService)
+
+    protected fun createService(
+        findNotificationAppOutPort: FindNotificationAppOutPort = FindNotificationAppOutPort { null },
+        saveNotificationAppOutPort: SaveNotificationAppOutPort = SaveNotificationAppOutPort { true },
+        sendNotificationMessageOutPort: SendNotificationMessageOutPort = SendNotificationMessageOutPort {},
+    ) = SendNotificationAppVerifyCodeCommandService(
+        findNotificationAppOutPort,
+        saveNotificationAppOutPort,
+        sendNotificationMessageOutPort,
+    )
+}
+
 
 class SendNotificationAppVerifyCodeCommandServiceAnnotationTest {
     @Test
     fun `메서드 애너테이션 사용 여부 확인`() {
-        assertTrue(MethodAnnotationTestHelper(SendNotificationAppVerifyCodeCommandService::sendVerifyCode).hasWritableTransactionalAnnotation())
+        assertTrue(MethodAnnotationTestHelper(SendNotificationAppVerifyCodeFacadeService::saveAndSendVerifyCode).hasNotTransactionalAnnotation())
+
+        assertTrue(MethodAnnotationTestHelper(SendNotificationAppVerifyCodeCommandService::saveVerifyCode).hasWritableTransactionalAnnotation())
+        assertTrue(MethodAnnotationTestHelper(SendNotificationAppVerifyCodeCommandService::sendVerifyCode).hasNotTransactionalAnnotation())
     }
 }

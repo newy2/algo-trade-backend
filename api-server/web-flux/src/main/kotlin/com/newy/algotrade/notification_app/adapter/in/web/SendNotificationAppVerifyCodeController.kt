@@ -21,7 +21,7 @@ class SendNotificationAppVerifyCodeController(
         @LoginUserInfo loginUser: LoginUser,
         @RequestBody request: SendNotificationAppVerifyCodeRequest
     ): ResponseEntity<SendNotificationAppVerifyCodeResponse> {
-        val verifyCode = sendNotificationAppVerifyCodeInPort.sendVerifyCode(request.toInPortModel(loginUser.id))
+        val verifyCode = sendNotificationAppVerifyCodeInPort.saveAndSendVerifyCode(request.toInPortModel(loginUser.id))
 
         return ResponseEntity.ok().body(
             SendNotificationAppVerifyCodeResponse(
