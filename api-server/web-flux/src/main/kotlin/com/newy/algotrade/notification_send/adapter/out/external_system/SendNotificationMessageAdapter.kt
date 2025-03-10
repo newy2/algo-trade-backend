@@ -6,12 +6,11 @@ import com.newy.algotrade.common.web.http.post
 import com.newy.algotrade.notification_send.domain.NotificationSendMessage
 import com.newy.algotrade.notification_send.port.out.SendNotificationMessageOutPort
 import com.newy.algotrade.spring.annotation.ExternalSystemAdapter
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Qualifier
 
 @ExternalSystemAdapter
 class SendNotificationMessageAdapter(
-    @Autowired @Qualifier("slackHttpApiClient") private val slackApiClient: HttpApiClient
+    @Qualifier("slackHttpApiClient") private val slackApiClient: HttpApiClient
 ) : SendNotificationMessageOutPort {
     override suspend fun sendMessage(notificationSendMessage: NotificationSendMessage): String {
         val response = slackApiClient.post<String>(

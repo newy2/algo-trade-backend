@@ -1,7 +1,6 @@
 package com.newy.algotrade.product.service
 
 import com.newy.algotrade.product.domain.RegisterProducts
-import com.newy.algotrade.product.port.`in`.SetRegisterProductsInPort
 import com.newy.algotrade.product.port.`in`.model.RegisterProductResult
 import com.newy.algotrade.product.port.out.DeleteProductsOutPort
 import com.newy.algotrade.product.port.out.FindAllProductsOutPort
@@ -10,13 +9,13 @@ import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
-class RegisterProductsCommandService(
+class RegisterProductCommandService(
     val findAllProductsOutPort: FindAllProductsOutPort,
     val saveProductsOutPort: SaveProductsOutPort,
     val deleteProductsOutPort: DeleteProductsOutPort,
-) : SetRegisterProductsInPort {
+) {
     @Transactional
-    override suspend fun setProducts(fetchedProducts: RegisterProducts): RegisterProductResult {
+    suspend fun setProducts(fetchedProducts: RegisterProducts): RegisterProductResult {
         val savedProducts = findAllProductsOutPort.findAllProducts()
         val insertProducts = fetchedProducts.subtract(savedProducts)
         val deleteProducts = savedProducts.subtract(fetchedProducts)

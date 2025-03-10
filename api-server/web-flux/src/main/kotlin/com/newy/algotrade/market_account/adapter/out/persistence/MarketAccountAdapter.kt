@@ -7,12 +7,11 @@ import com.newy.algotrade.market_account.domain.MarketAccount
 import com.newy.algotrade.market_account.port.out.ExistsMarketAccountOutPort
 import com.newy.algotrade.market_account.port.out.SaveMarketAccountOutPort
 import com.newy.algotrade.spring.annotation.PersistenceAdapter
-import org.springframework.beans.factory.annotation.Autowired
 
 @PersistenceAdapter
 class MarketAccountAdapter(
-    @Autowired private val marketRepository: MarketR2dbcRepository,
-    @Autowired private val marketAccountRepository: MarketAccountR2dbcRepository,
+    private val marketRepository: MarketR2dbcRepository,
+    private val marketAccountRepository: MarketAccountR2dbcRepository,
 ) : ExistsMarketAccountOutPort, SaveMarketAccountOutPort {
     override suspend fun existsMarketAccount(marketAccount: MarketAccount): Boolean {
         return marketAccountRepository.existsByUserIdAndDisplayNameAndUseYn(

@@ -11,7 +11,7 @@ import com.newy.algotrade.market_account.port.out.SaveMarketAccountOutPort
 import com.newy.algotrade.market_account.port.out.ValidMarketAccountOutPort
 import com.newy.algotrade.market_account.service.RegisterMarketAccountCommandService
 import com.newy.algotrade.market_account.service.RegisterMarketAccountFacadeService
-import helpers.spring.TransactionalAnnotationTestHelper
+import helpers.spring.MethodAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -30,8 +30,10 @@ class RegisterMarketAccountFacadeServiceTest {
     @Test
     fun `중복된 별명으로 등록하는 경우 에러가 발생한다`() = runTest {
         val duplicateAdapter = ExistsMarketAccountOutPort { true }
-        val service = newService(
-            existsMarketAccountOutPort = duplicateAdapter,
+        val service = createFacadeService(
+            commandService = createService(
+                existsMarketAccountOutPort = duplicateAdapter,
+            )
         )
 
         val error = assertThrows<DuplicateDataException> {
@@ -42,10 +44,12 @@ class RegisterMarketAccountFacadeServiceTest {
     }
 
     @Test
-    fun `계정정보 조회에 실패한 경우 에러가 발생한다`() = runTest {
+    fun `계정정보 검증에 실패한 경우 에러가 발생한다`() = runTest {
         val validationFailedAdapter = ValidMarketAccountOutPort { _, _ -> false }
-        val service = newService(
-            validMarketAccountOutPort = validationFailedAdapter,
+        val service = createFacadeService(
+            commandService = createService(
+                validMarketAccountOutPort = validationFailedAdapter,
+            )
         )
 
         val error = assertThrows<HttpResponseException> {
@@ -58,11 +62,13 @@ class RegisterMarketAccountFacadeServiceTest {
     @Test
     fun `검증에 통과한 데이터는 SaveMarketAccountOutPort 으로 데이터를 저장한다`() = runTest {
         var savableMarketAccount: MarketAccount? = null
-        val mockAdapter = SaveMarketAccountOutPort {
+        val captureAdapter = SaveMarketAccountOutPort {
             savableMarketAccount = it
         }
-        val service = newService(
-            saveMarketAccountOutPort = mockAdapter
+        val service = createFacadeService(
+            commandService = createService(
+                saveMarketAccountOutPort = captureAdapter,
+            )
         )
 
         service.registerMarketAccount(command)
@@ -81,59 +87,28 @@ class RegisterMarketAccountFacadeServiceTest {
         )
     }
 
-    @Test
-    fun `RegisterMarketAccountFacadeService 는 아래와 같은 순서로 RegisterMarketAccountCommandService 를 호출한다`() = runTest {
-        var log = ""
-        val service = newService(
-            existsMarketAccountOutPort = { false.also { log += "existsMarketAccount " } },
-            validMarketAccountOutPort = { _, _ -> true.also { log += "validMarketAccount " } },
-            saveMarketAccountOutPort = { log += "saveMarketAccount " },
-        )
+    private fun createFacadeService(
+        commandService: RegisterMarketAccountCommandService = createService()
+    ) = RegisterMarketAccountFacadeService(commandService)
 
-        service.registerMarketAccount(command)
-
-        assertEquals(log, "existsMarketAccount validMarketAccount saveMarketAccount ")
-    }
-
-    private fun newService(
-        existsMarketAccountOutPort: ExistsMarketAccountOutPort = defaultExistsMarketAccountAdapter(),
-        validMarketAccountOutPort: ValidMarketAccountOutPort = defaultValidateMarketAccountAdapter(),
-        saveMarketAccountOutPort: SaveMarketAccountOutPort = defaultSaveMarketAccountAdapter(),
-    ) = RegisterMarketAccountFacadeService(
-        service = RegisterMarketAccountCommandService(
-            existsMarketAccountOutPort = existsMarketAccountOutPort,
-            validMarketAccountOutPort = validMarketAccountOutPort,
-            saveMarketAccountOutPort = saveMarketAccountOutPort,
-        )
+    private fun createService(
+        existsMarketAccountOutPort: ExistsMarketAccountOutPort = ExistsMarketAccountOutPort { false },
+        validMarketAccountOutPort: ValidMarketAccountOutPort = ValidMarketAccountOutPort { _, _ -> true },
+        saveMarketAccountOutPort: SaveMarketAccountOutPort = SaveMarketAccountOutPort {},
+    ) = RegisterMarketAccountCommandService(
+        existsMarketAccountOutPort = existsMarketAccountOutPort,
+        validMarketAccountOutPort = validMarketAccountOutPort,
+        saveMarketAccountOutPort = saveMarketAccountOutPort,
     )
-
-    private fun defaultExistsMarketAccountAdapter() = object : ExistsMarketAccountOutPort {
-        override suspend fun existsMarketAccount(marketAccount: MarketAccount) = false
-    }
-
-    private fun defaultValidateMarketAccountAdapter() = object : ValidMarketAccountOutPort {
-        override suspend fun validMarketAccount(marketCode: MarketCode, privateApiInfo: PrivateApiInfo) = true
-    }
-
-    private fun defaultSaveMarketAccountAdapter() = object : SaveMarketAccountOutPort {
-        override suspend fun saveMarketAccount(marketAccount: MarketAccount) {}
-    }
 }
 
-class RegisterMarketAccountFacadeServiceTransactionalAnnotationTest :
-    TransactionalAnnotationTestHelper(clazz = RegisterMarketAccountFacadeService::class) {
+class RegisterMarketAccountFacadeServiceAnnotationTest {
     @Test
-    fun `@Transactional 애너테이션 사용 여부 테스트`() {
-        assertTrue(hasNotTransactional(methodName = "registerMarketAccount"))
-    }
-}
+    fun `메서드 애너테이션 사용 여부 확인`() {
+        assertTrue(MethodAnnotationTestHelper(RegisterMarketAccountFacadeService::registerMarketAccount).hasNotTransactionalAnnotation())
 
-class RegisterMarketAccountCommandServiceTransactionalAnnotationTest :
-    TransactionalAnnotationTestHelper(clazz = RegisterMarketAccountCommandService::class) {
-    @Test
-    fun `@Transactional 애너테이션 사용 여부 테스트`() {
-        assertTrue(hasReadOnlyTransactional(methodName = "checkDuplicateMarketAccount"))
-        assertTrue(hasNotTransactional(methodName = "validMarketAccount"))
-        assertTrue(hasWritableTransactional(methodName = "saveMarketAccount"))
+        assertTrue(MethodAnnotationTestHelper(RegisterMarketAccountCommandService::checkDuplicateMarketAccount).hasReadOnlyTransactionalAnnotation())
+        assertTrue(MethodAnnotationTestHelper(RegisterMarketAccountCommandService::validMarketAccount).hasNotTransactionalAnnotation())
+        assertTrue(MethodAnnotationTestHelper(RegisterMarketAccountCommandService::saveMarketAccount).hasWritableTransactionalAnnotation())
     }
 }

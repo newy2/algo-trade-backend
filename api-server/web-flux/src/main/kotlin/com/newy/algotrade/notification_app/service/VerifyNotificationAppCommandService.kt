@@ -6,14 +6,13 @@ import com.newy.algotrade.notification_app.port.`in`.VerifyNotificationAppInPort
 import com.newy.algotrade.notification_app.port.`in`.model.VerifyNotificationAppCommand
 import com.newy.algotrade.notification_app.port.out.FindNotificationAppOutPort
 import com.newy.algotrade.notification_app.port.out.SaveNotificationAppOutPort
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class VerifyNotificationAppCommandService(
-    @Autowired private val findNotificationAppOutPort: FindNotificationAppOutPort,
-    @Autowired private val saveNotificationAppOutPort: SaveNotificationAppOutPort,
+    private val findNotificationAppOutPort: FindNotificationAppOutPort,
+    private val saveNotificationAppOutPort: SaveNotificationAppOutPort,
 ) : VerifyNotificationAppInPort {
     @Transactional
     override suspend fun verify(command: VerifyNotificationAppCommand): Boolean {

@@ -11,7 +11,8 @@ import com.newy.algotrade.setting.domain.UserSetting
 import com.newy.algotrade.setting.port.`in`.model.GetUserSettingQuery
 import com.newy.algotrade.spring.auth.model.LoginUser
 import com.newy.algotrade.spring.auth.model.UserRole
-import helpers.spring.AdminOnlyAnnotationTestHelper
+import helpers.spring.ClassAnnotationTestHelper
+import helpers.spring.MethodAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.springframework.http.ResponseEntity
@@ -28,18 +29,12 @@ class GetUserSettingControllerTest {
 
     @Test
     fun `Controller 는 WebRequest 모델을 InPort 모델로 변환해야 한다`() = runTest {
-        lateinit var inPortModel: GetUserSettingQuery
-        val controller = GetUserSettingController(
-            getUserSettingInPort = { query ->
-                UserSetting(
-                    marketAccounts = emptyList(),
-                    notificationApp = null
-                ).also {
-                    inPortModel = query
-                }
+        var inPortModel: GetUserSettingQuery? = null
+        val controller = GetUserSettingController { query ->
+            UserSetting(marketAccounts = emptyList(), notificationApp = null).also {
+                inPortModel = query
             }
-        )
-
+        }
         controller.getUserSetting(
             loginUser = webRequestModel.loginUser,
         )
@@ -55,10 +50,7 @@ class GetUserSettingControllerTest {
     @Test
     fun `ADMIN 사용자가 조회한 경우, 데이터 마스킹 처리를 하지 않는다`() = runTest {
         val fakeUserSetting = getFakeUserSetting()
-        val controller = GetUserSettingController(
-            getUserSettingInPort = { fakeUserSetting.copy() }
-        )
-
+        val controller = GetUserSettingController { fakeUserSetting.copy() }
         val response = controller.getUserSetting(
             loginUser = webRequestModel.loginUser.copy(role = UserRole.ADMIN),
         )
@@ -77,10 +69,7 @@ class GetUserSettingControllerTest {
     @Test
     fun `GUEST 사용자가 조회한 경우 appKey, appSecret, webhookUrl 을 마스킹 처리한다`() = runTest {
         val fakeUserSetting = getFakeUserSetting()
-        val controller = GetUserSettingController(
-            getUserSettingInPort = { fakeUserSetting.copy() }
-        )
-
+        val controller = GetUserSettingController { fakeUserSetting.copy() }
         val response = controller.getUserSetting(
             loginUser = webRequestModel.loginUser.copy(role = UserRole.GUEST),
         )
@@ -142,10 +131,19 @@ class GetUserSettingControllerTest {
     )
 }
 
-class GetUserSettingControllerAnnotationTest : AdminOnlyAnnotationTestHelper(clazz = GetUserSettingController::class) {
+class GetUserSettingControllerAnnotationTest {
     @Test
-    fun `@AdminOnly @LoginUser 애너테이션 사용 여부 테스트`() {
-        assertFalse(hasAdminOnly(methodName = "getUserSetting"))
-        assertTrue(hasLoginUserInfo(methodName = "getUserSetting", parameterName = "loginUser"))
+    fun `클래스 애너테이션 사용 여부 확인`() {
+        val helper = ClassAnnotationTestHelper(GetUserSettingController::class)
+        assertTrue(helper.hasRestControllerAnnotation())
+    }
+
+    @Test
+    fun `메서드 애너테이션 사용 여부 확인`() {
+        MethodAnnotationTestHelper(GetUserSettingController::getUserSetting).let {
+            assertTrue(it.hasGetMappingAnnotation("/setting"))
+            assertFalse(it.hasAdminOnlyAnnotation())
+            assertTrue(it.hasLoginUserInfoAnnotation(parameterName = "loginUser"))
+        }
     }
 }

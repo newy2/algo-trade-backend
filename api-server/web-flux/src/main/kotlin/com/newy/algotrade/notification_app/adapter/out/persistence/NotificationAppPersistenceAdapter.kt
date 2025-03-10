@@ -9,12 +9,11 @@ import com.newy.algotrade.notification_app.domain.Webhook
 import com.newy.algotrade.notification_app.port.out.FindNotificationAppOutPort
 import com.newy.algotrade.notification_app.port.out.SaveNotificationAppOutPort
 import com.newy.algotrade.spring.annotation.PersistenceAdapter
-import org.springframework.beans.factory.annotation.Autowired
 
 @PersistenceAdapter
 class NotificationAppPersistenceAdapter(
-    @Autowired private val userNotificationAppR2dbcRepository: UserNotificationAppR2dbcRepository,
-    @Autowired private val userNotificationAppVerifyCodeR2dbcRepository: UserNotificationAppVerifyCodeR2dbcRepository,
+    private val userNotificationAppR2dbcRepository: UserNotificationAppR2dbcRepository,
+    private val userNotificationAppVerifyCodeR2dbcRepository: UserNotificationAppVerifyCodeR2dbcRepository,
 ) : FindNotificationAppOutPort, SaveNotificationAppOutPort {
     override suspend fun findByUserId(userId: Long): NotificationApp? {
         val userNotificationApp = findUserNotificationApp(userId) ?: return null

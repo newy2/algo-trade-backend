@@ -6,6 +6,7 @@ import org.springframework.transaction.reactive.TransactionSynchronization
 import org.springframework.transaction.reactive.TransactionSynchronizationManager
 import reactor.core.publisher.Mono
 
+@Deprecated("Facade Service 패턴 사용으로 인한 미사용 처리")
 suspend fun useTransactionHook(
     onAfterCommit: suspend () -> Unit = {},
     onAfterCompletion: suspend (Int) -> Unit = {}

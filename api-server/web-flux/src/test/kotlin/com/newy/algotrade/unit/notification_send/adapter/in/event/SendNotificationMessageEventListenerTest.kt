@@ -17,7 +17,9 @@ class SendNotificationMessageEventListenerTest {
         val listener = SendNotificationMessageEventListener(
             backgroundScope = this,
             sendNotificationMessageInPort = { command ->
-                inPortModel = command
+                null.also {
+                    inPortModel = command
+                }
             }
         )
         val eventModel = SendNotificationMessageEvent(
