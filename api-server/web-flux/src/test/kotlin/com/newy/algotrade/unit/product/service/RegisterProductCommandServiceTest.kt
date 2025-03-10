@@ -8,7 +8,7 @@ import com.newy.algotrade.product.port.out.DeleteProductsOutPort
 import com.newy.algotrade.product.port.out.FindAllProductsOutPort
 import com.newy.algotrade.product.port.out.SaveProductsOutPort
 import com.newy.algotrade.product.service.RegisterProductsCommandService
-import helpers.spring.TransactionalAnnotationTestHelper
+import helpers.spring.MethodAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -96,11 +96,10 @@ class AlreadySavedRegisterProductCommandServiceTest : BaseRegisterProductCommand
     }
 }
 
-class RegisterProductCommandServiceTransactionalAnnotationTest :
-    TransactionalAnnotationTestHelper(clazz = RegisterProductsCommandService::class) {
+class RegisterProductCommandServiceAnnotationTest {
     @Test
-    fun `@Transactional 애너테이션 사용 여부 테스트`() {
-        assertTrue(hasWritableTransactional(methodName = "setProducts"))
+    fun `메서드 애너테이션 사용 여부 확인`() {
+        assertTrue(MethodAnnotationTestHelper(RegisterProductsCommandService::setProducts).hasWritableTransactionalAnnotation())
     }
 }
 

@@ -8,7 +8,7 @@ import com.newy.algotrade.product.domain.RegisterProducts
 import com.newy.algotrade.product.port.out.FetchProductsOutPort
 import com.newy.algotrade.product.port.out.FindPrivateApiInfoOutPort
 import com.newy.algotrade.product.service.RegisterProductQueryService
-import helpers.spring.TransactionalAnnotationTestHelper
+import helpers.spring.MethodAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -118,10 +118,9 @@ class RegisterProductQueryServiceTest {
     }
 }
 
-class RegisterProductQueryServiceTransactionalAnnotationTest :
-    TransactionalAnnotationTestHelper(clazz = RegisterProductQueryService::class) {
+class RegisterProductQueryServiceAnnotationTest {
     @Test
-    fun `@Transactional 애너테이션 사용 여부 테스트`() {
-        assertTrue(hasNotTransactional(methodName = "getProducts"))
+    fun `메서드 애너테이션 사용 여부 확인`() {
+        assertTrue(MethodAnnotationTestHelper(RegisterProductQueryService::getProducts).hasNotTransactionalAnnotation())
     }
 }

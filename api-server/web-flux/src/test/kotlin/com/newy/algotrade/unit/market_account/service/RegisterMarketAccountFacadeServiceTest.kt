@@ -11,7 +11,7 @@ import com.newy.algotrade.market_account.port.out.SaveMarketAccountOutPort
 import com.newy.algotrade.market_account.port.out.ValidMarketAccountOutPort
 import com.newy.algotrade.market_account.service.RegisterMarketAccountCommandService
 import com.newy.algotrade.market_account.service.RegisterMarketAccountFacadeService
-import helpers.spring.TransactionalAnnotationTestHelper
+import helpers.spring.MethodAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -120,20 +120,18 @@ class RegisterMarketAccountFacadeServiceTest {
     }
 }
 
-class RegisterMarketAccountFacadeServiceTransactionalAnnotationTest :
-    TransactionalAnnotationTestHelper(clazz = RegisterMarketAccountFacadeService::class) {
+class RegisterMarketAccountFacadeServiceAnnotationTest {
     @Test
-    fun `@Transactional 애너테이션 사용 여부 테스트`() {
-        assertTrue(hasNotTransactional(methodName = "registerMarketAccount"))
+    fun `메서드 애너테이션 사용 여부 확인`() {
+        assertTrue(MethodAnnotationTestHelper(RegisterMarketAccountFacadeService::registerMarketAccount).hasNotTransactionalAnnotation())
     }
 }
 
-class RegisterMarketAccountCommandServiceTransactionalAnnotationTest :
-    TransactionalAnnotationTestHelper(clazz = RegisterMarketAccountCommandService::class) {
+class RegisterMarketAccountCommandServiceAnnotationTest {
     @Test
-    fun `@Transactional 애너테이션 사용 여부 테스트`() {
-        assertTrue(hasReadOnlyTransactional(methodName = "checkDuplicateMarketAccount"))
-        assertTrue(hasNotTransactional(methodName = "validMarketAccount"))
-        assertTrue(hasWritableTransactional(methodName = "saveMarketAccount"))
+    fun `메서드 애너테이션 사용 여부 혹인`() {
+        assertTrue(MethodAnnotationTestHelper(RegisterMarketAccountCommandService::checkDuplicateMarketAccount).hasReadOnlyTransactionalAnnotation())
+        assertTrue(MethodAnnotationTestHelper(RegisterMarketAccountCommandService::validMarketAccount).hasNotTransactionalAnnotation())
+        assertTrue(MethodAnnotationTestHelper(RegisterMarketAccountCommandService::saveMarketAccount).hasWritableTransactionalAnnotation())
     }
 }

@@ -10,7 +10,7 @@ import com.newy.algotrade.notification_send.port.out.FindNotificationAppOutPort
 import com.newy.algotrade.notification_send.port.out.SaveNotificationSendMessageOutPort
 import com.newy.algotrade.notification_send.port.out.SendNotificationMessageOutPort
 import com.newy.algotrade.notification_send.service.SendNotificationMessageCommandService
-import helpers.spring.TransactionalAnnotationTestHelper
+import helpers.spring.MethodAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -126,13 +126,12 @@ class SendNotificationMessageCommandServiceExceptionTest {
     }
 }
 
-class SendNotificationMessageCommandServiceTransactionalAnnotationTest :
-    TransactionalAnnotationTestHelper(clazz = SendNotificationMessageCommandService::class) {
+class SendNotificationMessageCommandServiceAnnotationTest {
     @Test
-    fun `@Transactional 애너테이션 사용 여부 테스트`() {
-        assertTrue(hasReadOnlyTransactional(methodName = "getMessage"))
-        assertTrue(hasNotTransactional(methodName = "sendMessage"))
-        assertTrue(hasWritableTransactional(methodName = "saveMessage"))
+    fun `메서드 애너테이션 사용 여부 확인`() {
+        assertTrue(MethodAnnotationTestHelper(SendNotificationMessageCommandService::getMessage).hasReadOnlyTransactionalAnnotation())
+        assertTrue(MethodAnnotationTestHelper(SendNotificationMessageCommandService::sendMessage).hasNotTransactionalAnnotation())
+        assertTrue(MethodAnnotationTestHelper(SendNotificationMessageCommandService::saveMessage).hasWritableTransactionalAnnotation())
     }
 }
 

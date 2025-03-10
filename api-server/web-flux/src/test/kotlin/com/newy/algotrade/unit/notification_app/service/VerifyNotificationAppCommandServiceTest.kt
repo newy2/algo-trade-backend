@@ -7,7 +7,7 @@ import com.newy.algotrade.notification_app.port.`in`.model.VerifyNotificationApp
 import com.newy.algotrade.notification_app.port.out.FindNotificationAppOutPort
 import com.newy.algotrade.notification_app.port.out.SaveNotificationAppOutPort
 import com.newy.algotrade.notification_app.service.VerifyNotificationAppCommandService
-import helpers.spring.TransactionalAnnotationTestHelper
+import helpers.spring.MethodAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -105,10 +105,9 @@ class VerifyNotificationAppCommandServiceTest {
     }
 }
 
-class VerifyNotificationAppCommandServiceTransactionalAnnotationTest :
-    TransactionalAnnotationTestHelper(clazz = VerifyNotificationAppCommandService::class) {
+class VerifyNotificationAppCommandServiceTransactionalAnnotationTest {
     @Test
-    fun `@Transactional 애너테이션 사용 여부 테스트`() {
-        assertTrue(hasWritableTransactional(methodName = "verify"))
+    fun `메서드 애너테이션 사용 여부 확인`() {
+        assertTrue(MethodAnnotationTestHelper(VerifyNotificationAppCommandService::verify).hasWritableTransactionalAnnotation())
     }
 }

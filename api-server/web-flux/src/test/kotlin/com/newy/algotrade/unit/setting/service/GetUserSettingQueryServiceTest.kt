@@ -8,7 +8,7 @@ import com.newy.algotrade.setting.port.`in`.model.GetUserSettingQuery
 import com.newy.algotrade.setting.port.out.GetMarketAccountsOutPort
 import com.newy.algotrade.setting.port.out.GetNotificationAppOutPort
 import com.newy.algotrade.setting.service.GetUserSettingQueryService
-import helpers.spring.TransactionalAnnotationTestHelper
+import helpers.spring.MethodAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
@@ -91,10 +91,9 @@ class GetSettingQueryServiceTest {
     )
 }
 
-class GetUserSettingQueryServiceTransactionalAnnotationTest :
-    TransactionalAnnotationTestHelper(clazz = GetUserSettingQueryService::class) {
+class GetUserSettingQueryServiceAnnotationTest {
     @Test
-    fun `@Transactional 사용여부 테스트`() {
-        assertTrue(hasReadOnlyTransactional(methodName = "getUserSetting"))
+    fun `메서드 애너테이션 사용여부 확인`() {
+        assertTrue(MethodAnnotationTestHelper(GetUserSettingQueryService::getUserSetting).hasReadOnlyTransactionalAnnotation())
     }
 }

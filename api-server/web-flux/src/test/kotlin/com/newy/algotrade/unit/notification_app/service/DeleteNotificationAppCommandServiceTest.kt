@@ -7,7 +7,7 @@ import com.newy.algotrade.notification_app.port.`in`.model.DeleteNotificationApp
 import com.newy.algotrade.notification_app.port.out.DeleteNotificationAppOutPort
 import com.newy.algotrade.notification_app.port.out.FindDeletableNotificationAppOutPort
 import com.newy.algotrade.notification_app.service.DeleteNotificationAppCommandService
-import helpers.spring.TransactionalAnnotationTestHelper
+import helpers.spring.MethodAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -96,10 +96,9 @@ class DeleteNotificationAppCommandServiceTest {
     private fun defaultDeleteNotificationAppAdapter() = DeleteNotificationAppOutPort {}
 }
 
-class DeleteNotificationAppCommandServiceTransactionalAnnotationTest :
-    TransactionalAnnotationTestHelper(clazz = DeleteNotificationAppCommandService::class) {
+class DeleteNotificationAppCommandServiceAnnotationTest {
     @Test
-    fun `@Transactional 애너테이션 사용 여부 테스트`() {
-        assertTrue(hasWritableTransactional(methodName = "deleteNotificationApp"))
+    fun `메서드 애너테이션 사용 여부 확인`() {
+        assertTrue(MethodAnnotationTestHelper(DeleteNotificationAppCommandService::deleteNotificationApp).hasWritableTransactionalAnnotation())
     }
 }

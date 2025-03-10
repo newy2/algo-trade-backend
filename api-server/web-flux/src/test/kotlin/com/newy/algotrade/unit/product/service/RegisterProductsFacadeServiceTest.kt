@@ -6,7 +6,7 @@ import com.newy.algotrade.product.domain.RegisterProduct
 import com.newy.algotrade.product.domain.RegisterProducts
 import com.newy.algotrade.product.port.`in`.model.RegisterProductResult
 import com.newy.algotrade.product.service.RegisterProductsFacadeService
-import helpers.spring.TransactionalAnnotationTestHelper
+import helpers.spring.MethodAnnotationTestHelper
 import kotlinx.coroutines.test.runTest
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
@@ -52,10 +52,9 @@ class RegisterProductsFacadeServiceTest {
     }
 }
 
-class RegisterProductsFacadeServiceTransactionalAnnotationTest :
-    TransactionalAnnotationTestHelper(clazz = RegisterProductsFacadeService::class) {
+class RegisterProductsFacadeServiceAnnotationTest {
     @Test
-    fun `@Transactional 애너테이션 사용 여부 테스트`() {
-        assertTrue(hasNotTransactional(methodName = "registerProducts"))
+    fun `메서드 애너테이션 사용 여부 확인`() {
+        assertTrue(MethodAnnotationTestHelper(RegisterProductsFacadeService::registerProducts).hasNotTransactionalAnnotation())
     }
 }
