@@ -1,18 +1,16 @@
 package com.newy.algotrade.product.service
 
-import com.newy.algotrade.product.port.`in`.GetRegisterProductsInPort
 import com.newy.algotrade.product.port.`in`.RegisterProductsInPort
-import com.newy.algotrade.product.port.`in`.SetRegisterProductsInPort
 import com.newy.algotrade.product.port.`in`.model.RegisterProductResult
 import org.springframework.stereotype.Service
 
 @Service
 class RegisterProductsFacadeService(
-    val getRegisterProductsInPort: GetRegisterProductsInPort,
-    val setRegisterProductsInPort: SetRegisterProductsInPort,
+    val queryService: RegisterProductQueryService,
+    val commandService: RegisterProductCommandService,
 ) : RegisterProductsInPort {
     override suspend fun registerProducts(userId: Long): RegisterProductResult {
-        val fetchedProducts = getRegisterProductsInPort.getProducts(userId)
-        return setRegisterProductsInPort.setProducts(fetchedProducts)
+        val fetchedProducts = queryService.getProducts(userId)
+        return commandService.setProducts(fetchedProducts)
     }
 }
