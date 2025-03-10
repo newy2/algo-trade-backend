@@ -24,6 +24,7 @@ class SendNotificationAppVerifyCodeCommandService(
             .generateVerifyCode()
 
         saveNotificationAppOutPort.save(newNotificationApp)
+        // TODO Remove useTransactionHook
         useTransactionHook(
             onAfterCommit = {
                 sendNotificationMessageOutPort.send(

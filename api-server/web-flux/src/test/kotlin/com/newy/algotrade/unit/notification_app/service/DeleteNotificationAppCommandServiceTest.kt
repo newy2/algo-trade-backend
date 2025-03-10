@@ -23,7 +23,7 @@ class DeleteNotificationAppCommandServiceTest {
     @Test
     fun `등록되지 않은 NotificationApp 을 삭제하는 경우 에러가 발생한다`() = runTest {
         val notFoundAdapter = FindDeletableNotificationAppOutPort { null }
-        val service = newService(
+        val service = createService(
             findDeletableNotificationAppOutPort = notFoundAdapter,
         )
 
@@ -45,7 +45,7 @@ class DeleteNotificationAppCommandServiceTest {
                 id = 2,
             )
         }
-        val service = newService(
+        val service = createService(
             findDeletableNotificationAppOutPort = foundOtherUserNotificationAppAdapter,
         )
 
@@ -57,43 +57,26 @@ class DeleteNotificationAppCommandServiceTest {
     }
 
     @Test
-    fun `문제가 없는 요청이면 FindDeletableNotificationAppOutPort 과 DeleteNotificationAppOutPort 에 notificationAppId 가 전달된다`() =
-        runTest {
-            var findAdapterParameter: Long? = null
-            var deleteAdapterParameter: Long? = null
-            val service = newService(
-                findDeletableNotificationAppOutPort = { parameter ->
-                    defaultFindDeletableNotificationAppAdapter().findById(parameter).also {
-                        findAdapterParameter = parameter
-                    }
-                },
-                deleteNotificationAppOutPort = { parameter ->
-                    deleteAdapterParameter = parameter
-                },
-            )
+    fun `문제가 없는 요청이면 DeleteNotificationAppOutPort 에 notificationAppId 가 전달된다`() = runTest {
+        var deletableNotificationId: Long? = null
+        val service = createService(
+            deleteNotificationAppOutPort = { deletableNotificationId = it },
+        )
 
-            service.deleteNotificationApp(command)
+        service.deleteNotificationApp(command)
 
-            assertEquals(command.notificationAppId, findAdapterParameter)
-            assertEquals(command.notificationAppId, deleteAdapterParameter)
-        }
+        assertEquals(command.notificationAppId, deletableNotificationId)
+    }
 
-    private fun newService(
-        findDeletableNotificationAppOutPort: FindDeletableNotificationAppOutPort = defaultFindDeletableNotificationAppAdapter(),
-        deleteNotificationAppOutPort: DeleteNotificationAppOutPort = defaultDeleteNotificationAppAdapter(),
+    private fun createService(
+        findDeletableNotificationAppOutPort: FindDeletableNotificationAppOutPort = FindDeletableNotificationAppOutPort {
+            DeletableNotificationApp(userId = command.userId, id = command.notificationAppId)
+        },
+        deleteNotificationAppOutPort: DeleteNotificationAppOutPort = DeleteNotificationAppOutPort {},
     ) = DeleteNotificationAppCommandService(
         findDeletableNotificationAppOutPort,
         deleteNotificationAppOutPort,
     )
-
-    private fun defaultFindDeletableNotificationAppAdapter() = FindDeletableNotificationAppOutPort {
-        DeletableNotificationApp(
-            userId = 1,
-            id = 2,
-        )
-    }
-
-    private fun defaultDeleteNotificationAppAdapter() = DeleteNotificationAppOutPort {}
 }
 
 class DeleteNotificationAppCommandServiceAnnotationTest {

@@ -18,18 +18,6 @@ import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
-class NullFindNotificationAppOutPort : FindNotificationAppOutPort {
-    override suspend fun findByUserId(userId: Long) = null
-}
-
-class NullSaveNotificationAppOutPort : SaveNotificationAppOutPort {
-    override suspend fun save(app: NotificationApp) = false
-}
-
-class NullSendNotificationAppOutPort : SendNotificationMessageOutPort {
-    override suspend fun send(event: SendNotificationMessageEvent) {}
-}
-
 @DisplayName("인증코드 요청하기 테스트")
 class FirstTrySendNotificationAppVerifyCodeCommandServiceTest {
     private val command = SendNotificationAppVerifyCodeCommand(
@@ -40,34 +28,30 @@ class FirstTrySendNotificationAppVerifyCodeCommandServiceTest {
 
     @Test
     fun `인증코드를 생성에 성공하면 SaveNotificationAppOutPort 를 호출한다`() = runTest {
-        var savedVerifyCode = ""
-        val mockSaveNotificationAppOutPort = SaveNotificationAppOutPort { app ->
+        var savedVerifyCode: String? = null
+        val captureAdapter = SaveNotificationAppOutPort { app ->
             true.also {
                 savedVerifyCode = app.verifyCode
             }
         }
-        val service = SendNotificationAppVerifyCodeCommandService(
-            findNotificationAppOutPort = NullFindNotificationAppOutPort(),
-            saveNotificationAppOutPort = mockSaveNotificationAppOutPort,
-            sendNotificationMessageOutPort = NullSendNotificationAppOutPort(),
+        val service = createService(
+            saveNotificationAppOutPort = captureAdapter,
         )
 
         val verifyCode = service.sendVerifyCode(command)
 
-        assertEquals(5, savedVerifyCode.length)
+        assertEquals(5, savedVerifyCode?.length)
         assertEquals(verifyCode, savedVerifyCode)
     }
 
     @Test
     fun `인증코드를 생성에 성공하면 sendNotificationMessageOutPort 를 호출한다`() = runTest {
         var event: SendNotificationMessageEvent? = null
-        val mockSendNotificationMessageOutPort = SendNotificationMessageOutPort {
+        val captureAdapter = SendNotificationMessageOutPort {
             event = it
         }
-        val service = SendNotificationAppVerifyCodeCommandService(
-            findNotificationAppOutPort = NullFindNotificationAppOutPort(),
-            saveNotificationAppOutPort = NullSaveNotificationAppOutPort(),
-            sendNotificationMessageOutPort = mockSendNotificationMessageOutPort,
+        val service = createService(
+            sendNotificationMessageOutPort = captureAdapter,
         )
 
         val verifyCode = service.sendVerifyCode(command)
@@ -95,32 +79,27 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
     )
 
     @Test
-    fun `인증코드 재요청하기`() = runTest {
-        val beforeUsedVerifyCode = "A1B2C"
-        val alreadySavedNotificationAppOutPort = FindNotificationAppOutPort {
-            savedNotificationApp.copy(verifyCode = beforeUsedVerifyCode)
+    fun `인증코드를 재요청하면 기존에 사용한 verifyCode 와 다른 verifyCode 를 생성한다`() = runTest {
+        val foundSavedAppAdapter = FindNotificationAppOutPort {
+            savedNotificationApp.copy(verifyCode = "A1B2C")
         }
-        val service = SendNotificationAppVerifyCodeCommandService(
-            findNotificationAppOutPort = alreadySavedNotificationAppOutPort,
-            saveNotificationAppOutPort = NullSaveNotificationAppOutPort(),
-            sendNotificationMessageOutPort = NullSendNotificationAppOutPort(),
+        val service = createService(
+            findNotificationAppOutPort = foundSavedAppAdapter,
         )
 
         val newVerifyCode = service.sendVerifyCode(command)
 
         assertEquals(5, newVerifyCode.length)
-        assertNotEquals(beforeUsedVerifyCode, newVerifyCode)
+        assertNotEquals("A1B2C", newVerifyCode)
     }
 
     @Test
-    fun `검증 완료된 알림앱으로 인증코드를 재요청하는 경우 에러가 발생한다`() = runTest {
-        val alreadyVerifiedNotificationAppOutPort = FindNotificationAppOutPort {
+    fun `검증이 완료된 알림앱으로 인증코드를 재요청하면 에러가 발생한다`() = runTest {
+        val foundVerifiedAppAdapter = FindNotificationAppOutPort {
             savedNotificationApp.copy(isVerified = true)
         }
-        val service = SendNotificationAppVerifyCodeCommandService(
-            findNotificationAppOutPort = alreadyVerifiedNotificationAppOutPort,
-            saveNotificationAppOutPort = NullSaveNotificationAppOutPort(),
-            sendNotificationMessageOutPort = NullSendNotificationAppOutPort(),
+        val service = createService(
+            findNotificationAppOutPort = foundVerifiedAppAdapter,
         )
 
         val error = assertThrows<VerificationCodeException> {
@@ -131,7 +110,7 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
 
     @Test
     fun `검증 진행중인 Webhook URL 과 다른 URL로 인증코드를 재요청하는 경우 에러가 발생한다`() = runTest {
-        val alreadySavedNotificationAppOutPort = FindNotificationAppOutPort {
+        val foundDifferentWebhookAdapter = FindNotificationAppOutPort {
             savedNotificationApp.copy(
                 webhook = Webhook(
                     type = "SLACK",
@@ -139,10 +118,8 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
                 )
             )
         }
-        val service = SendNotificationAppVerifyCodeCommandService(
-            findNotificationAppOutPort = alreadySavedNotificationAppOutPort,
-            saveNotificationAppOutPort = NullSaveNotificationAppOutPort(),
-            sendNotificationMessageOutPort = NullSendNotificationAppOutPort(),
+        val service = createService(
+            findNotificationAppOutPort = foundDifferentWebhookAdapter,
         )
 
         val error = assertThrows<VerificationCodeException> {
@@ -158,6 +135,16 @@ class RetrySendNotificationAppVerifyCodeCommandServiceTest {
         )
     }
 }
+
+private fun createService(
+    findNotificationAppOutPort: FindNotificationAppOutPort = FindNotificationAppOutPort { null },
+    saveNotificationAppOutPort: SaveNotificationAppOutPort = SaveNotificationAppOutPort { true },
+    sendNotificationMessageOutPort: SendNotificationMessageOutPort = SendNotificationMessageOutPort {},
+) = SendNotificationAppVerifyCodeCommandService(
+    findNotificationAppOutPort,
+    saveNotificationAppOutPort,
+    sendNotificationMessageOutPort,
+)
 
 class SendNotificationAppVerifyCodeCommandServiceAnnotationTest {
     @Test
