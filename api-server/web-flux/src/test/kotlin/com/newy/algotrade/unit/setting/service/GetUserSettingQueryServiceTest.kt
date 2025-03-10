@@ -20,7 +20,7 @@ class GetSettingQueryServiceTest {
 
     @Test
     fun `저장된 데이터가 없는 경우`() = runTest {
-        val service = newService()
+        val service = createService()
 
         assertEquals(
             UserSetting(
@@ -34,7 +34,7 @@ class GetSettingQueryServiceTest {
     @Test
     fun `저장된 데이터가 있는 경우`() = runTest {
         val verifyCodeExpiredAt = LocalDateTime.now().plusMinutes(3)
-        val service = newService(
+        val service = createService(
             getMarketAccountsOutPort = {
                 listOf(
                     MarketAccount(
@@ -82,7 +82,7 @@ class GetSettingQueryServiceTest {
         )
     }
 
-    private fun newService(
+    private fun createService(
         getMarketAccountsOutPort: GetMarketAccountsOutPort = GetMarketAccountsOutPort { emptyList() },
         getNotificationAppOutPort: GetNotificationAppOutPort = GetNotificationAppOutPort { null },
     ) = GetUserSettingQueryService(
