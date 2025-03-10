@@ -106,6 +106,7 @@ class RegisterMarketAccountFacadeServiceAnnotationTest {
     @Test
     fun `메서드 애너테이션 사용 여부 확인`() {
         assertTrue(MethodAnnotationTestHelper(RegisterMarketAccountFacadeService::registerMarketAccount).hasNotTransactionalAnnotation())
+
         assertTrue(MethodAnnotationTestHelper(RegisterMarketAccountCommandService::checkDuplicateMarketAccount).hasReadOnlyTransactionalAnnotation())
         assertTrue(MethodAnnotationTestHelper(RegisterMarketAccountCommandService::validMarketAccount).hasNotTransactionalAnnotation())
         assertTrue(MethodAnnotationTestHelper(RegisterMarketAccountCommandService::saveMarketAccount).hasWritableTransactionalAnnotation())

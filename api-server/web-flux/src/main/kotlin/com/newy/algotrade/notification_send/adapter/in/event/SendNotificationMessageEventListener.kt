@@ -6,15 +6,14 @@ import com.newy.algotrade.notification_send.port.`in`.model.SendNotificationMess
 import com.newy.algotrade.spring.annotation.InternalSystemAdapter
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Profile
 import org.springframework.context.event.EventListener
 
 @Profile("!test")
 @InternalSystemAdapter
 class SendNotificationMessageEventListener(
-    @Autowired private val backgroundScope: CoroutineScope,
-    @Autowired private val sendNotificationMessageInPort: SendNotificationMessageInPort,
+    private val backgroundScope: CoroutineScope,
+    private val sendNotificationMessageInPort: SendNotificationMessageInPort,
 ) {
     @EventListener
     fun onReceiveMessage(event: SendNotificationMessageEvent) {

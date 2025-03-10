@@ -1,24 +1,20 @@
 package com.newy.algotrade.notification_send.service
 
-import com.newy.algotrade.notification_send.port.`in`.GetMessageInPort
-import com.newy.algotrade.notification_send.port.`in`.SaveMessageInPort
-import com.newy.algotrade.notification_send.port.`in`.SendMessageInPort
+import com.newy.algotrade.notification_send.domain.NotificationSendMessage
 import com.newy.algotrade.notification_send.port.`in`.SendNotificationMessageInPort
 import com.newy.algotrade.notification_send.port.`in`.model.SendNotificationMessageCommand
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
 class SendNotificationMessageFacadeService(
-    @Autowired private val getMessageInPort: GetMessageInPort,
-    @Autowired private val sendMessageInPort: SendMessageInPort,
-    @Autowired private val saveMessageInPort: SaveMessageInPort,
+    private val commandService: SendNotificationMessageCommandService,
 ) : SendNotificationMessageInPort {
-    override suspend fun sendNotificationMessage(command: SendNotificationMessageCommand) {
-        getMessageInPort.getMessage(command).let {
-            sendMessageInPort.sendMessage(it)
-        }.let {
-            saveMessageInPort.saveMessage(it)
-        }
+    override suspend fun sendNotificationMessage(command: SendNotificationMessageCommand): NotificationSendMessage? {
+        return commandService.getMessage(command)
+            .let {
+                commandService.sendMessage(it)
+            }.let {
+                commandService.saveMessage(it)
+            }
     }
 }
